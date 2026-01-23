@@ -1,0 +1,349 @@
+-- =================================================================================
+-- Views للاستعلامات السريعة (Business Views)
+-- الوصف: Views جاهزة للاستخدام في التقارير والواجهات
+-- المخطط: HR_PERSONNEL
+-- =================================================================================
+
+-- ==========================================================
+-- 1. View: معلومات الموظفين الكاملة
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEES_FULL AS
+SELECT 
+    e.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FIRST_NAME_AR || ' ' || e.SECOND_NAME_AR || ' ' || 
+    e.THIRD_NAME_AR || ' ' || e.HIJRI_LAST_NAME_AR AS FULL_NAME_AR,
+    e.FULL_NAME_EN,
+    e.GENDER,
+    e.BIRTH_DATE,
+    TRUNC(MONTHS_BETWEEN(SYSDATE, e.BIRTH_DATE) / 12) AS AGE,
+    e.MARITAL_STATUS,
+    c.COUNTRY_NAME_AR AS NATIONALITY_AR,
+    c.COUNTRY_NAME_EN AS NATIONALITY_EN,
+    j.JOB_TITLE_AR,
+    j.JOB_TITLE_EN,
+    d.DEPT_NAME_AR,
+    d.DEPT_NAME_EN,
+    b.BRANCH_NAME_AR,
+    mgr.FULL_NAME_EN AS MANAGER_NAME,
+    e.JOINING_DATE,
+    ROUND(MONTHS_BETWEEN(SYSDATE, e.JOINING_DATE) / 12, 2) AS SERVICE_YEARS,
+    e.STATUS,
+    e.EMAIL,
+    e.MOBILE,
+    e.CREATED_AT,
+    e.UPDATED_AT
+FROM HR_PERSONNEL.EMPLOYEES e
+LEFT JOIN HR_CORE.COUNTRIES c ON e.NATIONALITY_ID = c.COUNTRY_ID
+LEFT JOIN HR_CORE.JOBS j ON e.JOB_ID = j.JOB_ID
+LEFT JOIN HR_CORE.DEPARTMENTS d ON e.DEPT_ID = d.DEPT_ID
+LEFT JOIN HR_CORE.BRANCHES b ON d.BRANCH_ID = b.BRANCH_ID
+LEFT JOIN HR_PERSONNEL.EMPLOYEES mgr ON e.MANAGER_ID = mgr.EMPLOYEE_ID
+WHERE e.IS_DELETED = 0;
+
+-- ==========================================================
+-- 2. View: الموظفين النشطين فقط
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_ACTIVE_EMPLOYEES AS
+SELECT * FROM HR_PERSONNEL.V_EMPLOYEES_FULL
+WHERE STATUS = 'ACTIVE';
+
+-- ==========================================================
+-- 3. View: معلومات العقود مع الموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_CONTRACTS_FULL AS
+SELECT 
+    c.CONTRACT_ID,
+    c.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    c.CONTRACT_TYPE,
+    c.START_DATE,
+    c.END_DATE,
+    CASE 
+        WHEN c.END_DATE IS NULL THEN 'مفتوح'
+        WHEN c.END_DATE < SYSDATE THEN 'منتهي'
+        WHEN c.END_DATE - SYSDATE <= 60 THEN 'قريب الانتهاء'
+        ELSE 'ساري'
+    END AS CONTRACT_STATUS_DESC,
+    c.BASIC_SALARY,
+    c.HOUSING_ALLOWANCE,
+    c.TRANSPORT_ALLOWANCE,
+    c.OTHER_ALLOWANCES,
+    (c.BASIC_SALARY + c.HOUSING_ALLOWANCE + c.TRANSPORT_ALLOWANCE + c.OTHER_ALLOWANCES) AS TOTAL_SALARY,
+    c.VACATION_DAYS,
+    c.WORKING_HOURS_DAILY,
+    c.CONTRACT_STATUS,
+    c.IS_RENEWABLE,
+    CASE 
+        WHEN c.END_DATE IS NOT NULL THEN c.END_DATE - SYSDATE
+        ELSE NULL
+    END AS DAYS_TO_EXPIRY
+FROM HR_PERSONNEL.CONTRACTS c
+JOIN HR_PERSONNEL.EMPLOYEES e ON c.EMPLOYEE_ID = e.EMPLOYEE_ID
+WHERE c.IS_DELETED = 0;
+
+-- ==========================================================
+-- 4. View: العقود المنتهية قريباً (60 يوم)
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EXPIRING_CONTRACTS AS
+SELECT * FROM HR_PERSONNEL.V_CONTRACTS_FULL
+WHERE CONTRACT_STATUS = 'ACTIVE'
+  AND END_DATE IS NOT NULL
+  AND END_DATE BETWEEN SYSDATE AND SYSDATE + 60
+ORDER BY END_DATE;
+
+-- ==========================================================
+-- 5. View: الوثائق منتهية الصلاحية قريباً
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EXPIRING_DOCUMENTS AS
+SELECT 
+    ed.DOC_ID,
+    ed.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    dt.DOC_NAME_AR,
+    ed.DOC_NUMBER,
+    ed.ISSUE_DATE,
+    ed.EXPIRY_DATE,
+    (ed.EXPIRY_DATE - SYSDATE) AS DAYS_REMAINING,
+    CASE 
+        WHEN ed.EXPIRY_DATE < SYSDATE THEN 'منتهي'
+        WHEN ed.EXPIRY_DATE - SYSDATE <= 7 THEN 'عاجل جداً'
+        WHEN ed.EXPIRY_DATE - SYSDATE <= 30 THEN 'عاجل'
+        ELSE 'تنبيه'
+    END AS URGENCY_LEVEL,
+    ed.ATTACHMENT_PATH
+FROM HR_PERSONNEL.EMPLOYEE_DOCUMENTS ed
+JOIN HR_PERSONNEL.EMPLOYEES e ON ed.EMPLOYEE_ID = e.EMPLOYEE_ID
+JOIN HR_CORE.DOCUMENT_TYPES dt ON ed.DOC_TYPE_ID = dt.DOC_TYPE_ID
+WHERE ed.EXPIRY_DATE IS NOT NULL
+  AND ed.EXPIRY_DATE BETWEEN SYSDATE - 30 AND SYSDATE + 60
+  AND ed.IS_ACTIVE = 1
+  AND e.STATUS = 'ACTIVE'
+ORDER BY ed.EXPIRY_DATE;
+
+-- ==========================================================
+-- 6. View: المؤهلات العلمية للموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_QUALIFICATIONS AS
+SELECT 
+    eq.QUALIFICATION_ID,
+    eq.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    eq.DEGREE_TYPE,
+    eq.MAJOR_AR,
+    eq.UNIVERSITY_AR,
+    c.COUNTRY_NAME_AR AS COUNTRY,
+    eq.GRADUATION_YEAR,
+    eq.GRADE,
+    eq.ATTACHMENT_PATH
+FROM HR_PERSONNEL.EMPLOYEE_QUALIFICATIONS eq
+JOIN HR_PERSONNEL.EMPLOYEES e ON eq.EMPLOYEE_ID = e.EMPLOYEE_ID
+LEFT JOIN HR_CORE.COUNTRIES c ON eq.COUNTRY_ID = c.COUNTRY_ID
+WHERE eq.IS_DELETED = 0
+ORDER BY eq.GRADUATION_YEAR DESC;
+
+-- ==========================================================
+-- 7. View: الشهادات المهنية للموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_CERTIFICATIONS AS
+SELECT 
+    ec.CERT_ID,
+    ec.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    ec.CERT_NAME_AR,
+    ec.ISSUING_AUTHORITY,
+    ec.ISSUE_DATE,
+    ec.EXPIRY_DATE,
+    ec.CERT_NUMBER,
+    ec.IS_MANDATORY,
+    CASE 
+        WHEN ec.EXPIRY_DATE IS NULL THEN 'لا تنتهي'
+        WHEN ec.EXPIRY_DATE < SYSDATE THEN 'منتهية'
+        WHEN ec.EXPIRY_DATE - SYSDATE <= 30 THEN 'قريبة الانتهاء'
+        ELSE 'سارية'
+    END AS CERT_STATUS,
+    ec.ATTACHMENT_PATH
+FROM HR_PERSONNEL.EMPLOYEE_CERTIFICATIONS ec
+JOIN HR_PERSONNEL.EMPLOYEES e ON ec.EMPLOYEE_ID = e.EMPLOYEE_ID
+WHERE ec.IS_DELETED = 0
+ORDER BY ec.EXPIRY_DATE NULLS LAST;
+
+-- ==========================================================
+-- 8. View: الحسابات البنكية للموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_BANK_ACCOUNTS AS
+SELECT 
+    eba.ACCOUNT_ID,
+    eba.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    b.BANK_NAME_AR,
+    b.BANK_NAME_EN,
+    eba.ACCOUNT_NUMBER,
+    eba.IBAN,
+    eba.IS_PRIMARY,
+    eba.IS_ACTIVE,
+    CASE 
+        WHEN eba.IS_PRIMARY = 1 THEN 'حساب رئيسي'
+        ELSE 'حساب ثانوي'
+    END AS ACCOUNT_TYPE
+FROM HR_PERSONNEL.EMPLOYEE_BANK_ACCOUNTS eba
+JOIN HR_PERSONNEL.EMPLOYEES e ON eba.EMPLOYEE_ID = e.EMPLOYEE_ID
+JOIN HR_CORE.BANKS b ON eba.BANK_ID = b.BANK_ID
+WHERE eba.IS_DELETED = 0;
+
+-- ==========================================================
+-- 9. View: جهات الاتصال للطوارئ
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMERGENCY_CONTACTS AS
+SELECT 
+    ec.CONTACT_ID,
+    ec.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    ec.CONTACT_NAME_AR,
+    ec.RELATIONSHIP,
+    ec.PHONE_PRIMARY,
+    ec.PHONE_SECONDARY,
+    ec.IS_PRIMARY,
+    CASE 
+        WHEN ec.IS_PRIMARY = 1 THEN 'جهة اتصال رئيسية'
+        ELSE 'جهة اتصال ثانوية'
+    END AS CONTACT_TYPE
+FROM HR_PERSONNEL.EMERGENCY_CONTACTS ec
+JOIN HR_PERSONNEL.EMPLOYEES e ON ec.EMPLOYEE_ID = e.EMPLOYEE_ID
+WHERE ec.IS_DELETED = 0;
+
+-- ==========================================================
+-- 10. View: عناوين الموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_ADDRESSES AS
+SELECT 
+    ea.ADDRESS_ID,
+    ea.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    ea.ADDRESS_TYPE,
+    ci.CITY_NAME_AR,
+    co.COUNTRY_NAME_AR,
+    ea.DISTRICT,
+    ea.STREET,
+    ea.BUILDING_NO,
+    ea.POSTAL_CODE,
+    ea.DISTRICT || ', ' || ci.CITY_NAME_AR || ', ' || co.COUNTRY_NAME_AR AS FULL_ADDRESS
+FROM HR_PERSONNEL.EMPLOYEE_ADDRESSES ea
+JOIN HR_PERSONNEL.EMPLOYEES e ON ea.EMPLOYEE_ID = e.EMPLOYEE_ID
+LEFT JOIN HR_CORE.CITIES ci ON ea.CITY_ID = ci.CITY_ID
+LEFT JOIN HR_CORE.COUNTRIES co ON ci.COUNTRY_ID = co.COUNTRY_ID
+WHERE ea.IS_DELETED = 0;
+
+-- ==========================================================
+-- 11. View: التابعين للموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_DEPENDENTS AS
+SELECT 
+    d.DEPENDENT_ID,
+    d.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN AS EMPLOYEE_NAME,
+    d.NAME_AR AS DEPENDENT_NAME,
+    d.RELATIONSHIP,
+    d.BIRTH_DATE,
+    TRUNC(MONTHS_BETWEEN(SYSDATE, d.BIRTH_DATE) / 12) AS AGE,
+    d.NATIONAL_ID,
+    d.IS_ELIGIBLE_FOR_TICKET,
+    d.IS_ELIGIBLE_FOR_INSURANCE
+FROM HR_PERSONNEL.DEPENDENTS d
+JOIN HR_PERSONNEL.EMPLOYEES e ON d.EMPLOYEE_ID = e.EMPLOYEE_ID
+WHERE d.IS_DELETED = 0;
+
+-- ==========================================================
+-- 12. View: نقل الموظفين (Transfers)
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_TRANSFERS AS
+SELECT 
+    et.TRANSFER_ID,
+    et.EMPLOYEE_ID,
+    e.EMPLOYEE_NUMBER,
+    e.FULL_NAME_EN,
+    d1.DEPT_NAME_AR AS FROM_DEPT,
+    d2.DEPT_NAME_AR AS TO_DEPT,
+    j1.JOB_TITLE_AR AS FROM_JOB,
+    j2.JOB_TITLE_AR AS TO_JOB,
+    et.TRANSFER_DATE,
+    et.REASON,
+    et.STATUS,
+    approver.FULL_NAME_EN AS APPROVED_BY_NAME
+FROM HR_PERSONNEL.EMPLOYEE_TRANSFERS et
+JOIN HR_PERSONNEL.EMPLOYEES e ON et.EMPLOYEE_ID = e.EMPLOYEE_ID
+LEFT JOIN HR_CORE.DEPARTMENTS d1 ON et.FROM_DEPT_ID = d1.DEPT_ID
+LEFT JOIN HR_CORE.DEPARTMENTS d2 ON et.TO_DEPT_ID = d2.DEPT_ID
+LEFT JOIN HR_CORE.JOBS j1 ON et.FROM_JOB_ID = j1.JOB_ID
+LEFT JOIN HR_CORE.JOBS j2 ON et.TO_JOB_ID = j2.JOB_ID
+LEFT JOIN HR_PERSONNEL.EMPLOYEES approver ON et.APPROVED_BY = approver.EMPLOYEE_ID
+WHERE et.IS_DELETED = 0
+ORDER BY et.TRANSFER_DATE DESC;
+
+-- ==========================================================
+-- 13. View: إحصائيات الموظفين حسب القسم
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_DEPT_STATISTICS AS
+SELECT 
+    d.DEPT_ID,
+    d.DEPT_NAME_AR,
+    d.DEPT_NAME_EN,
+    COUNT(e.EMPLOYEE_ID) AS TOTAL_EMPLOYEES,
+    SUM(CASE WHEN e.STATUS = 'ACTIVE' THEN 1 ELSE 0 END) AS ACTIVE_EMPLOYEES,
+    SUM(CASE WHEN e.STATUS = 'ON_LEAVE' THEN 1 ELSE 0 END) AS ON_LEAVE,
+    SUM(CASE WHEN e.STATUS = 'TERMINATED' THEN 1 ELSE 0 END) AS TERMINATED,
+    SUM(CASE WHEN e.GENDER = 'M' THEN 1 ELSE 0 END) AS MALE_COUNT,
+    SUM(CASE WHEN e.GENDER = 'F' THEN 1 ELSE 0 END) AS FEMALE_COUNT,
+    ROUND(AVG(MONTHS_BETWEEN(SYSDATE, e.JOINING_DATE) / 12), 2) AS AVG_SERVICE_YEARS
+FROM HR_CORE.DEPARTMENTS d
+LEFT JOIN HR_PERSONNEL.EMPLOYEES e ON d.DEPT_ID = e.DEPT_ID AND e.IS_DELETED = 0
+WHERE d.IS_DELETED = 0
+GROUP BY d.DEPT_ID, d.DEPT_NAME_AR, d.DEPT_NAME_EN
+ORDER BY d.DEPT_NAME_AR;
+
+-- ==========================================================
+-- 14. View: إحصائيات الموظفين حسب الجنسية
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_NATIONALITY_STATISTICS AS
+SELECT 
+    c.COUNTRY_ID,
+    c.COUNTRY_NAME_AR,
+    c.COUNTRY_NAME_EN,
+    COUNT(e.EMPLOYEE_ID) AS EMPLOYEE_COUNT,
+    SUM(CASE WHEN e.STATUS = 'ACTIVE' THEN 1 ELSE 0 END) AS ACTIVE_COUNT,
+    ROUND(COUNT(e.EMPLOYEE_ID) * 100.0 / 
+        (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE IS_DELETED = 0), 2) AS PERCENTAGE
+FROM HR_CORE.COUNTRIES c
+LEFT JOIN HR_PERSONNEL.EMPLOYEES e ON c.COUNTRY_ID = e.NATIONALITY_ID AND e.IS_DELETED = 0
+GROUP BY c.COUNTRY_ID, c.COUNTRY_NAME_AR, c.COUNTRY_NAME_EN
+HAVING COUNT(e.EMPLOYEE_ID) > 0
+ORDER BY EMPLOYEE_COUNT DESC;
+
+-- ==========================================================
+-- 15. View: Dashboard - ملخص الموظفين
+-- ==========================================================
+CREATE OR REPLACE VIEW HR_PERSONNEL.V_EMPLOYEE_DASHBOARD AS
+SELECT 
+    (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE IS_DELETED = 0) AS TOTAL_EMPLOYEES,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE STATUS = 'ACTIVE' AND IS_DELETED = 0) AS ACTIVE_EMPLOYEES,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE STATUS = 'ON_LEAVE' AND IS_DELETED = 0) AS ON_LEAVE,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE STATUS = 'TERMINATED' AND IS_DELETED = 0) AS TERMINATED,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.V_EXPIRING_CONTRACTS) AS EXPIRING_CONTRACTS,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.V_EXPIRING_DOCUMENTS WHERE URGENCY_LEVEL IN ('عاجل', 'عاجل جداً')) AS URGENT_DOCUMENTS,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE GENDER = 'M' AND IS_DELETED = 0) AS MALE_COUNT,
+    (SELECT COUNT(*) FROM HR_PERSONNEL.EMPLOYEES WHERE GENDER = 'F' AND IS_DELETED = 0) AS FEMALE_COUNT,
+    (SELECT ROUND(AVG(MONTHS_BETWEEN(SYSDATE, JOINING_DATE) / 12), 2) 
+     FROM HR_PERSONNEL.EMPLOYEES WHERE STATUS = 'ACTIVE' AND IS_DELETED = 0) AS AVG_SERVICE_YEARS
+FROM DUAL;
+
+PROMPT ========================================
+PROMPT تم إنشاء جميع Views بنجاح!
+PROMPT ========================================

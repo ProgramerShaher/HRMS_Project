@@ -1,0 +1,23 @@
+# Build Folders
+bin/
+obj/
+out/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+
+# Rider
+.idea/
+
+# Database
+*.mdf
+*.ldf
+*.db
+
+# Others
+*.vsix
+*.ncrunch*
