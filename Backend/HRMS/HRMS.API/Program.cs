@@ -1,6 +1,8 @@
 using HRMS.API.Middlewares;
 using HRMS.Application;
+using HRMS.Application.Interfaces;
 using HRMS.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 using System.Reflection;
 
@@ -21,7 +23,61 @@ builder.Services.AddControllers();
 
 // 2. Register Layer Services (Clean Architecture)
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// 3. Register MediatR (CQRS Pattern)
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(HRMS.Application.AssemblyReference).Assembly));
+
+// 4. Register AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// 5. Register Identity
+builder.Services.AddIdentity<HRMS.Core.Entities.Identity.ApplicationUser, HRMS.Core.Entities.Identity.ApplicationRole>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<HRMS.Infrastructure.Data.HRMSDbContext>()
+.AddDefaultTokenProviders();
+
+// 6. Register JWT Authentication
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.Configure<HRMS.Application.Settings.JwtSettings>(jwtSettings);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(jwtSettings["Secret"]!))
+    };
+});
+
+// 7. Register AuthService
+builder.Services.AddScoped<IAuthService, HRMS.Application.Services.AuthService>();
+
 
 // 3. Swagger Configuration
 builder.Services.AddEndpointsApiExplorer();
@@ -69,9 +125,32 @@ app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+// Authentication & Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed Default Roles and Admin User
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<HRMS.Core.Entities.Identity.ApplicationUser>>();
+        var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<HRMS.Core.Entities.Identity.ApplicationRole>>();
+        
+        await HRMS.Infrastructure.Data.Seeders.RoleSeeder.SeedRolesAsync(roleManager);
+        await HRMS.Infrastructure.Data.Seeders.RoleSeeder.SeedDefaultAdminAsync(userManager, roleManager);
+        
+        Log.Information("Default roles and admin user seeded successfully");
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "An error occurred while seeding roles");
+    }
+}
+
 
 try
 {

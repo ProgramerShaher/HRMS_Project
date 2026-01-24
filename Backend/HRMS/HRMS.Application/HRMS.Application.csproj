@@ -10,6 +10,7 @@
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="FluentValidation.Validators.UnitTestExtension" Version="1.9.0.13" />
 		<PackageReference Include="MediatR" Version="14.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 	</ItemGroup>

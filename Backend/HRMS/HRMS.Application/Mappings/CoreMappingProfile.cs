@@ -1,5 +1,5 @@
 using AutoMapper;
-using HRMS.Application.Features.Core.Branches.Commands.CreateBranch;
+
 using HRMS.Application.Features.Core.Countries.Commands.CreateCountry;
 using HRMS.Application.Features.Core.Cities.Commands.CreateCity;
 using HRMS.Application.Features.Core.Departments.Commands.CreateDepartment;
@@ -16,7 +16,7 @@ namespace HRMS.Application.Mappings
         public CoreMappingProfile()
         {
             // Core Entities
-            CreateMap<CreateBranchCommand, Branch>();
+
             CreateMap<CreateCountryCommand, Country>();
             CreateMap<CreateCityCommand, City>();
             CreateMap<CreateDepartmentCommand, Department>();

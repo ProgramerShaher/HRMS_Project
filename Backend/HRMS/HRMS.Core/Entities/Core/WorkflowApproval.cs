@@ -23,7 +23,7 @@ namespace HRMS.Core.Entities.Core
 
         [Required]
         [Column("REQUEST_ID")]
-        public long RequestId { get; set; }
+        public int RequestId { get; set; }
 
         [Required]
         [Column("APPROVER_LEVEL")]

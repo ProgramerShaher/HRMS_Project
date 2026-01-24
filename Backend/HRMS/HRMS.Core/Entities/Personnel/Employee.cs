@@ -218,5 +218,10 @@ namespace HRMS.Core.Entities.Personnel
         /// الحسابات البنكية
         /// </summary>
         public virtual ICollection<EmployeeBankAccount> BankAccounts { get; set; } = new List<EmployeeBankAccount>();
+
+        /// <summary>
+        /// حساب المستخدم (اختياري - للموظفين الذين لديهم صلاحية الدخول للنظام)
+        /// </summary>
+        public virtual Identity.ApplicationUser? User { get; set; }
     }
 }

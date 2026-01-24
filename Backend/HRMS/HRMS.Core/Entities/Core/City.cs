@@ -52,9 +52,6 @@ namespace HRMS.Core.Entities.Core
         /// </summary>
         public virtual Country Country { get; set; } = null!;
 
-        /// <summary>
-        /// الفروع الموجودة في هذه المدينة
-        /// </summary>
-        public virtual ICollection<Branch> Branches { get; set; } = new List<Branch>();
+
     }
 }

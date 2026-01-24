@@ -41,13 +41,7 @@ namespace HRMS.Core.Entities.Core
         [ForeignKey(nameof(ParentDepartment))]
         public int? ParentDeptId { get; set; }
 
-        /// <summary>
-        /// معرف الفرع التابع له القسم
-        /// </summary>
-        [Required(ErrorMessage = "الفرع مطلوب")]
-        [Column("BRANCH_ID")]
-        [ForeignKey(nameof(Branch))]
-        public int BranchId { get; set; }
+
 
         /// <summary>
         /// رمز مركز التكلفة
@@ -72,10 +66,7 @@ namespace HRMS.Core.Entities.Core
         // Navigation Properties - العلاقات
         // ═══════════════════════════════════════════════════════════
 
-        /// <summary>
-        /// الفرع التابع له القسم
-        /// </summary>
-        public virtual Branch Branch { get; set; } = null!;
+
 
         /// <summary>
         /// القسم الأب (في حالة الأقسام الفرعية)
