@@ -1,0 +1,37 @@
+/* 
+  Main Layout Styles 
+  Theme: Fluid Background Gradient
+*/
+
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+.layout-wrapper {
+    background: radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.08) 0%, rgba(248, 250, 252, 1) 30%, rgba(248, 250, 252, 1) 100%);
+    background-color: #F8FAFC;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+}
+
+.main-content {
+    /* Fluid Margin Transition matching Sidebar speed */
+    transition: margin-right 0.3s ease-in-out;
+}
+
+/* Page Entry Animation */
+.animate-fade-in-up {
+    animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

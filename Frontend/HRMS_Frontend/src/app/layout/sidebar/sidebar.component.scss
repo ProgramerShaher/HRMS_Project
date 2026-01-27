@@ -1,0 +1,56 @@
+/* 
+  Sidebar Component Styles 
+  Theme: Ultra-Modern Dark Floating 
+*/
+
+:host {
+    display: block;
+}
+
+/* 
+  Deep customization of PrimeNG Drawer 
+  Using !important to override inline styles where necessary, 
+  but preferring structural class overrides.
+*/
+:host ::ng-deep .p-drawer {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+:host ::ng-deep .p-drawer-content {
+    background-color: transparent !important;
+    padding: 0 !important;
+    height: 100%;
+}
+
+:host ::ng-deep .p-drawer-header {
+    display: none !important; /* Custom Header implemented in content */
+}
+
+/* Mask Backdrop Blur */
+:host ::ng-deep .p-drawer-mask {
+    background-color: rgba(15, 23, 42, 0.4) !important; /* Slate 900 / 40% */
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Scrollbar Styling */
+.custom-scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}

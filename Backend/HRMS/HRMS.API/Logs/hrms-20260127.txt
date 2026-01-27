@@ -3329,3 +3329,29 @@ OUTPUT INSERTED.[RECORD_ID], i._Position;
 2026-01-27 20:07:42.757 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
 2026-01-27 20:07:43.275 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 514.2870 ms
 2026-01-27 20:07:43.280 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 523.5906ms
+2026-01-27 21:10:58.488 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-27 21:10:58.517 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 29.0678ms
+2026-01-27 21:10:59.655 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-01-27 21:11:00.015 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 354.3725 ms
+2026-01-27 21:11:00.036 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 380.7622ms
+2026-01-27 21:11:21.920 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-27 21:11:22.020 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 99.418ms
+2026-01-27 21:11:24.142 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-01-27 21:11:24.369 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 222.3759 ms
+2026-01-27 21:11:24.377 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 235.3182ms
+2026-01-27 21:33:50.967 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/api/AttendanceSettings/shifts - null null
+2026-01-27 21:33:51.000 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-01-27 21:33:51.032 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Configuration.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 21:33:53.406 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 21:33:53.409 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 21:33:53.412 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 21:33:55.374 +03:00 [INF] Executed DbCommand (85ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-01-27 21:33:55.444 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Configuration.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-27 21:33:55.481 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 4439.3226ms
+2026-01-27 21:33:55.487 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-01-27 21:33:55.489 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 4493.6955 ms
+2026-01-27 21:33:55.534 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 4569.9161ms

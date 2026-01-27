@@ -1,0 +1,25 @@
+<!-- 
+  Main Layout Template 
+  RTL Direction is bound to the root wrapper 
+-->
+<div class="layout-wrapper" [dir]="layoutService.direction()">
+  
+  <app-topbar></app-topbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- 
+    Main Content 
+    RTL Logic: 
+      When Sidebar Visible (w-72 + m-4 = ~20rem/320px) -> mr-[21rem] 
+      When Hidden -> mr-0
+  -->
+  <main class="main-content min-h-screen pt-24 px-8 pb-10"
+        [class.mr-[21rem]]="layoutService.sidebarVisible()"
+        [class.mr-0]="!layoutService.sidebarVisible()">
+    
+    <div class="max-w-[1920px] mx-auto animate-fade-in-up">
+        <router-outlet></router-outlet>
+    </div>
+  </main>
+
+</div>

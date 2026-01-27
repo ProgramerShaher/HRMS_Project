@@ -1,0 +1,77 @@
+<!-- 
+  Sidebar Template 
+  RTL Support: Right-aligned floating drawer 
+-->
+<p-drawer 
+    [visible]="layoutService.sidebarVisible()" 
+    (visibleChange)="layoutService.setSidebarState($event)"
+    [modal]="false" 
+    [dismissible]="false" 
+    styleClass="!w-72 !h-[calc(100vh-2rem)] !m-4 !rounded-2xl !bg-slate-900 !text-white !shadow-2xl font-sans"
+    position="right">
+
+    <!-- Container -->
+    <div class="h-full flex flex-col bg-slate-900 rounded-2xl border border-slate-700/50 overflow-hidden relative">
+        
+        <!-- Decorative Glow -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+        <!-- 1. Header: Branding -->
+        <div class="px-6 pt-8 pb-6 flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-900/50 ring-1 ring-blue-500/50">
+                <i class="pi pi-heart-fill text-xl"></i>
+            </div>
+            <div class="flex flex-col">
+                <h2 class="text-xl font-bold text-white tracking-wide leading-tight">HR Hospital</h2>
+                <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Ultra Dashboard</span>
+            </div>
+        </div>
+
+        <!-- 2. Navigation Menu -->
+        <div class="flex-1 overflow-y-auto px-4 py-2 custom-scroll relative z-10 flex flex-col gap-1.5">
+            <ng-container *ngFor="let item of menuItems">
+                
+                <!-- Menu Item -->
+                <a [routerLink]="item.route" 
+                   routerLinkActive="active-menu"
+                   class="group flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 relative overflow-hidden cursor-pointer"
+                   pRipple>
+                    
+                    <!-- Icon -->
+                    <i [class]="item.icon" class="text-xl transition-colors duration-300 group-hover:text-blue-400 group-[.active-menu]:text-blue-500"></i>
+                    
+                    <!-- Label -->
+                    <span class="font-medium text-base tracking-wide">{{ item.label }}</span>
+
+                    <!-- Active State Background / Border -->
+                    <div class="absolute inset-0 border-r-[3px] border-blue-500 bg-gradient-to-l from-blue-500/10 to-transparent opacity-0 group-[.active-menu]:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </a>
+
+            </ng-container>
+        </div>
+
+        <!-- 3. Footer: Profile Summary -->
+        <div class="p-4 mt-auto relative z-10">
+            <div class="flex items-center gap-3 p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/50 backdrop-blur-md hover:bg-slate-800 transition-colors cursor-pointer group">
+                
+                <!-- Avatar -->
+                <div class="relative">
+                    <img src="https://i.pravatar.cc/150?u=admin" alt="Admin" class="w-10 h-10 rounded-full border-2 border-slate-600 group-hover:border-slate-500 transition-colors">
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-800 rounded-full"></span>
+                </div>
+
+                <!-- Info -->
+                <div class="flex flex-col items-start overflow-hidden w-full">
+                    <span class="text-sm font-bold text-slate-200 group-hover:text-white transition-colors truncate">د. أحمد علي</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider truncate">Hospital Admin</span>
+                </div>
+
+                <!-- Logout -->
+                <button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-white/5 transition-all ml-1">
+                    <i class="pi pi-power-off text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</p-drawer>

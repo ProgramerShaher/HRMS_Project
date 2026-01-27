@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* 
+  Tailwind v4 Theme Configuration 
+  Ultra-Modern Hospital HRMS
+*/
+
+@theme {
+  /* Brand Colors */
+  --color-brand-primary: #0f172a; /* Slate 900 (Sidebar) */
+  --color-brand-accent: #3b82f6; /* Blue 500 */
+  
+  /* Typography */
+  --font-sans: 'Cairo', system-ui, sans-serif;
+
+  /* Custom Shadows */
+  --shadow-floating: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  
+  /* Spacing */
+  --radius-2xl: 1rem;
+}
+
+/* 
+  PrimeNG Customization 
+*/
+:root {
+    --p-primary-color: var(--color-brand-accent);
+    --p-primary-500: var(--color-brand-accent);
+    --p-font-family: var(--font-sans);
+    --p-content-border-radius: 1rem;
+}
+
+/* Global Styles */
+body {
+    background-color: #F8FAFC;
+    color: #1e293b;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Utilities */
+.glass-effect {
+    @apply bg-white/60 backdrop-blur-xl border border-white/40;
+}
+
+.card-floating {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md;
+}
+
+/* Fluid Animations */
+.fluid-transition {
+    @apply transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* 
+  PrimeNG Customization 
+  Overriding Aura theme CSS variables for seamless integration
+*/
+:root {
+    --p-primary-color: var(--color-brand-primary);
+    --p-primary-500: var(--color-brand-primary);
+    --p-font-family: var(--font-sans);
+    --p-content-border-radius: 0.75rem; /* rounded-xl */
+}
+
+/* Global Styles */
+body {
+    background-color: #f8fafc; /* slate-50 */
+    color: #0f172a; /* slate-900 */
+}
+
+/* Utils */
+.glass-panel {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl;
+}
+
+.card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+}
