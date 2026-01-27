@@ -71,19 +71,27 @@ public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveReque
             throw new NotFoundException("Leave Type", request.LeaveTypeId);
 
         // 3. PROBATION PERIOD CHECK (Annual Leave Only)
+        // If it's Annual Leave, they must have served the probation period (Default: 3 Months)
         if (leaveType.LeaveNameEn != null && leaveType.LeaveNameEn.Contains("Annual", StringComparison.OrdinalIgnoreCase))
         {
+            int probationMonths = 3; // Default value if not set in DB
+            
             var probationSetting = await _context.SystemSettings
                 .FirstOrDefaultAsync(s => s.SettingKey == "PROBATION_PERIOD_MONTHS", cancellationToken);
             
-            if (probationSetting != null && int.TryParse(probationSetting.SettingValue, out int probationMonths))
+            if (probationSetting != null && int.TryParse(probationSetting.SettingValue, out int outputMonths))
             {
-                var monthsEmployed = ((DateTime.Today.Year - employee.HireDate.Year) * 12) + DateTime.Today.Month - employee.HireDate.Month;
-                // Adjust for day of month
-                if (DateTime.Today.Day < employee.HireDate.Day) monthsEmployed--;
+                probationMonths = outputMonths;
+            }
 
-                if (monthsEmployed < probationMonths)
-                    throw new FluentValidation.ValidationException($"عذراً، لا يمكنك طلب إجازة سنوية خلال فترة التجربة ({probationMonths} أشهر).");
+            var monthsEmployed = ((DateTime.Today.Year - employee.HireDate.Year) * 12) + DateTime.Today.Month - employee.HireDate.Month;
+            // Adjust for exact day of month
+            if (DateTime.Today.Day < employee.HireDate.Day) monthsEmployed--;
+
+            if (monthsEmployed < probationMonths)
+            {
+                throw new FluentValidation.ValidationException(
+                    $"عذراً، لا يمكنك طلب إجازة سنوية خلال فترة التجربة. يجب إكمال {probationMonths} أشهر، وأنت أكملت {monthsEmployed} أشهر فقط.");
             }
         }
 
