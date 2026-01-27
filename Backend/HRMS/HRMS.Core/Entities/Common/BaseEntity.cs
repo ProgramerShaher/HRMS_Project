@@ -21,7 +21,7 @@ namespace HRMS.Core.Entities.Common
         /// تاريخ ووقت إنشاء السجل
         /// </summary>
         [Column("CREATED_AT")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// اسم المستخدم الذي قام بآخر تعديل على السجل

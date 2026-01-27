@@ -6,10 +6,11 @@ namespace HRMS.Application.DTOs.Core
         public string? DeptNameAr { get; set; }
         public string? DeptNameEn { get; set; }
         public int? ParentDeptId { get; set; }
+        public string? ParentDeptNameAr { get; set; }
         public int BranchId { get; set; }
         public string? CostCenterCode { get; set; }
         public int? ManagerId { get; set; }
-        public int? IsActive { get; set; }
+        public byte IsActive { get; set; }
     }
 
     public class CreateDepartmentDto

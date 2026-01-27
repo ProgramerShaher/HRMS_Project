@@ -1,92 +1,56 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HRMS.Core.Entities.Common;
-using HRMS.Core.Entities.Core;
+using HRMS.Core.Entities.Core; // For DocumentType
 
-namespace HRMS.Core.Entities.Personnel
+namespace HRMS.Core.Entities.Personnel;
+
+/// <summary>
+/// وثائق الموظف (تراخيص، شهادات، عقود)
+/// </summary>
+[Table("EMPLOYEE_DOCUMENTS", Schema = "HR_PERSONNEL")]
+public class EmployeeDocument : BaseEntity
 {
-    /// <summary>
-    /// كيان وثائق الموظف - يحتوي على الهويات والجوازات والرخص
-    /// </summary>
-    [Table("EMPLOYEE_DOCUMENTS", Schema = "HR_PERSONNEL")]
-    public class EmployeeDocument : BaseEntity
-    {
-        /// <summary>
-        /// المعرف الفريد للوثيقة
-        /// </summary>
-        [Key]
-        [Column("DOC_ID")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DocId { get; set; }
+    [Key]
+    [Column("DOCUMENT_ID")]
+    public int DocumentId { get; set; }
 
-        /// <summary>
-        /// معرف الموظف صاحب الوثيقة
-        /// </summary>
-        [Required(ErrorMessage = "الموظف مطلوب")]
-        [Column("EMPLOYEE_ID")]
-        [ForeignKey(nameof(Employee))]
-        public int EmployeeId { get; set; }
+    [Column("EMPLOYEE_ID")]
+    public int EmployeeId { get; set; }
 
-        /// <summary>
-        /// معرف نوع الوثيقة
-        /// </summary>
-        [Required(ErrorMessage = "نوع الوثيقة مطلوب")]
-        [Column("DOC_TYPE_ID")]
-        [ForeignKey(nameof(DocumentType))]
-        public int DocTypeId { get; set; }
+    [Column("DOCUMENT_TYPE_ID")]
+    public int DocumentTypeId { get; set; }
 
-        /// <summary>
-        /// رقم الوثيقة
-        /// </summary>
-        [MaxLength(50)]
-        [Column("DOC_NUMBER")]
-        public string? DocNumber { get; set; }
+    [Column("DOCUMENT_NUMBER")]
+    [MaxLength(50)]
+    public string? DocumentNumber { get; set; }
 
-        /// <summary>
-        /// تاريخ الإصدار
-        /// </summary>
-        [Column("ISSUE_DATE")]
-        public DateTime? IssueDate { get; set; }
+    [Column("ISSUE_DATE")]
+    public DateTime? IssueDate { get; set; }
 
-        /// <summary>
-        /// تاريخ الانتهاء
-        /// </summary>
-        [Column("EXPIRY_DATE")]
-        public DateTime? ExpiryDate { get; set; }
+    [Column("EXPIRY_DATE")]
+    public DateTime? ExpiryDate { get; set; }
 
-        /// <summary>
-        /// مكان الإصدار
-        /// </summary>
-        [MaxLength(100)]
-        [Column("ISSUE_PLACE")]
-        public string? IssuePlace { get; set; }
+    // --- File Info (Best Practice) ---
+    [Column("FILE_NAME")] // الاسم الأصلي
+    [MaxLength(255)]
+    public required string FileName { get; set; }
 
-        /// <summary>
-        /// مسار الملف المرفق أو الرابط
-        /// </summary>
-        [MaxLength(500)]
-        [Column("ATTACHMENT_PATH")]
-        public string? AttachmentPath { get; set; }
+    [Column("FILE_PATH")] // المسار المخزن (Relative)
+    [MaxLength(500)]
+    public required string FilePath { get; set; }
 
-        /// <summary>
-        /// هل الوثيقة نشطة (1=نعم، 0=لا)
-        /// </summary>
-        [Column("IS_ACTIVE")]
-        public byte IsActive { get; set; } = 1;
+    [Column("CONTENT_TYPE")] // e.g. application/pdf
+    [MaxLength(100)]
+    public string? ContentType { get; set; }
 
-        // ═══════════════════════════════════════════════════════════
-        // Navigation Properties - العلاقات
-        // ═══════════════════════════════════════════════════════════
+    [Column("FILE_SIZE")]
+    public long FileSize { get; set; }
 
-        /// <summary>
-        /// الموظف صاحب الوثيقة
-        /// </summary>
-        public virtual Employee Employee { get; set; } = null!;
+    // Navigation
+    [ForeignKey(nameof(EmployeeId))]
+    public virtual Employee Employee { get; set; } = null!;
 
-        /// <summary>
-        /// نوع الوثيقة
-        /// </summary>
-        public virtual DocumentType DocumentType { get; set; } = null!;
-    }
+    [ForeignKey(nameof(DocumentTypeId))]
+    public virtual DocumentType DocumentType { get; set; } = null!;
 }

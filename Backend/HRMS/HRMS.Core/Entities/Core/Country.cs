@@ -43,6 +43,13 @@ namespace HRMS.Core.Entities.Core
         public string? CitizenshipNameAr { get; set; }
 
         /// <summary>
+        /// اسم الجنسية بالإنجليزية
+        /// </summary>
+        [MaxLength(100)]
+        [Column("CITIZENSHIP_NAME_EN")]
+        public string? CitizenshipNameEn { get; set; }
+
+        /// <summary>
         /// رمز الدولة ISO (مثل: SA, EG, AE)
         /// </summary>
         [MaxLength(2)]

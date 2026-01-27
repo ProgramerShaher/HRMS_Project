@@ -1,38 +1,81 @@
 using AutoMapper;
-using HRMS.Application.Features.Personnel.Employees.DTOs;
-using HRMS.Infrastructure.Data;
+using HRMS.Application.DTOs.Core;
+using HRMS.Application.DTOs.Personnel;
+using HRMS.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees
+namespace HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees;
+
+public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery, PagedResult<EmployeeListDto>>
 {
-    public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery, List<EmployeeDto>>
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public GetAllEmployeesQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
-        private readonly HRMSDbContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public GetAllEmployeesQueryHandler(HRMSDbContext context, IMapper mapper)
+    public async Task<PagedResult<EmployeeListDto>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
+    {
+        var query = _context.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Job)
+            .AsNoTracking() // Performance
+            .AsQueryable();
+
+        // 1. Filtering (Search Engine style)
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            _context = context;
-            _mapper = mapper;
+            var term = request.SearchTerm.Trim().ToLower();
+            query = query.Where(e => 
+                e.FirstNameAr.Contains(term) || 
+                e.LastNameAr.Contains(term) ||
+                e.FullNameEn.ToLower().Contains(term) ||
+                e.EmployeeNumber.Contains(term) ||
+                e.Mobile.Contains(term));
         }
 
-        public async Task<List<EmployeeDto>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
-        {
-            var employees = await _context.Employees
-                .AsNoTracking()
-                .Where(e => e.Status == "ACTIVE")
-                .Include(e => e.Nationality)
-                .Include(e => e.Job)
-                .Include(e => e.Department)
-                .OrderBy(e => e.EmployeeNumber)
-                .ToListAsync(cancellationToken);
+        if (request.DepartmentId.HasValue)
+            query = query.Where(e => e.DepartmentId == request.DepartmentId);
 
-            return _mapper.Map<List<EmployeeDto>>(employees);
-        }
+        if (request.JobId.HasValue)
+            query = query.Where(e => e.JobId == request.JobId);
+
+        if (request.IsActive.HasValue)
+            query = query.Where(e => e.IsDeleted == (request.IsActive.Value ? 0 : 1)); // Assuming IsDeleted logic
+        else
+            query = query.Where(e => e.IsDeleted == 0); // Default active only
+
+        // 2. Pagination
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(e => new EmployeeListDto
+            {
+                EmployeeId = e.EmployeeId,
+                EmployeeNumber = e.EmployeeNumber,
+                FullNameAr = $"{e.FirstNameAr} {e.SecondNameAr} {e.LastNameAr}",
+                FullNameEn = e.FullNameEn,
+                DepartmentName = e.Department.DeptNameAr ?? "",
+                JobTitle = e.Job.JobTitleAr,
+                Mobile = e.Mobile,
+                HireDate = e.HireDate,
+                IsActive = e.IsDeleted == 0
+            })
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<EmployeeListDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
     }
 }

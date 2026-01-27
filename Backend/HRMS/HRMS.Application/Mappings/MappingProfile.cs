@@ -8,14 +8,10 @@ namespace HRMS.Application.Mappings
     {
         public MappingProfile()
         {
-            // Country Mappings
-            CreateMap<Country, CountryDto>();
-            CreateMap<CreateCountryDto, Country>();
-            CreateMap<UpdateCountryDto, Country>();
+            // Country Mappings - Moved to CountriesProfile
 
             // City Mappings
             CreateMap<City, CityDto>();
-            CreateMap<CreateCityDto, City>();
             CreateMap<UpdateCityDto, City>();
 
             // Branch Mappings

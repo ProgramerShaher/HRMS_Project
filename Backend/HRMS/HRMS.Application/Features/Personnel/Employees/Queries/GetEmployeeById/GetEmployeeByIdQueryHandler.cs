@@ -1,6 +1,6 @@
 using AutoMapper;
 using HRMS.Application.Features.Personnel.Employees.DTOs;
-using HRMS.Infrastructure.Data;
+using HRMS.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -10,10 +10,10 @@ namespace HRMS.Application.Features.Personnel.Employees.Queries.GetEmployeeById
 {
     public class GetEmployeeByIdQueryHandler : IRequestHandler<GetEmployeeByIdQuery, EmployeeDto>
     {
-        private readonly HRMSDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetEmployeeByIdQueryHandler(HRMSDbContext context, IMapper mapper)
+        public GetEmployeeByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -23,7 +23,7 @@ namespace HRMS.Application.Features.Personnel.Employees.Queries.GetEmployeeById
         {
             var employee = await _context.Employees
                 .AsNoTracking()
-                .Include(e => e.Nationality)
+                .Include(e => e.Country)
                 .Include(e => e.Job)
                 .Include(e => e.Department)
                 .FirstOrDefaultAsync(e => e.EmployeeId == request.Id, cancellationToken);

@@ -1,21 +1,25 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using HRMS.Core.Entities.Core;
-using HRMS.Core.Entities.Personnel;
+using System.Linq;
+using HRMS.Application.Interfaces;
 using HRMS.Core.Entities.Attendance;
+using HRMS.Core.Entities.Core;
+using HRMS.Core.Entities.Identity;
 using HRMS.Core.Entities.Leaves;
 using HRMS.Core.Entities.Payroll;
-using HRMS.Core.Entities.Recruitment;
 using HRMS.Core.Entities.Performance;
-using HRMS.Core.Entities.Identity;
-using System.Linq;
+using HRMS.Core.Entities.Personnel;
+using HRMS.Core.Entities.Recruitment;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.Infrastructure.Data
 {
     /// <summary>
-    /// سياق قاعدة البيانات الرئيسي - يرث من IdentityDbContext لدعم المصادقة والتفويض
+    /// سياق قاعدة البيانات الرئيسي - يرث من IdentityDbContext ويطبق IApplicationDbContext
     /// </summary>
-    public class HRMSDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
+    /// <remarks>
+    /// تطبيق Dependency Inversion Principle - Infrastructure ينفذ واجهة من Application
+    /// </remarks>
+    public class HRMSDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>, IApplicationDbContext
     {
         public HRMSDbContext(DbContextOptions<HRMSDbContext> options) : base(options)
         {
@@ -40,6 +44,7 @@ namespace HRMS.Infrastructure.Data
         public DbSet<JobGrade> JobGrades { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Bank> Banks { get; set; }
+        public DbSet<Branch> Branches { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -51,6 +56,7 @@ namespace HRMS.Infrastructure.Data
         // ===================================
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+        public DbSet<EmployeeCompensation> EmployeeCompensations { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<ContractRenewal> ContractRenewals { get; set; }
         public DbSet<Dependent> Dependents { get; set; }
@@ -60,6 +66,10 @@ namespace HRMS.Infrastructure.Data
         public DbSet<EmployeeAddress> Addresses { get; set; }
         public DbSet<EmergencyContact> EmergencyContacts { get; set; }
         public DbSet<EmployeeBankAccount> BankAccounts { get; set; }
+        
+        // Aliases for IApplicationDbContext
+        public DbSet<EmployeeBankAccount> EmployeeBankAccounts => BankAccounts;
+
 
         // ===================================
         // HR_ATTENDANCE Schema
@@ -166,6 +176,81 @@ namespace HRMS.Infrastructure.Data
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            // ═══════════════════════════════════════════════════════════
+            // EXCEPTION: Employee Sub-Entities (Cascade Delete Required)
+            // ═══════════════════════════════════════════════════════════
+            // These entities are "owned" by the Employee and should be deleted if removed from collection
+            
+            // 1. Qualifications
+            modelBuilder.Entity<EmployeeQualification>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Qualifications)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 2. Experiences
+            modelBuilder.Entity<EmployeeExperience>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Experiences)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 3. EmergencyContacts
+            modelBuilder.Entity<EmergencyContact>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.EmergencyContacts)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 4. Contracts
+            modelBuilder.Entity<Contract>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Contracts)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // 5. Certifications
+            modelBuilder.Entity<EmployeeCertification>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Certifications)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 6. BankAccounts
+            modelBuilder.Entity<EmployeeBankAccount>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.BankAccounts)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 7. Dependents
+            modelBuilder.Entity<Dependent>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Dependents)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 8. Addresses
+            modelBuilder.Entity<EmployeeAddress>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Addresses)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 9. Documents
+            modelBuilder.Entity<EmployeeDocument>()
+                .HasOne(e => e.Employee)
+                .WithMany(e => e.Documents)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+             // 10. Compensation (One-to-One)
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Compensation)
+                .WithOne(c => c.Employee)
+                .HasForeignKey<EmployeeCompensation>(c => c.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             #endregion
         }

@@ -1,8 +1,11 @@
-using HRMS.Core.Entities.Core;
 using MediatR;
-using System.Collections.Generic;
+using HRMS.Application.DTOs.Core;
 
-namespace HRMS.Application.Features.Core.Jobs.Queries.GetAllJobs
+namespace HRMS.Application.Features.Core.Jobs.Queries.GetAllJobs;
+
+public class GetAllJobsQuery : IRequest<PagedResult<JobDto>>
 {
-    public class GetAllJobsQuery : IRequest<List<Job>> { }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+    public string? SearchTerm { get; set; }
 }

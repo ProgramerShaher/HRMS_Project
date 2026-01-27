@@ -1,21 +1,53 @@
-using HRMS.Core.Entities.Core;
-using HRMS.Infrastructure.Data;
 using MediatR;
+using HRMS.Application.DTOs.Core;
+using HRMS.Application.DTOs;
+using HRMS.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace HRMS.Application.Features.Core.Cities.Queries.GetAllCities
+namespace HRMS.Application.Features.Core.Cities.Queries.GetAllCities;
+
+public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQuery, PagedResult<CityListDto>>
 {
-    public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQuery, List<City>>
-    {
-        private readonly HRMSDbContext _context;
-        public GetAllCitiesQueryHandler(HRMSDbContext context) => _context = context;
+    private readonly IApplicationDbContext _context;
 
-        public async Task<List<City>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
+    public GetAllCitiesQueryHandler(IApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<PagedResult<CityListDto>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
+    {
+        var query = _context.Cities.AsQueryable();
+
+        if (request.CountryId.HasValue)
+            query = query.Where(c => c.CountryId == request.CountryId.Value);
+
+        if (request.IsActive.HasValue)
+            query = query.Where(c => c.IsActive == request.IsActive.Value);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(c => c.CityNameAr)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(c => new CityListDto
+            {
+                CityId = c.CityId,
+                CityNameAr = c.CityNameAr,
+                CityNameEn = c.CityNameEn,
+                CountryNameAr = c.Country.CountryNameAr,
+                IsActive = c.IsActive
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<CityListDto>
         {
-            return await _context.Cities.AsNoTracking().ToListAsync(cancellationToken);
-        }
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
     }
 }

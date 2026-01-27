@@ -1,24 +1,17 @@
-namespace HRMS.Application.DTOs.Core
+namespace HRMS.Application.DTOs.Core;
+
+/// <summary>
+/// DTO لعرض بيانات المدينة الكاملة
+/// </summary>
+public class CityDto
 {
-    public class CityDto
-    {
-        public int CityId { get; set; }
-        public int CountryId { get; set; }
-        public string? CityNameAr { get; set; }
-        public string? CityNameEn { get; set; }
-    }
-
-    public class CreateCityDto
-    {
-        public int CountryId { get; set; }
-        public required string CityNameAr { get; set; }
-        public required string CityNameEn { get; set; }
-    }
-
-    public class UpdateCityDto
-    {
-        public int CountryId { get; set; }
-        public required string CityNameAr { get; set; }
-        public required string CityNameEn { get; set; }
-    }
+    public int CityId { get; set; }
+    public int CountryId { get; set; }
+    public string CityNameAr { get; set; } = string.Empty;
+    public string CityNameEn { get; set; } = string.Empty;
+    public string CountryNameAr { get; set; } = string.Empty;
+    public string CountryNameEn { get; set; } = string.Empty;
+    public bool IsActive { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

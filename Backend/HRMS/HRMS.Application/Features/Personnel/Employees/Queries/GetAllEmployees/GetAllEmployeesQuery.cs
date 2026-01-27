@@ -1,10 +1,15 @@
-using HRMS.Application.Features.Personnel.Employees.DTOs;
+using HRMS.Application.DTOs.Core;
+using HRMS.Application.DTOs.Personnel;
 using MediatR;
-using System.Collections.Generic;
 
-namespace HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees
+namespace HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees;
+
+public class GetAllEmployeesQuery : IRequest<PagedResult<EmployeeListDto>>
 {
-    public class GetAllEmployeesQuery : IRequest<List<EmployeeDto>>
-    {
-    }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+    public string? SearchTerm { get; set; } // Name, Number, Mobile
+    public int? DepartmentId { get; set; }
+    public int? JobId { get; set; }
+    public bool? IsActive { get; set; }
 }

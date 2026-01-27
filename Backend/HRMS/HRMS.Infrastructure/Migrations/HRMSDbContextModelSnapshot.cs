@@ -654,6 +654,11 @@ namespace HRMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BankId"));
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("ADDRESS");
+
                     b.Property<string>("BankCode")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
@@ -669,6 +674,82 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("BANK_NAME_EN");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("EMAIL");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("PHONE");
+
+                    b.Property<string>("SwiftCode")
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)")
+                        .HasColumnName("SWIFT_CODE");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("BankId");
+
+                    b.ToTable("BANKS", "HR_CORE");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Core.Branch", b =>
+                {
+                    b.Property<int>("BranchId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("BRANCH_ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BranchId"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("ADDRESS");
+
+                    b.Property<string>("BranchNameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("BRANCH_NAME_AR");
+
+                    b.Property<string>("BranchNameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("BRANCH_NAME_EN");
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int")
+                        .HasColumnName("CITY_ID");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -697,9 +778,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("VERSION_NO");
 
-                    b.HasKey("BankId");
+                    b.HasKey("BranchId");
 
-                    b.ToTable("BANKS", "HR_CORE");
+                    b.HasIndex("CityId");
+
+                    b.ToTable("BRANCHES", "HR_CORE");
                 });
 
             modelBuilder.Entity("HRMS.Core.Entities.Core.City", b =>
@@ -775,6 +858,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("CITIZENSHIP_NAME_AR");
 
+                    b.Property<string>("CitizenshipNameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("CITIZENSHIP_NAME_EN");
+
                     b.Property<string>("CountryNameAr")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -833,6 +921,9 @@ namespace HRMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeptId"));
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CostCenterCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -890,6 +981,8 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.HasKey("DeptId");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("ParentDeptId");
 
                     b.ToTable("DEPARTMENTS", "HR_CORE");
@@ -897,16 +990,17 @@ namespace HRMS.Infrastructure.Migrations
 
             modelBuilder.Entity("HRMS.Core.Entities.Core.DocumentType", b =>
                 {
-                    b.Property<int>("DocTypeId")
+                    b.Property<int>("DocumentTypeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("DOC_TYPE_ID");
+                        .HasColumnName("DOCUMENT_TYPE_ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocTypeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentTypeId"));
 
-                    b.Property<short>("AlertDaysBefore")
-                        .HasColumnType("smallint")
-                        .HasColumnName("ALERT_DAYS_BEFORE");
+                    b.Property<string>("AllowedExtensions")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("ALLOWED_EXTENSIONS");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -917,23 +1011,42 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
-                    b.Property<string>("DocNameAr")
+                    b.Property<int?>("DefaultExpiryDays")
+                        .HasColumnType("int")
+                        .HasColumnName("DEFAULT_EXPIRY_DAYS");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("DESCRIPTION");
+
+                    b.Property<string>("DocumentTypeNameAr")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("DOC_NAME_AR");
+                        .HasColumnName("DOCUMENT_TYPE_NAME_AR");
+
+                    b.Property<string>("DocumentTypeNameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("DOCUMENT_TYPE_NAME_EN");
+
+                    b.Property<bool>("HasExpiry")
+                        .HasColumnType("bit")
+                        .HasColumnName("HAS_EXPIRY");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_DELETED");
 
-                    b.Property<byte>("IsMandatory")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("IS_MANDATORY");
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit")
+                        .HasColumnName("IS_REQUIRED");
 
-                    b.Property<byte>("RequiresExpiry")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("REQUIRES_EXPIRY");
+                    b.Property<int?>("MaxFileSizeMB")
+                        .HasColumnType("int")
+                        .HasColumnName("MAX_FILE_SIZE_MB");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -949,7 +1062,7 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("VERSION_NO");
 
-                    b.HasKey("DocTypeId");
+                    b.HasKey("DocumentTypeId");
 
                     b.ToTable("DOCUMENT_TYPES", "HR_CORE");
                 });
@@ -1023,12 +1136,16 @@ namespace HRMS.Infrastructure.Migrations
 
             modelBuilder.Entity("HRMS.Core.Entities.Core.JobGrade", b =>
                 {
-                    b.Property<int>("GradeId")
+                    b.Property<int>("JobGradeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("GRADE_ID");
+                        .HasColumnName("JOB_GRADE_ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GradeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobGradeId"));
+
+                    b.Property<string>("BenefitsConfig")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("BENEFITS_CONFIG");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -1039,28 +1156,44 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
-                    b.Property<string>("GradeName")
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("DESCRIPTION");
+
+                    b.Property<string>("GradeCode")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("GRADE_NAME");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("GRADE_CODE");
+
+                    b.Property<int>("GradeLevel")
+                        .HasColumnType("int")
+                        .HasColumnName("GRADE_LEVEL");
+
+                    b.Property<string>("GradeNameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("GRADE_NAME_AR");
+
+                    b.Property<string>("GradeNameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("GRADE_NAME_EN");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_DELETED");
 
-                    b.Property<decimal?>("MaxSalary")
-                        .HasColumnType("decimal(10,2)")
+                    b.Property<decimal>("MaxSalary")
+                        .HasColumnType("decimal(18,2)")
                         .HasColumnName("MAX_SALARY");
 
-                    b.Property<decimal?>("MinSalary")
-                        .HasColumnType("decimal(10,2)")
+                    b.Property<decimal>("MinSalary")
+                        .HasColumnType("decimal(18,2)")
                         .HasColumnName("MIN_SALARY");
-
-                    b.Property<string>("TicketClass")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("TICKET_CLASS");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -1076,7 +1209,7 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("VERSION_NO");
 
-                    b.HasKey("GradeId");
+                    b.HasKey("JobGradeId");
 
                     b.ToTable("JOB_GRADES", "HR_CORE");
                 });
@@ -1487,9 +1620,7 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique()
-                        .HasFilter("[EmployeeId] IS NOT NULL");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1879,9 +2010,17 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
+                    b.Property<int>("DefaultDays")
+                        .HasColumnType("int")
+                        .HasColumnName("DEFAULT_DAYS");
+
                     b.Property<byte>("IsCarryForward")
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_CARRY_FORWARD");
+
+                    b.Property<bool>("IsDeductible")
+                        .HasColumnType("bit")
+                        .HasColumnName("IS_DEDUCTIBLE");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
@@ -1896,6 +2035,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("LEAVE_NAME_AR");
+
+                    b.Property<string>("LeaveNameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("LEAVE_NAME_EN");
 
                     b.Property<short?>("MaxDaysPerYear")
                         .HasColumnType("smallint")
@@ -3337,11 +3481,12 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
-                    b.Property<int>("DeptId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int")
-                        .HasColumnName("DEPT_ID");
+                        .HasColumnName("DEPARTMENT_ID");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("EMAIL");
@@ -3365,15 +3510,14 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnName("FULL_NAME_EN");
 
                     b.Property<string>("Gender")
+                        .IsRequired()
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)")
                         .HasColumnName("GENDER");
 
-                    b.Property<string>("HijriLastNameAr")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("HIJRI_LAST_NAME_AR");
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("HIRE_DATE");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
@@ -3383,39 +3527,60 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("JOB_ID");
 
-                    b.Property<DateTime>("JoiningDate")
+                    b.Property<string>("LastNameAr")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("LAST_NAME_AR");
+
+                    b.Property<DateTime?>("LicenseExpiryDate")
                         .HasColumnType("datetime2")
-                        .HasColumnName("JOINING_DATE");
+                        .HasColumnName("LICENSE_EXPIRY_DATE");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("LICENSE_NUMBER");
 
                     b.Property<int?>("ManagerId")
                         .HasColumnType("int")
                         .HasColumnName("MANAGER_ID");
 
                     b.Property<string>("MaritalStatus")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("MARITAL_STATUS");
 
                     b.Property<string>("Mobile")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("MOBILE");
 
-                    b.Property<int>("NationalityId")
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("NATIONAL_ID");
+
+                    b.Property<int?>("NationalityId")
                         .HasColumnType("int")
                         .HasColumnName("NATIONALITY_ID");
 
                     b.Property<string>("SecondNameAr")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("SECOND_NAME_AR");
 
-                    b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("STATUS");
+                    b.Property<string>("Specialty")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("SPECIALTY");
 
                     b.Property<string>("ThirdNameAr")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("THIRD_NAME_AR");
@@ -3429,6 +3594,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("UPDATED_BY");
 
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("USER_ID");
+
                     b.Property<int>("VersionNo")
                         .IsConcurrencyToken()
                         .HasColumnType("int")
@@ -3436,7 +3606,7 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.HasIndex("DeptId");
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("JobId");
 
@@ -3677,19 +3847,22 @@ namespace HRMS.Infrastructure.Migrations
                     b.ToTable("EMPLOYEE_CERTIFICATIONS", "HR_PERSONNEL");
                 });
 
-            modelBuilder.Entity("HRMS.Core.Entities.Personnel.EmployeeDocument", b =>
+            modelBuilder.Entity("HRMS.Core.Entities.Personnel.EmployeeCompensation", b =>
                 {
-                    b.Property<int>("DocId")
+                    b.Property<int>("CompensationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("DOC_ID");
+                        .HasColumnName("COMPENSATION_ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompensationId"));
 
-                    b.Property<string>("AttachmentPath")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .HasColumnName("ATTACHMENT_PATH");
+                    b.Property<int?>("BankId")
+                        .HasColumnType("int")
+                        .HasColumnName("BANK_ID");
+
+                    b.Property<decimal>("BasicSalary")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("BASIC_SALARY");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -3700,39 +3873,34 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
-                    b.Property<string>("DocNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("DOC_NUMBER");
-
-                    b.Property<int>("DocTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("DOC_TYPE_ID");
-
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int")
                         .HasColumnName("EMPLOYEE_ID");
 
-                    b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("EXPIRY_DATE");
+                    b.Property<decimal>("HousingAllowance")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("HOUSING_ALLOWANCE");
 
-                    b.Property<byte>("IsActive")
-                        .HasColumnType("tinyint")
-                        .HasColumnName("IS_ACTIVE");
+                    b.Property<string>("IbanNumber")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("IBAN_NUMBER");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_DELETED");
 
-                    b.Property<DateTime?>("IssueDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ISSUE_DATE");
+                    b.Property<decimal>("MedicalAllowance")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("MEDICAL_ALLOWANCE");
 
-                    b.Property<string>("IssuePlace")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("ISSUE_PLACE");
+                    b.Property<decimal>("OtherAllowances")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("OTHER_ALLOWANCES");
+
+                    b.Property<decimal>("TransportAllowance")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("TRANSPORT_ALLOWANCE");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -3748,9 +3916,97 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("VERSION_NO");
 
-                    b.HasKey("DocId");
+                    b.HasKey("CompensationId");
 
-                    b.HasIndex("DocTypeId");
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
+
+                    b.ToTable("EMPLOYEE_COMPENSATIONS", "HR_PERSONNEL");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Personnel.EmployeeDocument", b =>
+                {
+                    b.Property<int>("DocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("DOCUMENT_ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"));
+
+                    b.Property<string>("ContentType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("CONTENT_TYPE");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<string>("DocumentNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("DOCUMENT_NUMBER");
+
+                    b.Property<int>("DocumentTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("DOCUMENT_TYPE_ID");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int")
+                        .HasColumnName("EMPLOYEE_ID");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("EXPIRY_DATE");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("FILE_NAME");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("FILE_PATH");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint")
+                        .HasColumnName("FILE_SIZE");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<DateTime?>("IssueDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ISSUE_DATE");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("DocumentId");
+
+                    b.HasIndex("DocumentTypeId");
 
                     b.HasIndex("EmployeeId");
 
@@ -4506,6 +4762,16 @@ namespace HRMS.Infrastructure.Migrations
                     b.Navigation("TargetEmployee");
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Core.Branch", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Core.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("City");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Core.City", b =>
                 {
                     b.HasOne("HRMS.Core.Entities.Core.Country", "Country")
@@ -4519,6 +4785,11 @@ namespace HRMS.Infrastructure.Migrations
 
             modelBuilder.Entity("HRMS.Core.Entities.Core.Department", b =>
                 {
+                    b.HasOne("HRMS.Core.Entities.Core.Branch", null)
+                        .WithMany("Departments")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("HRMS.Core.Entities.Core.Department", "ParentDepartment")
                         .WithMany("SubDepartments")
                         .HasForeignKey("ParentDeptId")
@@ -4545,8 +4816,8 @@ namespace HRMS.Infrastructure.Migrations
             modelBuilder.Entity("HRMS.Core.Entities.Identity.ApplicationUser", b =>
                 {
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
-                        .WithOne("User")
-                        .HasForeignKey("HRMS.Core.Entities.Identity.ApplicationUser", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Employee");
@@ -4824,7 +5095,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("Contracts")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
@@ -4846,7 +5117,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("Dependents")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
@@ -4857,7 +5128,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("EmergencyContacts")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
@@ -4867,7 +5138,7 @@ namespace HRMS.Infrastructure.Migrations
                 {
                     b.HasOne("HRMS.Core.Entities.Core.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DeptId")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -4882,19 +5153,18 @@ namespace HRMS.Infrastructure.Migrations
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("HRMS.Core.Entities.Core.Country", "Nationality")
+                    b.HasOne("HRMS.Core.Entities.Core.Country", "Country")
                         .WithMany()
                         .HasForeignKey("NationalityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Country");
 
                     b.Navigation("Department");
 
                     b.Navigation("Job");
 
                     b.Navigation("Manager");
-
-                    b.Navigation("Nationality");
                 });
 
             modelBuilder.Entity("HRMS.Core.Entities.Personnel.EmployeeAddress", b =>
@@ -4907,7 +5177,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("Addresses")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("City");
@@ -4926,7 +5196,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("BankAccounts")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Bank");
@@ -4937,10 +5207,28 @@ namespace HRMS.Infrastructure.Migrations
             modelBuilder.Entity("HRMS.Core.Entities.Personnel.EmployeeCertification", b =>
                 {
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Certifications")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Personnel.EmployeeCompensation", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Core.Bank", "Bank")
+                        .WithMany()
+                        .HasForeignKey("BankId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
+                        .WithOne("Compensation")
+                        .HasForeignKey("HRMS.Core.Entities.Personnel.EmployeeCompensation", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bank");
 
                     b.Navigation("Employee");
                 });
@@ -4949,14 +5237,14 @@ namespace HRMS.Infrastructure.Migrations
                 {
                     b.HasOne("HRMS.Core.Entities.Core.DocumentType", "DocumentType")
                         .WithMany()
-                        .HasForeignKey("DocTypeId")
+                        .HasForeignKey("DocumentTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("Documents")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DocumentType");
@@ -4969,7 +5257,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("Experiences")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
@@ -4985,7 +5273,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
                         .WithMany("Qualifications")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");
@@ -5121,6 +5409,11 @@ namespace HRMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Core.Branch", b =>
+                {
+                    b.Navigation("Departments");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Core.Country", b =>
                 {
                     b.Navigation("Cities");
@@ -5199,6 +5492,10 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Navigation("BankAccounts");
 
+                    b.Navigation("Certifications");
+
+                    b.Navigation("Compensation");
+
                     b.Navigation("Contracts");
 
                     b.Navigation("Dependents");
@@ -5212,8 +5509,6 @@ namespace HRMS.Infrastructure.Migrations
                     b.Navigation("Qualifications");
 
                     b.Navigation("Subordinates");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HRMS.Core.Entities.Recruitment.Candidate", b =>

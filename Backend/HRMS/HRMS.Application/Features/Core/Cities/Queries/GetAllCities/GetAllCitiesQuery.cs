@@ -1,8 +1,13 @@
-using HRMS.Core.Entities.Core;
 using MediatR;
-using System.Collections.Generic;
+using HRMS.Application.DTOs.Core;
+using HRMS.Application.DTOs;
 
-namespace HRMS.Application.Features.Core.Cities.Queries.GetAllCities
+namespace HRMS.Application.Features.Core.Cities.Queries.GetAllCities;
+
+public class GetAllCitiesQuery : IRequest<PagedResult<CityListDto>>
 {
-    public class GetAllCitiesQuery : IRequest<List<City>> { }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+    public int? CountryId { get; set; }
+    public bool? IsActive { get; set; }
 }

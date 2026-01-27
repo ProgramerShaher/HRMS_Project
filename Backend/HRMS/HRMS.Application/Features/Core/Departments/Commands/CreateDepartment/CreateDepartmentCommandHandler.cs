@@ -1,32 +1,29 @@
-using HRMS.Core.Entities.Core;
-using HRMS.Infrastructure.Data;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Core;
+using AutoMapper;
 
-namespace HRMS.Application.Features.Core.Departments.Commands.CreateDepartment
+namespace HRMS.Application.Features.Core.Departments.Commands.CreateDepartment;
+
+public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
 {
-    public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public CreateDepartmentCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
-        private readonly HRMSDbContext _context;
-        public CreateDepartmentCommandHandler(HRMSDbContext context) => _context = context;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public async Task<int> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
-        {
-            var dept = new Department
-            {
-                DeptNameAr = request.DeptNameAr,
-                DeptNameEn = request.DeptNameEn,
-                ParentDeptId = request.ParentDeptId,
-                ManagerId = request.ManagerId,
-                CreatedBy = "API_USER",
-                CreatedAt = DateTime.Now
-            };
+    public async Task<int> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
+    {
+        var department = _mapper.Map<Department>(request);
+        department.CreatedAt = DateTime.UtcNow;
 
-            _context.Departments.Add(dept);
-            await _context.SaveChangesAsync(cancellationToken);
-            return dept.DeptId;
-        }
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return department.DeptId;
     }
 }

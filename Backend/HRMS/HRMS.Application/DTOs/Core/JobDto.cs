@@ -6,7 +6,8 @@ namespace HRMS.Application.DTOs.Core
         public string? JobTitleAr { get; set; }
         public string? JobTitleEn { get; set; }
         public int? DefaultGradeId { get; set; }
-        public int? IsMedical { get; set; }
+        public string? GradeNameAr { get; set; }
+        public byte? IsMedical { get; set; }
     }
 
     public class CreateJobDto
@@ -14,7 +15,7 @@ namespace HRMS.Application.DTOs.Core
         public required string JobTitleAr { get; set; }
         public string? JobTitleEn { get; set; }
         public int? DefaultGradeId { get; set; }
-        public int? IsMedical { get; set; }
+        public byte? IsMedical { get; set; }
     }
 
     public class UpdateJobDto
@@ -22,6 +23,6 @@ namespace HRMS.Application.DTOs.Core
         public required string JobTitleAr { get; set; }
         public string? JobTitleEn { get; set; }
         public int? DefaultGradeId { get; set; }
-        public int? IsMedical { get; set; }
+        public byte? IsMedical { get; set; }
     }
 }

@@ -1,9 +1,11 @@
-namespace HRMS.Application
+using System.Reflection;
+
+namespace HRMS.Application;
+
+/// <summary>
+/// مرجع Assembly للتطبيق - يستخدم لتسجيل MediatR و AutoMapper
+/// </summary>
+public static class AssemblyReference
 {
-    /// <summary>
-    /// مرجع لتجميع طبقة التطبيق - يستخدم لتسجيل MediatR
-    /// </summary>
-    public class AssemblyReference
-    {
-    }
+    public static Assembly Assembly => typeof(AssemblyReference).Assembly;
 }

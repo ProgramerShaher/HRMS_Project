@@ -29,10 +29,29 @@ namespace HRMS.Core.Entities.Leaves
         public string LeaveNameAr { get; set; } = string.Empty;
 
         /// <summary>
+        /// الاسم بالإنجليزية
+        /// </summary>
+        [MaxLength(100)]
+        [Column("LEAVE_NAME_EN")]
+        public string? LeaveNameEn { get; set; }
+
+        /// <summary>
+        /// عدد الأيام الافتراضي
+        /// </summary>
+        [Column("DEFAULT_DAYS")]
+        public int DefaultDays { get; set; } = 0;
+
+        /// <summary>
         /// هل الإجازة مدفوعة الراتب (1=نعم، 0=لا)
         /// </summary>
         [Column("IS_PAID")]
         public byte IsPaid { get; set; } = 1;
+
+        /// <summary>
+        /// هل يخصم من الرصيد السنوي (1=نعم، 0=لا)
+        /// </summary>
+        [Column("IS_DEDUCTIBLE")]
+        public bool IsDeductible { get; set; } = true;
 
         /// <summary>
         /// الحد الأقصى للأيام في السنة

@@ -5,7 +5,7 @@ using HRMS.Core.Entities.Common;
 namespace HRMS.Core.Entities.Core
 {
     /// <summary>
-    /// كيان أنواع الوثائق - يحتوي على أنواع الوثائق المطلوبة من الموظفين
+    /// كيان أنواع الوثائق - يحدد أنواع الوثائق المطلوبة من الموظفين
     /// </summary>
     [Table("DOCUMENT_TYPES", Schema = "HR_CORE")]
     public class DocumentType : BaseEntity
@@ -14,34 +14,62 @@ namespace HRMS.Core.Entities.Core
         /// المعرف الفريد لنوع الوثيقة
         /// </summary>
         [Key]
-        [Column("DOC_TYPE_ID")]
+        [Column("DOCUMENT_TYPE_ID")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DocTypeId { get; set; }
+        public int DocumentTypeId { get; set; }
 
         /// <summary>
         /// اسم نوع الوثيقة بالعربية
         /// </summary>
-        [Required(ErrorMessage = "اسم نوع الوثيقة مطلوب")]
-        [MaxLength(100, ErrorMessage = "اسم نوع الوثيقة لا يمكن أن يتجاوز 100 حرف")]
-        [Column("DOC_NAME_AR")]
-        public string DocNameAr { get; set; } = string.Empty;
+        [Required(ErrorMessage = "اسم نوع الوثيقة بالعربية مطلوب")]
+        [MaxLength(100)]
+        [Column("DOCUMENT_TYPE_NAME_AR")]
+        public string DocumentTypeNameAr { get; set; } = string.Empty;
 
         /// <summary>
-        /// هل الوثيقة إلزامية (1 = نعم، 0 = لا)
+        /// اسم نوع الوثيقة بالإنجليزية
         /// </summary>
-        [Column("IS_MANDATORY")]
-        public byte IsMandatory { get; set; } = 0;
+        [Required(ErrorMessage = "اسم نوع الوثيقة بالإنجليزية مطلوب")]
+        [MaxLength(100)]
+        [Column("DOCUMENT_TYPE_NAME_EN")]
+        public string DocumentTypeNameEn { get; set; } = string.Empty;
 
         /// <summary>
-        /// هل الوثيقة تتطلب تاريخ انتهاء (1 = نعم، 0 = لا)
+        /// وصف نوع الوثيقة
         /// </summary>
-        [Column("REQUIRES_EXPIRY")]
-        public byte RequiresExpiry { get; set; } = 1;
+        [MaxLength(500)]
+        [Column("DESCRIPTION")]
+        public string? Description { get; set; }
 
         /// <summary>
-        /// عدد الأيام قبل انتهاء الوثيقة للتنبيه
+        /// الامتدادات المسموحة للملف (مفصولة بفاصلة) مثل: ".pdf,.jpg,.png"
         /// </summary>
-        [Column("ALERT_DAYS_BEFORE")]
-        public short AlertDaysBefore { get; set; } = 30;
+        [MaxLength(200)]
+        [Column("ALLOWED_EXTENSIONS")]
+        public string? AllowedExtensions { get; set; }
+
+        /// <summary>
+        /// هل الوثيقة مطلوبة أم اختيارية
+        /// </summary>
+        [Column("IS_REQUIRED")]
+        public bool IsRequired { get; set; }
+
+        /// <summary>
+        /// هل للوثيقة تاريخ انتهاء صلاحية
+        /// </summary>
+        [Column("HAS_EXPIRY")]
+        public bool HasExpiry { get; set; }
+
+        /// <summary>
+        /// عدد الأيام الافتراضية لصلاحية الوثيقة
+        /// </summary>
+        [Column("DEFAULT_EXPIRY_DAYS")]
+        public int? DefaultExpiryDays { get; set; }
+
+        /// <summary>
+        /// الحد الأقصى لحجم الملف بالميجابايت
+        /// </summary>
+        [Column("MAX_FILE_SIZE_MB")]
+        public int? MaxFileSizeMB { get; set; }
     }
 }

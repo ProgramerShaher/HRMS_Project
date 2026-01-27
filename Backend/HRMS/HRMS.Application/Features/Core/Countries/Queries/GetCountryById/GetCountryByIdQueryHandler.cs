@@ -1,26 +1,44 @@
 using HRMS.Core.Entities.Core;
-using HRMS.Infrastructure.Data;
+using HRMS.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using HRMS.Application.DTOs.Core;
 
-namespace HRMS.Application.Features.Core.Countries.Queries.GetCountryById
+namespace HRMS.Application.Features.Core.Countries.Queries.GetCountryById;
+
+/// <summary>
+/// معالج استعلام الحصول على دولة بمعرفها
+/// </summary>
+public class GetCountryByIdQueryHandler : IRequestHandler<GetCountryByIdQuery, CountryDto?>
 {
-    public class GetCountryByIdQueryHandler : IRequestHandler<GetCountryByIdQuery, Country>
+    private readonly IApplicationDbContext _context;
+
+    public GetCountryByIdQueryHandler(IApplicationDbContext context)
     {
-        private readonly HRMSDbContext _context;
+        _context = context;
+    }
 
-        public GetCountryByIdQueryHandler(HRMSDbContext context)
-        {
-            _context = context;
-        }
+    public async Task<CountryDto?> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
+    {
+        var country = await _context.Countries
+            .Where(c => c.CountryId == request.CountryId)
+            .Select(c => new CountryDto
+            {
+                CountryId = c.CountryId,
+                CountryNameAr = c.CountryNameAr,
+                CountryNameEn = c.CountryNameEn,
+                CitizenshipNameAr = c.CitizenshipNameAr,
+                IsoCode = c.IsoCode,
+                IsActive = c.IsActive,
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt,
+                CitiesCount = c.Cities.Count
+            })
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<Country> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
-        {
-            return await _context.Countries
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CountryId == request.Id, cancellationToken);
-        }
+        return country;
     }
 }

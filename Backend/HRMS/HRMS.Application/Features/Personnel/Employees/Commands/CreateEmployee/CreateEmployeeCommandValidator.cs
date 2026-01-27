@@ -1,40 +1,57 @@
 using FluentValidation;
-using HRMS.Application.Features.Personnel.Employees.Commands.CreateEmployee;
+using HRMS.Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace HRMS.Application.Features.Personnel.Employees.Commands.CreateEmployee
+namespace HRMS.Application.Features.Personnel.Employees.Commands.CreateEmployee;
+
+public class CreateEmployeeCommandValidator : AbstractValidator<CreateEmployeeCommand>
 {
-    public class CreateEmployeeCommandValidator : AbstractValidator<CreateEmployeeCommand>
+    private readonly IApplicationDbContext _context;
+
+    public CreateEmployeeCommandValidator(IApplicationDbContext context)
     {
-        public CreateEmployeeCommandValidator()
-        {
-            RuleFor(p => p.EmployeeNumber)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MaximumLength(20).WithMessage("{PropertyName} must not exceed 20 characters.");
+        _context = context;
 
-            RuleFor(p => p.FirstNameAr)
-                .NotEmpty().WithMessage("First Name (Arabic) is required.")
-                .MaximumLength(50);
+        RuleFor(x => x.Data.EmployeeNumber)
+            .NotEmpty().WithMessage("الرقم الوظيفي مطلوب")
+            .MustAsync(BeUniqueEmployeeNumber).WithMessage("الرقم الوظيفي مستخدم بالفعل");
 
-            RuleFor(p => p.HijriLastNameAr)
-                .NotEmpty().WithMessage("Last Name (Arabic) is required.")
-                .MaximumLength(50);
+        RuleFor(x => x.Data.FirstNameAr).NotEmpty().WithMessage("الاسم الأول مطلوب");
+        RuleFor(x => x.Data.LastNameAr).NotEmpty().WithMessage("اسم العائلة مطلوب");
+        RuleFor(x => x.Data.Email).EmailAddress().WithMessage("البريد الإلكتروني غير صحيح");
+        
+        RuleFor(x => x.Data.DepartmentId)
+            .GreaterThan(0).WithMessage("يجب اختيار القسم");
+        
+        RuleFor(x => x.Data.JobId)
+            .GreaterThan(0).WithMessage("يجب اختيار الوظيفة");
 
-            RuleFor(p => p.FullNameEn)
-                .NotEmpty().WithMessage("English Full Name is required.")
-                .MaximumLength(200);
+        RuleFor(x => x.Data.BasicSalary)
+             .GreaterThanOrEqualTo(0).WithMessage("الراتب الأساسي لا يمكن أن يكون سالب");
 
-            RuleFor(p => p.NationalityId)
-                .GreaterThan(0).WithMessage("Nationality is required.");
+        // --- New Professional Validations ---
+        RuleFor(x => x.Data.NationalId)
+            .NotEmpty().WithMessage("رقم الهوية مطلوب")
+            .Length(10).WithMessage("رقم الهوية يجب أن يكون 10 أرقام"); // افتراض قياسي
 
-            RuleFor(p => p.JobId)
-                .GreaterThan(0).WithMessage("Job is required.");
+        RuleFor(x => x.Data.LicenseExpiryDate)
+            .GreaterThan(DateTime.Today)
+            .When(x => x.Data.LicenseExpiryDate.HasValue)
+            .WithMessage("تاريخ انتهاء الترخيص يجب أن يكون في المستقبل");
 
-            RuleFor(p => p.DeptId)
-                .GreaterThan(0).WithMessage("Department is required.");
-                
-            RuleFor(p => p.Email)
-                .EmailAddress().When(p => !string.IsNullOrEmpty(p.Email))
-                .WithMessage("Invalid email format.");
-        }
+        RuleFor(x => x.Data.BankId)
+            .GreaterThan(0)
+            .When(x => x.Data.BankId.HasValue)
+            .WithMessage("بيانات البنك غير صحيحة");
+
+        // --- Sub-Entities Validation ---
+        RuleForEach(x => x.Data.Qualifications).SetValidator(new EmployeeQualificationValidator());
+        RuleForEach(x => x.Data.Experiences).SetValidator(new EmployeeExperienceValidator());
+        RuleForEach(x => x.Data.EmergencyContacts).SetValidator(new EmergencyContactValidator());
+    }
+
+    private async Task<bool> BeUniqueEmployeeNumber(string employeeNumber, CancellationToken token)
+    {
+        return !await _context.Employees.AnyAsync(e => e.EmployeeNumber == employeeNumber, token);
     }
 }

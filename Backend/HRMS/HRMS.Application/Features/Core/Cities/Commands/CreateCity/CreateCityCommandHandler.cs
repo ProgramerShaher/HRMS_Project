@@ -1,31 +1,47 @@
-using HRMS.Core.Entities.Core;
-using HRMS.Infrastructure.Data;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Core;
 
-namespace HRMS.Application.Features.Core.Cities.Commands.CreateCity
+namespace HRMS.Application.Features.Core.Cities.Commands.CreateCity;
+
+/// <summary>
+/// معالج أمر إنشاء مدينة جديدة
+/// </summary>
+/// <remarks>
+/// يقوم بإضافة مدينة جديدة إلى قاعدة البيانات بعد التحقق من صحة البيانات
+/// </remarks>
+public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, int>
 {
-    public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, int>
+    private readonly IApplicationDbContext _context;
+
+    /// <summary>
+    /// المنشئ
+    /// </summary>
+    /// <param name="context">سياق قاعدة البيانات</param>
+    public CreateCityCommandHandler(IApplicationDbContext context)
     {
-        private readonly HRMSDbContext _context;
-        public CreateCityCommandHandler(HRMSDbContext context) => _context = context;
+        _context = context;
+    }
 
-        public async Task<int> Handle(CreateCityCommand request, CancellationToken cancellationToken)
+    /// <summary>
+    /// معالجة أمر إنشاء المدينة
+    /// </summary>
+    /// <param name="request">بيانات الأمر</param>
+    /// <param name="cancellationToken">رمز الإلغاء</param>
+    /// <returns>معرف المدينة الجديدة</returns>
+    public async Task<int> Handle(CreateCityCommand request, CancellationToken cancellationToken)
+    {
+        var city = new City
         {
-            var city = new City
-            {
-                CityNameAr = request.CityNameAr,
-                CityNameEn = request.CityNameEn,
-                CountryId = request.CountryId,
-                CreatedBy = "API_USER",
-                CreatedAt = DateTime.Now
-            };
+            CountryId = request.CountryId,
+            CityNameAr = request.CityNameAr,
+            CityNameEn = request.CityNameEn,
+            CreatedAt = DateTime.UtcNow
+        };
 
-            _context.Cities.Add(city);
-            await _context.SaveChangesAsync(cancellationToken);
-            return city.CityId;
-        }
+        _context.Cities.Add(city);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return city.CityId;
     }
 }

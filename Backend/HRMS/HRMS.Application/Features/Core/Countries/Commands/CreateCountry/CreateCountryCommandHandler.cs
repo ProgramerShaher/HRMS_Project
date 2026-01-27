@@ -1,37 +1,29 @@
-using HRMS.Core.Entities.Core;
-using HRMS.Infrastructure.Data;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Core;
+using AutoMapper;
 
-namespace HRMS.Application.Features.Core.Countries.Commands.CreateCountry
+namespace HRMS.Application.Features.Core.Countries.Commands.CreateCountry;
+
+public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand, int>
 {
-    public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand, int>
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public CreateCountryCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
-        private readonly HRMSDbContext _context;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public CreateCountryCommandHandler(HRMSDbContext context)
-        {
-            _context = context;
-        }
+    public async Task<int> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
+    {
+        var country = _mapper.Map<Country>(request);
+        country.CreatedAt = DateTime.UtcNow;
 
-        public async Task<int> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
-        {
-            var country = new Country
-            {
-                CountryNameAr = request.CountryNameAr,
-                CountryNameEn = request.CountryNameEn,
-                CitizenshipNameAr = request.CitizenshipNameAr,
-                IsoCode = request.IsoCode,
-                CreatedBy = "API_USER",
-                CreatedAt = DateTime.Now
-            };
+        _context.Countries.Add(country);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            _context.Countries.Add(country);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return country.CountryId;
-        }
+        return country.CountryId;
     }
 }

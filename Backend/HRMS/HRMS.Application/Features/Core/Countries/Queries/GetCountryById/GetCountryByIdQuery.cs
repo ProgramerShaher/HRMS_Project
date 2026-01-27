@@ -1,15 +1,17 @@
-using HRMS.Core.Entities.Core;
 using MediatR;
+using HRMS.Application.DTOs.Core;
 
-namespace HRMS.Application.Features.Core.Countries.Queries.GetCountryById
+namespace HRMS.Application.Features.Core.Countries.Queries.GetCountryById;
+
+/// <summary>
+/// استعلام للحصول على دولة بمعرفها
+/// </summary>
+public class GetCountryByIdQuery : IRequest<CountryDto?>
 {
-    public class GetCountryByIdQuery : IRequest<Country>
-    {
-        public int Id { get; set; }
+    public int CountryId { get; set; }
 
-        public GetCountryByIdQuery(int id)
-        {
-            Id = id;
-        }
+    public GetCountryByIdQuery(int id)
+    {
+        CountryId = id;
     }
 }

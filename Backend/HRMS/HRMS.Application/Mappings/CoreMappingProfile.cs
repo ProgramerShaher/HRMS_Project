@@ -25,7 +25,7 @@ namespace HRMS.Application.Mappings
             // Personnel - Employee
             CreateMap<CreateEmployeeCommand, Employee>();
             CreateMap<Employee, EmployeeDto>()
-                .ForMember(dest => dest.NationalityName, opt => opt.MapFrom(src => src.Nationality != null ? src.Nationality.CountryNameAr : ""))
+                .ForMember(dest => dest.NationalityName, opt => opt.MapFrom(src => src.Country != null ? src.Country.CountryNameAr : ""))
                 .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.Job != null ? src.Job.JobTitleAr : ""))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.DeptNameAr : ""));
         }

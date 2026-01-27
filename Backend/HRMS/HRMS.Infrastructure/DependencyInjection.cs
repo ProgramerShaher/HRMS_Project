@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using HRMS.Application.Interfaces;
+using HRMS.Infrastructure.Services;
 
 namespace HRMS.Infrastructure
 {
@@ -49,6 +51,9 @@ namespace HRMS.Infrastructure
             });
 
             #endregion
+
+            // Services
+            services.AddScoped<IFileService, FileService>();
 
             return services;
         }

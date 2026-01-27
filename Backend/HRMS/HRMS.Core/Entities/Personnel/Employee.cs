@@ -1,227 +1,120 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HRMS.Core.Entities.Common;
 using HRMS.Core.Entities.Core;
 
-namespace HRMS.Core.Entities.Personnel
+namespace HRMS.Core.Entities.Personnel;
+
+/// <summary>
+/// الكيان الأساسي للموظف (بيانات شخصية ووظيفية)
+/// </summary>
+[Table("EMPLOYEES", Schema = "HR_PERSONNEL")]
+public class Employee : BaseEntity
 {
-    /// <summary>
-    /// كيان الموظفين - يمثل الجدول الرئيسي في النظام
-    /// يحتوي على البيانات الشخصية، الوظيفية، ومعلومات الاتصال
-    /// </summary>
-    [Table("EMPLOYEES", Schema = "HR_PERSONNEL")]
-    public class Employee : BaseEntity
-    {
-        /// <summary>
-        /// المعرف الفريد للموظف
-        /// </summary>
-        [Key]
-        [Column("EMPLOYEE_ID")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int EmployeeId { get; set; }
+    [Key]
+    [Column("EMPLOYEE_ID")]
+    public int EmployeeId { get; set; }
 
-        /// <summary>
-        /// الرقم الوظيفي (فريد)
-        /// </summary>
-        [Required(ErrorMessage = "الرقم الوظيفي مطلوب")]
-        [MaxLength(20, ErrorMessage = "الرقم الوظيفي لا يمكن أن يتجاوز 20 حرف")]
-        [Column("EMPLOYEE_NUMBER")]
-        public string EmployeeNumber { get; set; } = string.Empty;
+    [Column("EMPLOYEE_NUMBER")]
+    [MaxLength(20)]
+    public required string EmployeeNumber { get; set; } // رقم وظيفي فريد
 
-        /// <summary>
-        /// الاسم الأول بالعربية
-        /// </summary>
-        [Required(ErrorMessage = "الاسم الأول بالعربية مطلوب")]
-        [MaxLength(50)]
-        [Column("FIRST_NAME_AR")]
-        public string FirstNameAr { get; set; } = string.Empty;
+    // --- البيانات الشخصية ---
+    [Column("FIRST_NAME_AR")] 
+    [MaxLength(50)]
+    public required string FirstNameAr { get; set; }
+    
+    [Column("SECOND_NAME_AR")]
+    [MaxLength(50)]
+    public required string SecondNameAr { get; set; }
+    
+    [Column("THIRD_NAME_AR")]
+    [MaxLength(50)]
+    public required string ThirdNameAr { get; set; }
 
-        /// <summary>
-        /// الاسم الثاني (الأب) بالعربية
-        /// </summary>
-        [MaxLength(50)]
-        [Column("SECOND_NAME_AR")]
-        public string? SecondNameAr { get; set; }
+    [Column("LAST_NAME_AR")]
+    [MaxLength(50)]
+    public required string LastNameAr { get; set; }
 
-        /// <summary>
-        /// الاسم الثالث (الجد) بالعربية
-        /// </summary>
-        [MaxLength(50)]
-        [Column("THIRD_NAME_AR")]
-        public string? ThirdNameAr { get; set; }
+    [Column("FULL_NAME_EN")]
+    [MaxLength(200)]
+    public required string FullNameEn { get; set; }
 
-        /// <summary>
-        /// اسم العائلة بالعربية
-        /// </summary>
-        [Required(ErrorMessage = "اسم العائلة بالعربية مطلوب")]
-        [MaxLength(50)]
-        [Column("HIJRI_LAST_NAME_AR")]
-        public string HijriLastNameAr { get; set; } = string.Empty;
+    [Column("BIRTH_DATE")]
+    public DateTime BirthDate { get; set; }
 
-        /// <summary>
-        /// الاسم الكامل بالإنجليزية
-        /// </summary>
-        [Required(ErrorMessage = "الاسم الكامل بالإنجليزية مطلوب")]
-        [MaxLength(200)]
-        [Column("FULL_NAME_EN")]
-        public string FullNameEn { get; set; } = string.Empty;
+    [Column("GENDER")]
+    [MaxLength(1)] 
+    public string Gender { get; set; } = "M"; // M/F
 
-        /// <summary>
-        /// الجنس (M=ذكر، F=أنثى)
-        /// </summary>
-        [MaxLength(1)]
-        [Column("GENDER")]
-        public string? Gender { get; set; }
+    [Column("MARITAL_STATUS")]
+    [MaxLength(20)]
+    public string MaritalStatus { get; set; } = "Single";
 
-        /// <summary>
-        /// تاريخ الميلاد
-        /// </summary>
-        [Required(ErrorMessage = "تاريخ الميلاد مطلوب")]
-        [Column("BIRTH_DATE")]
-        public DateTime BirthDate { get; set; }
+    [Column("MOBILE")]
+    [MaxLength(20)] 
+    public required string Mobile { get; set; }
 
-        /// <summary>
-        /// الحالة الاجتماعية
-        /// </summary>
-        [MaxLength(20)]
-        [Column("MARITAL_STATUS")]
-        public string? MaritalStatus { get; set; }
+    [Column("EMAIL")]
+    [MaxLength(100)]
+    public required string Email { get; set; }
 
-        /// <summary>
-        /// معرف الجنسية (FK)
-        /// </summary>
-        [Required(ErrorMessage = "الجنسية مطلوبة")]
-        [Column("NATIONALITY_ID")]
-        [ForeignKey(nameof(Nationality))]
-        public int NationalityId { get; set; }
+    // --- البيانات الوظيفية ---
+    [Column("HIRE_DATE")]
+    public DateTime HireDate { get; set; }
 
-        /// <summary>
-        /// معرف الوظيفة (FK)
-        /// </summary>
-        [Required(ErrorMessage = "الوظيفة مطلوبة")]
-        [Column("JOB_ID")]
-        [ForeignKey(nameof(Job))]
-        public int JobId { get; set; }
+    [Column("DEPARTMENT_ID")]
+    public int DepartmentId { get; set; }
 
-        /// <summary>
-        /// معرف القسم (FK)
-        /// </summary>
-        [Required(ErrorMessage = "القسم مطلوب")]
-        [Column("DEPT_ID")]
-        [ForeignKey(nameof(Department))]
-        public int DeptId { get; set; }
+    [Column("JOB_ID")]
+    public int JobId { get; set; }
 
-        /// <summary>
-        /// معرف المدير المباشر (FK)
-        /// </summary>
-        [Column("MANAGER_ID")]
-        [ForeignKey(nameof(Manager))]
-        public int? ManagerId { get; set; }
+    [Column("NATIONALITY_ID")] // نفترض وجود جدول للجنسيات مستقبلاً أو نستخدم الدولة حالياً
+    public int? NationalityId { get; set; } 
 
-        /// <summary>
-        /// تاريخ الالتحاق
-        /// </summary>
-        [Required(ErrorMessage = "تاريخ الالتحاق مطلوب")]
-        [Column("JOINING_DATE")]
-        public DateTime JoiningDate { get; set; }
+    [Column("NATIONAL_ID")]
+    [MaxLength(20)]
+    public required string NationalId { get; set; }
 
-        /// <summary>
-        /// حالة الموظف (ACTIVE, ON_LEAVE, TERMINATED, RESIGNED)
-        /// </summary>
-        [MaxLength(20)]
-        [Column("STATUS")]
-        public string? Status { get; set; } = "ACTIVE";
+    // --- البيانات الطبية Professional Details ---
+    [Column("LICENSE_NUMBER")]
+    [MaxLength(50)]
+    public string? LicenseNumber { get; set; }
 
-        /// <summary>
-        /// البريد الإلكتروني
-        /// </summary>
-        [EmailAddress(ErrorMessage = "البريد الإلكتروني غير صحيح")]
-        [MaxLength(100)]
-        [Column("EMAIL")]
-        public string? Email { get; set; }
+    [Column("LICENSE_EXPIRY_DATE")]
+    public DateTime? LicenseExpiryDate { get; set; }
 
-        /// <summary>
-        /// رقم الجوال
-        /// </summary>
-        [MaxLength(20)]
-        [Column("MOBILE")]
-        public string? Mobile { get; set; }
+    [Column("SPECIALTY")]
+    [MaxLength(100)]
+    public string? Specialty { get; set; }
 
-        // ═══════════════════════════════════════════════════════════
-        // Navigation Properties - العلاقات
-        // ═══════════════════════════════════════════════════════════
+    [Column("MANAGER_ID")]
+    public int? ManagerId { get; set; }
 
-        /// <summary>
-        /// الدولة (الجنسية)
-        /// </summary>
-        public virtual Country? Nationality { get; set; }
+    [Column("USER_ID")] // للربط مع Identity
+    [MaxLength(450)]
+    public string? UserId { get; set; }
 
-        /// <summary>
-        /// الوظيفة الحالية
-        /// </summary>
-        public virtual Job? Job { get; set; }
+    // --- العلاقات Navigation Properties ---
+    public virtual Department Department { get; set; } = null!;
+    public virtual Job Job { get; set; } = null!;
+    [ForeignKey(nameof(NationalityId))]
+    public virtual Country? Country { get; set; }
+    public virtual Employee? Manager { get; set; }
 
-        /// <summary>
-        /// القسم الحالي
-        /// </summary>
-        public virtual Department? Department { get; set; }
+    // One-to-One
+    public virtual EmployeeCompensation? Compensation { get; set; }
 
-        /// <summary>
-        /// المدير المباشر
-        /// </summary>
-        public virtual Employee? Manager { get; set; }
-
-        /// <summary>
-        /// الموظفين التابعين لهذا المدير
-        /// </summary>
-        [InverseProperty(nameof(Manager))]
-        public virtual ICollection<Employee> Subordinates { get; set; } = new List<Employee>();
-
-        /// <summary>
-        /// وثائق الموظف
-        /// </summary>
-        public virtual ICollection<EmployeeDocument> Documents { get; set; } = new List<EmployeeDocument>();
-
-        /// <summary>
-        /// العقود الوظيفية
-        /// </summary>
-        public virtual ICollection<Contract> Contracts { get; set; } = new List<Contract>();
-
-        /// <summary>
-        /// التابعين (المعالين)
-        /// </summary>
-        public virtual ICollection<Dependent> Dependents { get; set; } = new List<Dependent>();
-
-        /// <summary>
-        /// المؤهلات العلمية
-        /// </summary>
-        public virtual ICollection<EmployeeQualification> Qualifications { get; set; } = new List<EmployeeQualification>();
-
-        /// <summary>
-        /// الخبرات العملية
-        /// </summary>
-        public virtual ICollection<EmployeeExperience> Experiences { get; set; } = new List<EmployeeExperience>();
-
-        /// <summary>
-        /// العناوين
-        /// </summary>
-        public virtual ICollection<EmployeeAddress> Addresses { get; set; } = new List<EmployeeAddress>();
-
-        /// <summary>
-        /// جهات الاتصال للطوارئ
-        /// </summary>
-        public virtual ICollection<EmergencyContact> EmergencyContacts { get; set; } = new List<EmergencyContact>();
-
-        /// <summary>
-        /// الحسابات البنكية
-        /// </summary>
-        public virtual ICollection<EmployeeBankAccount> BankAccounts { get; set; } = new List<EmployeeBankAccount>();
-
-        /// <summary>
-        /// حساب المستخدم (اختياري - للموظفين الذين لديهم صلاحية الدخول للنظام)
-        /// </summary>
-        public virtual Identity.ApplicationUser? User { get; set; }
-    }
+    // One-to-Many
+    // One-to-Many
+    public virtual ICollection<EmployeeDocument> Documents { get; set; } = new List<EmployeeDocument>();
+    public virtual ICollection<EmployeeQualification> Qualifications { get; set; } = new List<EmployeeQualification>();
+    public virtual ICollection<EmployeeExperience> Experiences { get; set; } = new List<EmployeeExperience>();
+    public virtual ICollection<EmergencyContact> EmergencyContacts { get; set; } = new List<EmergencyContact>();
+    public virtual ICollection<Contract> Contracts { get; set; } = new List<Contract>();
+    public virtual ICollection<EmployeeCertification> Certifications { get; set; } = new List<EmployeeCertification>();
+    public virtual ICollection<EmployeeBankAccount> BankAccounts { get; set; } = new List<EmployeeBankAccount>();
+    public virtual ICollection<Dependent> Dependents { get; set; } = new List<Dependent>();
+    public virtual ICollection<EmployeeAddress> Addresses { get; set; } = new List<EmployeeAddress>();
+    public virtual ICollection<Employee> Subordinates { get; set; } = new List<Employee>();
 }

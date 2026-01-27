@@ -39,5 +39,33 @@ namespace HRMS.Core.Entities.Core
         [MaxLength(20)]
         [Column("BANK_CODE")]
         public string? BankCode { get; set; }
+
+        /// <summary>
+        /// رمز السويفت الدولي للبنك (8 أو 11 حرف)
+        /// </summary>
+        [MaxLength(11)]
+        [Column("SWIFT_CODE")]
+        public string? SwiftCode { get; set; }
+
+        /// <summary>
+        /// عنوان البنك
+        /// </summary>
+        [MaxLength(200)]
+        [Column("ADDRESS")]
+        public string? Address { get; set; }
+
+        /// <summary>
+        /// رقم هاتف البنك
+        /// </summary>
+        [MaxLength(20)]
+        [Column("PHONE")]
+        public string? Phone { get; set; }
+
+        /// <summary>
+        /// البريد الإلكتروني للبنك
+        /// </summary>
+        [MaxLength(100)]
+        [Column("EMAIL")]
+        public string? Email { get; set; }
     }
 }
