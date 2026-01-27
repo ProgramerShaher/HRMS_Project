@@ -1886,3 +1886,1446 @@ VALUES (@p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p1
 2026-01-27 03:31:57.445 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Leaves.LeavesController.ProcessAction (HRMS.API)'
 2026-01-27 03:31:57.447 +03:00 [INF] HTTP POST /api/Leaves/action responded 200 in 316.9526 ms
 2026-01-27 03:31:57.451 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/Leaves/action - 200 null application/json; charset=utf-8 358.6356ms
+2026-01-27 16:52:06.049 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-01-27 16:52:14.402 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-01-27 16:52:16.489 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-27 16:52:17.214 +03:00 [INF] Now listening on: https://localhost:5001
+2026-01-27 16:52:17.216 +03:00 [INF] Now listening on: http://localhost:5000
+2026-01-27 16:52:17.344 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-27 16:52:17.345 +03:00 [INF] Hosting environment: Development
+2026-01-27 16:52:17.353 +03:00 [INF] Content root path: G:\HRMS_Hospital\Backend\HRMS\HRMS.API
+2026-01-27 16:52:21.449 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/index.html - null null
+2026-01-27 16:52:24.887 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 3015.7899 ms
+2026-01-27 16:52:24.905 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/index.html - 200 null text/html;charset=utf-8 3469.5967ms
+2026-01-27 16:52:24.909 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-27 16:52:24.923 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 14.2624ms
+2026-01-27 16:52:25.715 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_vs/browserLink - null null
+2026-01-27 16:52:25.909 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_vs/browserLink - 200 null text/javascript; charset=UTF-8 193.6328ms
+2026-01-27 16:52:27.522 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-01-27 16:52:28.048 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 484.3086 ms
+2026-01-27 16:52:28.054 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 532.2895ms
+2026-01-27 16:57:23.872 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - application/json 157
+2026-01-27 16:57:23.963 +03:00 [INF] CORS policy execution successful.
+2026-01-27 16:57:23.985 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 16:57:24.044 +03:00 [INF] Route matched with {action = "CreateShift", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] CreateShift(HRMS.Application.Features.Attendance.Configuration.CreateShiftTypeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 16:57:28.208 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 16:57:28.211 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 16:57:28.214 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 16:57:31.669 +03:00 [INF] Executed DbCommand (247ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 5), @p3='?' (DbType = Int16), @p4='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p5='?' (Size = 1) (DbType = Byte), @p6='?' (Size = 1) (DbType = Byte), @p7='?' (Size = 100), @p8='?' (Size = 5), @p9='?' (DbType = DateTime2), @p10='?' (Size = 50), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[SHIFT_TYPES] ([CREATED_AT], [CREATED_BY], [END_TIME], [GRACE_PERIOD_MINS], [HOURS_COUNT], [IS_CROSS_DAY], [IS_DELETED], [SHIFT_NAME_AR], [START_TIME], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[SHIFT_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+2026-01-27 16:57:31.837 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 16:57:31.852 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API) in 7798.3373ms
+2026-01-27 16:57:31.855 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 16:57:31.857 +03:00 [INF] HTTP POST /api/AttendanceSettings/shifts responded 200 in 7902.6197 ms
+2026-01-27 16:57:31.878 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 8006.293ms
+2026-01-27 16:58:34.096 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 16:58:34.115 +03:00 [INF] CORS policy execution successful.
+2026-01-27 16:58:34.117 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 16:58:34.130 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 16:58:34.870 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 16:58:34.906 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 16:58:34.944 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 16:58:35.073 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (Size = 1) (DbType = Byte), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (DbType = DateTime2), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] ([CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [IS_DELETED], [IS_OFF_DAY], [ROSTER_DATE], [SHIFT_ID], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[ROSTER_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+2026-01-27 16:58:35.087 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 16:58:35.091 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 948.7786ms
+2026-01-27 16:58:35.100 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 16:58:35.102 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 988.1460 ms
+2026-01-27 16:58:35.107 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 1045.6522ms
+2026-01-27 17:03:06.980 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:03:06.985 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:03:06.986 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:03:06.995 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:03:07.261 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:03:07.406 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:03:07.480 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:03:07.519 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:03:07.632 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 50), @p5='?' (DbType = Int16), @p6='?' (DbType = Int32), @p7='?' (Size = 1) (DbType = Byte), @p8='?' (DbType = Int16), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 20), @p12='?' (DbType = DateTime2), @p13='?' (Size = 50), @p14='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[DAILY_ATTENDANCE] ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14);
+2026-01-27 17:03:07.641 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:03:07.643 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 644.3715ms
+2026-01-27 17:03:07.645 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:03:07.646 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 661.6286 ms
+2026-01-27 17:03:07.649 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 668.3374ms
+2026-01-27 17:11:21.852 +03:00 [INF] Request starting HTTP/2 PUT https://localhost:5001/api/AttendanceSettings/shifts/1 - application/json 172
+2026-01-27 17:11:21.856 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:11:21.858 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.UpdateShift (HRMS.API)'
+2026-01-27 17:11:21.866 +03:00 [INF] Route matched with {action = "UpdateShift", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] UpdateShift(Int32, HRMS.Application.Features.Attendance.Configuration.UpdateShiftTypeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:11:21.949 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[SHIFT_ID] = @__p_0
+2026-01-27 17:11:21.985 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int16), @p2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [HR_ATTENDANCE].[SHIFT_TYPES] SET [GRACE_PERIOD_MINS] = @p0
+OUTPUT 1
+WHERE [SHIFT_ID] = @p1 AND [VERSION_NO] = @p2;
+2026-01-27 17:11:21.991 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:11:21.993 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.UpdateShift (HRMS.API) in 120.3849ms
+2026-01-27 17:11:21.999 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.UpdateShift (HRMS.API)'
+2026-01-27 17:11:22.002 +03:00 [INF] HTTP PUT /api/AttendanceSettings/shifts/1 responded 200 in 145.5429 ms
+2026-01-27 17:11:22.007 +03:00 [INF] Request finished HTTP/2 PUT https://localhost:5001/api/AttendanceSettings/shifts/1 - 200 null application/json; charset=utf-8 190.6715ms
+2026-01-27 17:11:41.636 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/api/AttendanceSettings/shifts - null null
+2026-01-27 17:11:41.641 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-01-27 17:11:41.649 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Configuration.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:11:41.705 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-01-27 17:11:41.711 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Configuration.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-27 17:11:41.728 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 73.9043ms
+2026-01-27 17:11:41.730 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-01-27 17:11:41.732 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 91.5554 ms
+2026-01-27 17:11:41.735 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 98.6955ms
+2026-01-27 17:19:15.749 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:19:15.759 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:19:15.774 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:19:15.781 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:19:15.965 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:19:15.979 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:19:15.996 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:19:16.017 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:19:16.083 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 50), @p7='?' (DbType = Int16), @p8='?' (DbType = Int32), @p9='?' (Size = 1) (DbType = Byte), @p10='?' (DbType = Int16), @p11='?' (DbType = Int16), @p12='?' (DbType = Int32), @p13='?' (Size = 20), @p14='?' (DbType = DateTime2), @p15='?' (Size = 50), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+INSERT INTO [HR_ATTENDANCE].[DAILY_ATTENDANCE] ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID]
+VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+2026-01-27 17:19:16.118 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:19:16.120 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 321.653ms
+2026-01-27 17:19:16.123 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:19:16.125 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 365.5634 ms
+2026-01-27 17:19:16.130 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 383.8038ms
+2026-01-27 17:23:26.543 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:23:26.546 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:23:26.548 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:23:26.549 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:23:26.740 +03:00 [INF] Executed DbCommand (180ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:23:26.871 +03:00 [INF] Executed DbCommand (34ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:23:26.912 +03:00 [INF] Executed DbCommand (31ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:23:26.937 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:23:26.957 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 50), @p7='?' (DbType = Int16), @p8='?' (DbType = Int32), @p9='?' (Size = 1) (DbType = Byte), @p10='?' (DbType = Int16), @p11='?' (DbType = Int16), @p12='?' (DbType = Int32), @p13='?' (Size = 20), @p14='?' (DbType = DateTime2), @p15='?' (Size = 50), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+INSERT INTO [HR_ATTENDANCE].[DAILY_ATTENDANCE] ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID]
+VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+2026-01-27 17:23:26.968 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:23:26.971 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 417.5641ms
+2026-01-27 17:23:26.990 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:23:26.991 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 445.1420 ms
+2026-01-27 17:23:26.995 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 452.0625ms
+2026-01-27 17:25:08.187 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/api/AttendanceSettings/shifts - null null
+2026-01-27 17:25:08.190 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-01-27 17:25:08.192 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Configuration.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:25:08.212 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-01-27 17:25:08.249 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Configuration.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-27 17:25:08.349 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 152.9048ms
+2026-01-27 17:25:08.364 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-01-27 17:25:08.365 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 175.1896 ms
+2026-01-27 17:25:08.368 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 181.5887ms
+2026-01-27 17:25:32.700 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - application/json 157
+2026-01-27 17:25:32.820 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:25:32.821 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 17:25:32.823 +03:00 [INF] Route matched with {action = "CreateShift", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] CreateShift(HRMS.Application.Features.Attendance.Configuration.CreateShiftTypeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:25:32.836 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 5), @p3='?' (DbType = Int16), @p4='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p5='?' (Size = 1) (DbType = Byte), @p6='?' (Size = 1) (DbType = Byte), @p7='?' (Size = 100), @p8='?' (Size = 5), @p9='?' (DbType = DateTime2), @p10='?' (Size = 50), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[SHIFT_TYPES] ([CREATED_AT], [CREATED_BY], [END_TIME], [GRACE_PERIOD_MINS], [HOURS_COUNT], [IS_CROSS_DAY], [IS_DELETED], [SHIFT_NAME_AR], [START_TIME], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[SHIFT_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+2026-01-27 17:25:32.842 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:25:32.843 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API) in 16.5143ms
+2026-01-27 17:25:32.897 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 17:25:32.900 +03:00 [INF] HTTP POST /api/AttendanceSettings/shifts responded 200 in 79.4590 ms
+2026-01-27 17:25:32.905 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 205.0008ms
+2026-01-27 17:26:01.078 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 17:26:01.104 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:26:01.106 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:26:01.109 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:26:01.140 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:26:01.150 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:26:01.158 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 17:26:01.173 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (Size = 1) (DbType = Byte), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (DbType = DateTime2), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] ([CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [IS_DELETED], [IS_OFF_DAY], [ROSTER_DATE], [SHIFT_ID], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[ROSTER_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+2026-01-27 17:26:01.180 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:26:01.182 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 66.3185ms
+2026-01-27 17:26:01.225 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:26:01.228 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 124.0333 ms
+2026-01-27 17:26:01.231 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 153.6757ms
+2026-01-27 17:27:21.049 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:27:21.085 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:27:21.086 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:27:21.088 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:27:21.102 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:27:21.119 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:27:21.132 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:27:21.145 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:27:21.185 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 50), @p7='?' (DbType = Int16), @p8='?' (DbType = Int32), @p9='?' (Size = 1) (DbType = Byte), @p10='?' (DbType = Int16), @p11='?' (DbType = Int16), @p12='?' (DbType = Int32), @p13='?' (Size = 20), @p14='?' (DbType = DateTime2), @p15='?' (Size = 50), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime2), @p18='?' (DbType = DateTime2), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (Size = 50), @p22='?' (DbType = Int16), @p23='?' (DbType = Int32), @p24='?' (Size = 1) (DbType = Byte), @p25='?' (DbType = Int16), @p26='?' (DbType = Int16), @p27='?' (DbType = Int32), @p28='?' (Size = 20), @p29='?' (DbType = DateTime2), @p30='?' (Size = 50), @p31='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, 0),
+(@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 17:27:21.192 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:27:21.194 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 102.8146ms
+2026-01-27 17:27:21.198 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:27:21.200 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 114.8514 ms
+2026-01-27 17:27:21.203 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 154.4972ms
+2026-01-27 17:28:40.425 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:28:40.457 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:28:40.461 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:28:40.464 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:28:40.482 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:28:40.497 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:28:40.515 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:28:40.528 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:28:40.573 +03:00 [INF] Executed DbCommand (36ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = Int64), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (DbType = DateTime2), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 1) (DbType = Byte), @p12='?' (DbType = Int16), @p13='?' (DbType = Int16), @p14='?' (DbType = Int32), @p15='?' (Size = 20), @p16='?' (DbType = DateTime2), @p17='?' (Size = 50), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (DbType = DateTime2), @p22='?' (DbType = DateTime2), @p23='?' (Size = 50), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 1) (DbType = Byte), @p27='?' (DbType = Int16), @p28='?' (DbType = Int16), @p29='?' (DbType = Int32), @p30='?' (Size = 20), @p31='?' (DbType = DateTime2), @p32='?' (Size = 50), @p33='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p2 AND [VERSION_NO] = @p3;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, 0),
+(@p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 17:28:40.592 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:28:40.594 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 124.3729ms
+2026-01-27 17:28:40.597 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:28:40.598 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 141.1768 ms
+2026-01-27 17:28:40.601 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 176.025ms
+2026-01-27 17:34:49.440 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:34:49.447 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:34:49.448 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:34:49.451 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:34:49.484 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:34:49.501 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:34:49.516 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:34:49.530 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:34:49.556 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = Int64), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (DbType = DateTime2), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 1) (DbType = Byte), @p12='?' (DbType = Int16), @p13='?' (DbType = Int16), @p14='?' (DbType = Int32), @p15='?' (Size = 20), @p16='?' (DbType = DateTime2), @p17='?' (Size = 50), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (DbType = DateTime2), @p22='?' (DbType = DateTime2), @p23='?' (Size = 50), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 1) (DbType = Byte), @p27='?' (DbType = Int16), @p28='?' (DbType = Int16), @p29='?' (DbType = Int32), @p30='?' (Size = 20), @p31='?' (DbType = DateTime2), @p32='?' (Size = 50), @p33='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p2 AND [VERSION_NO] = @p3;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, 0),
+(@p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 17:34:49.566 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:34:49.568 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 113.2242ms
+2026-01-27 17:34:49.570 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:34:49.572 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 125.4711 ms
+2026-01-27 17:34:49.575 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 134.475ms
+2026-01-27 17:36:07.981 +03:00 [INF] Request starting HTTP/2 PUT https://localhost:5001/api/AttendanceSettings/shifts/2 - application/json 172
+2026-01-27 17:36:07.985 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:36:07.986 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.UpdateShift (HRMS.API)'
+2026-01-27 17:36:07.987 +03:00 [INF] Route matched with {action = "UpdateShift", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] UpdateShift(Int32, HRMS.Application.Features.Attendance.Configuration.UpdateShiftTypeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:36:08.013 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[SHIFT_ID] = @__p_0
+2026-01-27 17:36:08.061 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int16), @p2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [HR_ATTENDANCE].[SHIFT_TYPES] SET [GRACE_PERIOD_MINS] = @p0
+OUTPUT 1
+WHERE [SHIFT_ID] = @p1 AND [VERSION_NO] = @p2;
+2026-01-27 17:36:08.068 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:36:08.073 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.UpdateShift (HRMS.API) in 79.2531ms
+2026-01-27 17:36:08.078 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.UpdateShift (HRMS.API)'
+2026-01-27 17:36:08.081 +03:00 [INF] HTTP PUT /api/AttendanceSettings/shifts/2 responded 200 in 96.8141 ms
+2026-01-27 17:36:08.084 +03:00 [INF] Request finished HTTP/2 PUT https://localhost:5001/api/AttendanceSettings/shifts/2 - 200 null application/json; charset=utf-8 133.1716ms
+2026-01-27 17:36:24.738 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 17:36:24.743 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:36:24.746 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:36:24.748 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:36:24.772 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:36:24.789 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:36:24.816 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 17:36:24.831 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:36:24.833 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 79.251ms
+2026-01-27 17:36:24.835 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:36:24.837 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 93.4651 ms
+2026-01-27 17:36:24.839 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 101.1313ms
+2026-01-27 17:36:29.962 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:36:29.968 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:36:29.971 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:36:29.976 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:36:30.120 +03:00 [INF] Executed DbCommand (130ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:36:30.170 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:36:30.186 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:36:30.198 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:36:30.238 +03:00 [INF] Executed DbCommand (34ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = Int64), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (DbType = DateTime2), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 1) (DbType = Byte), @p12='?' (DbType = Int16), @p13='?' (DbType = Int16), @p14='?' (DbType = Int32), @p15='?' (Size = 20), @p16='?' (DbType = DateTime2), @p17='?' (Size = 50), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (DbType = DateTime2), @p22='?' (DbType = DateTime2), @p23='?' (Size = 50), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 1) (DbType = Byte), @p27='?' (DbType = Int16), @p28='?' (DbType = Int16), @p29='?' (DbType = Int32), @p30='?' (Size = 20), @p31='?' (DbType = DateTime2), @p32='?' (Size = 50), @p33='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p2 AND [VERSION_NO] = @p3;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, 0),
+(@p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 17:36:30.267 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:36:30.269 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 287.0744ms
+2026-01-27 17:36:30.271 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:36:30.274 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 305.9015 ms
+2026-01-27 17:36:30.276 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 314.1543ms
+2026-01-27 17:43:23.761 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - application/json 155
+2026-01-27 17:43:23.773 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:43:23.775 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 17:43:23.776 +03:00 [INF] Route matched with {action = "CreateShift", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] CreateShift(HRMS.Application.Features.Attendance.Configuration.CreateShiftTypeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:43:23.816 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 5), @p3='?' (DbType = Int16), @p4='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p5='?' (Size = 1) (DbType = Byte), @p6='?' (Size = 1) (DbType = Byte), @p7='?' (Size = 100), @p8='?' (Size = 5), @p9='?' (DbType = DateTime2), @p10='?' (Size = 50), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[SHIFT_TYPES] ([CREATED_AT], [CREATED_BY], [END_TIME], [GRACE_PERIOD_MINS], [HOURS_COUNT], [IS_CROSS_DAY], [IS_DELETED], [SHIFT_NAME_AR], [START_TIME], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[SHIFT_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+2026-01-27 17:43:23.822 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:43:23.824 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API) in 44.5934ms
+2026-01-27 17:43:23.835 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 17:43:23.837 +03:00 [INF] HTTP POST /api/AttendanceSettings/shifts responded 200 in 64.4151 ms
+2026-01-27 17:43:23.841 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 80.1888ms
+2026-01-27 17:43:51.749 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 17:43:51.765 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:43:51.766 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:43:51.770 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:43:51.780 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:43:51.788 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:43:51.797 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 17:43:51.802 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:43:51.805 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 31.2869ms
+2026-01-27 17:43:51.861 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:43:51.878 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 113.3863 ms
+2026-01-27 17:43:51.882 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 133.1091ms
+2026-01-27 17:45:58.350 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 17:45:58.358 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:45:58.360 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:45:58.362 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:45:58.381 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:45:58.396 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:45:58.410 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 17:45:58.415 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:45:58.417 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 50.9295ms
+2026-01-27 17:45:58.421 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:45:58.424 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 65.4605 ms
+2026-01-27 17:45:58.427 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 77.0421ms
+2026-01-27 17:46:21.950 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:46:21.956 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:46:21.958 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:46:21.960 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:46:22.106 +03:00 [INF] Executed DbCommand (131ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:46:22.169 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:46:22.183 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:46:22.197 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:46:22.230 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 50), @p7='?' (DbType = Int16), @p8='?' (DbType = Int32), @p9='?' (Size = 1) (DbType = Byte), @p10='?' (DbType = Int16), @p11='?' (DbType = Int16), @p12='?' (DbType = Int32), @p13='?' (Size = 20), @p14='?' (DbType = DateTime2), @p15='?' (Size = 50), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime2), @p18='?' (DbType = DateTime2), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (Size = 50), @p22='?' (DbType = Int16), @p23='?' (DbType = Int32), @p24='?' (Size = 1) (DbType = Byte), @p25='?' (DbType = Int16), @p26='?' (DbType = Int16), @p27='?' (DbType = Int32), @p28='?' (Size = 20), @p29='?' (DbType = DateTime2), @p30='?' (Size = 50), @p31='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, 0),
+(@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 17:46:22.239 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:46:22.240 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 268.5425ms
+2026-01-27 17:46:22.243 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:46:22.245 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 288.9339 ms
+2026-01-27 17:46:22.248 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 298.6512ms
+2026-01-27 17:51:03.558 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - application/json 150
+2026-01-27 17:51:03.572 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:51:03.573 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 17:51:03.577 +03:00 [INF] Route matched with {action = "CreateShift", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] CreateShift(HRMS.Application.Features.Attendance.Configuration.CreateShiftTypeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:51:03.749 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 5), @p3='?' (DbType = Int16), @p4='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p5='?' (Size = 1) (DbType = Byte), @p6='?' (Size = 1) (DbType = Byte), @p7='?' (Size = 100), @p8='?' (Size = 5), @p9='?' (DbType = DateTime2), @p10='?' (Size = 50), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[SHIFT_TYPES] ([CREATED_AT], [CREATED_BY], [END_TIME], [GRACE_PERIOD_MINS], [HOURS_COUNT], [IS_CROSS_DAY], [IS_DELETED], [SHIFT_NAME_AR], [START_TIME], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[SHIFT_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+2026-01-27 17:51:03.754 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:51:03.756 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API) in 173.6603ms
+2026-01-27 17:51:03.758 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.CreateShift (HRMS.API)'
+2026-01-27 17:51:03.760 +03:00 [INF] HTTP POST /api/AttendanceSettings/shifts responded 200 in 189.0123 ms
+2026-01-27 17:51:03.763 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 205.0091ms
+2026-01-27 17:51:40.910 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 17:51:40.915 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:51:40.916 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:51:40.919 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:51:41.071 +03:00 [INF] Executed DbCommand (146ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:51:41.104 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 17:51:41.121 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 17:51:41.133 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (Size = 1) (DbType = Byte), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (DbType = DateTime2), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] ([CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [IS_DELETED], [IS_OFF_DAY], [ROSTER_DATE], [SHIFT_ID], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[ROSTER_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+2026-01-27 17:51:41.138 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 17:51:41.140 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 217.1939ms
+2026-01-27 17:51:41.147 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 17:51:41.153 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 238.7012 ms
+2026-01-27 17:51:41.156 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 246.216ms
+2026-01-27 17:52:50.584 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 17:52:50.588 +03:00 [INF] CORS policy execution successful.
+2026-01-27 17:52:50.589 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:52:50.591 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 17:52:50.605 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 17:52:50.626 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 17:52:50.640 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 17:52:50.653 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 17:52:50.666 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 50), @p5='?' (DbType = Int16), @p6='?' (DbType = Int32), @p7='?' (Size = 1) (DbType = Byte), @p8='?' (DbType = Int16), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 20), @p12='?' (DbType = DateTime2), @p13='?' (Size = 50), @p14='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[DAILY_ATTENDANCE] ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14);
+2026-01-27 17:52:50.673 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 17:52:50.675 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 79.5698ms
+2026-01-27 17:52:50.685 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 17:52:50.688 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 99.7578 ms
+2026-01-27 17:52:50.691 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 139.7486ms
+2026-01-27 18:08:13.094 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-01-27 18:08:16.771 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-01-27 18:08:16.960 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-27 18:08:17.685 +03:00 [INF] Now listening on: https://localhost:5001
+2026-01-27 18:08:17.689 +03:00 [INF] Now listening on: http://localhost:5000
+2026-01-27 18:08:17.964 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-27 18:08:17.976 +03:00 [INF] Hosting environment: Development
+2026-01-27 18:08:17.978 +03:00 [INF] Content root path: G:\HRMS_Hospital\Backend\HRMS\HRMS.API
+2026-01-27 18:08:18.704 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/index.html - null null
+2026-01-27 18:08:20.961 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 699.1935 ms
+2026-01-27 18:08:21.195 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/index.html - 200 null text/html;charset=utf-8 2501.7202ms
+2026-01-27 18:08:22.023 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-27 18:08:22.024 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_vs/browserLink - null null
+2026-01-27 18:08:22.132 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 109.9543ms
+2026-01-27 18:08:22.216 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_vs/browserLink - 200 null text/javascript; charset=UTF-8 192.215ms
+2026-01-27 18:08:51.215 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-01-27 18:08:52.275 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 395.7020 ms
+2026-01-27 18:08:52.282 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 1067.5319ms
+2026-01-27 18:14:01.196 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - application/json 94
+2026-01-27 18:14:01.220 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:14:01.232 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 18:14:01.276 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:14:04.010 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 18:14:04.013 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 18:14:04.017 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 18:14:05.521 +03:00 [INF] Executed DbCommand (100ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 18:14:05.594 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 18:14:05.646 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-01-27 18:14:06.063 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (Size = 1) (DbType = Byte), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (DbType = DateTime2), @p6='?' (DbType = Int32), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] ([CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [IS_DELETED], [IS_OFF_DAY], [ROSTER_DATE], [SHIFT_ID], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[ROSTER_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+2026-01-27 18:14:06.128 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 18:14:06.141 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 4853.9679ms
+2026-01-27 18:14:06.144 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-01-27 18:14:06.146 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 4930.7893 ms
+2026-01-27 18:14:06.164 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 4967.431ms
+2026-01-27 18:15:11.556 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 18:15:11.634 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:15:11.636 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 18:15:11.646 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:15:12.051 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 18:15:12.294 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 18:15:12.378 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 18:15:12.431 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 18:15:12.700 +03:00 [INF] Executed DbCommand (39ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 50), @p7='?' (DbType = Int16), @p8='?' (DbType = Int32), @p9='?' (Size = 1) (DbType = Byte), @p10='?' (DbType = Int16), @p11='?' (DbType = Int16), @p12='?' (DbType = Int32), @p13='?' (Size = 20), @p14='?' (DbType = DateTime2), @p15='?' (Size = 50), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime2), @p18='?' (DbType = DateTime2), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (Size = 50), @p22='?' (DbType = Int16), @p23='?' (DbType = Int32), @p24='?' (Size = 1) (DbType = Byte), @p25='?' (DbType = Int16), @p26='?' (DbType = Int16), @p27='?' (DbType = Int32), @p28='?' (Size = 20), @p29='?' (DbType = DateTime2), @p30='?' (Size = 50), @p31='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, 0),
+(@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 18:15:12.738 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 18:15:12.820 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 1170.155ms
+2026-01-27 18:15:12.849 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 18:15:12.851 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 1218.1519 ms
+2026-01-27 18:15:12.855 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 1299.1415ms
+2026-01-27 18:19:45.481 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 18:19:45.486 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:19:45.490 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 18:19:45.497 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:19:45.700 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 18:19:45.712 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 18:19:45.727 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 18:19:45.739 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 18:19:45.775 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = Int64), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (DbType = DateTime2), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 1) (DbType = Byte), @p12='?' (DbType = Int16), @p13='?' (DbType = Int16), @p14='?' (DbType = Int32), @p15='?' (Size = 20), @p16='?' (DbType = DateTime2), @p17='?' (Size = 50), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (DbType = DateTime2), @p22='?' (DbType = DateTime2), @p23='?' (Size = 50), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 1) (DbType = Byte), @p27='?' (DbType = Int16), @p28='?' (DbType = Int16), @p29='?' (DbType = Int32), @p30='?' (Size = 20), @p31='?' (DbType = DateTime2), @p32='?' (Size = 50), @p33='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p2 AND [VERSION_NO] = @p3;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, 0),
+(@p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 18:19:45.784 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 18:19:45.787 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 285.6256ms
+2026-01-27 18:19:45.789 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 18:19:45.790 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 304.8186 ms
+2026-01-27 18:19:45.793 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 315.2896ms
+2026-01-27 18:25:38.458 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/apply-swap - application/json 242
+2026-01-27 18:25:38.588 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:25:38.596 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplySwap (HRMS.API)'
+2026-01-27 18:25:38.608 +03:00 [INF] Route matched with {action = "ApplySwap", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ApplySwap(HRMS.Application.Features.Attendance.Requests.CreateSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:25:38.636 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2026-01-27 18:25:38.666 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplySwap (HRMS.API) in 53.7527ms
+2026-01-27 18:25:38.673 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplySwap (HRMS.API)'
+2026-01-27 18:25:38.675 +03:00 [INF] HTTP POST /api/AttendanceSettings/apply-swap responded 400 in 86.9791 ms
+2026-01-27 18:25:38.677 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/apply-swap - 400 null application/problem+json; charset=utf-8 218.9887ms
+2026-01-27 18:26:03.917 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/apply-swap - application/json 126
+2026-01-27 18:26:04.041 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:26:04.044 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplySwap (HRMS.API)'
+2026-01-27 18:26:04.050 +03:00 [INF] Route matched with {action = "ApplySwap", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ApplySwap(HRMS.Application.Features.Attendance.Requests.CreateSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:26:04.105 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_TargetEmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_TargetEmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-01-27 18:26:04.183 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 1) (DbType = Byte), @p3='?' (Size = 200), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2), @p6='?' (Size = 20), @p7='?' (DbType = Int32), @p8='?' (DbType = DateTime2), @p9='?' (Size = 50), @p10='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[SHIFT_SWAP_REQUESTS] ([CREATED_AT], [CREATED_BY], [IS_DELETED], [MANAGER_COMMENT], [REQUESTER_ID], [ROSTER_DATE], [STATUS], [TARGET_EMPLOYEE_ID], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[REQUEST_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);
+2026-01-27 18:26:04.197 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 18:26:04.199 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplySwap (HRMS.API) in 134.5862ms
+2026-01-27 18:26:04.214 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplySwap (HRMS.API)'
+2026-01-27 18:26:04.215 +03:00 [INF] HTTP POST /api/AttendanceSettings/apply-swap responded 200 in 174.0255 ms
+2026-01-27 18:26:04.218 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/apply-swap - 200 null application/json; charset=utf-8 300.806ms
+2026-01-27 18:28:59.111 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - application/json 113
+2026-01-27 18:28:59.117 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:28:59.118 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:28:59.130 +03:00 [INF] Route matched with {action = "ActionSwapRequest", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionSwapRequest(HRMS.Application.Features.Attendance.Requests.ActionSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:28:59.170 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2026-01-27 18:28:59.173 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API) in 9.7915ms
+2026-01-27 18:28:59.176 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:28:59.177 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-swap-request responded 400 in 60.3024 ms
+2026-01-27 18:28:59.181 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - 400 null application/problem+json; charset=utf-8 70.2739ms
+2026-01-27 18:29:35.043 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - application/json 113
+2026-01-27 18:29:35.069 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:29:35.071 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:29:35.074 +03:00 [INF] Route matched with {action = "ActionSwapRequest", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionSwapRequest(HRMS.Application.Features.Attendance.Requests.ActionSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:29:35.085 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2026-01-27 18:29:35.087 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API) in 2.6484ms
+2026-01-27 18:29:35.089 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:29:35.091 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-swap-request responded 400 in 22.1903 ms
+2026-01-27 18:29:35.095 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - 400 null application/problem+json; charset=utf-8 52.0954ms
+2026-01-27 18:30:34.835 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - application/json 110
+2026-01-27 18:30:34.840 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:30:34.841 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:30:34.843 +03:00 [INF] Route matched with {action = "ActionSwapRequest", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionSwapRequest(HRMS.Application.Features.Attendance.Requests.ActionSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:30:34.890 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__request_RequestId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[REQUEST_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[IS_DELETED], [s].[MANAGER_COMMENT], [s].[REQUESTER_ID], [s].[ROSTER_DATE], [s].[STATUS], [s].[TARGET_EMPLOYEE_ID], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[SHIFT_SWAP_REQUESTS] AS [s]
+WHERE [s].[REQUEST_ID] = @__request_RequestId_0
+2026-01-27 18:30:34.900 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-27 18:30:34.903 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API) in 57.5604ms
+2026-01-27 18:30:34.926 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:30:34.928 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-swap-request responded 400 in 87.8336 ms
+2026-01-27 18:30:34.931 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - 400 null application/json; charset=utf-8 96.1913ms
+2026-01-27 18:31:35.727 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - application/json 155
+2026-01-27 18:31:35.731 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:31:35.732 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:31:35.734 +03:00 [INF] Route matched with {action = "ActionSwapRequest", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionSwapRequest(HRMS.Application.Features.Attendance.Requests.ActionSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:31:35.752 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@__request_RequestId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[REQUEST_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[IS_DELETED], [s].[MANAGER_COMMENT], [s].[REQUESTER_ID], [s].[ROSTER_DATE], [s].[STATUS], [s].[TARGET_EMPLOYEE_ID], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[SHIFT_SWAP_REQUESTS] AS [s]
+WHERE [s].[REQUEST_ID] = @__request_RequestId_0
+2026-01-27 18:31:35.757 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-27 18:31:35.760 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API) in 22.1426ms
+2026-01-27 18:31:35.774 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:31:35.776 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-swap-request responded 400 in 45.0749 ms
+2026-01-27 18:31:35.779 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - 400 null application/json; charset=utf-8 52.4735ms
+2026-01-27 18:31:51.395 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - application/json 154
+2026-01-27 18:31:51.405 +03:00 [INF] CORS policy execution successful.
+2026-01-27 18:31:51.407 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:31:51.411 +03:00 [INF] Route matched with {action = "ActionSwapRequest", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionSwapRequest(HRMS.Application.Features.Attendance.Requests.ActionSwapRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 18:31:51.449 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__request_RequestId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[REQUEST_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[IS_DELETED], [s].[MANAGER_COMMENT], [s].[REQUESTER_ID], [s].[ROSTER_DATE], [s].[STATUS], [s].[TARGET_EMPLOYEE_ID], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[SHIFT_SWAP_REQUESTS] AS [s]
+WHERE [s].[REQUEST_ID] = @__request_RequestId_0
+2026-01-27 18:31:51.480 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__swapRequest_RequesterId_0='?' (DbType = Int32), @__swapRequest_RosterDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__swapRequest_RequesterId_0 AND [e].[ROSTER_DATE] = @__swapRequest_RosterDate_1
+2026-01-27 18:31:51.503 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__swapRequest_TargetEmployeeId_0='?' (DbType = Int32), @__swapRequest_RosterDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__swapRequest_TargetEmployeeId_0 AND [e].[ROSTER_DATE] = @__swapRequest_RosterDate_1
+2026-01-27 18:31:51.546 +03:00 [INF] Executed DbCommand (27ms) [Parameters=[@p1='?' (DbType = Int64), @p0='?' (DbType = Int32), @p2='?' (DbType = Int32), @p4='?' (DbType = Int64), @p3='?' (DbType = Int32), @p5='?' (DbType = Int32), @p8='?' (DbType = Int32), @p6='?' (Size = 200), @p7='?' (Size = 20), @p9='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+UPDATE [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] SET [SHIFT_ID] = @p0
+OUTPUT 1
+WHERE [ROSTER_ID] = @p1 AND [VERSION_NO] = @p2;
+UPDATE [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] SET [SHIFT_ID] = @p3
+OUTPUT 1
+WHERE [ROSTER_ID] = @p4 AND [VERSION_NO] = @p5;
+UPDATE [HR_ATTENDANCE].[SHIFT_SWAP_REQUESTS] SET [MANAGER_COMMENT] = @p6, [STATUS] = @p7
+OUTPUT 1
+WHERE [REQUEST_ID] = @p8 AND [VERSION_NO] = @p9;
+2026-01-27 18:31:51.553 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 18:31:51.555 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API) in 111.2012ms
+2026-01-27 18:31:51.558 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionSwapRequest (HRMS.API)'
+2026-01-27 18:31:51.559 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-swap-request responded 200 in 154.4649 ms
+2026-01-27 18:31:51.562 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-swap-request - 200 null application/json; charset=utf-8 166.926ms
+2026-01-27 18:42:04.961 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-01-27 18:42:08.170 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-01-27 18:42:08.252 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-27 18:42:08.846 +03:00 [INF] Now listening on: https://localhost:5001
+2026-01-27 18:42:08.848 +03:00 [INF] Now listening on: http://localhost:5000
+2026-01-27 18:42:09.001 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-27 18:42:09.055 +03:00 [INF] Hosting environment: Development
+2026-01-27 18:42:09.056 +03:00 [INF] Content root path: G:\HRMS_Hospital\Backend\HRMS\HRMS.API
+2026-01-27 18:42:10.540 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/index.html - null null
+2026-01-27 18:42:11.577 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 617.7663 ms
+2026-01-27 18:42:11.615 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/index.html - 200 null text/html;charset=utf-8 1084.9514ms
+2026-01-27 18:42:11.695 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-27 18:42:11.853 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 156.1269ms
+2026-01-27 18:42:12.576 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_vs/browserLink - null null
+2026-01-27 18:42:13.100 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_vs/browserLink - 200 null text/javascript; charset=UTF-8 523.7937ms
+2026-01-27 18:42:14.490 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-01-27 18:42:14.992 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 479.9597 ms
+2026-01-27 18:42:14.995 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 504.8954ms
+2026-01-27 19:20:33.471 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/apply-overtime - application/json 166
+2026-01-27 19:20:33.484 +03:00 [INF] CORS policy execution successful.
+2026-01-27 19:20:33.498 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplyOvertime (HRMS.API)'
+2026-01-27 19:20:33.564 +03:00 [INF] Route matched with {action = "ApplyOvertime", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ApplyOvertime(HRMS.Application.Features.Attendance.Requests.ApplyOvertimeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 19:20:36.455 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 19:20:36.459 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 19:20:36.462 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-01-27 19:20:38.352 +03:00 [INF] Executed DbCommand (135ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p2='?' (DbType = DateTime2), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p6='?' (Size = 1) (DbType = Byte), @p7='?' (Size = 200), @p8='?' (DbType = DateTime2), @p9='?' (Size = 20), @p10='?' (DbType = DateTime2), @p11='?' (Size = 50), @p12='?' (DbType = Int32), @p13='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[OVERTIME_REQUESTS] ([APPROVED_BY], [APPROVED_HOURS], [CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [HOURS_REQUESTED], [IS_DELETED], [REASON], [REQUEST_DATE], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], [WORK_DATE])
+OUTPUT INSERTED.[OT_REQUEST_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13);
+2026-01-27 19:20:38.467 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 19:20:38.476 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplyOvertime (HRMS.API) in 4900.7787ms
+2026-01-27 19:20:38.481 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ApplyOvertime (HRMS.API)'
+2026-01-27 19:20:38.483 +03:00 [INF] HTTP POST /api/AttendanceSettings/apply-overtime responded 200 in 5003.4954 ms
+2026-01-27 19:20:38.512 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/apply-overtime - 200 null application/json; charset=utf-8 5041.3017ms
+2026-01-27 19:21:46.624 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-overtime - application/json 151
+2026-01-27 19:21:46.644 +03:00 [INF] CORS policy execution successful.
+2026-01-27 19:21:46.646 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API)'
+2026-01-27 19:21:46.655 +03:00 [INF] Route matched with {action = "ActionOvertime", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionOvertime(HRMS.Application.Features.Attendance.Requests.ActionOvertimeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 19:21:47.323 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__request_RequestId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [o].[OT_REQUEST_ID], [o].[APPROVED_BY], [o].[APPROVED_HOURS], [o].[CREATED_AT], [o].[CREATED_BY], [o].[EMPLOYEE_ID], [o].[HOURS_REQUESTED], [o].[IS_DELETED], [o].[REASON], [o].[REQUEST_DATE], [o].[STATUS], [o].[UPDATED_AT], [o].[UPDATED_BY], [o].[VERSION_NO], [o].[WORK_DATE]
+FROM [HR_ATTENDANCE].[OVERTIME_REQUESTS] AS [o]
+WHERE [o].[OT_REQUEST_ID] = @__request_RequestId_0
+2026-01-27 19:21:47.386 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[@p3='?' (DbType = Int32), @p0='?' (DbType = Int32), @p1='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p2='?' (Size = 20), @p4='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [HR_ATTENDANCE].[OVERTIME_REQUESTS] SET [APPROVED_BY] = @p0, [APPROVED_HOURS] = @p1, [STATUS] = @p2
+OUTPUT 1
+WHERE [OT_REQUEST_ID] = @p3 AND [VERSION_NO] = @p4;
+2026-01-27 19:21:47.447 +03:00 [ERR] An exception occurred in the database while saving changes for context type 'HRMS.Infrastructure.Data.HRMSDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The UPDATE statement conflicted with the FOREIGN KEY constraint "FK_OVERTIME_REQUESTS_EMPLOYEES_APPROVED_BY". The conflict occurred in database "HRMS_Hospital", table "HR_PERSONNEL.EMPLOYEES", column 'EMPLOYEE_ID'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:608cb629-1150-4286-bccc-7fa99798eb07
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The UPDATE statement conflicted with the FOREIGN KEY constraint "FK_OVERTIME_REQUESTS_EMPLOYEES_APPROVED_BY". The conflict occurred in database "HRMS_Hospital", table "HR_PERSONNEL.EMPLOYEES", column 'EMPLOYEE_ID'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:608cb629-1150-4286-bccc-7fa99798eb07
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-01-27 19:22:44.493 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API) in 57833.9873ms
+2026-01-27 19:22:44.507 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API)'
+2026-01-27 19:22:45.060 +03:00 [ERR] Global Exception Caught: An error occurred while saving the entity changes. See the inner exception for details.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The UPDATE statement conflicted with the FOREIGN KEY constraint "FK_OVERTIME_REQUESTS_EMPLOYEES_APPROVED_BY". The conflict occurred in database "HRMS_Hospital", table "HR_PERSONNEL.EMPLOYEES", column 'EMPLOYEE_ID'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:608cb629-1150-4286-bccc-7fa99798eb07
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at HRMS.Application.Features.Attendance.Requests.ActionOvertimeHandler.Handle(ActionOvertimeCommand request, CancellationToken cancellationToken) in G:\HRMS_Hospital\Backend\HRMS\HRMS.Application\Features\Attendance\Requests\OvertimeFeatures.cs:line 136
+   at HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime(ActionOvertimeCommand command) in G:\HRMS_Hospital\Backend\HRMS\HRMS.API\Controllers\Attendance\AttendanceSettingsController.cs:line 104
+   at lambda_method248(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at HRMS.API.Middleware.GlobalExceptionMiddleware.InvokeAsync(HttpContext context) in G:\HRMS_Hospital\Backend\HRMS\HRMS.API\Middleware\GlobalExceptionMiddleware.cs:line 25
+2026-01-27 19:22:45.116 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-overtime responded 400 in 58472.5915 ms
+2026-01-27 19:22:45.118 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-overtime - 400 null application/json 58494.417ms
+2026-01-27 19:23:12.237 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-overtime - application/json 151
+2026-01-27 19:23:12.440 +03:00 [INF] CORS policy execution successful.
+2026-01-27 19:23:12.441 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API)'
+2026-01-27 19:23:12.443 +03:00 [INF] Route matched with {action = "ActionOvertime", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionOvertime(HRMS.Application.Features.Attendance.Requests.ActionOvertimeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 19:23:12.493 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__request_RequestId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [o].[OT_REQUEST_ID], [o].[APPROVED_BY], [o].[APPROVED_HOURS], [o].[CREATED_AT], [o].[CREATED_BY], [o].[EMPLOYEE_ID], [o].[HOURS_REQUESTED], [o].[IS_DELETED], [o].[REASON], [o].[REQUEST_DATE], [o].[STATUS], [o].[UPDATED_AT], [o].[UPDATED_BY], [o].[VERSION_NO], [o].[WORK_DATE]
+FROM [HR_ATTENDANCE].[OVERTIME_REQUESTS] AS [o]
+WHERE [o].[OT_REQUEST_ID] = @__request_RequestId_0
+2026-01-27 19:23:12.555 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@p3='?' (DbType = Int32), @p0='?' (DbType = Int32), @p1='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p2='?' (Size = 20), @p4='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [HR_ATTENDANCE].[OVERTIME_REQUESTS] SET [APPROVED_BY] = @p0, [APPROVED_HOURS] = @p1, [STATUS] = @p2
+OUTPUT 1
+WHERE [OT_REQUEST_ID] = @p3 AND [VERSION_NO] = @p4;
+2026-01-27 19:23:12.568 +03:00 [ERR] An exception occurred in the database while saving changes for context type 'HRMS.Infrastructure.Data.HRMSDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The UPDATE statement conflicted with the FOREIGN KEY constraint "FK_OVERTIME_REQUESTS_EMPLOYEES_APPROVED_BY". The conflict occurred in database "HRMS_Hospital", table "HR_PERSONNEL.EMPLOYEES", column 'EMPLOYEE_ID'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:608cb629-1150-4286-bccc-7fa99798eb07
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The UPDATE statement conflicted with the FOREIGN KEY constraint "FK_OVERTIME_REQUESTS_EMPLOYEES_APPROVED_BY". The conflict occurred in database "HRMS_Hospital", table "HR_PERSONNEL.EMPLOYEES", column 'EMPLOYEE_ID'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:608cb629-1150-4286-bccc-7fa99798eb07
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-01-27 19:23:18.674 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API) in 6226.9914ms
+2026-01-27 19:23:18.682 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API)'
+2026-01-27 19:23:19.143 +03:00 [ERR] Global Exception Caught: An error occurred while saving the entity changes. See the inner exception for details.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The UPDATE statement conflicted with the FOREIGN KEY constraint "FK_OVERTIME_REQUESTS_EMPLOYEES_APPROVED_BY". The conflict occurred in database "HRMS_Hospital", table "HR_PERSONNEL.EMPLOYEES", column 'EMPLOYEE_ID'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:608cb629-1150-4286-bccc-7fa99798eb07
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at HRMS.Application.Features.Attendance.Requests.ActionOvertimeHandler.Handle(ActionOvertimeCommand request, CancellationToken cancellationToken) in G:\HRMS_Hospital\Backend\HRMS\HRMS.Application\Features\Attendance\Requests\OvertimeFeatures.cs:line 136
+   at HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime(ActionOvertimeCommand command) in G:\HRMS_Hospital\Backend\HRMS\HRMS.API\Controllers\Attendance\AttendanceSettingsController.cs:line 104
+   at lambda_method248(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at HRMS.API.Middleware.GlobalExceptionMiddleware.InvokeAsync(HttpContext context) in G:\HRMS_Hospital\Backend\HRMS\HRMS.API\Middleware\GlobalExceptionMiddleware.cs:line 25
+2026-01-27 19:23:19.186 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-overtime responded 400 in 6745.7166 ms
+2026-01-27 19:23:19.242 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-overtime - 400 null application/json 7005.1507ms
+2026-01-27 19:26:01.546 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-overtime - application/json 152
+2026-01-27 19:26:01.549 +03:00 [INF] CORS policy execution successful.
+2026-01-27 19:26:01.551 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API)'
+2026-01-27 19:26:01.553 +03:00 [INF] Route matched with {action = "ActionOvertime", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] ActionOvertime(HRMS.Application.Features.Attendance.Requests.ActionOvertimeCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 19:26:01.582 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@__request_RequestId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [o].[OT_REQUEST_ID], [o].[APPROVED_BY], [o].[APPROVED_HOURS], [o].[CREATED_AT], [o].[CREATED_BY], [o].[EMPLOYEE_ID], [o].[HOURS_REQUESTED], [o].[IS_DELETED], [o].[REASON], [o].[REQUEST_DATE], [o].[STATUS], [o].[UPDATED_AT], [o].[UPDATED_BY], [o].[VERSION_NO], [o].[WORK_DATE]
+FROM [HR_ATTENDANCE].[OVERTIME_REQUESTS] AS [o]
+WHERE [o].[OT_REQUEST_ID] = @__request_RequestId_0
+2026-01-27 19:26:01.724 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@p3='?' (DbType = Int32), @p0='?' (DbType = Int32), @p1='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p2='?' (Size = 20), @p4='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [HR_ATTENDANCE].[OVERTIME_REQUESTS] SET [APPROVED_BY] = @p0, [APPROVED_HOURS] = @p1, [STATUS] = @p2
+OUTPUT 1
+WHERE [OT_REQUEST_ID] = @p3 AND [VERSION_NO] = @p4;
+2026-01-27 19:26:01.733 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-01-27 19:26:01.736 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API) in 176.9643ms
+2026-01-27 19:26:01.772 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ActionOvertime (HRMS.API)'
+2026-01-27 19:26:01.774 +03:00 [INF] HTTP POST /api/AttendanceSettings/action-overtime responded 200 in 224.7646 ms
+2026-01-27 19:26:01.777 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/action-overtime - 200 null application/json; charset=utf-8 231.2599ms
+2026-01-27 19:30:05.974 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 19:30:06.101 +03:00 [INF] CORS policy execution successful.
+2026-01-27 19:30:06.102 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 19:30:06.111 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 19:30:06.278 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 19:30:06.490 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 19:30:06.570 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 19:30:06.603 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [o].[OT_REQUEST_ID], [o].[APPROVED_BY], [o].[APPROVED_HOURS], [o].[CREATED_AT], [o].[CREATED_BY], [o].[EMPLOYEE_ID], [o].[HOURS_REQUESTED], [o].[IS_DELETED], [o].[REASON], [o].[REQUEST_DATE], [o].[STATUS], [o].[UPDATED_AT], [o].[UPDATED_BY], [o].[VERSION_NO], [o].[WORK_DATE]
+FROM [HR_ATTENDANCE].[OVERTIME_REQUESTS] AS [o]
+WHERE [o].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [o].[STATUS] = N'APPROVED' AND [o].[WORK_DATE] = @__targetDate_1
+2026-01-27 19:30:06.641 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 19:30:06.872 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = Int64), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (DbType = DateTime2), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 1) (DbType = Byte), @p12='?' (DbType = Int16), @p13='?' (DbType = Int16), @p14='?' (DbType = Int32), @p15='?' (Size = 20), @p16='?' (DbType = DateTime2), @p17='?' (Size = 50), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (DbType = DateTime2), @p22='?' (DbType = DateTime2), @p23='?' (Size = 50), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 1) (DbType = Byte), @p27='?' (DbType = Int16), @p28='?' (DbType = Int16), @p29='?' (DbType = Int32), @p30='?' (Size = 20), @p31='?' (DbType = DateTime2), @p32='?' (Size = 50), @p33='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p2 AND [VERSION_NO] = @p3;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, 0),
+(@p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 19:30:06.913 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 19:30:06.916 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 801.5574ms
+2026-01-27 19:30:06.961 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 19:30:06.963 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 862.8268 ms
+2026-01-27 19:30:06.966 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 992.2451ms
+2026-01-27 19:38:53.024 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - application/json 32
+2026-01-27 19:38:53.027 +03:00 [INF] CORS policy execution successful.
+2026-01-27 19:38:53.029 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 19:38:53.030 +03:00 [INF] Route matched with {action = "ProcessAttendance", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int32]] ProcessAttendance(HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance.ProcessAttendanceCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-01-27 19:38:53.090 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0
+2026-01-27 19:38:53.107 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__startRange_1='?' (DbType = DateTime2), @__endRange_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__startRange_1 AND [r].[PUNCH_TIME] < @__endRange_2
+2026-01-27 19:38:53.194 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [l].[STATUS] = N'APPROVED' AND [l].[START_DATE] <= @__targetDate_1 AND [l].[END_DATE] >= @__targetDate_1
+2026-01-27 19:38:53.205 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [o].[OT_REQUEST_ID], [o].[APPROVED_BY], [o].[APPROVED_HOURS], [o].[CREATED_AT], [o].[CREATED_BY], [o].[EMPLOYEE_ID], [o].[HOURS_REQUESTED], [o].[IS_DELETED], [o].[REASON], [o].[REQUEST_DATE], [o].[STATUS], [o].[UPDATED_AT], [o].[UPDATED_BY], [o].[VERSION_NO], [o].[WORK_DATE]
+FROM [HR_ATTENDANCE].[OVERTIME_REQUESTS] AS [o]
+WHERE [o].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [o].[STATUS] = N'APPROVED' AND [o].[WORK_DATE] = @__targetDate_1
+2026-01-27 19:38:53.217 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2), @__employeeIds_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__targetDate_0 AND [d].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_1) WITH ([value] int '$') AS [e]
+)
+2026-01-27 19:38:53.245 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[@p0='?' (DbType = Int64), @p1='?' (DbType = Int32), @p2='?' (DbType = Int64), @p3='?' (DbType = Int32), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (DbType = DateTime2), @p7='?' (DbType = DateTime2), @p8='?' (Size = 50), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 1) (DbType = Byte), @p12='?' (DbType = Int16), @p13='?' (DbType = Int16), @p14='?' (DbType = Int32), @p15='?' (Size = 20), @p16='?' (DbType = DateTime2), @p17='?' (Size = 50), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime2), @p20='?' (DbType = DateTime2), @p21='?' (DbType = DateTime2), @p22='?' (DbType = DateTime2), @p23='?' (Size = 50), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 1) (DbType = Byte), @p27='?' (DbType = Int16), @p28='?' (DbType = Int16), @p29='?' (DbType = Int32), @p30='?' (Size = 20), @p31='?' (DbType = DateTime2), @p32='?' (Size = 50), @p33='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p0 AND [VERSION_NO] = @p1;
+DELETE FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE]
+OUTPUT 1
+WHERE [RECORD_ID] = @p2 AND [VERSION_NO] = @p3;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, 0),
+(@p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-01-27 19:38:53.254 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int32'.
+2026-01-27 19:38:53.256 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API) in 223.1878ms
+2026-01-27 19:38:53.258 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.ProcessAttendance (HRMS.API)'
+2026-01-27 19:38:53.260 +03:00 [INF] HTTP POST /api/AttendanceSettings/process-attendance responded 200 in 232.7686 ms
+2026-01-27 19:38:53.262 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5001/api/AttendanceSettings/process-attendance - 200 null application/json; charset=utf-8 238.8024ms
+2026-01-27 20:07:33.744 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-01-27 20:07:37.354 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-01-27 20:07:37.432 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-27 20:07:38.000 +03:00 [INF] Now listening on: https://localhost:5001
+2026-01-27 20:07:38.003 +03:00 [INF] Now listening on: http://localhost:5000
+2026-01-27 20:07:38.158 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-27 20:07:38.162 +03:00 [INF] Hosting environment: Development
+2026-01-27 20:07:38.163 +03:00 [INF] Content root path: G:\HRMS_Hospital\Backend\HRMS\HRMS.API
+2026-01-27 20:07:39.335 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/index.html - null null
+2026-01-27 20:07:39.953 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 348.9497 ms
+2026-01-27 20:07:39.991 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/index.html - 200 null text/html;charset=utf-8 666.372ms
+2026-01-27 20:07:40.030 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-27 20:07:40.901 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_vs/browserLink - null null
+2026-01-27 20:07:41.300 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 1269.811ms
+2026-01-27 20:07:41.450 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_vs/browserLink - 200 null text/javascript; charset=UTF-8 549.2646ms
+2026-01-27 20:07:42.757 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-01-27 20:07:43.275 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 514.2870 ms
+2026-01-27 20:07:43.280 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 523.5906ms

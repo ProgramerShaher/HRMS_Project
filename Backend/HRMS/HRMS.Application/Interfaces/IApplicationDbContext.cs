@@ -8,6 +8,8 @@ using HRMS.Core.Entities.Performance;
 using HRMS.Core.Entities.Recruitment;
 using Microsoft.EntityFrameworkCore.Infrastructure; // 👈 ضروري جداً
 using HRMS.Core.Entities.Identity;
+using HRMS.Core.Entities.Attendance;
+using HRMS.Core.Entities.Payroll;
 
 namespace HRMS.Application.Interfaces;
 
@@ -166,12 +168,51 @@ public interface IApplicationDbContext
 
     #endregion
 
+    #region Attendance Entities
+
+    /// <summary>
+    /// جداول الموظفين
+    /// </summary>
+    DbSet<EmployeeRoster> EmployeeRosters { get; }
+
+    /// <summary>
+    /// الحضور اليومي
+    /// </summary>
+    DbSet<DailyAttendance> DailyAttendances { get; }
+
+    /// <summary>
+    /// سجلات البصمة الخام
+    /// </summary>
+    DbSet<RawPunchLog> RawPunchLogs { get; }
+
+    /// <summary>
+    /// أنواع المناوبات
+    /// </summary>
+    DbSet<ShiftType> ShiftTypes { get; }
+
+    /// <summary>
+    /// طلبات تبديل المناوبات
+    /// </summary>
+    DbSet<ShiftSwapRequest> ShiftSwapRequests { get; }
+
+    /// <summary>
+    /// طلبات العمل الإضافي
+    /// </summary>
+    DbSet<OvertimeRequest> OvertimeRequests { get; }
+
+    #endregion
+
     #region Payroll Entities
 
     /// <summary>
     /// هياكل رواتب الموظفين
     /// </summary>
     DbSet<EmployeeSalaryStructure> SalaryStructures { get; }
+
+    /// <summary>
+    /// مسيرات الرواتب
+    /// </summary>
+    DbSet<PayrollRun> PayrollRuns { get; }
     #endregion
 
     #region Performance Entities
