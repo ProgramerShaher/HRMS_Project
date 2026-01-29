@@ -213,6 +213,12 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("SHIFT_ID");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("STATUS");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("UPDATED_AT");

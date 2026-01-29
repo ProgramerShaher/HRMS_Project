@@ -48,6 +48,13 @@ namespace HRMS.Core.Entities.Attendance
         [Column("IS_OFF_DAY")]
         public byte IsOffDay { get; set; } = 0;
 
+        /// <summary>
+        /// حالة الرطوبة (Scheduled, Present, Absent, ON_LEAVE)
+        /// </summary>
+        [Column("STATUS")]
+        [MaxLength(20)]
+        public string Status { get; set; } = "Scheduled";
+
         // ═══════════════════════════════════════════════════════════
         // Navigation Properties - العلاقات
         // ═══════════════════════════════════════════════════════════

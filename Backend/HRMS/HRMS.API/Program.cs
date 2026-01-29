@@ -1,5 +1,7 @@
 using HRMS.API.Extensions;
 using Serilog;
+using HRMS.Application.Interfaces;
+using HRMS.API.Services;
 
 #region Serilog Configuration
 
@@ -39,6 +41,10 @@ try
     // 5. Authorization Policies (Development Mode: Disabled)
     builder.Services.AddAuthorizationPolicies(isDevelopment: true);
     // 🔓 لتفعيل Authorization: غير isDevelopment إلى false
+
+    // Services Registration for Audit
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
     // 6. Custom Application Services
     builder.Services.AddCustomServices();

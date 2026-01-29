@@ -6,10 +6,15 @@ import { Injectable, signal } from '@angular/core';
 export class LayoutService {
   // Signal State for Sidebar Visibility
   sidebarVisible = signal<boolean>(true);
+  isSidebarCollapsed = signal<boolean>(false);
   
   // Toggle Logic
   toggleSidebar() {
-    this.sidebarVisible.update(v => !v);
+    this.isSidebarCollapsed.update(v => !v);
+  }
+
+  setSidebarState(state: boolean) {
+    this.sidebarVisible.set(state);
   }
 
   // Direction State
@@ -22,8 +27,4 @@ export class LayoutService {
     document.documentElement.dir = this.direction();
   }
 
-  // Set Explicit Side State
-  setSidebarState(state: boolean) {
-    this.sidebarVisible.set(state);
-  }
 }

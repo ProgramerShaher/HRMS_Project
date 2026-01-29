@@ -1,0 +1,56 @@
+<div class="min-h-screen bg-slate-50 dark:bg-zinc-950 flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
+    <p-toast></p-toast>
+    
+    <!-- Background Decor -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 -left-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-20 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="relative z-10 w-full max-w-md bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-slate-100 dark:border-zinc-800 overflow-hidden">
+        <div class="p-8 md:p-10">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                     <i class="pi pi-heart-fill text-3xl text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-zinc-100 mb-2">تسجيل الدخول</h2>
+                <p class="text-slate-500 dark:text-zinc-400">نظام إدارة المستشفيات HRMS</p>
+            </div>
+
+            <!-- Form -->
+            <form (ngSubmit)="login()" class="space-y-6">
+                <div class="field">
+                    <p-floatLabel>
+                        <input pInputText id="username" [(ngModel)]="loginRequest.userName" name="username" class="w-full" required autofocus />
+                        <label for="username">اسم المستخدم / البريد الإلكتروني</label>
+                    </p-floatLabel>
+                </div>
+
+                <div class="field">
+                    <p-floatLabel>
+                        <p-password [(ngModel)]="loginRequest.password" name="password" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                        <label for="password">كلمة المرور</label>
+                    </p-floatLabel>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                         <p-checkbox [(ngModel)]="loginRequest.rememberMe" name="remember" [binary]="true" inputId="remember"></p-checkbox>
+                         <label for="remember" class="text-sm text-slate-600 dark:text-zinc-400 cursor-pointer">تذكرني</label>
+                    </div>
+                    <a routerLink="/auth/forgot-password" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">نسيت كلمة المرور؟</a>
+                </div>
+
+                <p-button type="submit" label="دخول" [loading]="loading()" styleClass="w-full p-button-rounded p-button-lg p-button-primary shadow-lg shadow-blue-500/20"></p-button>
+            </form>
+        </div>
+        
+        <!-- Footer -->
+        <div class="bg-slate-50 dark:bg-zinc-800/50 p-4 text-center border-t border-slate-100 dark:border-zinc-800">
+            <p class="text-xs text-slate-400 dark:text-zinc-500">جميع الحقوق محفوظة &copy; {{ 2026 }} مستشفى المستقبل</p>
+        </div>
+    </div>
+</div>

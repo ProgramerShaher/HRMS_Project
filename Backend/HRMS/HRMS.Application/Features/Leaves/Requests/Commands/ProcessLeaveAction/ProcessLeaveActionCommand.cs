@@ -44,63 +44,130 @@ public class ProcessLeaveActionCommandHandler : IRequestHandler<ProcessLeaveActi
 
     public async Task<bool> Handle(ProcessLeaveActionCommand request, CancellationToken cancellationToken)
     {
-        var action = request.Data.Action; // Approve or Reject
-        
-        // 1. Fetch Request
-        var leaveRequest = await _context.LeaveRequests
-            .Include(r => r.LeaveType)
-            .FirstOrDefaultAsync(r => r.RequestId == request.Data.RequestId, cancellationToken);
-
-        if (leaveRequest == null)
-            throw new NotFoundException("Leave Request", request.Data.RequestId);
-
-        if (leaveRequest.Status != "PENDING")
-            throw new FluentValidation.ValidationException($"لا يمكن تعديل طلب بحالة {leaveRequest.Status}");
-
-        // 2. Process Action
-        if (action == "Reject")
+        try
         {
-            leaveRequest.Status = "REJECTED";
-            leaveRequest.RejectionReason = request.Data.Comment;
-        }
-        else if (action == "Approve")
-        {
-            // 3. Deduct Balance (If applicable)
-            if (leaveRequest.LeaveType.IsDeductible)
+            if (request.Data.Action == "Approve")
             {
-                var year = (short)leaveRequest.StartDate.Year;
-                var balance = await _context.LeaveBalances
-                    .FirstOrDefaultAsync(b => b.EmployeeId == leaveRequest.EmployeeId && 
-                                              b.LeaveTypeId == leaveRequest.LeaveTypeId && 
-                                              b.Year == year, cancellationToken);
-                
-                if (balance == null || balance.CurrentBalance < leaveRequest.DaysCount)
-                    throw new FluentValidation.ValidationException("رصيد الموظف لم يعد كافياً لإتمام الموافقة.");
-
-                // Deduct
-                balance.CurrentBalance -= leaveRequest.DaysCount;
-                leaveRequest.IsPostedToBalance = 1;
-
-                // 4. Create Transaction Log
-                var transaction = new LeaveTransaction
-                {
-                    EmployeeId = leaveRequest.EmployeeId,
-                    LeaveTypeId = leaveRequest.LeaveTypeId,
-                    TransactionType = "DEDUCTION",
-                    Days = -leaveRequest.DaysCount, // Negative for deduction
-                    TransactionDate = DateTime.Now,
-                    ReferenceId = leaveRequest.RequestId,
-                    Notes = $"Approved Leave Request #{leaveRequest.RequestId}"
-                };
-
-                _context.LeaveTransactions.Add(transaction);
+                // استدعاء بروسيجر الموافقة (الذي أصلح مشكلة الروستر)
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC [HR_LEAVES].[sp_ApproveLeaveRequest] @RequestId = {0}, @ManagerId = {1}",
+                    new object[] { request.Data.RequestId, request.Data.ManagerId },
+                    cancellationToken);
+            }
+            else if (request.Data.Action == "Reject")
+            {
+                // استدعاء بروسيجر الرفض الجديد (للتوحيد والاحترافية)
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC [HR_LEAVES].[sp_RejectLeaveRequest] @RequestId = {0}, @ManagerId = {1}, @Comment = {2}",
+                    new object[] { request.Data.RequestId, request.Data.ManagerId, request.Data.Comment ?? "" },
+                    cancellationToken);
             }
 
-            leaveRequest.Status = "APPROVED";
-            // leaveRequest.ApprovedBy = User... (if we had that field)
+            return true;
         }
-
-        await _context.SaveChangesAsync(cancellationToken);
-        return true;
+        catch (Exception ex)
+        {
+            throw new Exception("خطأ في تنفيذ الإجراء: " + ex.Message);
+        }
     }
+    //public async Task<bool> Handle(ProcessLeaveActionCommand request, CancellationToken cancellationToken)
+    //{
+    //    // Start Atomic Transaction
+    //    using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+    //    try
+    //    {
+    //        var action = request.Data.Action; // Approve or Reject
+
+    //        // 1. Fetch Request with detailed info
+    //        var leaveRequest = await _context.LeaveRequests
+    //            .Include(r => r.LeaveType)
+    //            .FirstOrDefaultAsync(r => r.RequestId == request.Data.RequestId, cancellationToken);
+
+    //        if (leaveRequest == null)
+    //            throw new NotFoundException("Leave Request", request.Data.RequestId);
+
+    //        if (leaveRequest.Status != "PENDING")
+    //            throw new FluentValidation.ValidationException($"لا يمكن تعديل طلب بحالة {leaveRequest.Status}");
+
+    //        // 2. Process Action
+    //        if (action == "Reject")
+    //        {
+    //            leaveRequest.Status = "REJECTED";
+    //            leaveRequest.RejectionReason = request.Data.Comment;
+    //            leaveRequest.CreatedBy = request.Data.ManagerId.ToString(); // Assuming ManagerId is int, storing as string or int depending on entity
+    //            leaveRequest.CreatedAt = DateTime.Now;
+    //        }
+    //        else if (action == "Approve")
+    //        {
+    //            // 3. Balance Deduction (Critical Section)
+    //            if (leaveRequest.LeaveType.IsDeductible)
+    //            {
+    //                var year = (short)leaveRequest.StartDate.Year;
+
+    //                // Re-fetch balance to ensure latest data (prevent race conditions)
+    //                var balance = await _context.LeaveBalances
+    //                    .FirstOrDefaultAsync(b => b.EmployeeId == leaveRequest.EmployeeId && 
+    //                                              b.LeaveTypeId == leaveRequest.LeaveTypeId && 
+    //                                              b.Year == year, cancellationToken);
+
+    //                if (balance == null)
+    //                     throw new FluentValidation.ValidationException("لا يوجد رصيد إجازات معرف لهذا الموظف لهذه السنة.");
+
+    //                if (balance.CurrentBalance < leaveRequest.DaysCount)
+    //                    throw new FluentValidation.ValidationException($"رصيد الموظف ({balance.CurrentBalance}) غير كافٍ لخصم ({leaveRequest.DaysCount}) أيام.");
+
+    //                // A. Deduct
+    //                balance.CurrentBalance -= leaveRequest.DaysCount;
+    //                leaveRequest.IsPostedToBalance = 1;
+
+    //                // B. Audit Trail (Leave Transaction)
+    //                var transactionLog = new LeaveTransaction
+    //                {
+    //                    EmployeeId = leaveRequest.EmployeeId,
+    //                    LeaveTypeId = leaveRequest.LeaveTypeId,
+    //                    TransactionType = "DEDUCTION",
+    //                    Days = -leaveRequest.DaysCount, // Negative for deduction
+    //                    TransactionDate = DateTime.Now,
+    //                    ReferenceId = leaveRequest.RequestId,
+    //                    Notes = $"Approved Leave Request #{leaveRequest.RequestId} by Manager {request.Data.ManagerId}"
+    //                };
+
+    //                _context.LeaveTransactions.Add(transactionLog);
+    //            }
+
+    //            // 4. Operational Sync (Roster Updates) - Using Raw SQL for Performance & Date Precision
+    //            // Fix: Use CAST to ensure we compare only dates, ignoring time parts
+    //            // 4. Operational Sync (Roster Updates) - الحل النهائي والآمن
+    //            // نستخدم ExecuteSqlInterpolatedAsync للتعامل الصحيح مع الـ CancellationToken والبارامترات
+    //            await _context.Database.ExecuteSqlInterpolatedAsync($@"
+    //UPDATE [HR_ATTENDANCE].[EMPLOYEE_ROSTERS]
+    //SET [STATUS] = 'ON_LEAVE', 
+    //    [IS_OFF_DAY] = 1
+    //WHERE [EMPLOYEE_ID] = {leaveRequest.EmployeeId} 
+    //AND CAST([ROSTER_DATE] AS DATE) BETWEEN CAST({leaveRequest.StartDate} AS DATE) AND CAST({leaveRequest.EndDate} AS DATE)",
+    //                cancellationToken); // هنا يتم تمريره كمعامل خارجي للميثود وليس كجزء من الـ SQL
+    //            // Update Request Status
+    //            leaveRequest.Status = "APPROVED";
+    //            leaveRequest.CreatedBy = request.Data.ManagerId.ToString();
+    //            leaveRequest.CreatedAt = DateTime.Now;
+    //            if (!string.IsNullOrEmpty(request.Data.Comment))
+    //            {
+    //                 leaveRequest.RejectionReason = request.Data.Comment; // Using same field for comments
+    //            }
+    //        }
+
+    //        // 5. Commit Changes
+    //        await _context.SaveChangesAsync(cancellationToken);
+    //        await transaction.CommitAsync(cancellationToken);
+
+    //        return true;
+    //    }
+    //    catch (Exception)
+    //    {
+    //        // Rollback on any error
+    //        await transaction.RollbackAsync(cancellationToken);
+    //        throw; // Re-throw to let global exception handler manage the response
+    //    }
+    //}
 }

@@ -1,10 +1,16 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+
+/* 
+  Enable Class-Based Dark Mode for v4 
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 
   Tailwind v4 Theme Configuration 
   Ultra-Modern Hospital HRMS
 */
-
 @theme {
   /* Brand Colors */
   --color-brand-primary: #0f172a; /* Slate 900 (Sidebar) */
@@ -23,20 +29,25 @@
 
 /* 
   PrimeNG Customization 
+  Overriding Aura theme CSS variables for seamless integration
 */
 :root {
     --p-primary-color: var(--color-brand-accent);
     --p-primary-500: var(--color-brand-accent);
     --p-font-family: var(--font-sans);
-    --p-content-border-radius: 1rem;
+    --p-content-border-radius: 0.75rem; /* rounded-xl */
 }
 
 /* Global Styles */
 body {
-    background-color: #F8FAFC;
-    color: #1e293b;
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+}
+
+/* Dark Mode Overrides for Body */
+@variant dark {
+  body {
+    @apply bg-zinc-950 text-zinc-100;
+  }
 }
 
 /* Utilities */
@@ -44,38 +55,19 @@ body {
     @apply bg-white/60 backdrop-blur-xl border border-white/40;
 }
 
+.glass-panel {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl;
+}
+
 .card-floating {
     @apply bg-white rounded-2xl shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md;
+}
+
+.card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
 }
 
 /* Fluid Animations */
 .fluid-transition {
     @apply transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-
-/* 
-  PrimeNG Customization 
-  Overriding Aura theme CSS variables for seamless integration
-*/
-:root {
-    --p-primary-color: var(--color-brand-primary);
-    --p-primary-500: var(--color-brand-primary);
-    --p-font-family: var(--font-sans);
-    --p-content-border-radius: 0.75rem; /* rounded-xl */
-}
-
-/* Global Styles */
-body {
-    background-color: #f8fafc; /* slate-50 */
-    color: #0f172a; /* slate-900 */
-}
-
-/* Utils */
-.glass-panel {
-    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl;
-}
-
-.card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
 }

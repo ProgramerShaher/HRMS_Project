@@ -22,4 +22,9 @@
     <ProjectReference Include="..\HRMS.Core\HRMS.Core.csproj" />
   </ItemGroup>
 
+
+	<ItemGroup>
+	  <Folder Include="Database\Scripts\SPs\" />
+	</ItemGroup>
+
 </Project>
