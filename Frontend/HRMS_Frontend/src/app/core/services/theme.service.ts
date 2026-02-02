@@ -7,18 +7,20 @@ import { DOCUMENT } from '@angular/common';
 export class ThemeService {
   private document = inject(DOCUMENT);
   
-  // Signal to hold the current theme state
+  // Signal to hold the current theme state (true = dark, false = light)
   isDark = signal<boolean>(this.getInitialTheme());
 
   constructor() {
     // Effect to update the DOM whenever isDark changes
     effect(() => {
       const dark = this.isDark();
+      const html = this.document.documentElement;
+      
       if (dark) {
-        this.document.documentElement.classList.add('dark');
+        html.classList.add('dark');
         localStorage.setItem('theme', 'dark');
       } else {
-        this.document.documentElement.classList.remove('dark');
+        html.classList.remove('dark');
         localStorage.setItem('theme', 'light');
       }
     });
@@ -30,12 +32,13 @@ export class ThemeService {
   }
 
   private getInitialTheme(): boolean {
+    // Check localStorage first
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         return savedTheme === 'dark';
     }
-    // Default to light if no preference to avoid "stuck in dark" feeling for new users
+    
+    // Fallback to system preference, default to False (Light) if simpler
     return false; 
-    // previously: return window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 }

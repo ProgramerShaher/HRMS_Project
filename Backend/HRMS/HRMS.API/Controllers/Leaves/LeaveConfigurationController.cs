@@ -4,6 +4,7 @@ using HRMS.Application.Features.Leaves.LeaveTypes.Commands.CreateLeaveType;
 using HRMS.Application.Features.Leaves.LeaveTypes.Commands.UpdateLeaveType;
 using HRMS.Application.Features.Leaves.LeaveTypes.Queries.GetAllLeaveTypes;
 using HRMS.Application.Features.Leaves.PublicHolidays.Commands.CreatePublicHoliday; // New
+using HRMS.Application.Features.Leaves.PublicHolidays.Commands.DeletePublicHoliday;
 using HRMS.Core.Utilities;
 using HRMS.Core.Entities.Core;
 using HRMS.Core.Entities.Leaves;
@@ -11,10 +12,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HRMS.API.Controllers;
-using HRMS.Application.Features.Leaves.PublicHolidays.Queries.GetAllPublicHolidays;
 using HRMS.Application.Features.Leaves.LeaveBalances.Commands.InitializeYearlyBalance;
 using HRMS.Application.Features.Core.SystemSettings.Queries.GetAllSettings;
-using HRMS.Application.Features.Core.SystemSettings.Commands.UpdateSetting; // Inherit from BaseController if exists, or ControllerBase
+using HRMS.Application.Features.Core.SystemSettings.Commands.UpdateSetting;
+using HRMS.Application.Features.Leaves.PublicHolidays.Queries.GetPublicHolidays;
 
 namespace HRMS.API.Controllers.Leaves;
 
@@ -41,7 +42,7 @@ public class LeaveConfigurationController : ControllerBase
     public async Task<ActionResult<Result<List<LeaveTypeDto>>>> GetAllLeaveTypes()
     {
         var result = await _mediator.Send(new GetAllLeaveTypesQuery());
-        return Ok(Result<List<LeaveTypeDto>>.Success(result));
+        return Ok(result);
     }
 
     // إضافة نوع إجازة جديد
@@ -52,7 +53,7 @@ public class LeaveConfigurationController : ControllerBase
     public async Task<ActionResult<Result<int>>> CreateLeaveType([FromBody] CreateLeaveTypeCommand command)
     {
         var result = await _mediator.Send(command);
-        return Ok(Result<int>.Success(result, "تم إضافة نوع الإجازة بنجاح"));
+        return Ok(result);
     }
 
     // تعديل بيانات نوع إجازة
@@ -65,8 +66,8 @@ public class LeaveConfigurationController : ControllerBase
         if (id != command.LeaveTypeId)
             return BadRequest(Result<bool>.Failure("ID mismatch"));
 
-        await _mediator.Send(command);
-        return Ok(Result<bool>.Success(true, "تم تعديل نوع الإجازة بنجاح"));
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -117,8 +118,8 @@ public class LeaveConfigurationController : ControllerBase
 
     public async Task<ActionResult<Result<List<PublicHolidayDto>>>> GetAllPublicHolidays([FromQuery] short? year)
     {
-        var result = await _mediator.Send(new GetAllPublicHolidaysQuery(year));
-        return Ok(Result<List<PublicHolidayDto>>.Success(result));
+        var result = await _mediator.Send(new GetPublicHolidaysQuery { Year = year });
+        return Ok(result);
     }
 
     // إضافة عطلة رسمية جديدة
@@ -129,21 +130,17 @@ public class LeaveConfigurationController : ControllerBase
     public async Task<ActionResult<Result<int>>> CreatePublicHoliday([FromBody] CreatePublicHolidayCommand command)
     {
         var result = await _mediator.Send(command);
-        return Ok(Result<int>.Success(result, "تم إضافة العطلة بنجاح"));
+        return Ok(result);
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // Leave Balances Endpoints (Admin)
-    // ═══════════════════════════════════════════════════════════
-
-    // تهيئة الأرصدة السنوية
-    [HttpPost("initialize-balances")]
+    // حذف عطلة رسمية
+    [HttpDelete("public-holidays/{id}")]
     [Authorize(Roles = "System_Admin,HR_Manager")]
     [AllowAnonymous] // 🔓 للتطوير فقط - احذف هذا السطر في الإنتاج
-
-    public async Task<ActionResult<Result<bool>>> InitializeYearlyBalances([FromBody] short year)
+    public async Task<ActionResult<Result<bool>>> DeletePublicHoliday(int id)
     {
-        var result = await _mediator.Send(new InitializeYearlyBalanceCommand(year));
-        return Ok(Result<bool>.Success(result, "تم تهيئة الأرصدة الافتتاحية بنجاح"));
+        var result = await _mediator.Send(new DeletePublicHolidayCommand(id));
+        return Ok(result);
     }
+
 }

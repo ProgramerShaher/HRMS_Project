@@ -51,7 +51,7 @@ namespace HRMS.Core.Entities.Leaves
         /// هل يخصم من الرصيد السنوي (1=نعم، 0=لا)
         /// </summary>
         [Column("IS_DEDUCTIBLE")]
-        public bool IsDeductible { get; set; } = true;
+        public byte IsDeductible { get; set; } = 1;
 
         /// <summary>
         /// الحد الأقصى للأيام في السنة

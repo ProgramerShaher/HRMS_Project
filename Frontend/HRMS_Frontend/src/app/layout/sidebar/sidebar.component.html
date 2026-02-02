@@ -4,7 +4,11 @@
   Theme: Adapts to Light/Dark Mode
   Features: Hierarchical Navigation (Accordion)
 -->
-<aside class="h-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex flex-col border-l border-slate-200 dark:border-slate-700/50 relative shadow-2xl overflow-hidden transition-colors duration-300">
+<aside class="h-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex flex-col border-e border-slate-200 dark:border-slate-700/50 relative shadow-2xl overflow-hidden transition-[width,colors] duration-300"
+       [ngClass]="{
+           'w-72': !layoutService.isSidebarCollapsed(),
+           'w-20': layoutService.isSidebarCollapsed()
+       }">
     
     <!-- Decorative Glow (Dark Mode Only) -->
     <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300"></div>

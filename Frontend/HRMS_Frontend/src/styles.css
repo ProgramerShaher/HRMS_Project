@@ -1,73 +1,52 @@
 @import "tailwindcss";
 
-@plugin "tailwindcss-animate";
-
 /* 
-  Enable Class-Based Dark Mode for v4 
+  Modern Hospital ERP - Global Style Layer
+  Tailwind CSS v4 + Angular 21
 */
-@custom-variant dark (&:where(.dark, .dark *));
 
-/* 
-  Tailwind v4 Theme Configuration 
-  Ultra-Modern Hospital HRMS
-*/
 @theme {
-  /* Brand Colors */
-  --color-brand-primary: #0f172a; /* Slate 900 (Sidebar) */
-  --color-brand-accent: #3b82f6; /* Blue 500 */
-  
-  /* Typography */
+  --color-brand-primary: #0f172a;
+  --color-brand-accent: #3b82f6;
   --font-sans: 'Cairo', system-ui, sans-serif;
-
-  /* Custom Shadows */
-  --shadow-floating: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  
-  /* Spacing */
   --radius-2xl: 1rem;
 }
 
+@variant dark (&:where(.dark, .dark *));
+
 /* 
-  PrimeNG Customization 
-  Overriding Aura theme CSS variables for seamless integration
+  Global Resets & Typography
+*/
+html, body {
+    @apply h-full w-full m-0 p-0 overflow-hidden;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300 antialiased flex flex-col;
+}
+
+@variant dark { body { @apply bg-zinc-950 text-zinc-100; } }
+
+/* 
+  PrimeNG Global Overrides 
 */
 :root {
     --p-primary-color: var(--color-brand-accent);
-    --p-primary-500: var(--color-brand-accent);
-    --p-font-family: var(--font-sans);
-    --p-content-border-radius: 0.75rem; /* rounded-xl */
+    --p-content-border-radius: 0.75rem; 
 }
 
-/* Global Styles */
-body {
-    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
-}
-
-/* Dark Mode Overrides for Body */
-@variant dark {
-  body {
-    @apply bg-zinc-950 text-zinc-100;
-  }
-}
-
-/* Utilities */
-.glass-effect {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40;
+/* 
+  Shared Utilities 
+*/
+.bg-radial-gradient {
+    background: radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 25%);
 }
 
 .glass-panel {
-    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl;
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg dark:bg-zinc-900/80 dark:border-white/5;
 }
 
 .card-floating {
-    @apply bg-white rounded-2xl shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md;
-}
-
-.card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
-}
-
-/* Fluid Animations */
-.fluid-transition {
-    @apply transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1);
+    @apply bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6;
 }

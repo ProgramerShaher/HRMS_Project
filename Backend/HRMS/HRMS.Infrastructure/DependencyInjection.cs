@@ -24,36 +24,15 @@ namespace HRMS.Infrastructure
         /// <param name="services">مجموعة الخدمات</param>
         /// <param name="configuration">إعدادات التطبيق</param>
         /// <returns>مجموعة الخدمات بعد التسجيل</returns>
-        public static IServiceCollection AddInfrastructure(
-            this IServiceCollection services, 
-            IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            #region Database Configuration - إعدادات قاعدة البيانات
-
-            services.AddDbContext<HRMSDbContext>(options =>
-            {
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    sqlOptions =>
-                    {
-                        sqlOptions.MigrationsAssembly(typeof(HRMSDbContext).Assembly.FullName);
-                        sqlOptions.EnableRetryOnFailure(
-                            maxRetryCount: 5,
-                            maxRetryDelay: TimeSpan.FromSeconds(30),
-                            errorNumbersToAdd: null);
-                        sqlOptions.CommandTimeout(60);
-                    });
-
-#if DEBUG
-                options.EnableSensitiveDataLogging();
-                options.EnableDetailedErrors();
-#endif
+            // تسجيل DbContext مع كل الإعدادات المتقدمة
+            services.AddDbContext<HRMSDbContext>(options => {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            #endregion
-
-            // Services
-            services.AddScoped<IFileService, FileService>();
+            // التسجيل الصحيح والواضح للواجهة
+            services.AddScoped<IApplicationDbContext, HRMSDbContext>();
 
             return services;
         }

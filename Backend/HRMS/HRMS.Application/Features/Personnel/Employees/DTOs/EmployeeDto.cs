@@ -45,6 +45,7 @@ namespace HRMS.Application.Features.Personnel.Employees.DTOs
         /// الاسم الكامل بالإنجليزية
         /// </summary>
         public string FullNameEn { get; set; }
+        public string FullNameAr { get; set; }
 
         /// <summary>
         /// الجنس (M: ذكر، F: أنثى)

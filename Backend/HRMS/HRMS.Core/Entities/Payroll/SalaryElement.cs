@@ -32,6 +32,8 @@ namespace HRMS.Core.Entities.Payroll
 
         public byte IsRecurring { get; set; } = 1;
 
+        public byte IsBasic { get; set; } = 0; // NEW: Flag for Basic Salary
+
         // Navigation Properties
         public virtual ICollection<EmployeeSalaryStructure> EmployeeStructures { get; set; } = new List<EmployeeSalaryStructure>();
     }

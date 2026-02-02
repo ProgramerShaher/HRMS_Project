@@ -1,17 +1,268 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>HRMSFrontend</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <title>HRMSFrontend</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+      rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script>
+      // Inject Tailwind Config dynamically to avoid build-time errors with Vite/Angular
+      const style = document.createElement('style');
+      style.type = 'text/tailwindcss';
+      style.innerHTML = `
+        @theme {
+          --color-brand-primary: #0f172a;
+          --color-brand-accent: #3b82f6;
+          --font-sans: 'Cairo', system-ui, sans-serif;
+          --radius-2xl: 1rem;
+        }
 
-</head>
-<body>
-  <app-root></app-root>
-</body>
+        /* Explicitly define dark mode selector strategy */
+        @variant dark (&:where(.dark, .dark *));
+
+        /* 
+           GLOBAL THEME VARIABLES 
+           Defining semantic colors that flip automatically 
+        */
+        :root {
+            --bg-page: #f8fafc;        /* Slate 50 */
+            --bg-surface: #ffffff;     /* White */
+            --bg-surface-h: #f1f5f9;   /* Slate 100 (Hover) */
+            --text-main: #0f172a;      /* Slate 900 */
+            --text-muted: #64748b;     /* Slate 500 */
+            --border-color: #e2e8f0;   /* Slate 200 */
+        }
+
+        .dark {
+            --bg-page: #020617;        /* Slate 950 (Deep Rich Blue-Black) */
+            --bg-surface: #0f172a;     /* Slate 900 */
+            --bg-surface-h: #1e293b;   /* Slate 800 */
+            --text-main: #ffffff;      /* Pure White */
+            --text-muted: #e2e8f0;     /* Slate 200 (High Contrast Grey) */
+            --border-color: #334155;   /* Slate 700 (Visible Borders) */
+            --color-brand-accent: #38bdf8; /* Sky 400 (Neon Blue) */
+        }
+
+        /* Global Resets & Body */
+        html, body {
+            @apply h-full w-full m-0 p-0 overflow-x-hidden;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+        }
+        
+        /* Make Icons & Headings Pop in Dark Mode */
+        .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        
+        /* 
+           MODERN ICON SYSTEM (Adaptive vibrant colors)
+        */
+        
+        /* 1. Delete / Cancel -> Vibrant Red */
+        .pi-trash, .pi-times, .pi-ban, .text-red-500, .text-red-600 {
+            color: #dc2626 !important; /* Red 600 */
+        }
+        .dark .pi-trash, .dark .pi-times, .dark .pi-ban, .dark .text-red-500, .dark .text-red-600 {
+            color: #ef4444 !important; /* Red 500 (lighter) */
+            text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* 2. Edit / Warning -> Vibrant Amber */
+        .pi-pencil, .pi-file-edit, .pi-exclamation-triangle, .text-orange-500 {
+            color: #d97706 !important; /* Amber 600 */
+        }
+        .dark .pi-pencil, .dark .pi-file-edit, .dark .pi-exclamation-triangle, .dark .text-orange-500 {
+            color: #facc15 !important;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+        }
+
+        /* 3. Add / Check / Success -> Vibrant Green */
+        .pi-plus, .pi-check, .pi-check-circle, .text-green-500 {
+            color: #16a34a !important; /* Green 600 */
+        }
+        .dark .pi-plus, .dark .pi-check, .dark .pi-check-circle, .dark .text-green-500 {
+            color: #4ade80 !important;
+            text-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+        }
+
+        /* 4. Info / Users / Search -> Vibrant Blue */
+        .pi-info-circle, .pi-users, .pi-search, .text-blue-500 {
+            color: #2563eb !important; /* Blue 600 */
+        }
+        .dark .pi-info-circle, .dark .pi-users, .dark .pi-search, .dark .text-blue-500 {
+            color: #38bdf8 !important;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+        
+        /* 5. Heart / Favorite -> Pink */
+        .pi-heart, .pi-heart-fill {
+             color: #db2777 !important; /* Pink 600 */
+        }
+        .dark .pi-heart, .dark .pi-heart-fill {
+            color: #f472b6 !important;
+            text-shadow: 0 0 15px rgba(244, 114, 182, 0.4);
+        }
+
+        /* Generic Icon Fallback - Transition */
+        .pi { transition: color 0.3s ease; }
+
+        .p-button .pi { color: inherit !important; text-shadow: none !important; }
+
+        /* 
+           PRIPMENG COMPONENT OVERRIDES (The "Everything" Fix) 
+           Forcing explicit colors on complex components
+        */
+        
+        /* 1. Modals & Dialogs */
+        .p-dialog, .p-sidebar, .p-overlaypanel {
+            background-color: var(--bg-surface) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border-color);
+        }
+        .p-dialog-header, .p-dialog-content, .p-dialog-footer {
+            background-color: transparent !important;
+            color: inherit !important;
+        }
+
+        /* 2. Tables (DataTable) & Paginator */
+        .p-datatable .p-datatable-header,
+        .p-datatable .p-datatable-thead > tr > th,
+        .p-datatable .p-datatable-tbody > tr > td,
+        .p-datatable .p-datatable-tfoot > tr > td,
+        .p-paginator {
+            background-color: var(--bg-surface) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .p-paginator .p-paginator-first,
+        .p-paginator .p-paginator-prev,
+        .p-paginator .p-paginator-next,
+        .p-paginator .p-paginator-last,
+        .p-paginator .p-paginator-pages .p-paginator-page {
+            color: var(--text-muted) !important;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+            background-color: var(--color-brand-accent) !important;
+            color: white !important;
+        }
+        
+        .p-datatable .p-datatable-tbody > tr:hover,
+        .p-paginator .p-paginator-first:not(.p-disabled):hover,
+        .p-paginator .p-paginator-prev:not(.p-disabled):hover,
+        .p-paginator .p-paginator-next:not(.p-disabled):hover,
+        .p-paginator .p-paginator-last:not(.p-disabled):hover,
+        .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+            background-color: var(--bg-surface-h) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* 3. Inputs (Text, Password, Dropdown, Select, etc.) */
+        .p-inputtext, 
+        .p-dropdown, .p-select,
+        .p-calendar, 
+        .p-inputnumber-input, 
+        .p-multiselect {
+            background-color: var(--bg-surface) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Override Popups/Overlays */
+        .p-dropdown-panel, 
+        .p-multiselect-panel, 
+        .p-select-overlay, 
+        .p-select-list-container,
+        .p-select-list {
+            background-color: var(--bg-surface) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
+        }
+        
+        /* Options */
+        .p-dropdown-item, 
+        .p-multiselect-item, 
+        .p-select-option {
+            color: var(--text-main) !important;
+            background: transparent !important;
+        }
+
+        /* Hover & Focus States - Critical */
+        .p-dropdown-item:hover, 
+        .p-multiselect-item:hover, 
+        .p-select-option:hover,
+        .p-select-option.p-select-option-selected,
+        .p-select-option.p-focus {
+            background-color: var(--bg-surface-h) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* Labels & Icons within Select */
+        .p-select-label, .p-select-option-label {
+            color: inherit !important;
+            background: transparent !important;
+        }
+        
+        .p-select-dropdown-icon, .p-select-clear-icon {
+             color: var(--text-muted) !important;
+        }
+
+        /* 4. Menus & Overlays */
+        .p-menu, .p-menu-list {
+             background-color: var(--bg-surface) !important;
+             color: var(--text-main) !important;
+             border-color: var(--border-color) !important;
+        }
+        .p-menuitem-link {
+             color: var(--text-main) !important;
+        }
+        .p-menuitem-text, .p-menuitem-icon {
+             color: inherit !important;
+        }
+        .p-menuitem-link:hover {
+             background-color: var(--bg-surface-h) !important;
+             color: var(--text-main) !important;
+        }
+        
+        /* 5. Tooltips */
+        .p-tooltip-text {
+            background-color: var(--text-main) !important;
+            color: var(--bg-surface) !important;
+        }
+
+        /* Utilities */
+        @layer utilities {
+          .glass-panel {
+            background-color: rgb(255 255 255 / 0.8);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgb(255 255 255 / 0.2);
+          }
+          .dark .glass-panel {
+            background-color: rgb(24 24 27 / 0.8);
+            border-color: rgb(255 255 255 / 0.05);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>

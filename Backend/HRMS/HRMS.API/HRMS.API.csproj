@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RazorLangVersion>Latest</RazorLangVersion>
@@ -26,6 +26,7 @@
     <ProjectReference Include="..\HRMS.Infrastructure\HRMS.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Logs\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

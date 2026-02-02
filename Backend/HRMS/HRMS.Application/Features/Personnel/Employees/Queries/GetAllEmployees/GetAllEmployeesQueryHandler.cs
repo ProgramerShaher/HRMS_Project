@@ -56,23 +56,25 @@ public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery,
             .OrderByDescending(e => e.CreatedAt)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(e => new EmployeeListDto
-            {
-                EmployeeId = e.EmployeeId,
-                EmployeeNumber = e.EmployeeNumber,
-                FullNameAr = $"{e.FirstNameAr} {e.SecondNameAr} {e.LastNameAr}",
-                FullNameEn = e.FullNameEn,
-                DepartmentName = e.Department.DeptNameAr ?? "",
-                JobTitle = e.Job.JobTitleAr,
-                Mobile = e.Mobile,
-                HireDate = e.HireDate,
-                IsActive = e.IsDeleted == 0
-            })
             .ToListAsync(cancellationToken);
+
+        // In-Memory Mapping to use computed FullNameAr
+        var dtos = items.Select(e => new EmployeeListDto
+        {
+            EmployeeId = e.EmployeeId,
+            EmployeeNumber = e.EmployeeNumber,
+            FullNameAr = e.FullNameAr, // Now works because 'e' is in memory
+            FullNameEn = e.FullNameEn,
+            DepartmentName = e.Department?.DeptNameAr ?? "",
+            JobTitle = e.Job?.JobTitleAr ?? "", // Safety check
+            Mobile = e.Mobile,
+            HireDate = e.HireDate,
+            IsActive = e.IsDeleted == 0
+        }).ToList();
 
         return new PagedResult<EmployeeListDto>
         {
-            Items = items,
+            Items = dtos,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize

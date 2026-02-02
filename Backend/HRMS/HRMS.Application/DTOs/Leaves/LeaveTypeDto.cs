@@ -16,7 +16,7 @@ public class LeaveTypeDto
     /// الاسم بالعربية
     /// </summary>
     [Required]
-    public string LeaveNameAr { get; set; } = string.Empty;
+    public string LeaveTypeNameAr { get; set; } = string.Empty;
 
     /// <summary>
     /// الاسم بالإنجليزية
@@ -31,7 +31,12 @@ public class LeaveTypeDto
     public int DefaultDays { get; set; }
 
     /// <summary>
-    /// هل يخصم من الرصيد
+    /// هل يخصم من الرصيد السنوي (1=نعم، 0=لا)
     /// </summary>
-    public bool IsDeductible { get; set; }
+    public byte IsDeductible { get; set; }
+
+    /// <summary>
+    /// هل يتطلب مرفق (1=نعم، 0=لا)
+    /// </summary>
+    public byte RequiresAttachment { get; set; }
 }

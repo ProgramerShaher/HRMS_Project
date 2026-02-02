@@ -22,6 +22,85 @@ namespace HRMS.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("HRMS.Core.Entities.Attendance.AttendanceCorrection", b =>
+                {
+                    b.Property<long>("CorrectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("CORRECTION_ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CorrectionId"));
+
+                    b.Property<DateTime>("AttendanceDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ATTENDANCE_DATE");
+
+                    b.Property<string>("AuditNote")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("AUDIT_NOTE");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<long>("DailyAttendanceId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("DAILY_ATTENDANCE_ID");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int")
+                        .HasColumnName("EMPLOYEE_ID");
+
+                    b.Property<string>("FieldName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("FIELD_NAME");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<string>("NewValue")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("NEW_VALUE");
+
+                    b.Property<string>("OldValue")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("OLD_VALUE");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("CorrectionId");
+
+                    b.HasIndex("DailyAttendanceId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("ATTENDANCE_CORRECTIONS", "HR_ATTENDANCE");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Attendance.AttendancePolicy", b =>
                 {
                     b.Property<int>("PolicyId")
@@ -1764,6 +1843,89 @@ namespace HRMS.Infrastructure.Migrations
                     b.ToTable("LEAVE_ACCRUAL_RULES", "HR_LEAVES");
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Leaves.LeaveApprovalHistory", b =>
+                {
+                    b.Property<int>("HistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("HISTORY_ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryId"));
+
+                    b.Property<DateTime>("ActionDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ACTION_DATE");
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("ACTION_TYPE");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("COMMENT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<string>("NewStatus")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("NEW_STATUS");
+
+                    b.Property<int?>("PerformedByEmployeeId")
+                        .HasColumnType("int")
+                        .HasColumnName("PERFORMED_BY_EMPLOYEE_ID");
+
+                    b.Property<string>("PerformedByUserId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("PERFORMED_BY_USER_ID");
+
+                    b.Property<string>("PreviousStatus")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("PREVIOUS_STATUS");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int")
+                        .HasColumnName("REQUEST_ID");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("HistoryId");
+
+                    b.HasIndex("PerformedByEmployeeId");
+
+                    b.HasIndex("RequestId");
+
+                    b.ToTable("LEAVE_APPROVAL_HISTORY", "HR_LEAVES");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Leaves.LeaveEncashment", b =>
                 {
                     b.Property<int>("EncashId")
@@ -2024,8 +2186,8 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_CARRY_FORWARD");
 
-                    b.Property<bool>("IsDeductible")
-                        .HasColumnType("bit")
+                    b.Property<byte>("IsDeductible")
+                        .HasColumnType("tinyint")
                         .HasColumnName("IS_DEDUCTIBLE");
 
                     b.Property<byte>("IsDeleted")
@@ -2662,6 +2824,9 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<string>("ElementType")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<byte>("IsBasic")
+                        .HasColumnType("tinyint");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
@@ -4667,6 +4832,25 @@ namespace HRMS.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Attendance.AttendanceCorrection", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Attendance.DailyAttendance", "DailyAttendance")
+                        .WithMany()
+                        .HasForeignKey("DailyAttendanceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DailyAttendance");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Attendance.AttendancePolicy", b =>
                 {
                     b.HasOne("HRMS.Core.Entities.Core.Department", "Department")
@@ -4857,6 +5041,24 @@ namespace HRMS.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Leaves.LeaveApprovalHistory", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Personnel.Employee", "PerformedByEmployee")
+                        .WithMany()
+                        .HasForeignKey("PerformedByEmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HRMS.Core.Entities.Leaves.LeaveRequest", "LeaveRequest")
+                        .WithMany()
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LeaveRequest");
+
+                    b.Navigation("PerformedByEmployee");
                 });
 
             modelBuilder.Entity("HRMS.Core.Entities.Leaves.LeaveEncashment", b =>

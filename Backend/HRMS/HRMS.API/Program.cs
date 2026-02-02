@@ -1,7 +1,9 @@
 using HRMS.API.Extensions;
-using Serilog;
-using HRMS.Application.Interfaces;
 using HRMS.API.Services;
+using HRMS.Application;
+using HRMS.Application.Interfaces;
+using HRMS.Infrastructure;
+using Serilog;
 
 #region Serilog Configuration
 
@@ -28,12 +30,15 @@ try
 
     // 1. Database Services
     builder.Services.AddDatabaseServices(builder.Configuration);
-
+    // في Program.cs
     // 2. Application Services (MediatR, AutoMapper, FluentValidation)
     builder.Services.AddApplicationServices();
 
     // 3. Identity Services
     builder.Services.AddIdentityServices();
+
+
+    builder.Services.AddInfrastructure(builder.Configuration); // تسجيل كل ما يخص البيانات
 
     // 4. JWT Authentication
     builder.Services.AddJwtAuthentication(builder.Configuration);

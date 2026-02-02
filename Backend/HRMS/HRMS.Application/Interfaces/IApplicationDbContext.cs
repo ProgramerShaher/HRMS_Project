@@ -151,6 +151,12 @@ public interface IApplicationDbContext
     /// أرصدة إجازات الموظفين
     /// </summary>
     DbSet<EmployeeLeaveBalance> LeaveBalances { get; }
+    
+    /// <summary>
+    /// أرصدة إجازات الموظفين (Alias)
+    /// </summary>
+    DbSet<EmployeeLeaveBalance> EmployeeLeaveBalances { get; }
+    
     /// <summary>
     /// طلبات الإجازات
     /// </summary>
@@ -165,6 +171,16 @@ public interface IApplicationDbContext
     /// حركات الإجازات
     /// </summary>
     DbSet<LeaveTransaction> LeaveTransactions { get; }
+
+    /// <summary>
+    /// سجل تاريخ اعتماد الإجازات
+    /// </summary>
+    DbSet<LeaveApprovalHistory> LeaveApprovalHistory { get; }
+
+    /// <summary>
+    /// الموافقات على سير العمل
+    /// </summary>
+    DbSet<WorkflowApproval> WorkflowApprovals { get; }
 
     #endregion
 
@@ -191,6 +207,11 @@ public interface IApplicationDbContext
     DbSet<ShiftType> ShiftTypes { get; }
 
     /// <summary>
+    /// تصحيحات الحضور
+    /// </summary>
+    DbSet<AttendanceCorrection> AttendanceCorrections { get; }
+
+    /// <summary>
     /// طلبات تبديل المناوبات
     /// </summary>
     DbSet<ShiftSwapRequest> ShiftSwapRequests { get; }
@@ -200,9 +221,24 @@ public interface IApplicationDbContext
     /// </summary>
     DbSet<OvertimeRequest> OvertimeRequests { get; }
 
+    /// <summary>
+    /// سياسات الحضور
+    /// </summary>
+    DbSet<AttendancePolicy> AttendancePolicies { get; }
+
+    /// <summary>
+    /// فترات الروستر
+    /// </summary>
+    DbSet<RosterPeriod> RosterPeriods { get; }
+
     #endregion
 
     #region Payroll Entities
+
+    /// <summary>
+    /// عناصر الراتب
+    /// </summary>
+    DbSet<SalaryElement> SalaryElements { get; }
 
     /// <summary>
     /// هياكل رواتب الموظفين
@@ -213,6 +249,22 @@ public interface IApplicationDbContext
     /// مسيرات الرواتب
     /// </summary>
     DbSet<PayrollRun> PayrollRuns { get; }
+
+    /// <summary>
+    /// السلف
+    /// </summary>
+    DbSet<Loan> Loans { get; }
+
+    /// <summary>
+    /// أقساط السلف
+    /// </summary>
+    DbSet<LoanInstallment> LoanInstallments { get; }
+
+    /// <summary>
+    /// قسائم الرواتب
+    /// </summary>
+    DbSet<Payslip> Payslips { get; }
+
     #endregion
 
     #region Performance Entities

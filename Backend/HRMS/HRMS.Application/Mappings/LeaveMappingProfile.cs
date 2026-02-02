@@ -14,11 +14,15 @@ public class LeaveMappingProfile : Profile
         CreateMap<PublicHoliday, PublicHolidayDto>().ReverseMap();
         CreateMap<SystemSetting, SystemSettingDto>().ReverseMap();
         CreateMap<LeaveRequest, LeaveRequestDto>()
-            .ForMember(dest => dest.LeaveTypeName, opt => opt.MapFrom(src => src.LeaveType.LeaveNameAr)); // Ensure LeaveTypeName is mapped
+            .ForMember(dest => dest.LeaveTypeName, opt => opt.MapFrom(src => src.LeaveType.LeaveNameAr))
+            .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.FullNameAr))
+            .ForMember(dest => dest.FullNameAr, opt => opt.MapFrom(src => src.Employee.FullNameAr));
+        
         CreateMap<LeaveRequestDto, LeaveRequest>();
         
         CreateMap<EmployeeLeaveBalance, LeaveBalanceDto>()
             .ForMember(dest => dest.LeaveTypeName, opt => opt.MapFrom(src => src.LeaveType.LeaveNameAr))
-            .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.FirstNameAr + " " + src.Employee.LastNameAr));
+            .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.FullNameAr))
+            .ForMember(dest => dest.FullNameAr, opt => opt.MapFrom(src => src.Employee.FullNameAr));
     }
 }

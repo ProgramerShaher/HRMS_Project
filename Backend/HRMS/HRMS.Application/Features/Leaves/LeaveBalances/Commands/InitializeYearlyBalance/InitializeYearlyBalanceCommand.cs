@@ -1,29 +1,57 @@
 using FluentValidation;
 using HRMS.Application.Interfaces;
 using HRMS.Core.Entities.Leaves;
+using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.Application.Features.Leaves.LeaveBalances.Commands.InitializeYearlyBalance;
 
-// 1. Command
-/// <summary>
-/// أمر تهيئة أرصدة الإجازات السنوية للموظفين
-/// </summary>
-public record InitializeYearlyBalanceCommand(short Year) : IRequest<bool>;
+// ═══════════════════════════════════════════════════════════════════════════
+// 1. COMMAND - الأمر
+// ═══════════════════════════════════════════════════════════════════════════
 
-// 2. Validator
-public class InitializeYearlyBalanceValidator : AbstractValidator<InitializeYearlyBalanceCommand>
+/// <summary>
+/// Command to initialize yearly leave balances for all employees.
+/// Creates balance records for all deductible leave types.
+/// </summary>
+public record InitializeYearlyBalanceCommand : IRequest<Result<bool>>
 {
-    public InitializeYearlyBalanceValidator()
+    /// <summary>
+    /// السنة المراد تهيئة الأرصدة لها
+    /// Year to initialize balances for
+    /// </summary>
+    public short Year { get; init; }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 2. VALIDATOR - المدقق
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// <summary>
+/// Validator for InitializeYearlyBalanceCommand.
+/// Ensures valid year is provided.
+/// </summary>
+public class InitializeYearlyBalanceCommandValidator : AbstractValidator<InitializeYearlyBalanceCommand>
+{
+    public InitializeYearlyBalanceCommandValidator()
     {
+        // التحقق من السنة
+        // Validate year
         RuleFor(x => x.Year)
             .InclusiveBetween((short)2000, (short)2100).WithMessage("السنة يجب أن تكون بين 2000 و 2100");
     }
 }
 
-// 3. Handler
-public class InitializeYearlyBalanceCommandHandler : IRequestHandler<InitializeYearlyBalanceCommand, bool>
+// ═══════════════════════════════════════════════════════════════════════════
+// 3. HANDLER - معالج الأمر
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// <summary>
+/// Handler for initializing yearly leave balances.
+/// Creates balance records for all active employees and deductible leave types.
+/// </summary>
+public class InitializeYearlyBalanceCommandHandler : IRequestHandler<InitializeYearlyBalanceCommand, Result<bool>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -32,30 +60,56 @@ public class InitializeYearlyBalanceCommandHandler : IRequestHandler<InitializeY
         _context = context;
     }
 
-    public async Task<bool> Handle(InitializeYearlyBalanceCommand request, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(InitializeYearlyBalanceCommand request, CancellationToken cancellationToken)
     {
-        // 1. Get all employees
+        // ═══════════════════════════════════════════════════════════════════════════
+        // الخطوة 1: الحصول على جميع الموظفين النشطين
+        // Step 1: Get all active employees
+        // ═══════════════════════════════════════════════════════════════════════════
+
         var employees = await _context.Employees
-            .Where(e => e.IsDeleted == (byte)0) // Only active employees
+            .Where(e => e.IsDeleted == 0) // Only active employees
             .Select(e => e.EmployeeId)
             .ToListAsync(cancellationToken);
 
-        // 2. Get all Deductible Leave Types (like Annual)
+        if (!employees.Any())
+        {
+            return Result<bool>.Failure("لا يوجد موظفون نشطون لتهيئة أرصدتهم", 404);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // الخطوة 2: الحصول على أنواع الإجازات القابلة للخصم
+        // Step 2: Get all deductible leave types
+        // جلب أنواع الإجازات التي تخصم من الرصيد فقط
+        // Get deductible leave types only
         var leaveTypes = await _context.LeaveTypes
-            .Where(lt => lt.IsDeductible)
+            .Where(lt => lt.IsDeductible == 1 && lt.IsDeleted == 0)
             .ToListAsync(cancellationToken);
 
-        if (!leaveTypes.Any()) return false;
+        if (!leaveTypes.Any())
+        {
+            return Result<bool>.Failure("لا توجد أنواع إجازات قابلة للخصم لتهيئة الأرصدة", 404);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // الخطوة 3: إنشاء الأرصدة للموظفين
+        // Step 3: Create balances for employees
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        int createdCount = 0;
 
         foreach (var empId in employees)
         {
             foreach (var type in leaveTypes)
             {
-                // Check if balance already exists
-                var exists = await _context.LeaveBalances.AnyAsync(b => 
-                    b.EmployeeId == empId && 
-                    b.LeaveTypeId == type.LeaveTypeId && 
-                    b.Year == request.Year, cancellationToken);
+                // نتحقق من عدم وجود رصيد مسبقاً
+                // Why: لتجنب التكرار والتضارب
+                var exists = await _context.EmployeeLeaveBalances.AnyAsync(b => 
+                    b.EmployeeId == empId 
+                    && b.LeaveTypeId == type.LeaveTypeId 
+                    && b.Year == request.Year
+                    && b.IsDeleted == 0, 
+                    cancellationToken);
 
                 if (!exists)
                 {
@@ -64,14 +118,33 @@ public class InitializeYearlyBalanceCommandHandler : IRequestHandler<InitializeY
                         EmployeeId = empId,
                         LeaveTypeId = type.LeaveTypeId,
                         Year = request.Year,
-                        CurrentBalance = type.DefaultDays // Start with default balance
+                        CurrentBalance = type.DefaultDays // نبدأ بالرصيد الافتراضي
                     };
-                    _context.LeaveBalances.Add(balance);
+                    _context.EmployeeLeaveBalances.Add(balance);
+                    createdCount++;
                 }
             }
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
-        return true;
+        // ═══════════════════════════════════════════════════════════════════════════
+        // الخطوة 4: حفظ التغييرات
+        // Step 4: Save changes
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        if (createdCount > 0)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // الخطوة 5: إرجاع النتيجة
+        // Step 5: Return result
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        var message = createdCount > 0
+            ? $"تم تهيئة {createdCount} رصيد إجازة للسنة {request.Year}"
+            : $"جميع الأرصدة موجودة مسبقاً للسنة {request.Year}";
+
+        return Result<bool>.Success(true, message);
     }
 }

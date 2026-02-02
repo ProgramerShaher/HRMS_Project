@@ -40,6 +40,12 @@ public class Employee : BaseEntity
     [MaxLength(200)]
     public required string FullNameEn { get; set; }
 
+    /// <summary>
+    /// الاسم الكامل باللغة العربية (Computed)
+    /// </summary>
+    [NotMapped]
+    public string FullNameAr => string.Join(" ", new[] { FirstNameAr, SecondNameAr, ThirdNameAr, LastNameAr }.Where(s => !string.IsNullOrWhiteSpace(s)));
+
     [Column("BIRTH_DATE")]
     public DateTime BirthDate { get; set; }
 

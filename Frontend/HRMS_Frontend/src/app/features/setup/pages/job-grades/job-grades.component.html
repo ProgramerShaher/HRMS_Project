@@ -47,8 +47,8 @@
                 <td class="text-slate-600 dark:text-zinc-400 font-mono">{{item.minSalary | number}} ر.س</td>
                 <td class="text-slate-600 dark:text-zinc-400 font-mono">{{item.maxSalary | number}} ر.س</td>
                 <td>
-                    <span [class]="'px-2 py-0.5 rounded text-xs font-semibold block w-fit ' + (item.isActive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400')">
-                        {{item.isActive ? 'نشط' : 'متوقف'}}
+                    <span [class]="'px-2 py-0.5 rounded text-xs font-semibold block w-fit ' + (item.isActive !== false ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400')">
+                        {{item.isActive !== false ? 'نشط' : 'متوقف'}}
                     </span>
                 </td>
                 <td>

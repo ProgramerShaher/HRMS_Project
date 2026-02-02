@@ -33,7 +33,8 @@ export class SidebarComponent {
         { label: 'تهيئة المدن', icon: 'pi pi-map-marker', route: '/setup/cities' },
         { label: 'تهيئة البنوك', icon: 'pi pi-building', route: '/setup/banks' },
         { label: 'تهيئة الأقسام', icon: 'pi pi-sitemap', route: '/setup/departments' },
-        { label: 'الدرجات الوظيفية', icon: 'pi pi-list', route: '/setup/job-grades' }
+        { label: 'الدرجات الوظيفية', icon: 'pi pi-list', route: '/setup/job-grades' },
+        { label: 'الوظائف', icon: 'pi pi-briefcase', route: '/setup/jobs' }
       ]
     },
   ];

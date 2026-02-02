@@ -188,6 +188,7 @@ namespace HRMS.Infrastructure.Data
         public DbSet<EmployeeRoster> EmployeeRosters { get; set; }
         public DbSet<RawPunchLog> RawPunchLogs { get; set; }
         public DbSet<DailyAttendance> DailyAttendances { get; set; }
+        public DbSet<AttendanceCorrection> AttendanceCorrections { get; set; }
         public DbSet<ShiftSwapRequest> ShiftSwapRequests { get; set; }
         public DbSet<OvertimeRequest> OvertimeRequests { get; set; }
         public DbSet<AttendancePolicy> AttendancePolicies { get; set; }
@@ -197,19 +198,23 @@ namespace HRMS.Infrastructure.Data
         // ===================================
         public DbSet<LeaveType> LeaveTypes { get; set; }
         public DbSet<EmployeeLeaveBalance> LeaveBalances { get; set; }
+        public DbSet<EmployeeLeaveBalance> EmployeeLeaveBalances => LeaveBalances; // Alias for IApplicationDbContext
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<PublicHoliday> PublicHolidays { get; set; }
         public DbSet<LeaveAccrualRule> LeaveAccrualRules { get; set; }
         public DbSet<LeaveEncashment> LeaveEncashments { get; set; }
         public DbSet<LeaveTransaction> LeaveTransactions { get; set; }
+        public DbSet<LeaveApprovalHistory> LeaveApprovalHistory { get; set; }
+        // public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
 
         // ===================================
         // HR_PAYROLL Schema
         // ===================================
-        public DbSet<SalaryElement> SalaryElements { get; set; }
-        public DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
-        public DbSet<PayrollRun> PayrollRuns { get; set; }
-        public DbSet<Payslip> Payslips { get; set; }
+    // Payroll
+    public DbSet<SalaryElement> SalaryElements { get; set; }
+    public DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
+    public DbSet<PayrollRun> PayrollRuns { get; set; }
+    public DbSet<Payslip> Payslips { get; set; }
         public DbSet<PayslipDetail> PayslipDetails { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanInstallment> LoanInstallments { get; set; }
@@ -361,7 +366,33 @@ namespace HRMS.Infrastructure.Data
                 .HasForeignKey<EmployeeCompensation>(c => c.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            #endregion
-        }
-    }
+			#endregion
+
+			// --- حل مشكلة الـ Byte الشامل لكل الجداول ---
+			// ═══════════════════════════════════════════════════════════
+			// الحل النهائي: محول صريح من byte (C#) إلى bit (SQL) والعكس
+			// ═══════════════════════════════════════════════════════════
+
+			// تعريف المحول يدوياً لضمان عدم حدوث InvalidOperationException
+			// بدلاً من السطر القديم الذي سبب المشكلة في الصورة:
+			foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+			{
+				var byteProperties = entityType.GetProperties()
+					.Where(p => p.ClrType == typeof(byte));
+
+				foreach (var property in byteProperties)
+				{
+					// 1. إزالة أي محولات سابقة قد تسبب تعارضاً
+					property.SetValueConverter((Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter)null);
+
+					// 2. إخبار EF Core أن النوع في قاعدة البيانات هو tinyint
+					// (SQL Server TINYINT = C# Byte) - مطابقة 100%
+					property.SetColumnType("tinyint");
+				}
+			}
+			// ═══════════════════════════════════════════════════════════
+			// ═══════════════════════════════════════════════════════════
+			// -------------------------------------------
+		}
+	}
 }

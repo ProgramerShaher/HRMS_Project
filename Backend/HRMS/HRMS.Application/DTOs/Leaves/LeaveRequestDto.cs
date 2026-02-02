@@ -11,6 +11,7 @@ public class LeaveRequestDto
     public int RequestId { get; set; }
     public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = string.Empty;
+    public string FullNameAr { get; set; } = string.Empty;
 
     public int LeaveTypeId { get; set; }
     public string LeaveTypeName { get; set; } = string.Empty;

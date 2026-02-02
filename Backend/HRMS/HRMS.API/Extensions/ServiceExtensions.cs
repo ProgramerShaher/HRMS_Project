@@ -39,23 +39,7 @@ public static class ServiceExtensions
         return services;
     }
 
-    /// <summary>
-    /// تسجيل MediatR و AutoMapper
-    /// </summary>
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-    {
-        // أضمن طريقة للوصول لمشروع الـ Application
-        var assembly = typeof(IApplicationDbContext).Assembly;
-
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
-        services.AddAutoMapper(assembly);
-
-        return services;
-    }
-
-    /// <summary>
-    /// تسجيل ASP.NET Core Identity
-    /// </summary>
+   
     public static IServiceCollection AddIdentityServices(this IServiceCollection services)
     {
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>

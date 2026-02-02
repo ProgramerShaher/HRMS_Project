@@ -32,8 +32,8 @@ public class GetEmployeeProfileQueryHandler : IRequestHandler<GetEmployeeProfile
 
         var dto = _mapper.Map<EmployeeProfileDto>(employee);
         
-        // Manual formatting for Full Name if needed
-        dto.FullNameAr = $"{employee.FirstNameAr} {employee.SecondNameAr} {employee.LastNameAr}";
+        // Use centralized FullNameAr logic
+        dto.FullNameAr = employee.FullNameAr;
 
         return dto;
     }

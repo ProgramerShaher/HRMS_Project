@@ -1,25 +1,28 @@
 <!-- 
-  Main Layout Template 
-  RTL Direction is bound to the root wrapper 
+  Standard Enterprise Layout Structure
+  Refactored for 100% stability with Tailwind v4
 -->
-<div class="layout-wrapper" [dir]="layoutService.direction()">
-  
-  <app-topbar></app-topbar>
-  <app-sidebar></app-sidebar>
+<div class="layout-wrapper flex h-screen w-full overflow-hidden bg-slate-50 dark:bg-zinc-950 transition-colors duration-300" 
+     [dir]="layoutService.direction()">
 
-  <!-- 
-    Main Content 
-    RTL Logic: 
-      When Sidebar Visible (w-72 + m-4 = ~20rem/320px) -> mr-[21rem] 
-      When Hidden -> mr-0
-  -->
-  <main class="main-content min-h-screen pt-24 px-8 pb-10"
-        [class.mr-[21rem]]="layoutService.sidebarVisible()"
-        [class.mr-0]="!layoutService.sidebarVisible()">
-    
-    <div class="max-w-[1920px] mx-auto animate-fade-in-up">
-        <router-outlet></router-outlet>
-    </div>
-  </main>
+  <!-- 1. Sidebar (Fixed Width or Collapsed) -->
+  <app-sidebar class="shrink-0 z-50"></app-sidebar>
 
+  <!-- 2. Main Content Area (Flex Column) -->
+  <div class="relative flex flex-col flex-1 min-w-0 h-full transition-all duration-300">
+      
+      <!-- Topbar (Sticky at top of content area) -->
+      <app-topbar class="shrink-0 z-40"></app-topbar>
+
+      <!-- Page Content (Scrollable) -->
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth relative">
+          <!-- Background Gradient Effect -->
+          <div class="fixed inset-0 pointer-events-none z-0 bg-radial-gradient opacity-40 dark:opacity-20"></div>
+          
+          <div class="relative z-10 max-w-[1920px] mx-auto animate-fade-in-up">
+              <router-outlet></router-outlet>
+          </div>
+      </main>
+
+  </div>
 </div>
