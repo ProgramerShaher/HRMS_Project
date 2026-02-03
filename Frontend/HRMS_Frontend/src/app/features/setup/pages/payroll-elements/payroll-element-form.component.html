@@ -1,0 +1,50 @@
+<div class="p-4" dir="rtl" [formGroup]="form">
+    <div class="flex flex-col gap-4">
+        
+        <!-- Name -->
+        <div class="flex flex-col gap-2">
+            <label for="name" class="text-sm font-medium text-slate-700 dark:text-zinc-300">اسم البند <span class="text-red-500">*</span></label>
+            <input pInputText id="name" formControlName="elementNameAr" class="w-full" [ngClass]="{'ng-invalid ng-dirty': form.get('elementNameAr')?.touched && form.get('elementNameAr')?.invalid}" />
+            <small *ngIf="form.get('elementNameAr')?.touched && form.get('elementNameAr')?.invalid" class="text-red-500 text-xs">حقل مطلوب</small>
+        </div>
+
+        <!-- Type & Percentage -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="type" class="text-sm font-medium text-slate-700 dark:text-zinc-300">نوع البند <span class="text-red-500">*</span></label>
+                <p-select id="type" [options]="elementTypes" formControlName="elementType" placeholder="اختر النوع" styleClass="w-full" class="w-full"></p-select>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="percent" class="text-sm font-medium text-slate-700 dark:text-zinc-300">النسبة الافتراضية</label>
+                <p-inputNumber id="percent" formControlName="defaultPercentage" [min]="0" [max]="100" suffix="%" styleClass="w-full" class="w-full"></p-inputNumber>
+            </div>
+        </div>
+
+        <!-- Toggles -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="isTaxable" [binary]="true" inputId="tax"></p-checkbox>
+                <label for="tax" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">خاضع للضريبة</label>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="isGosiBase" [binary]="true" inputId="gosi"></p-checkbox>
+                <label for="gosi" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">خاضع للتأمين (GOSI)</label>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="isRecurring" [binary]="true" inputId="rec"></p-checkbox>
+                <label for="rec" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">بند متكرر شهرياً</label>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="isBasic" [binary]="true" inputId="basic"></p-checkbox>
+                <label for="basic" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">راتب أساسي</label>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
+        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
+        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+    </div>
+</div>

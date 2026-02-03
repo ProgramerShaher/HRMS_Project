@@ -1,0 +1,78 @@
+<div class="card p-6 bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-slate-100 dark:border-zinc-800" dir="rtl">
+    <p-toast position="bottom-left"></p-toast>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <i class="pi pi-dollar text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800 dark:text-zinc-100">بنود الراتب</h1>
+                <p class="text-slate-500 dark:text-zinc-400 text-xs mt-1">إعدادات الاستحقاقات والاستقطاعات</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="بحث..." class="p-inputtext-sm w-64" />
+            </span>
+            <p-button label="إضافة جديد" icon="pi pi-plus" (onClick)="openNew()" styleClass="p-button-rounded p-button-primary"></p-button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <p-table #dt [value]="elements()" [rows]="10" [paginator]="true" [loading]="loading()"
+             styleClass="p-datatable-sm p-datatable-gridlines"
+             [globalFilterFields]="['elementNameAr', 'elementType']"
+             [rowHover]="true"
+             responsiveLayout="scroll">
+        
+        <ng-template pTemplate="header">
+            <tr class="bg-slate-50 dark:bg-zinc-950 text-slate-700 dark:text-zinc-300 text-sm">
+                <th pSortableColumn="elementNameAr" class="text-center">اسم البند <p-sortIcon field="elementNameAr"></p-sortIcon></th>
+                <th pSortableColumn="elementType" class="text-center">النوع <p-sortIcon field="elementType"></p-sortIcon></th>
+                <th pSortableColumn="isTaxable" class="text-center">خاضع للضريبة <p-sortIcon field="isTaxable"></p-sortIcon></th>
+                <th pSortableColumn="isGosiBase" class="text-center">خاضع للتأمين <p-sortIcon field="isGosiBase"></p-sortIcon></th>
+                <th pSortableColumn="defaultPercentage" class="text-center">النسبة % <p-sortIcon field="defaultPercentage"></p-sortIcon></th>
+                <th class="w-32 text-center">الإجراءات</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+            <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50">
+                <td class="font-medium text-slate-800 dark:text-zinc-200 text-center">{{item.elementNameAr}}</td>
+                <td class="text-center">
+                    <span [class]="'px-2 py-0.5 rounded text-xs font-semibold block w-fit mx-auto ' + (item.elementType === 'EARNING' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400')">
+                        {{item.elementType === 'EARNING' ? 'استحقاق' : 'استقطاع'}}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span [class]="'px-2 py-0.5 rounded text-xs font-semibold block w-fit mx-auto ' + (item.isTaxable ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500')">
+                        {{item.isTaxable ? 'نعم' : 'لا'}}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span [class]="'px-2 py-0.5 rounded text-xs font-semibold block w-fit mx-auto ' + (item.isGosiBase ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500')">
+                        {{item.isGosiBase ? 'نعم' : 'لا'}}
+                    </span>
+                </td>
+                <td class="text-slate-600 dark:text-zinc-400 font-mono text-center">{{item.defaultPercentage}}%</td>
+                <td>
+                    <div class="flex justify-center gap-1">
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded p-button-sm text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20" (click)="edit(item)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20" (click)="delete(item)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" class="text-center py-8 text-slate-500">لا يوجد بيانات لعرضها</td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>

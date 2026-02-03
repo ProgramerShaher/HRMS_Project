@@ -97,3 +97,120 @@ export interface PaginatedResult<T> {
     hasPreviousPage: boolean;
     hasNextPage: boolean;
 }
+// Document Types DTOs
+export interface DocumentType {
+    documentTypeId: number;
+    documentTypeNameAr: string;
+    documentTypeNameEn?: string | null;
+    description?: string | null;
+    allowedExtensions?: string | null;
+    isRequired: boolean;
+    hasExpiry: boolean;
+    defaultExpiryDays?: number | null;
+    maxFileSizeMB?: number | null;
+}
+
+export interface CreateDocumentTypeCommand {
+    documentTypeNameAr: string;
+    documentTypeNameEn?: string | null;
+    description?: string | null;
+    allowedExtensions?: string | null;
+    isRequired: boolean;
+    hasExpiry: boolean;
+    defaultExpiryDays?: number | null;
+    maxFileSizeMB?: number | null;
+}
+
+// Attendance Shift Types DTOs
+export interface ShiftType {
+    shiftId: number;
+    shiftNameAr: string;
+    startTime: string; // HH:mm
+    endTime: string;   // HH:mm
+    hoursCount: number;
+    isCrossDay: number; // 0 or 1
+    gracePeriodMins?: number;
+}
+
+export interface CreateShiftTypeCommand {
+    shiftNameAr: string;
+    startTime: string;
+    endTime: string;
+    isCrossDay: number;
+}
+
+// Attendance Policy DTOs
+export interface AttendancePolicy {
+    policyId: number;
+    policyNameAr: string;
+    deptId?: number;
+    jobId?: number;
+    lateGraceMins: number;
+    overtimeMultiplier: number;
+    weekendOtMultiplier: number;
+}
+
+export interface CreateAttendancePolicyCommand {
+    policyNameAr: string;
+    deptId?: number;
+    jobId?: number;
+    lateGraceMins: number;
+    overtimeMultiplier: number;
+    weekendOtMultiplier: number;
+}
+
+// Leave Types DTOs
+export interface LeaveType {
+    leaveTypeId: number;
+    leaveTypeNameAr: string;
+    nameEn?: string | null;
+    defaultDays: number;
+    isDeductible: number; // 0 or 1
+    requiresAttachment: number; // 0 or 1
+}
+
+export interface CreateLeaveTypeCommand {
+    leaveTypeNameAr: string;
+    defaultDays: number;
+    isDeductible: number;
+    requiresAttachment: number;
+}
+
+// Public Holidays DTOs
+export interface PublicHoliday {
+    holidayId: number;
+    holidayNameAr: string;
+    holidayNameEn?: string | null;
+    startDate: string; // Date string
+    endDate: string;   // Date string
+    daysCount: number;
+}
+
+export interface CreatePublicHolidayCommand {
+    holidayNameAr: string;
+    holidayNameEn?: string | null;
+    startDate: string;
+    endDate: string;
+}
+
+// Payroll Elements DTOs
+export interface PayrollElement {
+    elementId: number;
+    elementNameAr: string;
+    elementType: string; // 'EARNING' or 'DEDUCTION'
+    isTaxable: boolean;
+    isGosiBase: boolean;
+    isRecurring: boolean;
+    isBasic: boolean;
+    defaultPercentage: number;
+}
+
+export interface CreatePayrollElementCommand {
+    elementNameAr: string;
+    elementType: string;
+    isTaxable: boolean;
+    isGosiBase: boolean;
+    isRecurring: boolean;
+    isBasic: boolean;
+    defaultPercentage: number;
+}

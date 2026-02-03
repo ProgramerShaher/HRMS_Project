@@ -1,0 +1,12 @@
+:host {
+    display: block;
+}
+
+// Customize PrimeNG Stepper if needed
+::ng-deep .p-stepper .p-stepper-header {
+    @apply font-bold text-lg;
+    
+    &.p-highlight {
+        @apply text-blue-600;
+    }
+}

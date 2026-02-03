@@ -1,0 +1,43 @@
+<div class="p-4" dir="rtl" [formGroup]="form">
+    <div class="flex flex-col gap-4">
+        
+        <!-- Name -->
+        <div class="flex flex-col gap-2">
+            <label for="nameAr" class="text-sm font-medium text-slate-700 dark:text-zinc-300">اسم الإجازة بالعربية <span class="text-red-500">*</span></label>
+            <input pInputText id="nameAr" formControlName="leaveTypeNameAr" class="w-full" [ngClass]="{'ng-invalid ng-dirty': form.get('leaveTypeNameAr')?.touched && form.get('leaveTypeNameAr')?.invalid}" />
+            <small *ngIf="form.get('leaveTypeNameAr')?.touched && form.get('leaveTypeNameAr')?.invalid" class="text-red-500 text-xs">حقل مطلوب</small>
+        </div>
+
+        <!-- Default Days -->
+        <div class="flex flex-col gap-2">
+            <label for="days" class="text-sm font-medium text-slate-700 dark:text-zinc-300">الرصيد الافتراضي (أيام) <span class="text-red-500">*</span></label>
+            <p-inputNumber id="days" formControlName="defaultDays" [min]="0" styleClass="w-full" class="w-full"></p-inputNumber>
+        </div>
+
+        <!-- Toggles -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="isDeductible" [binary]="true" inputId="deduct"></p-checkbox>
+                <div class="flex flex-col">
+                    <label for="deduct" class="text-sm font-medium text-slate-700 dark:text-zinc-300 cursor-pointer select-none">يخصم من الرصيد السنوي</label>
+                    <span class="text-xs text-slate-500 dark:text-zinc-500">عند تفعيل هذا الخيار سيتم خصم أيام الإجازة من رصيد الموظف</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="requiresAttachment" [binary]="true" inputId="attach"></p-checkbox>
+                <div class="flex flex-col">
+                    <label for="attach" class="text-sm font-medium text-slate-700 dark:text-zinc-300 cursor-pointer select-none">يتطلب مرفق</label>
+                    <span class="text-xs text-slate-500 dark:text-zinc-500">إجبار الموظف على إرفاق مستند عند طلب هذه الإجازة</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
+        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
+        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+    </div>
+</div>

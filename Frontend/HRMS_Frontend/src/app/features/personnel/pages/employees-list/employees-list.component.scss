@@ -1,0 +1,9 @@
+:host {
+    display: block;
+}
+
+// Custom Scrollbar for table
+::ng-deep .p-datatable-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}

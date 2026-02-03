@@ -1,0 +1,49 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2">
+
+    <!-- Department -->
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">القسم / الإدارة <span class="text-red-500">*</span></label>
+        <p-select [options]="departments" [(ngModel)]="data.departmentId" (ngModelChange)="onChange()" optionLabel="label" optionValue="value" placeholder="اختر القسم" styleClass="w-full"></p-select>
+    </div>
+
+    <!-- Job -->
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الوظيفة <span class="text-red-500">*</span></label>
+        <p-select [options]="jobs" [(ngModel)]="data.jobId" (ngModelChange)="onChange()" optionLabel="label" optionValue="value" placeholder="اختر الوظيفة" styleClass="w-full"></p-select>
+    </div>
+
+    <!-- Manager (Optional) -->
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">المدير المباشر</label>
+        <input pInputText type="number" [(ngModel)]="data.managerId" (ngModelChange)="onChange()" placeholder="رقم المدير" />
+    </div>
+
+    <!-- Hire Date -->
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">تاريخ التعيين <span class="text-red-500">*</span></label>
+        <p-datePicker [(ngModel)]="data.hireDate" (ngModelChange)="onChange()" placeholder="dd/mm/yyyy" styleClass="w-full"></p-datePicker>
+    </div>
+
+    <!-- Professional License (Medical etc.) -->
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">رقم الرخصة المهنية</label>
+        <input pInputText [(ngModel)]="data.licenseNumber" (ngModelChange)="onChange()" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">تاريخ انتهاء الرخصة</label>
+        <p-datePicker [(ngModel)]="data.licenseExpiryDate" (ngModelChange)="onChange()" placeholder="dd/mm/yyyy" styleClass="w-full"></p-datePicker>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">التخصص الدقيق</label>
+        <input pInputText [(ngModel)]="data.specialty" (ngModelChange)="onChange()" placeholder="مثال: جراحة أعصاب" />
+    </div>
+
+</div>
+
+<!-- Navigation Buttons -->
+<div class="flex justify-between mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
+    <button pButton label="السابق" icon="pi pi-arrow-right" class="p-button-outlined" (click)="onPrev()"></button>
+    <button pButton label="التالي: البيانات المالية" icon="pi pi-arrow-left" iconPos="left" (click)="onNext()"></button>
+</div>

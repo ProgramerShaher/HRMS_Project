@@ -34,7 +34,12 @@ export class SidebarComponent {
         { label: 'تهيئة البنوك', icon: 'pi pi-building', route: '/setup/banks' },
         { label: 'تهيئة الأقسام', icon: 'pi pi-sitemap', route: '/setup/departments' },
         { label: 'الدرجات الوظيفية', icon: 'pi pi-list', route: '/setup/job-grades' },
-        { label: 'الوظائف', icon: 'pi pi-briefcase', route: '/setup/jobs' }
+        { label: 'الوظائف', icon: 'pi pi-briefcase', route: '/setup/jobs' },
+        { label: 'أنواع الوثائق', icon: 'pi pi-file', route: '/setup/document-types' },
+        { label: 'أنواع الإجازات', icon: 'pi pi-calendar-times', route: '/setup/leave-types' },
+        { label: 'سياسات الحضور', icon: 'pi pi-clock', route: '/setup/attendance-policies' },
+        { label: 'أنواع الورديات', icon: 'pi pi-moon', route: '/setup/shift-types' },
+        { label: 'بنود الراتب', icon: 'pi pi-dollar', route: '/setup/payroll-elements' }
       ]
     },
   ];

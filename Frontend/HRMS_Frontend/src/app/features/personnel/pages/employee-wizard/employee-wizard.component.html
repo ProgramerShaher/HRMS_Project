@@ -1,0 +1,64 @@
+<div class="flex flex-col gap-6" dir="rtl">
+    <p-toast position="bottom-left"></p-toast>
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">ملف موظف جديد</h1>
+            <p class="text-slate-500 text-sm mt-1">أدخل بيانات الموظف الجديد عبر الخطوات التالية</p>
+        </div>
+        <button pButton label="إلغاء" class="p-button-text text-slate-500" routerLink="/employees"></button>
+    </div>
+
+    <!-- Wizard Container -->
+        <p-stepper [(value)]="currentStep" [linear]="true">
+            <p-step-list>
+                <p-step [value]="0">البيانات الشخصية</p-step>
+                <p-step [value]="1">بيانات التوظيف</p-step>
+                <p-step [value]="2">البيانات المالية</p-step>
+            </p-step-list>
+            
+            <p-step-panels>
+                <!-- Step 1: Personal Info -->
+                <p-step-panel [value]="0">
+                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                        <div class="p-6">
+                            <app-personal-info-step 
+                                [data]="employeeData()" 
+                                (dataChange)="updatePersonalInfo($event)"
+                                (next)="activateCallback(1)">
+                            </app-personal-info-step>
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+
+                <!-- Step 2: Employment Info -->
+                <p-step-panel [value]="1">
+                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                        <div class="p-6">
+                            <app-employment-info-step
+                                [data]="employeeData()"
+                                (dataChange)="updateEmploymentInfo($event)"
+                                (prev)="activateCallback(0)"
+                                (next)="activateCallback(2)">
+                            </app-employment-info-step>
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+
+                <!-- Step 3: Financial Info -->
+                <p-step-panel [value]="2">
+                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                        <div class="p-6">
+                            <app-financial-info-step
+                                [data]="employeeData()"
+                                (dataChange)="updateFinancialInfo($event)"
+                                (prev)="activateCallback(1)"
+                                (submit)="submit()">
+                            </app-financial-info-step>
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+            </p-step-panels>
+        </p-stepper>
+</div>

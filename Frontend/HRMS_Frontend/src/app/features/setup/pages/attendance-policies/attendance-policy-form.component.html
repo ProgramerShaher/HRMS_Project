@@ -1,0 +1,46 @@
+<div class="p-4" dir="rtl" [formGroup]="form">
+    <div class="flex flex-col gap-4">
+        
+        <!-- Name -->
+        <div class="flex flex-col gap-2">
+            <label for="name" class="text-sm font-medium text-slate-700 dark:text-zinc-300">اسم السياسة <span class="text-red-500">*</span></label>
+            <input pInputText id="name" formControlName="policyNameAr" class="w-full" [ngClass]="{'ng-invalid ng-dirty': form.get('policyNameAr')?.touched && form.get('policyNameAr')?.invalid}" />
+            <small *ngIf="form.get('policyNameAr')?.touched && form.get('policyNameAr')?.invalid" class="text-red-500 text-xs">حقل مطلوب</small>
+        </div>
+
+        <!-- Assignments (Optional) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="dept" class="text-sm font-medium text-slate-700 dark:text-zinc-300">القسم المطبق عليه</label>
+                <p-select id="dept" [options]="departments()" formControlName="deptId" optionLabel="deptNameAr" optionValue="deptId" placeholder="اختر القسم" styleClass="w-full" [showClear]="true"></p-select>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="job" class="text-sm font-medium text-slate-700 dark:text-zinc-300">المسمى الوظيفي المطبق عليه</label>
+                <p-select id="job" [options]="jobs()" formControlName="jobId" optionLabel="jobTitleAr" optionValue="jobId" placeholder="اختر الوظيفة" styleClass="w-full" [showClear]="true"></p-select>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 dark:bg-zinc-800 p-4 rounded-xl border border-slate-100 dark:border-zinc-700">
+            <div class="flex flex-col gap-2">
+                <label for="grace" class="text-sm font-medium text-slate-700 dark:text-zinc-300">سماحية التأخير (دقيقة)</label>
+                <p-inputNumber id="grace" formControlName="lateGraceMins" [min]="0" styleClass="w-full" class="w-full" suffix=" دقيقة"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="ot" class="text-sm font-medium text-slate-700 dark:text-zinc-300">مضاعف الإضافي</label>
+                <p-inputNumber id="ot" formControlName="overtimeMultiplier" [min]="1" [step]="0.5" [minFractionDigits]="1" styleClass="w-full" class="w-full" prefix="x "></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="weekend" class="text-sm font-medium text-slate-700 dark:text-zinc-300">مضاعف العطلات</label>
+                <p-inputNumber id="weekend" formControlName="weekendOtMultiplier" [min]="1" [step]="0.5" [minFractionDigits]="1" styleClass="w-full" class="w-full" prefix="x "></p-inputNumber>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
+        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
+        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="p-4" dir="rtl" [formGroup]="form">
+    <div class="flex flex-col gap-4">
+        
+        <!-- Name -->
+        <div class="flex flex-col gap-2">
+            <label for="name" class="text-sm font-medium text-slate-700 dark:text-zinc-300">اسم الوردية <span class="text-red-500">*</span></label>
+            <input pInputText id="name" formControlName="shiftNameAr" class="w-full" [ngClass]="{'ng-invalid ng-dirty': form.get('shiftNameAr')?.touched && form.get('shiftNameAr')?.invalid}" />
+            <small *ngIf="form.get('shiftNameAr')?.touched && form.get('shiftNameAr')?.invalid" class="text-red-500 text-xs">حقل مطلوب</small>
+        </div>
+
+        <!-- Times -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="start" class="text-sm font-medium text-slate-700 dark:text-zinc-300">وقت البداية <span class="text-red-500">*</span></label>
+                <p-inputMask id="start" mask="99:99" formControlName="startTime" placeholder="00:00" styleClass="w-full" class="w-full text-left" dir="ltr"></p-inputMask>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="end" class="text-sm font-medium text-slate-700 dark:text-zinc-300">وقت النهاية <span class="text-red-500">*</span></label>
+                <p-inputMask id="end" mask="99:99" formControlName="endTime" placeholder="00:00" styleClass="w-full" class="w-full text-left" dir="ltr"></p-inputMask>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="flex flex-col gap-4 pt-2">
+            <div class="flex flex-col gap-2">
+                <label for="hours" class="text-sm font-medium text-slate-700 dark:text-zinc-300">عدد الساعات <span class="text-red-500">*</span></label>
+                <p-inputNumber id="hours" formControlName="hoursCount" [min]="0" [max]="24" suffix=" ساعة" styleClass="w-full" class="w-full"></p-inputNumber>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+                <p-checkbox formControlName="isCrossDay" [binary]="true" inputId="cross"></p-checkbox>
+                <div class="flex flex-col">
+                    <label for="cross" class="text-sm font-medium text-slate-700 dark:text-zinc-300 cursor-pointer select-none">وردية مسائية (تعبر اليوم)</label>
+                    <span class="text-xs text-slate-500 dark:text-zinc-500">مفيدة عند حساب التأخير والحضور لليوم التالي</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
+        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
+        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+    </div>
+</div>

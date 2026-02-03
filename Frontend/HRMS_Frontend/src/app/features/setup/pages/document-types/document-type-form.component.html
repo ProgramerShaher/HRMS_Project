@@ -1,0 +1,60 @@
+<div class="p-4" dir="rtl" [formGroup]="form">
+    <div class="flex flex-col gap-4">
+        
+        <!-- Names -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="nameAr" class="text-sm font-medium text-slate-700 dark:text-zinc-300">الاسم بالعربية <span class="text-red-500">*</span></label>
+                <input pInputText id="nameAr" formControlName="documentTypeNameAr" class="w-full" [ngClass]="{'ng-invalid ng-dirty': form.get('documentTypeNameAr')?.touched && form.get('documentTypeNameAr')?.invalid}" />
+                <small *ngIf="form.get('documentTypeNameAr')?.touched && form.get('documentTypeNameAr')?.invalid" class="text-red-500 text-xs">حقل مطلوب</small>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="nameEn" class="text-sm font-medium text-slate-700 dark:text-zinc-300">الاسم بالإنجليزية</label>
+                <input pInputText id="nameEn" formControlName="documentTypeNameEn" class="w-full" />
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-2">
+            <label for="desc" class="text-sm font-medium text-slate-700 dark:text-zinc-300">الوصف</label>
+            <textarea pInputTextarea id="desc" formControlName="description" rows="3" class="w-full"></textarea>
+        </div>
+
+        <!-- File Settings -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label for="ext" class="text-sm font-medium text-slate-700 dark:text-zinc-300">الامتدادات المسموحة</label>
+                <input pInputText id="ext" formControlName="allowedExtensions" placeholder="مثال: .pdf,.jpg" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="size" class="text-sm font-medium text-slate-700 dark:text-zinc-300">أقصى حجم (ميجا)</label>
+                <p-inputNumber id="size" formControlName="maxFileSizeMB" [min]="0" styleClass="w-full" class="w-full"></p-inputNumber>
+            </div>
+        </div>
+
+        <!-- Toggles -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+            <div class="flex items-center gap-2">
+                <p-checkbox formControlName="isRequired" [binary]="true" inputId="req"></p-checkbox>
+                <label for="req" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">وثيقة إجبارية</label>
+            </div>
+            <div class="flex items-center gap-2">
+                <p-checkbox formControlName="hasExpiry" [binary]="true" inputId="exp"></p-checkbox>
+                <label for="exp" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">لها تاريخ انتهاء</label>
+            </div>
+        </div>
+
+        <!-- Expiry Days (Conditional) -->
+        <div class="flex flex-col gap-2" *ngIf="form.get('hasExpiry')?.value">
+            <label for="expDays" class="text-sm font-medium text-slate-700 dark:text-zinc-300">أيام التنبيه قبل الانتهاء</label>
+            <p-inputNumber id="expDays" formControlName="defaultExpiryDays" [min]="0" styleClass="w-full" class="w-full"></p-inputNumber>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
+        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
+        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+    </div>
+</div>
