@@ -39,6 +39,19 @@ namespace HRMS.Core.Entities.Payroll
         [Column(TypeName = "decimal(10, 2)")]
         public decimal? NetSalary { get; set; }
 
+        // --- Attendance & OT Breakdown ---
+        [Column("TOTAL_LATE_MINUTES")]
+        public int TotalLateMinutes { get; set; }
+
+        [Column("ABSENCE_DAYS")]
+        public int AbsenceDays { get; set; }
+
+        [Column("TOTAL_OT_MINUTES")]
+        public int TotalOvertimeMinutes { get; set; }
+
+        [Column("OT_EARNINGS", TypeName = "decimal(10, 2)")]
+        public decimal OvertimeEarnings { get; set; }
+
         // Navigation Properties
         public virtual PayrollRun PayrollRun { get; set; } = null!;
         public virtual Employee Employee { get; set; } = null!;

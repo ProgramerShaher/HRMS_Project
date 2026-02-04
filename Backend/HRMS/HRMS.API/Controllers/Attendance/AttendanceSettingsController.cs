@@ -5,6 +5,7 @@ using HRMS.Application.Features.Attendance.Configuration.GetShiftTypes;
 using HRMS.Application.Features.Attendance.Requests.CreateShiftSwap;
 using HRMS.Application.Features.Attendance.Requests.ActionShiftSwap;
 using HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster;
+using HRMS.Application.Features.Attendance.Roster.Commands.AssignShift;
 using HRMS.Application.Features.Attendance.Process.Commands.ProcessAttendance;
 using HRMS.Application.DTOs.Attendance;
 using MediatR;
@@ -67,6 +68,13 @@ public class AttendanceSettingsController : ControllerBase
     {
         var result = await _mediator.Send(command);
         return Ok(result);
+    }
+
+    [HttpPost("roster/assign")]
+    public async Task<ActionResult<int>> AssignShift([FromBody] AssignShiftCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
     [HttpPost("process-attendance")]

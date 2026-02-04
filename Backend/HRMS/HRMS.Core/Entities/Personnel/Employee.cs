@@ -101,6 +101,25 @@ public class Employee : BaseEntity
     [MaxLength(450)]
     public string? UserId { get; set; }
 
+    /// <summary>
+    /// مسار صورة الملف الشخصي
+    /// </summary>
+    [Column("PROFILE_PICTURE_PATH")]
+    [MaxLength(500)]
+    public string? ProfilePicturePath { get; set; }
+
+    /// <summary>
+    /// حالة الموظف (نشط/غير نشط)
+    /// </summary>
+    [Column("IS_ACTIVE")]
+    public bool IsActive { get; set; } = true;
+
+    /// <summary>
+    /// تاريخ إنهاء الخدمة
+    /// </summary>
+    [Column("TERMINATION_DATE")]
+    public DateTime? TerminationDate { get; set; }
+
     // --- العلاقات Navigation Properties ---
     public virtual Department Department { get; set; } = null!;
     public virtual Job Job { get; set; } = null!;

@@ -15,6 +15,12 @@ namespace HRMS.Application.Mappings
             CreateMap<HRMS.Application.DTOs.Personnel.CreateEmployeeDto, Employee>()
                 .ForMember(dest => dest.NationalityId, opt => opt.MapFrom(src => src.NationalityId));
             
+            // New Basic Mapping
+            CreateMap<CreateBasicEmployeeDto, Employee>()
+                .ForMember(dest => dest.Compensation, opt => opt.Ignore())
+                .ForMember(dest => dest.Documents, opt => opt.Ignore())
+                .ForMember(dest => dest.EmployeeNumber, opt => opt.Ignore()); 
+            
             CreateMap<Employee, EmployeeDto>()
                 .ForMember(dest => dest.NationalityName, opt => opt.MapFrom(src => src.Country != null ? src.Country.CountryNameAr : ""))
                 .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.Job != null ? src.Job.JobTitleAr : ""))

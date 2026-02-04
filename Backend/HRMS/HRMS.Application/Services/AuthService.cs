@@ -9,6 +9,7 @@ using HRMS.Application.DTOs.Auth;
 using HRMS.Application.Interfaces;
 using HRMS.Application.Settings;
 using HRMS.Core.Entities.Identity;
+using HRMS.Core.Utilities;
 
 namespace HRMS.Application.Services
 {
@@ -39,25 +40,25 @@ namespace HRMS.Application.Services
         /// <summary>
         /// تسجيل مستخدم جديد
         /// </summary>
-        public async Task<(bool Success, string Message, AuthResponse? Data)> RegisterAsync(RegisterRequest request)
+        public async Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request)
         {
             // التحقق من تطابق كلمة المرور
             if (request.Password != request.ConfirmPassword)
             {
-                return (false, "كلمة المرور وتأكيد كلمة المرور غير متطابقين", null);
+                return Result<AuthResponse>.Failure("كلمة المرور وتأكيد كلمة المرور غير متطابقين");
             }
 
             // التحقق من عدم وجود المستخدم مسبقاً
             var existingUser = await _userManager.FindByNameAsync(request.UserName);
             if (existingUser != null)
             {
-                return (false, "اسم المستخدم موجود مسبقاً", null);
+                return Result<AuthResponse>.Failure("اسم المستخدم موجود مسبقاً");
             }
 
             var existingEmail = await _userManager.FindByEmailAsync(request.Email);
             if (existingEmail != null)
             {
-                return (false, "البريد الإلكتروني مسجل مسبقاً", null);
+                return Result<AuthResponse>.Failure("البريد الإلكتروني مسجل مسبقاً");
             }
 
             // إنشاء المستخدم الجديد
@@ -79,7 +80,7 @@ namespace HRMS.Application.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return (false, $"فشل إنشاء المستخدم: {errors}", null);
+                return Result<AuthResponse>.Failure($"فشل إنشاء المستخدم: {errors}");
             }
 
             // إضافة الدور الافتراضي
@@ -88,7 +89,7 @@ namespace HRMS.Application.Services
             // إنشاء الرمز
             var authResponse = await GenerateAuthResponseAsync(user);
 
-            return (true, "تم التسجيل بنجاح", authResponse);
+            return Result<AuthResponse>.Success(authResponse, "تم التسجيل بنجاح");
         }
 
         #endregion
@@ -98,7 +99,7 @@ namespace HRMS.Application.Services
         /// <summary>
         /// تسجيل الدخول
         /// </summary>
-        public async Task<(bool Success, string Message, AuthResponse? Data)> LoginAsync(LoginRequest request)
+        public async Task<Result<AuthResponse>> LoginAsync(LoginRequest request)
         {
             // البحث عن المستخدم
             var user = await _userManager.FindByNameAsync(request.UserName) 
@@ -106,13 +107,13 @@ namespace HRMS.Application.Services
 
             if (user == null)
             {
-                return (false, "اسم المستخدم أو كلمة المرور غير صحيحة", null);
+                return Result<AuthResponse>.Failure("اسم المستخدم أو كلمة المرور غير صحيحة");
             }
 
             // التحقق من أن الحساب نشط
             if (!user.IsActive)
             {
-                return (false, "الحساب معطل، يرجى الاتصال بالإدارة", null);
+                return Result<AuthResponse>.Failure("الحساب معطل، يرجى الاتصال بالإدارة");
             }
 
             // التحقق من كلمة المرور
@@ -120,12 +121,12 @@ namespace HRMS.Application.Services
 
             if (result.IsLockedOut)
             {
-                return (false, "الحساب مقفل مؤقتاً بسبب محاولات دخول فاشلة متعددة", null);
+                return Result<AuthResponse>.Failure("الحساب مقفل مؤقتاً بسبب محاولات دخول فاشلة متعددة");
             }
 
             if (!result.Succeeded)
             {
-                return (false, "اسم المستخدم أو كلمة المرور غير صحيحة", null);
+                return Result<AuthResponse>.Failure("اسم المستخدم أو كلمة المرور غير صحيحة");
             }
 
             // تحديث آخر تسجيل دخول
@@ -135,7 +136,7 @@ namespace HRMS.Application.Services
             // إنشاء الرمز
             var authResponse = await GenerateAuthResponseAsync(user);
 
-            return (true, "تم تسجيل الدخول بنجاح", authResponse);
+            return Result<AuthResponse>.Success(authResponse, "تم تسجيل الدخول بنجاح");
         }
 
         #endregion
@@ -145,18 +146,18 @@ namespace HRMS.Application.Services
         /// <summary>
         /// تحديث الرمز باستخدام Refresh Token
         /// </summary>
-        public async Task<(bool Success, string Message, AuthResponse? Data)> RefreshTokenAsync(string refreshToken)
+        public async Task<Result<AuthResponse>> RefreshTokenAsync(string refreshToken)
         {
             var user = _userManager.Users.FirstOrDefault(u => u.RefreshToken == refreshToken);
 
             if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
-                return (false, "رمز التحديث غير صالح أو منتهي الصلاحية", null);
+                return Result<AuthResponse>.Failure("رمز التحديث غير صالح أو منتهي الصلاحية");
             }
 
             var authResponse = await GenerateAuthResponseAsync(user);
 
-            return (true, "تم تحديث الرمز بنجاح", authResponse);
+            return Result<AuthResponse>.Success(authResponse, "تم تحديث الرمز بنجاح");
         }
 
         #endregion

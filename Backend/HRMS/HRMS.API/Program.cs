@@ -91,7 +91,7 @@ try
     #region Database Seeding
 
     // Seed Default Roles and Admin User
-    //await app.SeedDatabaseAsync();
+    await app.SeedDatabaseAsync();
 
     #endregion
 

@@ -8,6 +8,7 @@ using HRMS.Core.Entities.Payroll;
 using HRMS.Core.Entities.Performance;
 using HRMS.Core.Entities.Personnel;
 using HRMS.Core.Entities.Recruitment;
+using HRMS.Core.Entities.Accounting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -192,6 +193,7 @@ namespace HRMS.Infrastructure.Data
         public DbSet<ShiftSwapRequest> ShiftSwapRequests { get; set; }
         public DbSet<OvertimeRequest> OvertimeRequests { get; set; }
         public DbSet<AttendancePolicy> AttendancePolicies { get; set; }
+        public DbSet<PermissionRequest> PermissionRequests { get; set; }
 
         // ===================================
         // HR_LEAVES Schema
@@ -240,6 +242,13 @@ namespace HRMS.Infrastructure.Data
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
         public DbSet<EmployeeViolation> EmployeeViolations { get; set; }
+
+        // ===================================
+        // ACCOUNTING Schema
+        // ===================================
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<JournalEntry> JournalEntries { get; set; }
+        public DbSet<JournalEntryLine> JournalEntryLines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

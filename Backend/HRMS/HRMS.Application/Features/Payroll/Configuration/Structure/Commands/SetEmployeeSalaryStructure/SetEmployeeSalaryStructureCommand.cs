@@ -79,12 +79,14 @@ public class SetEmployeeSalaryStructureCommandHandler : IRequestHandler<SetEmplo
             .AsNoTracking()
             .FirstOrDefaultAsync(e => e.EmployeeId == request.EmployeeId, cancellationToken);
 
-        if (employee?.Job?.DefaultGrade != null && basicSalaryAmount > 0)
+        // Validate if Employee has a Grade and we identified a Basic Element context
+        if (employee?.Job?.DefaultGrade != null && basicElement != null)
         {
             var grade = employee.Job.DefaultGrade;
+            // Check if amount is strictly within range (inclusive)
             if (basicSalaryAmount < grade.MinSalary || basicSalaryAmount > grade.MaxSalary)
             {
-               return Result<bool>.Failure($"الراتب الأساسي ({basicSalaryAmount}) خارج نطاق الدرجة الوظيفية ({grade.GradeNameAr}: {grade.MinSalary} - {grade.MaxSalary})");
+               return Result<bool>.Failure($"الراتب الأساسي ({basicSalaryAmount}) خارج النطاق المسموح للدرجة الوظيفية ({grade.GradeNameAr}: {grade.MinSalary} - {grade.MaxSalary})");
             }
         }
         // ------------------------------------

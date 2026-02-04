@@ -66,7 +66,13 @@ public class ProcessPayrunCommandHandler : IRequestHandler<ProcessPayrunCommand,
                 BasicSalary = calc.BasicSalary,
                 TotalAllowances = calc.TotalAllowances,
                 TotalDeductions = calc.TotalStructureDeductions + calc.LoanDeductions + calc.AttendancePenalties,
-                NetSalary = calc.NetSalary
+                NetSalary = calc.NetSalary,
+                
+                // Detailed Breakdown
+                TotalLateMinutes = calc.TotalLateMinutes,
+                AbsenceDays = calc.AbsenceDays,
+                TotalOvertimeMinutes = calc.TotalOvertimeMinutes,
+                OvertimeEarnings = calc.OvertimeEarnings
             };
 
             _context.Payslips.Add(payslip); 

@@ -1,6 +1,7 @@
 using HRMS.Application.DTOs.Payroll;
 using HRMS.Application.Features.Payroll.Loans.Commands.CreateLoan;
 using HRMS.Application.Features.Payroll.Loans.Queries.GetMonthlyInstallments;
+using HRMS.Application.Features.Payroll.Loans.Queries.GetEmployeeInstallments;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,13 @@ public class LoanController : ControllerBase
     {
         var query = new GetMonthlyInstallmentsQuery { Month = month, Year = year, EmployeeId = employeeId };
         var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("employee-schedule/{employeeId}")]
+    public async Task<ActionResult<Result<List<LoanInstallmentDto>>>> GetEmployeeSchedule(int employeeId)
+    {
+        var result = await _mediator.Send(new GetEmployeeInstallmentsQuery { EmployeeId = employeeId });
         return Ok(result);
     }
 }

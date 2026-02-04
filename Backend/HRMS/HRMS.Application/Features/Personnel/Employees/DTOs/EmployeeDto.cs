@@ -39,12 +39,16 @@ namespace HRMS.Application.Features.Personnel.Employees.DTOs
         /// <summary>
         /// اللقب (اسم العائلة) بالعربية
         /// </summary>
-        public string HijriLastNameAr { get; set; }
+        public string LastNameAr { get; set; }
 
         /// <summary>
         /// الاسم الكامل بالإنجليزية
         /// </summary>
         public string FullNameEn { get; set; }
+        
+        /// <summary>
+        /// الاسم الكامل بالعربية
+        /// </summary>
         public string FullNameAr { get; set; }
 
         /// <summary>
@@ -58,49 +62,19 @@ namespace HRMS.Application.Features.Personnel.Employees.DTOs
         public DateTime BirthDate { get; set; }
 
         /// <summary>
-        /// الحالة الاجتماعية (SINGLE, MARRIED, DIVORCED, WIDOWED)
+        /// الحالة الاجتماعية (Single, Married, Divorced, Widowed)
         /// </summary>
         public string MaritalStatus { get; set; }
-        
-        /// <summary>
-        /// معرف الجنسية
-        /// </summary>
-        public int NationalityId { get; set; }
 
         /// <summary>
-        /// معرف الوظيفة
+        /// رقم الهوية الوطنية
         /// </summary>
-        public int JobId { get; set; }
+        public string NationalId { get; set; }
 
         /// <summary>
-        /// معرف القسم
+        /// رقم الهاتف الجوال
         /// </summary>
-        public int DeptId { get; set; }
-        
-        /// <summary>
-        /// اسم الجنسية بالعربية (من جدول الدول)
-        /// </summary>
-        public string NationalityName { get; set; }
-
-        /// <summary>
-        /// المسمى الوظيفي بالعربية (من جدول الوظائف)
-        /// </summary>
-        public string JobTitle { get; set; }
-
-        /// <summary>
-        /// اسم القسم بالعربية (من جدول الأقسام)
-        /// </summary>
-        public string DepartmentName { get; set; }
-        
-        /// <summary>
-        /// تاريخ الالتحاق بالعمل
-        /// </summary>
-        public DateTime JoiningDate { get; set; }
-
-        /// <summary>
-        /// حالة الموظف (ACTIVE, RESIGNED, TERMINATED)
-        /// </summary>
-        public string Status { get; set; }
+        public string Mobile { get; set; }
 
         /// <summary>
         /// البريد الإلكتروني الرسمي
@@ -108,8 +82,78 @@ namespace HRMS.Application.Features.Personnel.Employees.DTOs
         public string Email { get; set; }
 
         /// <summary>
-        /// رقم الهاتف الجوال
+        /// تاريخ الالتحاق بالعمل
         /// </summary>
-        public string Mobile { get; set; }
+        public DateTime HireDate { get; set; }
+
+        /// <summary>
+        /// معرف القسم
+        /// </summary>
+        public int DepartmentId { get; set; }
+
+        /// <summary>
+        /// اسم القسم بالعربية (من جدول الأقسام)
+        /// </summary>
+        public string DepartmentName { get; set; }
+
+        /// <summary>
+        /// معرف الوظيفة
+        /// </summary>
+        public int JobId { get; set; }
+
+        /// <summary>
+        /// المسمى الوظيفي بالعربية (من جدول الوظائف)
+        /// </summary>
+        public string JobTitle { get; set; }
+
+        /// <summary>
+        /// معرف الجنسية
+        /// </summary>
+        public int? NationalityId { get; set; }
+
+        /// <summary>
+        /// اسم الجنسية بالعربية (من جدول الدول)
+        /// </summary>
+        public string NationalityName { get; set; }
+
+        /// <summary>
+        /// رقم الترخيص المهني
+        /// </summary>
+        public string? LicenseNumber { get; set; }
+
+        /// <summary>
+        /// تاريخ انتهاء الترخيص
+        /// </summary>
+        public DateTime? LicenseExpiryDate { get; set; }
+
+        /// <summary>
+        /// التخصص الطبي/المهني
+        /// </summary>
+        public string? Specialty { get; set; }
+
+        /// <summary>
+        /// معرف المدير المباشر
+        /// </summary>
+        public int? ManagerId { get; set; }
+
+        /// <summary>
+        /// معرف المستخدم (للربط مع Identity)
+        /// </summary>
+        public string? UserId { get; set; }
+
+        /// <summary>
+        /// مسار صورة الملف الشخصي
+        /// </summary>
+        public string? ProfilePicturePath { get; set; }
+
+        /// <summary>
+        /// حالة الموظف (نشط/غير نشط)
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// تاريخ إنهاء الخدمة
+        /// </summary>
+        public DateTime? TerminationDate { get; set; }
     }
 }

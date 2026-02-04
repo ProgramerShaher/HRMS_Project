@@ -25,25 +25,16 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult<Result<AuthResponse>>> Register([FromBody] RegisterRequest request)
         {
             var result = await _authService.RegisterAsync(request);
 
-            if (!result.Success)
+            if (!result.Succeeded)
             {
-                return BadRequest(new Result<AuthResponse>
-                {
-                    Succeeded = false,
-                    Message = result.Message
-                });
+                return BadRequest(result);
             }
 
-            return Ok(new Result<AuthResponse>
-            {
-                Data = result.Data,
-                Succeeded = true,
-                Message = result.Message
-            });
+            return Ok(result);
         }
 
         /// <summary>
@@ -51,25 +42,16 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<Result<AuthResponse>>> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginAsync(request);
 
-            if (!result.Success)
+            if (!result.Succeeded)
             {
-                return Unauthorized(new Result<AuthResponse>
-                {
-                    Succeeded = false,
-                    Message = result.Message
-                });
+                return Unauthorized(result);
             }
 
-            return Ok(new Result<AuthResponse>
-            {
-                Data = result.Data,
-                Succeeded = true,
-                Message = result.Message
-            });
+            return Ok(result);
         }
 
         /// <summary>
@@ -77,25 +59,16 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpPost("refresh-token")]
         [AllowAnonymous]
-        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+        public async Task<ActionResult<Result<AuthResponse>>> RefreshToken([FromBody] string refreshToken)
         {
             var result = await _authService.RefreshTokenAsync(refreshToken);
 
-            if (!result.Success)
+            if (!result.Succeeded)
             {
-                return Unauthorized(new Result<AuthResponse>
-                {
-                    Succeeded = false,
-                    Message = result.Message
-                });
+                return Unauthorized(result);
             }
 
-            return Ok(new Result<AuthResponse>
-            {
-                Data = result.Data,
-                Succeeded = true,
-                Message = result.Message
-            });
+            return Ok(result);
         }
 
         /// <summary>
@@ -103,16 +76,12 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpPost("logout")]
         [Authorize]
-        public async Task<IActionResult> Logout()
+        public async Task<ActionResult<Result<bool>>> Logout()
         {
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
             {
-                return Unauthorized(new Result<object>
-                {
-                    Succeeded = false,
-                    Message = "المستخدم غير مصرح له"
-                });
+                return Unauthorized(Result<bool>.Failure("المستخدم غير مصرح له"));
             }
 
             var userId = int.Parse(userIdClaim.Value);
@@ -120,18 +89,10 @@ namespace HRMS.API.Controllers
 
             if (!result)
             {
-                return BadRequest(new Result<object>
-                {
-                    Succeeded = false,
-                    Message = "فشل تسجيل الخروج"
-                });
+                return BadRequest(Result<bool>.Failure("فشل تسجيل الخروج"));
             }
 
-            return Ok(new Result<object>
-            {
-                Succeeded = true,
-                Message = "تم تسجيل الخروج بنجاح"
-            });
+            return Ok(Result<bool>.Success(true, "تم تسجيل الخروج بنجاح"));
         }
 
         /// <summary>
@@ -139,25 +100,25 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpGet("me")]
         [Authorize]
-        public IActionResult GetCurrentUser()
+        public ActionResult<Result<object>> GetCurrentUser()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var userName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
             var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             var roles = User.FindAll(System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();
 
-            return Ok(new Result<object>
+            if (userId == null)
             {
-                Data = new
-                {
-                    UserId = userId,
-                    UserName = userName,
-                    Email = email,
-                    Roles = roles
-                },
-                Succeeded = true,
-                Message = "تم جلب معلومات المستخدم بنجاح"
-            });
+                return Unauthorized(Result<object>.Failure("User not found in context"));
+            }
+
+            return Ok(Result<object>.Success(new
+            {
+                UserId = userId,
+                UserName = userName,
+                Email = email,
+                Roles = roles
+            }, "تم جلب معلومات المستخدم بنجاح"));
         }
 
         /// <summary>
@@ -165,24 +126,16 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpPost("add-role")]
         [Authorize(Roles = "System_Admin")]
-        public async Task<IActionResult> AddUserToRole([FromQuery] int userId, [FromQuery] string roleName)
+        public async Task<ActionResult<Result<bool>>> AddUserToRole([FromQuery] int userId, [FromQuery] string roleName)
         {
             var result = await _authService.AddUserToRoleAsync(userId, roleName);
 
             if (!result)
             {
-                return BadRequest(new Result<object>
-                {
-                    Succeeded = false,
-                    Message = "فشل إضافة الدور"
-                });
+                return BadRequest(Result<bool>.Failure("فشل إضافة الدور"));
             }
 
-            return Ok(new Result<object>
-            {
-                Succeeded = true,
-                Message = $"تم إضافة الدور {roleName} بنجاح"
-            });
+            return Ok(Result<bool>.Success(true, $"تم إضافة الدور {roleName} بنجاح"));
         }
 
         /// <summary>
@@ -190,24 +143,16 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpPost("remove-role")]
         [Authorize(Roles = "System_Admin")]
-        public async Task<IActionResult> RemoveUserFromRole([FromQuery] int userId, [FromQuery] string roleName)
+        public async Task<ActionResult<Result<bool>>> RemoveUserFromRole([FromQuery] int userId, [FromQuery] string roleName)
         {
             var result = await _authService.RemoveUserFromRoleAsync(userId, roleName);
 
             if (!result)
             {
-                return BadRequest(new Result<object>
-                {
-                    Succeeded = false,
-                    Message = "فشل إزالة الدور"
-                });
+                return BadRequest(Result<bool>.Failure("فشل إزالة الدور"));
             }
 
-            return Ok(new Result<object>
-            {
-                Succeeded = true,
-                Message = $"تم إزالة الدور {roleName} بنجاح"
-            });
+            return Ok(Result<bool>.Success(true, $"تم إزالة الدور {roleName} بنجاح"));
         }
 
         /// <summary>
@@ -215,16 +160,10 @@ namespace HRMS.API.Controllers
         /// </summary>
         [HttpGet("user-roles/{userId}")]
         [Authorize(Roles = "System_Admin,HR_Manager")]
-        public async Task<IActionResult> GetUserRoles(int userId)
+        public async Task<ActionResult<Result<List<string>>>> GetUserRoles(int userId)
         {
             var roles = await _authService.GetUserRolesAsync(userId);
-
-            return Ok(new Result<List<string>>
-            {
-                Data = roles,
-                Succeeded = true,
-                Message = "تم جلب الأدوار بنجاح"
-            });
+            return Ok(Result<List<string>>.Success(roles, "تم جلب الأدوار بنجاح"));
         }
     }
 }

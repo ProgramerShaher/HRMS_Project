@@ -12,6 +12,9 @@ using HRMS.Application.Features.Attendance.Dashboard.Queries.GetLiveAttendanceSt
 using HRMS.Application.Features.Attendance.Dashboard.Queries.GetAttendanceExceptions;
 using HRMS.Application.Features.Attendance.Commands.ManualCorrection;
 using HRMS.Application.Features.Attendance.Reports.Queries.GetMonthlyPayrollSummary;
+using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.CreatePermissionRequest;
+using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.ApproveRejectPermissionRequest;
+using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
 using HRMS.Core.Utilities; // For Result<T>
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -149,6 +152,42 @@ public class AttendanceController : ControllerBase
         [FromBody] ProcessMonthlyAttendanceClosingCommand command)
     {
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+    // ═══════════════════════════════════════════════════════════
+    // PERMISSIONS
+    // ═══════════════════════════════════════════════════════════
+    [HttpPost("permissions")]
+    public async Task<ActionResult<Result<int>>> ApplyPermission([FromBody] CreatePermissionRequestCommand command)
+    {
+        // Set EmployeeId from User Context if not provided or force it for security
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value; 
+        if (int.TryParse(userId, out int id)) command.EmployeeId = id; // Assuming UserId maps to EmployeeId or fetch via Claims
+
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpPost("permissions/action")]
+    public async Task<ActionResult<Result<bool>>> ActionPermission([FromBody] ApproveRejectPermissionRequestCommand command)
+    {
+         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+         if (int.TryParse(userId, out int approverId)) command.ApproverId = approverId;
+
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ROSTER
+    // ═══════════════════════════════════════════════════════════
+    [HttpGet("my-roster")]
+    public async Task<ActionResult<Result<List<MyRosterDto>>>> GetMyRoster()
+    {
+         var userId = User.FindFirst("EmployeeId")?.Value; // Assuming EmployeeId claim exists
+         if (userId == null) return Unauthorized(Result<List<MyRosterDto>>.Failure("EmployeeId claim not found"));
+
+        var result = await _mediator.Send(new GetMyRosterQuery { EmployeeId = int.Parse(userId) });
         return Ok(result);
     }
 }

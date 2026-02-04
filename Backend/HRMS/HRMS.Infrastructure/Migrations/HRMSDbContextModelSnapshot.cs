@@ -22,6 +22,215 @@ namespace HRMS.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.Account", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"));
+
+                    b.Property<string>("AccountCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("AccountNameAr")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("AccountNameEn")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("AccountType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int?>("ParentAccountId")
+                        .HasColumnType("int")
+                        .HasColumnName("PARENT_ACCOUNT_ID");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("AccountId");
+
+                    b.HasIndex("ParentAccountId");
+
+                    b.ToTable("ACCOUNTS", "ACCOUNTING");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.JournalEntry", b =>
+                {
+                    b.Property<long>("JournalEntryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("JournalEntryId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("EntryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("PostedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SourceModule")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("SourceReferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("TotalCredit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("TotalDebit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("JournalEntryId");
+
+                    b.ToTable("JOURNAL_ENTRIES", "ACCOUNTING");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.JournalEntryLine", b =>
+                {
+                    b.Property<long>("LineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("LineId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int")
+                        .HasColumnName("ACCOUNT_ID");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<decimal>("CreditAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("DebitAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<long>("JournalEntryId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("JOURNAL_ENTRY_ID");
+
+                    b.Property<short>("LineNumber")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("LineId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("JournalEntryId");
+
+                    b.ToTable("JOURNAL_ENTRY_LINES", "ACCOUNTING");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Attendance.AttendanceCorrection", b =>
                 {
                     b.Property<long>("CorrectionId")
@@ -2677,6 +2886,10 @@ namespace HRMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PayslipId"));
 
+                    b.Property<int>("AbsenceDays")
+                        .HasColumnType("int")
+                        .HasColumnName("ABSENCE_DAYS");
+
                     b.Property<decimal?>("BasicSalary")
                         .HasColumnType("decimal(10, 2)");
 
@@ -2700,6 +2913,10 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<decimal?>("NetSalary")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<decimal>("OvertimeEarnings")
+                        .HasColumnType("decimal(10, 2)")
+                        .HasColumnName("OT_EARNINGS");
+
                     b.Property<int>("RunId")
                         .HasColumnType("int")
                         .HasColumnName("RUN_ID");
@@ -2709,6 +2926,14 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Property<decimal?>("TotalDeductions")
                         .HasColumnType("decimal(10, 2)");
+
+                    b.Property<int>("TotalLateMinutes")
+                        .HasColumnType("int")
+                        .HasColumnName("TOTAL_LATE_MINUTES");
+
+                    b.Property<int>("TotalOvertimeMinutes")
+                        .HasColumnType("int")
+                        .HasColumnName("TOTAL_OT_MINUTES");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -3690,6 +3915,10 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("HIRE_DATE");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("IS_ACTIVE");
+
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_DELETED");
@@ -3739,6 +3968,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("NATIONALITY_ID");
 
+                    b.Property<string>("ProfilePicturePath")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("PROFILE_PICTURE_PATH");
+
                     b.Property<string>("SecondNameAr")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -3749,6 +3983,10 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("SPECIALTY");
+
+                    b.Property<DateTime?>("TerminationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("TERMINATION_DATE");
 
                     b.Property<string>("ThirdNameAr")
                         .IsRequired()
@@ -4832,6 +5070,35 @@ namespace HRMS.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.Account", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Accounting.Account", "ParentAccount")
+                        .WithMany("SubAccounts")
+                        .HasForeignKey("ParentAccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentAccount");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.JournalEntryLine", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Accounting.Account", "Account")
+                        .WithMany("JournalEntryLines")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HRMS.Core.Entities.Accounting.JournalEntry", "JournalEntry")
+                        .WithMany("Lines")
+                        .HasForeignKey("JournalEntryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("JournalEntry");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Attendance.AttendanceCorrection", b =>
                 {
                     b.HasOne("HRMS.Core.Entities.Attendance.DailyAttendance", "DailyAttendance")
@@ -5615,6 +5882,18 @@ namespace HRMS.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.Account", b =>
+                {
+                    b.Navigation("JournalEntryLines");
+
+                    b.Navigation("SubAccounts");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Accounting.JournalEntry", b =>
+                {
+                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("HRMS.Core.Entities.Core.Branch", b =>

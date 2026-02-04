@@ -16,6 +16,12 @@ public class MonthlySalaryCalculationDto
 
     public decimal AttendancePenalties { get; set; }
     public int AbsenceDays { get; set; }
+    public int TotalLateMinutes { get; set; }
+    public int TotalOvertimeMinutes { get; set; }
+    public decimal OvertimeEarnings { get; set; }
 
-    public decimal NetSalary => (BasicSalary + TotalAllowances) - (TotalStructureDeductions + LoanDeductions + AttendancePenalties);
+    // Warnings (e.g., Missing Punches)
+    public List<string> Warnings { get; set; } = new();
+
+    public decimal NetSalary => (BasicSalary + TotalAllowances + OvertimeEarnings) - (TotalStructureDeductions + LoanDeductions + AttendancePenalties);
 }

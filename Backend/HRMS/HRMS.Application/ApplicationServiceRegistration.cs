@@ -28,6 +28,8 @@ namespace HRMS.Application
 
             // تسجيل خدمات السياسات والذاكرة المؤقتة
             services.AddScoped<IAttendancePolicyService, AttendancePolicyService>();
+            services.AddScoped<Features.Payroll.Processing.Services.AttendanceAggregatorService>();
+            services.AddScoped<Features.Payroll.Processing.Services.BankFileExportService>();
             services.AddMemoryCache();
 
             return services;
