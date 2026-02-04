@@ -58,8 +58,7 @@ public static class MiddlewareExtensions
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            await RoleSeeder.SeedRolesAsync(roleManager);
-            await RoleSeeder.SeedDefaultAdminAsync(userManager, roleManager);
+            await IdentitySeeder.SeedAsync(userManager, roleManager);
 
             Log.Information("✅ Default roles and admin user seeded successfully");
         }

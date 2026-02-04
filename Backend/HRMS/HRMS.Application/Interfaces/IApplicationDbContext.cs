@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using HRMS.Core.Entities.Core;
 using HRMS.Core.Entities.Personnel;
-using Microsoft.EntityFrameworkCore.Infrastructure; // 👈 ضروري لاستخدام DatabaseFacade
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using HRMS.Core.Entities.Leaves;
 using HRMS.Core.Entities.Payroll;
 using HRMS.Core.Entities.Performance;
 using HRMS.Core.Entities.Recruitment;
-using Microsoft.EntityFrameworkCore.Infrastructure; // 👈 ضروري جداً
 using HRMS.Core.Entities.Identity;
 using HRMS.Core.Entities.Attendance;
-using HRMS.Core.Entities.Payroll;
+using HRMS.Core.Entities.Accounting;
 
 namespace HRMS.Application.Interfaces;
 
@@ -68,6 +67,11 @@ public interface IApplicationDbContext
     /// إعدادات النظام
     /// </summary>
     DbSet<SystemSetting> SystemSettings { get; }
+
+    /// <summary>
+    /// سجلات التدقيق
+    /// </summary>
+    DbSet<AuditLog> AuditLogs { get; }
 
     #endregion
 
@@ -229,7 +233,10 @@ public interface IApplicationDbContext
     /// <summary>
     /// فترات الروستر
     /// </summary>
-    DbSet<RosterPeriod> RosterPeriods { get; }
+    /// <summary>
+    /// طلبات الاستئذان
+    /// </summary>
+    DbSet<PermissionRequest> PermissionRequests { get; }
 
     #endregion
 
@@ -264,6 +271,25 @@ public interface IApplicationDbContext
     /// قسائم الرواتب
     /// </summary>
     DbSet<Payslip> Payslips { get; }
+
+    #endregion
+
+    #region Accounting Entities
+
+    /// <summary>
+    /// الحسابات - دليل الحسابات
+    /// </summary>
+    DbSet<Account> Accounts { get; }
+
+    /// <summary>
+    /// قيود اليومية
+    /// </summary>
+    DbSet<JournalEntry> JournalEntries { get; }
+
+    /// <summary>
+    /// سطور قيود اليومية
+    /// </summary>
+    DbSet<JournalEntryLine> JournalEntryLines { get; }
 
     #endregion
 

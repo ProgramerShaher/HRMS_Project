@@ -2,6 +2,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using HRMS.Application.Interfaces;
 using HRMS.Application.Services;
+using HRMS.Application.Features.Payroll.Processing.Services;
 using HRMS.Application.Settings;
 using HRMS.Core.Entities.Identity;
 using HRMS.Infrastructure.Data;
@@ -132,6 +133,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IFileService, FileService>();
+        services.AddScoped<PayrollAccountingService>();
         // يمكن إضافة المزيد من الخدمات هنا
 
         return services;

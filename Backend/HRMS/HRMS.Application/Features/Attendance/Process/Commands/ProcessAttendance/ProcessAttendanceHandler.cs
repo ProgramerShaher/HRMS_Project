@@ -1,7 +1,9 @@
 using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Attendance;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,27 +20,97 @@ public class ProcessAttendanceHandler : IRequestHandler<ProcessAttendanceCommand
 
     public async Task<int> Handle(ProcessAttendanceCommand request, CancellationToken cancellationToken)
     {
-        // 1. استخراج التاريخ من الطلب
         var targetDate = request.TargetDate.Date;
 
         try
         {
-            // 2. استدعاء الـ Stored Procedure مباشرة من قاعدة البيانات
-            // ملاحظة: قمنا بتمرير التاريخ كـ Parameter الأول، ورقم المستخدم (1) كـ Parameter الثاني للـ Audit
-            // نستخدم ExecuteSqlRawAsync لأننا نقوم بعملية (Insert/Delete) ولا ننتظر Return Data
-            await _context.Database.ExecuteSqlRawAsync(
-                "EXEC [HR_ATTENDANCE].[SP_PROCESS_ATTENDANCE] @TARGET_DATE = {0}, @USER_ID = {1}",
-                new object[] { targetDate, 1 },
-                cancellationToken
-            );
+            // 1. Fetch Rosters (Who is scheduled today?)
+            var rosters = await _context.EmployeeRosters
+                .Include(r => r.ShiftType)
+                .Where(r => r.RosterDate == targetDate && r.IsOffDay == 0 && r.ShiftId != null)
+                .ToListAsync(cancellationToken);
 
-            // 3. نرجع 1 كدلالة على نجاح العملية
-            return 1;
+            // 2. Fetch Logs (Who punched today?)
+            var logs = await _context.RawPunchLogs
+                .Where(p => p.PunchTime.Date == targetDate)
+                .OrderBy(p => p.PunchTime)
+                .ToListAsync(cancellationToken);
+
+            // 3. Process Each Employee in Roster
+            int processedCount = 0;
+            foreach (var roster in rosters)
+            {
+                var employeeLogs = logs.Where(l => l.EmployeeId == roster.EmployeeId).ToList();
+                var shift = roster.ShiftType;
+
+                // --- Determine In/Out ---
+                DateTime? actualIn = employeeLogs.FirstOrDefault()?.PunchTime;
+                DateTime? actualOut = employeeLogs.LastOrDefault()?.PunchTime;
+                
+                // If only one punch, treat as Missing Punch (unless logic allows single punch)
+                if (employeeLogs.Count == 1) actualOut = null; 
+
+                // --- Check Permissions ---
+                var permissions = await _context.PermissionRequests
+                    .Where(p => p.EmployeeId == roster.EmployeeId && p.PermissionDate == targetDate && p.Status == "Approved")
+                    .ToListAsync(cancellationToken);
+
+                decimal latePermissionHours = permissions.Where(p => p.PermissionType == "LateEntry").Sum(p => p.Hours);
+                // decimal earlyPermissionHours = permissions.Where(p => p.PermissionType == "EarlyExit").Sum(p => p.Hours);
+
+                // --- Calculate Late Minutes ---
+                short lateMinutes = 0;
+                if (actualIn.HasValue && shift != null && TimeSpan.TryParse(shift.StartTime, out var startTime))
+                {
+                    var shiftStart = targetDate.Add(startTime);
+                    var graceTime = shiftStart.AddMinutes(shift.GracePeriodMins);
+
+                    if (actualIn.Value > graceTime)
+                    {
+                        var totalLateMins = (short)(actualIn.Value - shiftStart).TotalMinutes;
+                        var excusedMins = (short)(latePermissionHours * 60);
+                        lateMinutes = (short)Math.Max(0, totalLateMins - excusedMins);
+                    }
+                }
+
+                // --- Determine Status ---
+                string status = "PRESENT";
+                if (!actualIn.HasValue) status = "ABSENT";
+                else if (!actualOut.HasValue) status = "MISSING_PUNCH";
+
+                // --- Save/Update DailyAttendance ---
+                var dailyRecord = await _context.DailyAttendances
+                    .FirstOrDefaultAsync(d => d.EmployeeId == roster.EmployeeId && d.AttendanceDate == targetDate, cancellationToken);
+
+                if (dailyRecord == null)
+                {
+                    dailyRecord = new DailyAttendance
+                    {
+                        EmployeeId = roster.EmployeeId,
+                        AttendanceDate = targetDate,
+                        PlannedShiftId = roster.ShiftId
+                    };
+                    _context.DailyAttendances.Add(dailyRecord);
+                }
+
+                dailyRecord.ActualInTime = actualIn;
+                dailyRecord.ActualOutTime = actualOut;
+                dailyRecord.LateMinutes = lateMinutes;
+                dailyRecord.Status = status;
+                
+                // TODO: Calculate OT / EarlyLeave if needed
+                
+                processedCount++;
+            }
+
+            // 4. Handle "Unscheduled" Punches (Employees not in Roster but present) - Optional for now
+
+            await _context.SaveChangesAsync(cancellationToken);
+            return processedCount;
         }
         catch (Exception ex)
         {
-            // 4. في حالة حدوث خطأ في قاعدة البيانات، يتم رمي استثناء لتوضيح السبب
-            throw new Exception($"خطأ أثناء تشغيل محرك المعالجة: {ex.Message}");
+            throw new Exception($"خطأ أثناء معالجة الحضور: {ex.Message}");
         }
     }
 }

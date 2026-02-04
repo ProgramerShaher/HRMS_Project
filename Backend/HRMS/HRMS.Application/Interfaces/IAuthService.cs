@@ -1,4 +1,5 @@
 using HRMS.Application.DTOs.Auth;
+using HRMS.Core.Utilities;
 
 namespace HRMS.Application.Interfaces
 {
@@ -10,17 +11,17 @@ namespace HRMS.Application.Interfaces
         /// <summary>
         /// تسجيل مستخدم جديد
         /// </summary>
-        Task<(bool Success, string Message, AuthResponse? Data)> RegisterAsync(RegisterRequest request);
+        Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request);
 
         /// <summary>
         /// تسجيل الدخول
         /// </summary>
-        Task<(bool Success, string Message, AuthResponse? Data)> LoginAsync(LoginRequest request);
+        Task<Result<AuthResponse>> LoginAsync(LoginRequest request);
 
         /// <summary>
         /// تحديث الرمز باستخدام Refresh Token
         /// </summary>
-        Task<(bool Success, string Message, AuthResponse? Data)> RefreshTokenAsync(string refreshToken);
+        Task<Result<AuthResponse>> RefreshTokenAsync(string refreshToken);
 
         /// <summary>
         /// تسجيل الخروج
