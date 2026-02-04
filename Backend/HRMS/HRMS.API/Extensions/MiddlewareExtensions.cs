@@ -35,6 +35,9 @@ public static class MiddlewareExtensions
         // HTTPS Redirection
         app.UseHttpsRedirection();
 
+        // Static Files (for serving uploaded images and documents)
+        app.UseStaticFiles();
+
         // CORS
         app.UseCors("AllowAll");
 

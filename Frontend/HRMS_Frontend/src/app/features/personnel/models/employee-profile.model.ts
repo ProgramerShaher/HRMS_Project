@@ -10,7 +10,10 @@ import {
     Qualification 
 } from './sub-models';
 
-export interface EmployeeProfile {
+/**
+ * Core employee profile information
+ */
+export interface CoreProfile {
     employeeId: number;
     employeeNumber: string;
     
@@ -18,7 +21,7 @@ export interface EmployeeProfile {
     firstNameAr?: string;
     secondNameAr?: string;
     thirdNameAr?: string;
-    lastNameAr?: string;
+    hijriLastNameAr?: string | null;
     fullNameAr: string;
     fullNameEn: string;
     
@@ -28,29 +31,41 @@ export interface EmployeeProfile {
     mobile: string;
     email?: string;
     nationalityId?: number;
+    nationalityName?: string;
     nationalId?: string;
     maritalStatus?: string;
+    profilePicturePath?: string;
     
     // Job
     departmentName?: string;
-    departmentId?: number;
+    deptId?: number;
     jobTitle?: string;
     jobId?: number;
+    joiningDate?: Date | string;
+    hireDate?: Date | string;
+    status?: string | null;
+    isActive?: boolean;
     managerName?: string;
-    managerId?: number;
-    hireDate: Date | string;
-    isActive: boolean;
-    
-    // Compensation
-    compensation?: {
-        basicSalary: number;
-        totalSalary: number;
-        housingAllowance: number;
-        transportAllowance: number;
-        medicalAllowance: number;
-    };
+}
 
-    // Lists
+/**
+ * Compensation details
+ */
+export interface Compensation {
+    basicSalary: number;
+    totalSalary: number;
+    housingAllowance: number;
+    transportAllowance: number;
+    medicalAllowance: number;
+}
+
+/**
+ * Full employee profile with all related data
+ */
+export interface EmployeeProfile {
+    coreProfile: CoreProfile;
+    managerName?: string;
+    compensation?: Compensation;
     qualifications?: Qualification[];
     experiences?: Experience[];
     emergencyContacts?: EmergencyContact[];

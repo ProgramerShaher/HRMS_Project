@@ -41,6 +41,7 @@ export interface Contract {
     otherAllowances: number;
     vacationDays: number;
     workingHoursDaily: number;
+    contractStatus?: string;
 }
 
 export interface Certification {
