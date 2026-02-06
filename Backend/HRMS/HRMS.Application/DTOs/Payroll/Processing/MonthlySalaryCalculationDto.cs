@@ -23,5 +23,5 @@ public class MonthlySalaryCalculationDto
     // Warnings (e.g., Missing Punches)
     public List<string> Warnings { get; set; } = new();
 
-    public decimal NetSalary => (BasicSalary + TotalAllowances + OvertimeEarnings) - (TotalStructureDeductions + LoanDeductions + AttendancePenalties);
+    public decimal NetSalary { get; set; }
 }

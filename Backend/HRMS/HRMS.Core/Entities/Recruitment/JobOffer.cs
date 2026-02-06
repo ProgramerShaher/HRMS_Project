@@ -33,8 +33,17 @@ namespace HRMS.Core.Entities.Recruitment
         [Column("TRANSPORT_ALLOWANCE", TypeName = "decimal(10, 2)")]
         public decimal? TransportAllowance { get; set; }
 
+        [Column("MEDICAL_ALLOWANCE", TypeName = "decimal(10, 2)")]
+        public decimal? MedicalAllowance { get; set; }
+
+        [Column("OTHER_ALLOWANCES", TypeName = "decimal(10, 2)")]
+        public decimal? OtherAllowances { get; set; }
+
         [Column("JOINING_DATE")]
         public DateTime? JoiningDate { get; set; }
+
+        [Column("EXPIRY_DATE")]
+        public DateTime? ExpiryDate { get; set; }
 
         [MaxLength(20)]
         [Column("STATUS")]

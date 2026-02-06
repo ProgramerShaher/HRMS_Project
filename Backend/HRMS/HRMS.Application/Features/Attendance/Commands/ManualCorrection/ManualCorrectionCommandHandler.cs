@@ -28,41 +28,55 @@ public class ManualCorrectionCommandHandler : IRequestHandler<ManualCorrectionCo
         string oldValue = string.Empty;
         string fieldName = request.CorrectionType;
 
-        // تطبيق التغيير حسب النوع
-        switch (request.CorrectionType)
-        {
-            case "InTime":
-                oldValue = record.ActualInTime?.ToString("o") ?? "null";
-                if (DateTime.TryParse(request.NewValue, out var newInDate))
-                {
-                    record.ActualInTime = newInDate;
-                    // إعادة حساب التأخير (بسيط هنا، المفروض بناءً على السياسة)
-                    // TODO: Recalculate LateMinutes based on Shift
-                }
-                else return Result<bool>.Failure("تنسيق التاريخ غير صحيح");
-                break;
+		// تطبيق التغيير حسب النوع
+		// داخل الـ Handler
+		switch (request.CorrectionType)
+		{
+			case "InTime":
+				oldValue = record.ActualInTime?.ToString("o") ?? "null";
+				// استخدام TimeOnly لضمان عدم تغيير تاريخ اليوم
+				if (TimeSpan.TryParse(request.NewValue, out var newInTime))
+				{
+					// نأخذ تاريخ السجل الأصلي + الوقت الجديد
+					record.ActualInTime = record.AttendanceDate.Date.Add(newInTime);
 
-            case "OutTime":
-                oldValue = record.ActualOutTime?.ToString("o") ?? "null";
-                if (DateTime.TryParse(request.NewValue, out var newOutDate))
-                {
-                    record.ActualOutTime = newOutDate;
-                    // TODO: Recalculate OT/EarlyLeave
-                }
-                else return Result<bool>.Failure("تنسيق التاريخ غير صحيح");
-                break;
+					// 🔥 الإصلاح: تصفير التأخير لأن المدير تدخل يدوياً
+					record.LateMinutes = 0;
+					record.Status = "PRESENT"; // ضمان أن الحالة حضور
+				}
+				else return Result<bool>.Failure("تنسيق الوقت غير صحيح (استخدم HH:mm:ss)");
+				break;
 
-            case "Status":
-                oldValue = record.Status ?? "null";
-                record.Status = request.NewValue;
-                break;
+			case "OutTime":
+				oldValue = record.ActualOutTime?.ToString("o") ?? "null";
+				if (TimeSpan.TryParse(request.NewValue, out var newOutTime))
+				{
+					record.ActualOutTime = record.AttendanceDate.Date.Add(newOutTime);
 
-            default:
-                return Result<bool>.Failure("نوع التصحيح غير مدعوم");
-        }
+					// 🔥 الإصلاح: تصفير الخروج المبكر
+					record.EarlyLeaveMinutes = 0;
+					// يمكن هنا إضافة منطق إعادة حساب الإضافي إذا أردت
+				}
+				else return Result<bool>.Failure("تنسيق الوقت غير صحيح");
+				break;
 
-        // تسجيل التصحيح في Audit
-        var correction = new AttendanceCorrection
+			case "Status":
+				oldValue = record.Status ?? "null";
+				record.Status = request.NewValue;
+				// إذا غير الحالة إلى "إجازة"، صفر كل شيء
+				if (request.NewValue == "LEAVE" || request.NewValue == "OFF")
+				{
+					record.LateMinutes = 0;
+					record.EarlyLeaveMinutes = 0;
+					record.OvertimeMinutes = 0;
+				}
+				break;
+
+			default:
+				return Result<bool>.Failure("نوع التصحيح غير مدعوم (استخدم InTime, OutTime, Status)");
+		}
+		// تسجيل التصحيح في Audit
+		var correction = new AttendanceCorrection
         {
             EmployeeId = record.EmployeeId,
             AttendanceDate = record.AttendanceDate,

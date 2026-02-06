@@ -348,7 +348,7 @@ public class EmployeeProfileController : ControllerBase
             return BadRequest("Employee ID mismatch");
             
         var result = await _mediator.Send(new CreateContractCommand(dto));
-        return Ok(Result<int>.Success(result));
+        return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
     [HttpPut("contracts/renew")]
@@ -356,6 +356,6 @@ public class EmployeeProfileController : ControllerBase
     {
         // Assuming RenewContract logic handles security check or redundant
        var result = await _mediator.Send(new RenewContractCommand(dto));
-       return Ok(Result<int>.Success(result));
+        return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 }

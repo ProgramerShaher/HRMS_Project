@@ -240,6 +240,74 @@ public interface IApplicationDbContext
 
     #endregion
 
+    #region Performance Entities
+
+    /// <summary>
+    /// المخالفات الإدارية
+    /// </summary>
+    DbSet<EmployeeViolation> EmployeeViolations { get; }
+
+    /// <summary>
+    /// لائحة الجزاءات
+    /// </summary>
+    DbSet<DisciplinaryAction> DisciplinaryActions { get; }
+
+    /// <summary>
+    /// تقييمات الموظفين
+    /// </summary>
+    DbSet<EmployeeAppraisal> EmployeeAppraisals { get; }
+
+    /// <summary>
+    /// تفاصيل التقييمات
+    /// </summary>
+    DbSet<AppraisalDetail> AppraisalDetails { get; }
+
+    /// <summary>
+    /// مكتبة مؤشرات الأداء
+    /// </summary>
+    DbSet<KpiLibrary> KpiLibraries { get; }
+
+    /// <summary>
+    /// أنواع المخالفات
+    /// </summary>
+    DbSet<ViolationType> ViolationTypes { get; }
+
+    /// <summary>
+    /// فترات التقييم
+    /// </summary>
+    DbSet<AppraisalCycle> AppraisalCycles { get; }
+
+    #endregion
+
+    #region Recruitment Entities
+
+    /// <summary>
+    /// المرشحين
+    /// </summary>
+    DbSet<Candidate> Candidates { get; }
+
+    /// <summary>
+    /// طلبات التوظيف
+    /// </summary>
+    DbSet<JobApplication> JobApplications { get; }
+
+    /// <summary>
+    /// عروض العمل
+    /// </summary>
+    DbSet<JobOffer> JobOffers { get; }
+
+    /// <summary>
+    /// الوظائف الشاغرة
+    /// </summary>
+    DbSet<JobVacancy> JobVacancies { get; }
+
+    /// <summary>
+    /// المقابلات
+    /// </summary>
+    DbSet<Interview> Interviews { get; }
+
+    #endregion
+
     #region Payroll Entities
 
     /// <summary>
@@ -272,6 +340,11 @@ public interface IApplicationDbContext
     /// </summary>
     DbSet<Payslip> Payslips { get; }
 
+    /// <summary>
+    /// التعديلات على الرواتب (مكافآت/خصومات)
+    /// </summary>
+    DbSet<PayrollAdjustment> PayrollAdjustments { get; }
+
     #endregion
 
     #region Accounting Entities
@@ -293,35 +366,6 @@ public interface IApplicationDbContext
 
     #endregion
 
-    #region Performance Entities
-
-    /// <summary>
-    /// دورات التقييم
-    /// </summary>
-    DbSet<AppraisalCycle> AppraisalCycles { get; }
-
-    /// <summary>
-    /// تقييمات الموظفين
-    /// </summary>
-    DbSet<EmployeeAppraisal> EmployeeAppraisals { get; }
-
-    #endregion
-
-    #region Recruitment Entities
-
-    /// <summary>
-    /// الوظائف الشاغرة
-    /// </summary>
-    DbSet<JobVacancy> JobVacancies { get; }
-
-    /// <summary>
-    /// المتقدمون للوظائف
-    /// </summary>
-    DbSet<Candidate> Candidates { get; }
-
-    #endregion
-
- 
     #region Methods
 
     /// <summary>

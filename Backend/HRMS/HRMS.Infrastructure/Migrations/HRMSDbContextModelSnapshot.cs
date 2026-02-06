@@ -609,6 +609,92 @@ namespace HRMS.Infrastructure.Migrations
                     b.ToTable("OVERTIME_REQUESTS", "HR_ATTENDANCE");
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Attendance.PermissionRequest", b =>
+                {
+                    b.Property<int>("PermissionRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PERMISSION_REQUEST_ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionRequestId"));
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("APPROVED_AT");
+
+                    b.Property<int?>("ApprovedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("APPROVED_BY");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int")
+                        .HasColumnName("EMPLOYEE_ID");
+
+                    b.Property<decimal>("Hours")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("HOURS");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<DateTime>("PermissionDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PERMISSION_DATE");
+
+                    b.Property<string>("PermissionType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("PERMISSION_TYPE");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("REASON");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("REJECTION_REASON");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("STATUS");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("PermissionRequestId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("PERMISSION_REQUESTS", "HR_ATTENDANCE");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Attendance.RawPunchLog", b =>
                 {
                     b.Property<long>("LogId")
@@ -4855,9 +4941,17 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("JOINING_DATE");
 
+                    b.Property<decimal?>("MedicalAllowance")
+                        .HasColumnType("decimal(10, 2)")
+                        .HasColumnName("MEDICAL_ALLOWANCE");
+
                     b.Property<DateTime>("OfferDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("OFFER_DATE");
+
+                    b.Property<decimal?>("OtherAllowances")
+                        .HasColumnType("decimal(10, 2)")
+                        .HasColumnName("OTHER_ALLOWANCES");
 
                     b.Property<string>("Status")
                         .HasMaxLength(20)
@@ -5185,6 +5279,17 @@ namespace HRMS.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Approver");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Attendance.PermissionRequest", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Employee");
                 });

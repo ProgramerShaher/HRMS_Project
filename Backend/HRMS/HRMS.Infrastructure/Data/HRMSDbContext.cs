@@ -210,6 +210,26 @@ namespace HRMS.Infrastructure.Data
         // public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
 
         // ===================================
+        // HR_PERFORMANCE Schema
+        // ===================================
+        public DbSet<EmployeeViolation> EmployeeViolations { get; set; }
+        public DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
+        public DbSet<EmployeeAppraisal> EmployeeAppraisals { get; set; }
+        public DbSet<AppraisalDetail> AppraisalDetails { get; set; }
+        public DbSet<KpiLibrary> KpiLibraries { get; set; }
+        public DbSet<ViolationType> ViolationTypes { get; set; }
+        public DbSet<AppraisalCycle> AppraisalCycles { get; set; }
+
+        // ===================================
+        // HR_RECRUITMENT Schema
+        // ===================================
+        public DbSet<Candidate> Candidates { get; set; }
+        public DbSet<JobApplication> JobApplications { get; set; }
+        public DbSet<JobOffer> JobOffers { get; set; }
+        public DbSet<JobVacancy> JobVacancies { get; set; }
+        public DbSet<Interview> Interviews { get; set; }
+
+        // ===================================
         // HR_PAYROLL Schema
         // ===================================
     // Payroll
@@ -223,25 +243,6 @@ namespace HRMS.Infrastructure.Data
         public DbSet<EndOfServiceCalc> EndOfServiceCalcs { get; set; }
         public DbSet<PayrollAdjustment> PayrollAdjustments { get; set; }
 
-        // ===================================
-        // HR_RECRUITMENT Schema
-        // ===================================
-        public DbSet<JobVacancy> JobVacancies { get; set; }
-        public DbSet<Candidate> Candidates { get; set; }
-        public DbSet<JobApplication> JobApplications { get; set; }
-        public DbSet<Interview> Interviews { get; set; }
-        public DbSet<JobOffer> JobOffers { get; set; }
-
-        // ===================================
-        // HR_PERFORMANCE Schema
-        // ===================================
-        public DbSet<KpiLibrary> KpiLibraries { get; set; }
-        public DbSet<AppraisalCycle> AppraisalCycles { get; set; }
-        public DbSet<EmployeeAppraisal> EmployeeAppraisals { get; set; }
-        public DbSet<AppraisalDetail> AppraisalDetails { get; set; }
-        public DbSet<ViolationType> ViolationTypes { get; set; }
-        public DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
-        public DbSet<EmployeeViolation> EmployeeViolations { get; set; }
 
         // ===================================
         // ACCOUNTING Schema

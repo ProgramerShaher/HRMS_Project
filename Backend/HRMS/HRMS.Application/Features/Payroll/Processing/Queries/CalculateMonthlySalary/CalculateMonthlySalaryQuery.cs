@@ -1,4 +1,5 @@
 using HRMS.Application.DTOs.Payroll.Processing;
+using HRMS.Application.Features.Payroll.Processing.Services;
 using HRMS.Application.Interfaces;
 using HRMS.Core.Utilities;
 using MediatR;
@@ -15,112 +16,128 @@ public class CalculateMonthlySalaryQuery : IRequest<Result<MonthlySalaryCalculat
 
 public class CalculateMonthlySalaryQueryHandler : IRequestHandler<CalculateMonthlySalaryQuery, Result<MonthlySalaryCalculationDto>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly Services.AttendanceAggregatorService _attendanceAggregator;
+	private readonly IApplicationDbContext _context;
+	private readonly AttendanceAggregatorService _attendanceAggregator; // 👈 إضافة خدمة الحضور
 
-    public CalculateMonthlySalaryQueryHandler(IApplicationDbContext context, Services.AttendanceAggregatorService attendanceAggregator)
-    {
-        _context = context;
-        _attendanceAggregator = attendanceAggregator;
-    }
+	public CalculateMonthlySalaryQueryHandler(IApplicationDbContext context, AttendanceAggregatorService attendanceAggregator)
+	{
+		_context = context;
+		_attendanceAggregator = attendanceAggregator;
+	}
 
-    public async Task<Result<MonthlySalaryCalculationDto>> Handle(CalculateMonthlySalaryQuery request, CancellationToken cancellationToken)
-    {
-        var result = new MonthlySalaryCalculationDto { EmployeeId = request.EmployeeId };
+	public async Task<Result<MonthlySalaryCalculationDto>> Handle(CalculateMonthlySalaryQuery request, CancellationToken cancellationToken)
+	{
+		var result = new MonthlySalaryCalculationDto { EmployeeId = request.EmployeeId };
 
-        // 1. Fetch Salary Structure
-        var structure = await _context.SalaryStructures
-            .Include(s => s.SalaryElement)
-            .Where(s => s.EmployeeId == request.EmployeeId && s.IsActive == 1)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+		// ═══════════════════════════════════════════════════════════
+		// 1. جلب هيكل الراتب (الأساس)
+		// ═══════════════════════════════════════════════════════════
+		var structure = await _context.SalaryStructures
+			.Include(s => s.SalaryElement)
+			.Where(s => s.EmployeeId == request.EmployeeId && s.IsActive == 1)
+			.AsNoTracking()
+			.ToListAsync(cancellationToken);
 
-        if (!structure.Any()) return Result<MonthlySalaryCalculationDto>.Failure("لا يوجد هيكل راتب للموظف");
+		if (!structure.Any()) return Result<MonthlySalaryCalculationDto>.Failure("لا يوجد هيكل راتب للموظف");
 
-        var employee = await _context.Employees.FindAsync(new object[] { request.EmployeeId }, cancellationToken);
-        result.EmployeeName = employee?.FullNameAr ?? "Unknown";
+		var employee = await _context.Employees
+			.Include(e => e.Job)
+			.Include(e => e.Department)
+			.FirstOrDefaultAsync(e => e.EmployeeId == request.EmployeeId, cancellationToken);
 
-        // Identify Basic Salary
-        var basicElement = structure.FirstOrDefault(s => s.SalaryElement.IsBasic == 1);
-        result.BasicSalary = basicElement?.Amount ?? 0;
+		result.EmployeeName = employee?.FullNameAr ?? "Unknown";
+		// يمكن إضافة المسمى الوظيفي والقسم للعرض
+		// result.JobTitle = employee?.Job?.JobTitleAr;
 
-        // Sum Allowances and Static Deductions
-        result.TotalAllowances = structure.Where(s => s.SalaryElement.ElementType == "EARNING" && s.SalaryElement.IsBasic == 0).Sum(s => s.Amount);
-        result.TotalStructureDeductions = structure.Where(s => s.SalaryElement.ElementType == "DEDUCTION").Sum(s => s.Amount);
+		// تحديد الراتب الأساسي
+		var basicElement = structure.FirstOrDefault(s => s.SalaryElement.IsBasic == 1);
+		result.BasicSalary = basicElement?.Amount ?? 0;
 
-        // --- GOSI Calculation (Standard 9.75% of Basic + Housing) ---
-        // For simplicity, we calculate 9.75% of Basic Salary only currently, or check if GOSI element exists.
-        // Better approach: Auto-add GOSI if not present? Or strictly follow structure?
-        // User asked to "Activate" it. We will assume a standard GOSI rule for all.
-        decimal gosiRate = 0.0975m; 
-        decimal gosiDeduction = Math.Round((result.BasicSalary + result.TotalAllowances) * gosiRate, 2); 
-        // NOTE: Usually GOSI is Basic + Housing only. For now Basic + All Allowances is a safer "Max" base, but typically Housing is specific.
-        // Let's stick to Basic Salary * 10% (0.10) for a clean round number if Labor Law unspec, or 9% for Saudi GOSI.
-        // Let's use 0.00 since we don't want to break existing numbers unless explicitly asked for a number.
-        // Wait, user said "Activate the calculation". Let's add it as a separate field or part of Deductions.
-        
-        // Let's add it to StructureDeductions to verify it works "automatically".
-        // Or better, let's just make sure "TotalStructureDeductions" captures it if the user added it to the structure.
-        // If the user meant "Hardcoded Logic", I will add it.
-        
-        // Implementing Hardcoded GOSI for Employee 25 as a test case (or all)
-        // DTO update required for "GosiDeduction"? Or just bundle into TotalDeductions?
-        // Let's bundle into TotalStructureDeductions for now to avoid breaking DTOs further.
-        // result.TotalStructureDeductions += gosiDeduction; 
-        
-        // REVERTING: I will trust the "Structure" contains the GOSI element if configured.
-        // If user wants AUTOMATIC deduction even if not in structure:
-        // result.TotalStructureDeductions += (result.BasicSalary * 0.09m); 
-        
-        // User Requirement: "Activate the calculation for Social Insurance".
-        // I will add a logic to check if GOSI exist in structure, if NOT, calculate it.
-        if (!structure.Any(s => s.SalaryElement.ElementNameAr.Contains("تأمينات") || s.SalaryElement.ElementType.Contains("GOSI")))
-        {
-             // Auto-calculate 9%
-             decimal autoGosi = Math.Round(result.BasicSalary * 0.09m, 2);
-             result.TotalStructureDeductions += autoGosi;
-        }
+		// جمع البدلات الثابتة
+		result.TotalAllowances = structure.Where(s => s.SalaryElement.ElementType == "EARNING" && s.SalaryElement.IsBasic == 0).Sum(s => s.Amount);
 
-        // 2. Fetch Loans (Upcoming Installments for this Month)
-        var startDate = new DateTime(request.Year, request.Month, 1);
-        var endDate = startDate.AddMonths(1).AddDays(-1);
+		// جمع الاستقطاعات الثابتة (ضرائب، تأمين صحي خاص...)
+		result.TotalStructureDeductions = structure.Where(s => s.SalaryElement.ElementType == "DEDUCTION").Sum(s => s.Amount);
 
-        var installments = await _context.LoanInstallments
-            .Where(i => i.Loan.EmployeeId == request.EmployeeId 
-                     && i.DueDate >= startDate && i.DueDate <= endDate 
-                     && i.IsPaid == 0)
-            .ToListAsync(cancellationToken);
+		// --- حساب التأمينات الاجتماعية (GOSI) ---
+		// إذا لم تكن مضافة يدوياً، نحسبها آلياً (مثلاً 9% أو حسب القانون)
+		if (!structure.Any(s => s.SalaryElement.ElementNameAr.Contains("تأمينات") || s.SalaryElement.ElementType.Contains("GOSI")))
+		{
+			// معادلة: 9% من (الأساسي + بدل السكن عادةً)
+			// للتبسيط هنا نحسبها من الأساسي، ويمكنك تعديلها
+			decimal autoGosi = Math.Round(result.BasicSalary * 0.09m, 2);
+			result.TotalStructureDeductions += autoGosi;
+		}
 
-        result.LoanDeductions = installments.Sum(i => i.Amount);
-        result.PaidInstallmentIds = installments.Select(i => i.InstallmentId).ToList();
+		// ═══════════════════════════════════════════════════════════
+		// 2. جلب القروض (Loans)
+		// ═══════════════════════════════════════════════════════════
+		var startDate = new DateTime(request.Year, request.Month, 1);
+		var endDate = startDate.AddMonths(1).AddDays(-1);
 
-        // 3. Attendance Aggregation (New Logic)
-        if (result.BasicSalary > 0)
-        {
-            var attendanceResult = await _attendanceAggregator.CalculateAttendanceImpactAsync(
-                request.EmployeeId, 
-                startDate, 
-                endDate, 
-                result.BasicSalary, 
-                cancellationToken);
+		var installments = await _context.LoanInstallments
+			.Where(i => i.Loan.EmployeeId == request.EmployeeId
+					 && i.DueDate >= startDate && i.DueDate <= endDate
+					 && i.IsPaid == 0)
+			.ToListAsync(cancellationToken);
 
-            // Check for BLOCKING issues (e.g. Missing Punches)
-            if (attendanceResult.IsBlocked)
-            {
-                result.Warnings.AddRange(attendanceResult.Warnings);
-                // We return Failure here to stop the Payrun for this employee
-                return Result<MonthlySalaryCalculationDto>.Failure(string.Join(", ", attendanceResult.Warnings));
-            }
+		result.LoanDeductions = installments.Sum(i => i.Amount);
+		result.PaidInstallmentIds = installments.Select(i => i.InstallmentId).ToList();
 
-            // Map Results
-            result.AbsenceDays = attendanceResult.AbsenceDays;
-            result.TotalLateMinutes = attendanceResult.TotalLateMinutes;
-            result.TotalOvertimeMinutes = attendanceResult.TotalOvertimeMinutes;
-            result.AttendancePenalties = attendanceResult.AttendancePenalties;
-            result.OvertimeEarnings = attendanceResult.OvertimeEarnings;
-            result.Warnings.AddRange(attendanceResult.Warnings);
-        }
+		// ═══════════════════════════════════════════════════════════
+		// 3. جلب التعديلات اليدوية والمخالفات (PAYROLL_ADJUSTMENTS)
+		// 🔥 هذا هو الجزء الذي سيخصم مخالفة رهف (11,666)
+		// ═══════════════════════════════════════════════════════════
+		var adjustments = await _context.PayrollAdjustments
+			.Where(a => a.EmployeeId == request.EmployeeId
+					 && a.CreatedAt.Month == request.Month
+					 && a.CreatedAt.Year == request.Year
+					 && a.IsDeleted == 0) // افتراض وجود Soft Delete
+			.ToListAsync(cancellationToken);
 
-        return Result<MonthlySalaryCalculationDto>.Success(result);
-    }
+		decimal manualDeductions = adjustments
+			.Where(a => a.AdjustmentType == "DEDUCTION" || a.AdjustmentType == "VIOLATION") // تأكد من الاسم في جدولك
+			.Sum(a => a.Amount);
+
+		decimal manualBonuses = adjustments
+			.Where(a => a.AdjustmentType == "BONUS" || a.AdjustmentType == "REWARD")
+			.Sum(a => a.Amount);
+
+		// إضافة القيم للمجاميع العامة
+		result.TotalStructureDeductions += manualDeductions;
+		result.TotalAllowances += manualBonuses;
+
+		// ═══════════════════════════════════════════════════════════
+		// 4. جلب تأثير الحضور والغياب (Attendance Integration)
+		// ═══════════════════════════════════════════════════════════
+		// نستدعي الخدمة التي تحسب التأخير والغياب والإضافي من البصمات
+		var attendanceImpact = await _attendanceAggregator.CalculateAttendanceImpactAsync(
+			request.EmployeeId, startDate, endDate, result.BasicSalary, cancellationToken);
+
+		result.AttendancePenalties = attendanceImpact.AttendancePenalties; // قيمة خصم التأخير والغياب
+		result.OvertimeEarnings = attendanceImpact.OvertimeEarnings;       // قيمة الإضافي
+
+		result.TotalLateMinutes = attendanceImpact.TotalLateMinutes;
+		result.AbsenceDays = attendanceImpact.AbsenceDays;
+		result.TotalOvertimeMinutes = attendanceImpact.TotalOvertimeMinutes;
+
+		if (attendanceImpact.IsBlocked)
+		{
+			result.Warnings.AddRange(attendanceImpact.Warnings);
+			// يمكنك هنا إرجاع Failure إذا أردت منع الراتب في حال وجود بصمات مفقودة
+			// return Result<MonthlySalaryCalculationDto>.Failure("لا يمكن حساب الراتب: سجلات الحضور غير مكتملة");
+		}
+
+		// ═══════════════════════════════════════════════════════════
+		// 5. الحسبة النهائية (Net Salary Formula)
+		// ═══════════════════════════════════════════════════════════
+		// المعادلة: (الاستحقاقات + الإضافي) - (الاستقطاعات الهيكلية + القروض + جزاءات الحضور)
+
+		var totalEarnings = result.BasicSalary + result.TotalAllowances + result.OvertimeEarnings;
+		var totalDeductions = result.TotalStructureDeductions + result.LoanDeductions + result.AttendancePenalties;
+
+		result.NetSalary = totalEarnings - totalDeductions;
+
+		return Result<MonthlySalaryCalculationDto>.Success(result);
+	}
 }

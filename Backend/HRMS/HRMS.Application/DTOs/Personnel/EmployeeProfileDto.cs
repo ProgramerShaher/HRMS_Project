@@ -17,10 +17,20 @@ public class EmployeeProfileDto
 public class EmployeeCompensationDto
 {
     public decimal BasicSalary { get; set; }
-    public decimal TotalSalary => BasicSalary + HousingAllowance + TransportAllowance + MedicalAllowance;
+    
+    /// <summary>
+    /// إجمالي الراتب (الراتب الأساسي + جميع البدلات)
+    /// </summary>
+    public decimal TotalSalary => BasicSalary + HousingAllowance + TransportAllowance + MedicalAllowance + OtherAllowances;
+    
     public decimal HousingAllowance { get; set; }
     public decimal TransportAllowance { get; set; }
     public decimal MedicalAllowance { get; set; }
+    
+    /// <summary>
+    /// البدلات الأخرى (تُضاف إلى إجمالي الراتب)
+    /// </summary>
+    public decimal OtherAllowances { get; set; }
 }
 
 

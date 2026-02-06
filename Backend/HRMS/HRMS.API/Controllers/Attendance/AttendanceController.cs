@@ -15,6 +15,7 @@ using HRMS.Application.Features.Attendance.Reports.Queries.GetMonthlyPayrollSumm
 using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.CreatePermissionRequest;
 using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.ApproveRejectPermissionRequest;
 using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
+using HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory;
 using HRMS.Core.Utilities; // For Result<T>
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -188,6 +189,19 @@ public class AttendanceController : ControllerBase
          if (userId == null) return Unauthorized(Result<List<MyRosterDto>>.Failure("EmployeeId claim not found"));
 
         var result = await _mediator.Send(new GetMyRosterQuery { EmployeeId = int.Parse(userId) });
+        return Ok(result);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // CORRECTION HISTORY
+    // ═══════════════════════════════════════════════════════════
+    /// <summary>
+    /// سجل تاريخ التصحيحات اليدوية
+    /// </summary>
+    [HttpGet("correction-history/{employeeId}")]
+    public async Task<ActionResult<Result<List<CorrectionHistoryDto>>>> GetCorrectionHistory(int employeeId)
+    {
+        var result = await _mediator.Send(new GetCorrectionHistoryQuery { EmployeeId = employeeId });
         return Ok(result);
     }
 }
