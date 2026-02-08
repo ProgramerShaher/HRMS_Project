@@ -15,6 +15,11 @@ export const SETUP_ROUTES: Routes = [
             { path: 'attendance-policies', loadComponent: () => import('./pages/attendance-policies/attendance-policies.component').then(m => m.AttendancePoliciesComponent) },
             { path: 'shift-types', loadComponent: () => import('./pages/shift-types/shift-types.component').then(m => m.ShiftTypesComponent) },
             { path: 'payroll-elements', loadComponent: () => import('./pages/payroll-elements/payroll-elements.component').then(m => m.PayrollElementsComponent) },
+            { path: 'violation-types', loadComponent: () => import('./pages/violation-types/violation-types.component').then(m => m.ViolationTypesComponent) },
+            { path: 'disciplinary-actions', loadComponent: () => import('./pages/disciplinary-actions/disciplinary-actions.component').then(m => m.DisciplinaryActionsComponent) },
+            { path: 'kpi-library', loadComponent: () => import('./pages/kpi-library/kpi-library.component').then(m => m.KpiLibraryComponent) },
+            { path: 'appraisal-cycles', loadComponent: () => import('./pages/appraisal-cycles/appraisal-cycles.component').then(m => m.AppraisalCyclesComponent) },
+            
             // Add placeholders for other possible setup pages here or redirect to default
             { path: '', redirectTo: 'departments', pathMatch: 'full' }
         ]

@@ -1,68 +1,125 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-2">
+<div class="flex flex-col lg:flex-row gap-4 h-full">
 
-    <!-- Arabic Name (4 Parts) -->
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الاسم الأول <span class="text-red-500">*</span></label>
-        <input pInputText [(ngModel)]="data.firstNameAr" (ngModelChange)="onChange()" placeholder="الاسم الأول" />
-    </div>
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الاسم الثاني</label>
-        <input pInputText [(ngModel)]="data.secondNameAr" (ngModelChange)="onChange()" placeholder="الاسم الثاني" />
-    </div>
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الاسم الثالث</label>
-        <input pInputText [(ngModel)]="data.thirdNameAr" (ngModelChange)="onChange()" placeholder="الاسم الثالث" />
-    </div>
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">اللقب <span class="text-red-500">*</span></label>
-        <input pInputText [(ngModel)]="data.lastNameAr" (ngModelChange)="onChange()" placeholder="اللقب" />
-    </div>
+    <!-- Left Column: Profile Picture & Basic Info -->
+    <div class="w-full lg:w-48 flex-shrink-0 bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-4 flex flex-col items-center gap-4 h-fit">
 
-    <!-- English Name -->
-    <div class="flex flex-col gap-2 md:col-span-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الاسم الكامل (إنجليزي)</label>
-        <input pInputText [(ngModel)]="data.fullNameEn" (ngModelChange)="onChange()" placeholder="Full Name (English)" class="text-left" dir="ltr" />
-    </div>
+        <!-- Profile Picture Upload -->
+        <div class="relative group cursor-pointer" (click)="fileInput.click()">
+            <div class="w-32 h-32 rounded-full border-2 border-slate-100 dark:border-zinc-800 overflow-hidden shadow-sm group-hover:border-blue-200 transition-all bg-slate-50 dark:bg-zinc-800">
+                <img *ngIf="profileImagePreview" [src]="profileImagePreview" class="w-full h-full object-cover" />
+                <div *ngIf="!profileImagePreview" class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                    <i class="pi pi-user text-3xl mb-1"></i>
+                    <span class="text-[10px]">اضافة صورة</span>
+                </div>
+            </div>
+            <div class="absolute bottom-1 right-1 w-8 h-8 bg-blue-600 rounded-full text-white flex items-center justify-center shadow-sm border-2 border-white dark:border-zinc-900">
+                <i class="pi pi-camera text-xs"></i>
+            </div>
+        </div>
 
-    <!-- Gender -->
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الجنس <span class="text-red-500">*</span></label>
-        <p-select [options]="genders" [(ngModel)]="data.gender" (ngModelChange)="onChange()" optionLabel="label" optionValue="value" placeholder="اختر الجنس" styleClass="w-full"></p-select>
-    </div>
+        <input #fileInput type="file" class="hidden" accept="image/*" (change)="onFileSelect($event)">
 
-    <!-- Birth Date -->
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">تاريخ الميلاد <span class="text-red-500">*</span></label>
-        <p-datePicker [(ngModel)]="data.birthDate" (ngModelChange)="onChange()" placeholder="dd/mm/yyyy" styleClass="w-full"></p-datePicker>
-    </div>
+        <div class="w-full space-y-3">
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-500">الجنس</label>
+                <p-select [options]="genders" [(ngModel)]="data.gender" (onChange)="onChange()"
+                    optionLabel="label" optionValue="value"
+                    styleClass="w-full p-inputtext-sm text-xs"
+                    appendTo="body">
+                </p-select>
+            </div>
 
-    <!-- Nationality -->
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الجنسية</label>
-        <p-select [options]="nationalities" [(ngModel)]="data.nationalityId" (ngModelChange)="onChange()" optionLabel="label" optionValue="value" placeholder="اختر الجنسية" styleClass="w-full"></p-select>
-    </div>
-
-    <!-- National ID -->
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">رقم الهوية / الجواز <span class="text-red-500">*</span></label>
-        <input pInputText [(ngModel)]="data.nationalId" (ngModelChange)="onChange()" />
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-500">الجنسية</label>
+                <p-select [options]="nationalities" [(ngModel)]="data.nationalityId" (onChange)="onChange()"
+                    optionLabel="label" optionValue="value"
+                    styleClass="w-full p-inputtext-sm text-xs"
+                    [filter]="true" filterBy="label"
+                    appendTo="body">
+                </p-select>
+            </div>
+        </div>
     </div>
 
-    <!-- Mobile -->
-    <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">رقم الجوال <span class="text-red-500">*</span></label>
-        <input pInputText [(ngModel)]="data.mobile" (ngModelChange)="onChange()" placeholder="77xxxxxxx" />
-    </div>
+    <!-- Right Column: Detailed Inputs -->
+    <div class="flex-1 bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-5">
+        <h3 class="font-bold text-slate-800 dark:text-white text-sm mb-4 flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800">
+            <i class="pi pi-id-card text-blue-500"></i>
+            البيانات الأساسية
+        </h3>
 
-    <!-- Email -->
-    <div class="flex flex-col gap-2 md:col-span-2">
-        <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">البريد الإلكتروني</label>
-        <input pInputText [(ngModel)]="data.email" (ngModelChange)="onChange()" placeholder="email@example.com" class="text-left" dir="ltr" />
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <!-- Row 1 -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الرقم الوظيفي <span class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="data.employeeNumber" (blur)="onChange()" class="p-inputtext-sm w-full font-mono font-bold" />
+            </div>
+
+            <div class="flex flex-col gap-1 md:col-span-3">
+                 <!-- Spacer or additional top-level info if needed -->
+            </div>
+
+            <!-- Row 2: Arabic Name -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الاسم الأول <span class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="data.firstNameAr" (blur)="onChange()" class="p-inputtext-sm w-full" placeholder="الأول" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">اسم الأب</label>
+                <input pInputText [(ngModel)]="data.secondNameAr" (blur)="onChange()" class="p-inputtext-sm w-full" placeholder="الثاني" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">اسم الجد</label>
+                <input pInputText [(ngModel)]="data.thirdNameAr" (blur)="onChange()" class="p-inputtext-sm w-full" placeholder="الثالث" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">اللقب <span class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="data.lastNameAr" (blur)="onChange()" class="p-inputtext-sm w-full" placeholder="اللقب" />
+            </div>
+
+            <!-- Row 3 -->
+            <div class="flex flex-col gap-1 md:col-span-2">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الاسم الكامل (English)</label>
+                <input pInputText [(ngModel)]="data.fullNameEn" (blur)="onChange()" class="p-inputtext-sm w-full text-left dir-ltr" />
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">تاريخ الميلاد</label>
+                <p-datePicker [(ngModel)]="data.birthDate" (onSelect)="onChange()" dateFormat="dd/mm/yy" [showIcon]="true" styleClass="w-full" inputStyleClass="p-inputtext-sm w-full" appendTo="body"></p-datePicker>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الهوية الوطنية <span class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="data.nationalId" (blur)="onChange()" class="p-inputtext-sm w-full font-mono text-center" maxlength="10" />
+            </div>
+
+             <!-- Row 4 -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">رقم الجوال <span class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="data.mobile" (blur)="onChange()" class="p-inputtext-sm w-full font-mono text-left dir-ltr" placeholder="+967" />
+            </div>
+
+            <div class="flex flex-col gap-1 md:col-span-2">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">البريد الإلكتروني</label>
+                <input pInputText [(ngModel)]="data.email" (blur)="onChange()" class="p-inputtext-sm w-full text-left dir-ltr" />
+            </div>
+            
+            <div class="flex flex-col gap-1">
+                 <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الحالة الاجتماعية</label>
+                 <!-- Placeholder for marital status if needed in DTO, otherwise just a placeholder input or remove -->
+                 <input pInputText [(ngModel)]="data.maritalStatus" (blur)="onChange()" class="p-inputtext-sm w-full" />
+            </div>
+
+        </div>
+
     </div>
 
 </div>
 
 <!-- Navigation Buttons -->
-<div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
-    <button pButton label="التالي: بيانات الوظيفة" icon="pi pi-arrow-left" iconPos="left" (click)="onNext()"></button>
+<div class="flex justify-end items-center mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800 w-full">
+    <button pButton label="التالي" icon="pi pi-arrow-left" iconPos="left"
+        class="p-button-primary p-button-sm rounded-lg px-6" (click)="onNext()">
+    </button>
 </div>

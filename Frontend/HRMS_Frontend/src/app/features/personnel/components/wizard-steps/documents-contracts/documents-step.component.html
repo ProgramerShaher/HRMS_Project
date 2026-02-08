@@ -1,0 +1,76 @@
+<div class="h-full flex flex-col gap-4">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-2">
+        <h3 class="font-bold text-slate-800 dark:text-white text-sm flex items-center gap-2">
+            <i class="pi pi-file text-blue-500"></i>
+            الوثائق الرسمية
+        </h3>
+        <button pButton icon="pi pi-plus" label="إضافة مستند" class="p-button-outlined p-button-sm rounded-lg text-xs" (click)="addDocument()"></button>
+    </div>
+
+    <!-- Documents Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto flex-1 p-1">
+        
+        <!-- Empty State -->
+        <div *ngIf="!data.documents || data.documents.length === 0" class="col-span-full py-8 flex flex-col items-center justify-center text-center bg-slate-50 dark:bg-zinc-900 rounded-lg border border-dashed border-slate-200 dark:border-zinc-800">
+            <i class="pi pi-folder-open text-xl text-slate-300 mb-1"></i>
+            <p class="text-xs text-slate-500">لا توجد وثائق مضافة</p>
+        </div>
+
+        <div *ngFor="let doc of data.documents; let i = index" class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 shadow-sm p-3 relative group hover:border-blue-200 transition-colors">
+            
+            <div class="flex items-center justify-between mb-3 border-b border-slate-50 dark:border-zinc-800 pb-2">
+                <span class="text-xs font-bold text-slate-700 dark:text-zinc-200 flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-[10px]">{{ i + 1 }}</span>
+                    وثيقة جديدة
+                </span>
+                <button pButton icon="pi pi-times" class="p-button-text p-button-danger p-button-sm w-6 h-6 !p-0 opacity-0 group-hover:opacity-100 transition-opacity" (click)="removeDocument(i)"></button>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                 <div class="flex flex-col gap-1">
+                    <label class="text-[10px] font-medium text-slate-700">نوع الوثيقة <span class="text-red-500">*</span></label>
+                    <p-select [options]="documentTypes" [(ngModel)]="doc.documentTypeId" (onChange)="onDocTypeChange(i)"
+                        optionLabel="label" optionValue="value" placeholder="اختر النوع"
+                        styleClass="w-full p-inputtext-sm text-xs" appendTo="body">
+                    </p-select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                     <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-medium text-slate-700">رقم الوثيقة</label>
+                        <input pInputText [(ngModel)]="doc.documentNumber" class="p-inputtext-sm w-full text-xs" />
+                    </div>
+                     <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-medium text-slate-700">تاريخ الانتهاء</label>
+                        <p-datePicker [(ngModel)]="doc.expiryDate" view="month" dateFormat="mm/yy" appendTo="body" styleClass="w-full" inputStyleClass="p-inputtext-sm w-full text-xs"></p-datePicker>
+                    </div>
+                </div>
+
+                <!-- File Upload Area -->
+                <div class="border border-dashed border-slate-200 dark:border-zinc-700 rounded-lg p-2 text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors bg-slate-50/50 dark:bg-zinc-900/50" (click)="fileInput.click()">
+                    <input #fileInput type="file" class="hidden" (change)="onFileSelect($event, i)">
+                    
+                    <div *ngIf="!doc.fileName" class="flex flex-row items-center justify-center gap-2 text-slate-400 py-1">
+                        <i class="pi pi-cloud-upload text-sm"></i>
+                        <span class="text-[10px]">رفع ملف</span>
+                    </div>
+
+                    <div *ngIf="doc.fileName" class="flex items-center justify-between gap-2 text-blue-600 bg-blue-50 dark:bg-blue-900/10 px-2 py-1 rounded">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <i class="pi pi-file text-xs"></i>
+                            <span class="text-[10px] font-bold truncate">{{ doc.fileName }}</span>
+                        </div>
+                        <i class="pi pi-check-circle text-xs text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center mt-2 pt-3 border-t border-slate-100 dark:border-zinc-800 shrink-0">
+        <button pButton label="السابق" icon="pi pi-arrow-right" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="onPrev()"></button>
+        <button pButton label="التالي" icon="pi pi-arrow-left" iconPos="left" class="p-button-primary p-button-sm rounded-lg px-6" (click)="onNext()"></button>
+    </div>
+</div>

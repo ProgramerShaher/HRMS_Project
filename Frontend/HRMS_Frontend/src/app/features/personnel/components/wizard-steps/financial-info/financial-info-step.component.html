@@ -1,48 +1,124 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-2">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-1">
 
     <!-- Salary Breakdown -->
-    <div class="flex flex-col gap-6">
-        <h3 class="text-lg font-bold text-slate-800 dark:text-zinc-200 border-b border-slate-200 dark:border-zinc-700 pb-2">الراتب والبدلات</h3>
+    <div class="flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-slate-700 dark:text-zinc-300 border-b border-slate-200 dark:border-zinc-700 pb-2 flex items-center gap-2">
+            <i class="pi pi-wallet text-green-600 dark:text-green-400"></i>
+            الراتب والبدلات
+        </h3>
         
-        <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">الراتب الأساسي <span class="text-red-500">*</span></label>
-            <p-inputNumber [(ngModel)]="data.basicSalary" (ngModelChange)="onChange()" mode="currency" currency="YER" locale="ar-YE" styleClass="w-full"></p-inputNumber>
-        </div>
-
         <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">بدل سكن</label>
-                <p-inputNumber [(ngModel)]="data.housingAllowance" (ngModelChange)="onChange()" mode="currency" currency="YER" locale="ar-YE" styleClass="w-full"></p-inputNumber>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">بدل مواصلات</label>
-                <p-inputNumber [(ngModel)]="data.transportAllowance" (ngModelChange)="onChange()" mode="currency" currency="YER" locale="ar-YE" styleClass="w-full"></p-inputNumber>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">بدل طبابة</label>
-                <p-inputNumber [(ngModel)]="data.medicalAllowance" (ngModelChange)="onChange()" mode="currency" currency="YER" locale="ar-YE" styleClass="w-full"></p-inputNumber>
-            </div>
+            
+            <!-- Basic Salary -->
+            <span class="p-float-label w-full col-span-2">
+                <input 
+                    pInputText
+                    type="number"
+                    id="basicSalary" 
+                    [(ngModel)]="data.basicSalary" 
+                    (blur)="onChange()" 
+                    class="w-full text-sm font-bold p-inputtext-sm text-slate-800 dark:text-zinc-100"
+                    [min]="0"
+                    step="1" />
+                <label for="basicSalary">الراتب الأساسي (ر.ي)</label>
+            </span>
+
+            <!-- Housing -->
+            <span class="p-float-label w-full">
+                <input 
+                    pInputText
+                    type="number"
+                    id="housing" 
+                    [(ngModel)]="data.housingAllowance" 
+                    (blur)="onChange()" 
+                    class="w-full text-sm p-inputtext-sm"
+                    [min]="0"
+                    step="1" />
+                <label for="housing">بدل سكن</label>
+            </span>
+
+            <!-- Transport -->
+            <span class="p-float-label w-full">
+                <input 
+                    pInputText
+                    type="number"
+                    id="transport" 
+                    [(ngModel)]="data.transportAllowance" 
+                    (blur)="onChange()" 
+                    class="w-full text-sm p-inputtext-sm"
+                    [min]="0"
+                    step="1" />
+                <label for="transport">بدل مواصلات</label>
+            </span>
+
+            <!-- Medical -->
+            <span class="p-float-label w-full col-span-2">
+                <input 
+                    pInputText
+                    type="number"
+                    id="medical" 
+                    [(ngModel)]="data.medicalAllowance" 
+                    (blur)="onChange()" 
+                    class="w-full text-sm p-inputtext-sm"
+                    [min]="0"
+                    step="1" />
+                <label for="medical">بدل طبي</label>
+            </span>
         </div>
 
         <!-- Total Display -->
-        <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/50 flex justify-between items-center">
-            <span class="font-bold text-blue-800 dark:text-blue-300">إجمالي الراتب</span>
-            <span class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ totalSalary | number }} ر.ي</span>
+        <div class="mt-2 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl border border-blue-100 dark:border-blue-800 shadow-sm flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="p-2 bg-white dark:bg-blue-900/50 rounded-full shadow-sm text-blue-600 dark:text-blue-400">
+                    <i class="pi pi-calculator text-lg"></i>
+                </div>
+                <span class="font-bold text-slate-700 dark:text-blue-200 text-sm">الإجمالي الشهري</span>
+            </div>
+            <span class="text-xl font-extrabold text-blue-700 dark:text-blue-300 tracking-wide dir-ltr">
+                {{ totalSalary | currency:'YER':'symbol':'1.0-0':'ar-YE' }}
+            </span>
         </div>
     </div>
 
     <!-- Bank Details -->
-    <div class="flex flex-col gap-6">
-        <h3 class="text-lg font-bold text-slate-800 dark:text-zinc-200 border-b border-slate-200 dark:border-zinc-700 pb-2">بيانات البنك (اختياري)</h3>
+    <div class="flex flex-col gap-4">
+        <h3 class="text-sm font-bold text-slate-700 dark:text-zinc-300 border-b border-slate-200 dark:border-zinc-700 pb-2 flex items-center gap-2">
+            <i class="pi pi-building text-blue-600 dark:text-blue-400"></i>
+            بيانات البنك (اختياري)
+        </h3>
 
-        <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">اسم البنك</label>
-            <p-select [options]="banks" [(ngModel)]="data.bankId" (ngModelChange)="onChange()" optionLabel="label" optionValue="value" placeholder="اختر البنك" styleClass="w-full"></p-select>
-        </div>
+        <div class="flex flex-col gap-4">
+            
+            <span class="p-float-label w-full">
+                <p-select 
+                    inputId="bank"
+                    [options]="banks" 
+                    [(ngModel)]="data.bankId" 
+                    (onChange)="onChange()" 
+                    optionLabel="label" 
+                    optionValue="value" 
+                    styleClass="w-full text-sm" 
+                    class="w-full"
+                    [showClear]="true">
+                </p-select>
+                <label for="bank">اسم البنك</label>
+            </span>
 
-        <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium text-slate-700 dark:text-zinc-300">رقم الايبان (IBAN)</label>
-            <input pInputText [(ngModel)]="data.ibanNumber" (ngModelChange)="onChange()" placeholder="YE..." dir="ltr" class="text-left" />
+            <span class="p-float-label w-full">
+                <input 
+                    pInputText 
+                    id="iban"
+                    [(ngModel)]="data.ibanNumber" 
+                    (blur)="onChange()" 
+                    dir="ltr" 
+                    class="w-full text-left font-mono p-inputtext-sm" />
+                <label for="iban">رقم الايبان (IBAN)</label>
+            </span>
+
+             <div class="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-100 dark:border-orange-800/50 text-xs text-orange-700 dark:text-orange-300 flex items-start gap-2">
+                <i class="pi pi-info-circle mt-0.5"></i>
+                <p>تأكد من إدخال رقم الآيبان بشكل صحيح لضمان التحويل.</p>
+            </div>
         </div>
     </div>
 

@@ -198,7 +198,7 @@ public class PerformanceController : ControllerBase
     /// إنشاء نوع مخالفة جديد (Admin Only)
     /// </summary>
     [HttpPost("config/violation-types")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<int>>> CreateViolationType([FromBody] CreateViolationTypeCommand command)
     {
@@ -210,7 +210,7 @@ public class PerformanceController : ControllerBase
     /// تحديث نوع مخالفة (Admin Only)
     /// </summary>
     [HttpPut("config/violation-types/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> UpdateViolationType(int id, [FromBody] UpdateViolationTypeCommand command)
     {
@@ -223,7 +223,7 @@ public class PerformanceController : ControllerBase
     /// حذف نوع مخالفة (Admin Only)
     /// </summary>
     [HttpDelete("config/violation-types/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> DeleteViolationType(int id)
     {
@@ -264,7 +264,7 @@ public class PerformanceController : ControllerBase
     /// إنشاء إجراء تأديبي جديد (Admin Only)
     /// </summary>
     [HttpPost("config/disciplinary-actions")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<int>>> CreateDisciplinaryAction([FromBody] CreateDisciplinaryActionCommand command)
     {
@@ -276,7 +276,7 @@ public class PerformanceController : ControllerBase
     /// تحديث إجراء تأديبي (Admin Only)
     /// </summary>
     [HttpPut("config/disciplinary-actions/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> UpdateDisciplinaryAction(int id, [FromBody] UpdateDisciplinaryActionCommand command)
     {
@@ -289,7 +289,7 @@ public class PerformanceController : ControllerBase
     /// حذف إجراء تأديبي (Admin Only)
     /// </summary>
     [HttpDelete("config/disciplinary-actions/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> DeleteDisciplinaryAction(int id)
     {
@@ -330,7 +330,7 @@ public class PerformanceController : ControllerBase
     /// إنشاء مؤشر أداء جديد (Admin Only)
     /// </summary>
     [HttpPost("config/kpis")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<int>>> CreateKpi([FromBody] CreateKpiCommand command)
     {
@@ -342,7 +342,7 @@ public class PerformanceController : ControllerBase
     /// تحديث مؤشر أداء (Admin Only)
     /// </summary>
     [HttpPut("config/kpis/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> UpdateKpi(int id, [FromBody] UpdateKpiCommand command)
     {
@@ -355,7 +355,7 @@ public class PerformanceController : ControllerBase
     /// حذف مؤشر أداء (Admin Only)
     /// </summary>
     [HttpDelete("config/kpis/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> DeleteKpi(int id)
     {
@@ -396,7 +396,7 @@ public class PerformanceController : ControllerBase
     /// إنشاء فترة تقييم جديدة (Admin Only)
     /// </summary>
     [HttpPost("config/appraisal-cycles")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<int>>> CreateAppraisalCycle([FromBody] CreateAppraisalCycleCommand command)
     {
@@ -408,7 +408,7 @@ public class PerformanceController : ControllerBase
     /// تحديث فترة تقييم (Admin Only)
     /// </summary>
     [HttpPut("config/appraisal-cycles/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> UpdateAppraisalCycle(int id, [FromBody] UpdateAppraisalCycleCommand command)
     {
@@ -421,7 +421,7 @@ public class PerformanceController : ControllerBase
     /// حذف فترة تقييم (Admin Only)
     /// </summary>
     [HttpDelete("config/appraisal-cycles/{id}")]
-    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Admin")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<bool>>> DeleteAppraisalCycle(int id)
     {

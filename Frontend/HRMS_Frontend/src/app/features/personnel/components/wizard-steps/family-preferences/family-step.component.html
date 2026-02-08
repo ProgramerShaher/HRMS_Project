@@ -1,0 +1,87 @@
+<div class="h-full flex flex-col gap-4">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-2">
+        <h3 class="font-bold text-slate-800 dark:text-white text-sm flex items-center gap-2">
+            <i class="pi pi-users text-pink-500"></i>
+            البيانات العائلية
+        </h3>
+        <button pButton icon="pi pi-plus" label="إضافة تابع" class="p-button-outlined p-button-sm rounded-lg text-xs" (click)="addDependent()"></button>
+    </div>
+
+    <!-- Dependents Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 flex-1 content-start overflow-y-auto max-h-[400px]">
+        
+        <!-- Empty State -->
+        <div *ngIf="!data.dependents || data.dependents.length === 0" class="col-span-full py-8 flex flex-col items-center justify-center text-center bg-slate-50 dark:bg-zinc-900 rounded-lg border border-dashed border-slate-200 dark:border-zinc-800">
+            <i class="pi pi-users text-xl text-slate-300 mb-1"></i>
+            <p class="text-xs text-slate-500">لا يوجد تابعين</p>
+        </div>
+
+        <div *ngFor="let dep of data.dependents; let i = index" class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 shadow-sm p-3 relative group hover:border-pink-200 transition-colors">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 flex items-center justify-center text-sm font-bold shrink-0">
+                        {{ dep.fullNameAr ? dep.fullNameAr.charAt(0) : '?' }}
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 dark:text-zinc-200 text-xs truncate max-w-[100px]">{{ dep.fullNameAr }}</h4>
+                        <span class="text-[10px] bg-slate-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-slate-500">{{ dep.relationship }}</span>
+                    </div>
+                </div>
+                <button pButton icon="pi pi-times" class="p-button-text p-button-danger p-button-sm w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity" (click)="removeDependent(i)"></button>
+            </div>
+            
+            <div class="border-t border-slate-50 dark:border-zinc-800 pt-2 text-[10px] text-slate-500 flex flex-col gap-1">
+                <div class="flex justify-between">
+                    <span>تاريخ الميلاد:</span>
+                    <span class="font-mono">{{ dep.birthDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="flex justify-between" *ngIf="dep.nationalId">
+                    <span>الهوية:</span>
+                    <span class="font-mono">{{ dep.nationalId }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependent Dialog -->
+    <div *ngIf="showDependentDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in-up" [formGroup]="depForm">
+            <div class="p-3 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-950">
+                <h3 class="font-bold text-slate-800 dark:text-white text-sm">إضافة تابع</h3>
+                <button pButton icon="pi pi-times" class="p-button-text p-button-secondary w-6 h-6" (click)="showDependentDialog = false"></button>
+            </div>
+            
+            <div class="p-4 flex flex-col gap-3">
+                 <div class="flex flex-col gap-1">
+                    <label class="text-xs font-medium text-slate-700">الاسم (عربي) <span class="text-red-500">*</span></label>
+                    <input pInputText formControlName="fullNameAr" class="p-inputtext-sm w-full" />
+                </div>
+                 <div class="flex flex-col gap-1">
+                    <label class="text-xs font-medium text-slate-700">صلة القرابة <span class="text-red-500">*</span></label>
+                    <p-select [options]="relations" formControlName="relationship" optionLabel="label" optionValue="value" appendTo="body" styleClass="w-full p-inputtext-sm text-xs"></p-select>
+                </div>
+                 <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-medium text-slate-700">تاريخ الميلاد <span class="text-red-500">*</span></label>
+                        <p-datePicker formControlName="birthDate" appendTo="body" styleClass="w-full" inputStyleClass="w-full p-inputtext-sm text-xs"></p-datePicker>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-medium text-slate-700">الجنس</label>
+                         <p-select [options]="genders" formControlName="gender" optionLabel="label" optionValue="value" appendTo="body" styleClass="w-full p-inputtext-sm text-xs"></p-select>
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 border-t border-slate-100 dark:border-zinc-800 flex justify-end gap-2 bg-slate-50 dark:bg-zinc-950">
+                <button pButton label="إلغاء" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="showDependentDialog = false"></button>
+                <button pButton label="حفظ" class="p-button-primary p-button-sm rounded-lg px-4" (click)="saveDependent()"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center mt-2 pt-3 border-t border-slate-100 dark:border-zinc-800 shrink-0">
+        <button pButton label="السابق: الوثائق" icon="pi pi-arrow-right" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="onPrev()"></button>
+        <button pButton label="حفظ وإتمام" icon="pi pi-check" iconPos="left" class="p-button-success p-button-sm rounded-lg px-6 font-bold" (click)="onSubmit()"></button>
+    </div>
+</div>

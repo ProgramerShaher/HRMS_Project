@@ -75,6 +75,9 @@ public class Employee : BaseEntity
     [Column("JOB_ID")]
     public int JobId { get; set; }
 
+    [Column("JOB_GRADE_ID")]
+    public int? JobGradeId { get; set; }
+
     [Column("NATIONALITY_ID")] // نفترض وجود جدول للجنسيات مستقبلاً أو نستخدم الدولة حالياً
     public int? NationalityId { get; set; } 
 

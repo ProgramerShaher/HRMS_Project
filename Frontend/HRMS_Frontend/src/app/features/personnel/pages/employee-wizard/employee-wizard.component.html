@@ -1,64 +1,161 @@
-<div class="flex flex-col gap-6" dir="rtl">
+<div class="flex flex-col gap-3 max-w-full mx-auto px-4 pt-4 pb-2 h-[calc(100vh-80px)]" dir="rtl">
     <p-toast position="bottom-left"></p-toast>
     
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">ملف موظف جديد</h1>
-            <p class="text-slate-500 text-sm mt-1">أدخل بيانات الموظف الجديد عبر الخطوات التالية</p>
+    <!-- Condensed Header -->
+    <div class="flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+             <div class="bg-blue-600 rounded-lg p-2 text-white">
+                <i class="pi pi-user-plus text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">ملف موظف جديد</h1>
+                <p class="text-slate-500 text-xs">إدخال بيانات الموظف (6 خطوات)</p>
+            </div>
         </div>
-        <button pButton label="إلغاء" class="p-button-text text-slate-500" routerLink="/employees"></button>
+        <button 
+            pButton 
+            label="خروج" 
+            icon="pi pi-times" 
+            class="p-button-text p-button-secondary p-button-sm text-slate-500" 
+            routerLink="/employees">
+        </button>
     </div>
 
     <!-- Wizard Container -->
-        <p-stepper [(value)]="currentStep" [linear]="true">
-            <p-step-list>
-                <p-step [value]="0">البيانات الشخصية</p-step>
-                <p-step [value]="1">بيانات التوظيف</p-step>
-                <p-step [value]="2">البيانات المالية</p-step>
+    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-slate-200 dark:border-zinc-800 overflow-hidden flex flex-col flex-1 min-h-0">
+        <p-stepper [(value)]="currentStep" [linear]="true" class="w-full flex flex-col h-full">
+            <p-step-list class="bg-slate-50 dark:bg-zinc-950/50 border-b border-slate-200 dark:border-zinc-800 shrink-0 h-14">
+                
+                <p-step [value]="0" class="flex-1">
+                    <div class="flex items-center justify-center gap-2 h-full">
+                        <i class="pi pi-user text-lg"></i>
+                        <span class="font-medium text-xs hidden md:inline">البيانات الشخصية</span>
+                    </div>
+                </p-step>
+
+                <p-step [value]="1" class="flex-1">
+                    <div class="flex items-center justify-center gap-2 h-full">
+                        <i class="pi pi-briefcase text-lg"></i>
+                        <span class="font-medium text-xs hidden md:inline">الوظيفة والمالية</span>
+                    </div>
+                </p-step>
+
+                <p-step [value]="2" class="flex-1">
+                    <div class="flex items-center justify-center gap-2 h-full">
+                        <i class="pi pi-map-marker text-lg"></i>
+                        <span class="font-medium text-xs hidden md:inline">العناوين والاتصال</span>
+                    </div>
+                </p-step>
+
+                <p-step [value]="3" class="flex-1">
+                    <div class="flex items-center justify-center gap-2 h-full">
+                        <i class="pi pi-verified text-lg"></i>
+                        <span class="font-medium text-xs hidden md:inline">المؤهلات</span>
+                    </div>
+                </p-step>
+
+                <p-step [value]="4" class="flex-1">
+                    <div class="flex items-center justify-center gap-2 h-full">
+                        <i class="pi pi-file text-lg"></i>
+                        <span class="font-medium text-xs hidden md:inline">الوثائق</span>
+                    </div>
+                </p-step>
+
+                <p-step [value]="5" class="flex-1">
+                    <div class="flex items-center justify-center gap-2 h-full">
+                        <i class="pi pi-users text-lg"></i>
+                        <span class="font-medium text-xs hidden md:inline">الأسرة</span>
+                    </div>
+                </p-step>
+
             </p-step-list>
             
-            <p-step-panels>
-                <!-- Step 1: Personal Info -->
-                <p-step-panel [value]="0">
+            <p-step-panels class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-zinc-900/30">
+                <!-- Step 1: Personal -->
+                <p-step-panel [value]="0" class="h-full">
                     <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                        <div class="p-6">
+                         <div class="p-4 h-full">
                             <app-personal-info-step 
                                 [data]="employeeData()" 
-                                (dataChange)="updatePersonalInfo($event)"
-                                (next)="activateCallback(1)">
+                                (dataChange)="updateData($event)"
+                                (next)="nextStep()">
                             </app-personal-info-step>
-                        </div>
+                         </div>
                     </ng-template>
                 </p-step-panel>
 
-                <!-- Step 2: Employment Info -->
-                <p-step-panel [value]="1">
+                <!-- Step 2: Job & Financial -->
+                <p-step-panel [value]="1" class="h-full">
                     <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                        <div class="p-6">
-                            <app-employment-info-step
+                         <div class="p-4 h-full">
+                            <app-job-financial-step
                                 [data]="employeeData()"
-                                (dataChange)="updateEmploymentInfo($event)"
-                                (prev)="activateCallback(0)"
-                                (next)="activateCallback(2)">
-                            </app-employment-info-step>
-                        </div>
+                                (dataChange)="updateData($event)"
+                                (prev)="prevStep()"
+                                (next)="nextStep()">
+                            </app-job-financial-step>
+                         </div>
                     </ng-template>
                 </p-step-panel>
 
-                <!-- Step 3: Financial Info -->
-                <p-step-panel [value]="2">
+                <!-- Step 3: Addresses -->
+                <p-step-panel [value]="2" class="h-full">
                     <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                        <div class="p-6">
-                            <app-financial-info-step
+                         <div class="p-4 h-full">
+                            <app-addresses-step
                                 [data]="employeeData()"
-                                (dataChange)="updateFinancialInfo($event)"
-                                (prev)="activateCallback(1)"
-                                (submit)="submit()">
-                            </app-financial-info-step>
-                        </div>
+                                (dataChange)="updateData($event)"
+                                (prev)="prevStep()"
+                                (next)="nextStep()">
+                            </app-addresses-step>
+                         </div>
                     </ng-template>
                 </p-step-panel>
+
+                <!-- Step 4: Qualifications -->
+                <p-step-panel [value]="3" class="h-full">
+                     <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                         <div class="p-4 h-full">
+                            <app-qualifications-step
+                                [data]="employeeData()"
+                                (dataChange)="updateData($event)"
+                                (prev)="prevStep()"
+                                (next)="nextStep()">
+                            </app-qualifications-step>
+                         </div>
+                     </ng-template>
+                </p-step-panel>
+
+                <!-- Step 5: Documents -->
+                <p-step-panel [value]="4" class="h-full">
+                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                         <div class="p-4 h-full">
+                            <app-documents-step
+                                [data]="employeeData()"
+                                (dataChange)="updateData($event)"
+                                (docFileSelect)="updateDocFiles($event)"
+                                (prev)="prevStep()"
+                                (next)="nextStep()">
+                            </app-documents-step>
+                         </div>
+                    </ng-template>
+                </p-step-panel>
+
+                <!-- Step 6: Family -->
+                <p-step-panel [value]="5" class="h-full">
+                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
+                         <div class="p-4 h-full">
+                            <app-family-step
+                                [data]="employeeData()"
+                                (dataChange)="updateData($event)"
+                                (prev)="prevStep()"
+                                (submitForm)="submit()">
+                            </app-family-step>
+                         </div>
+                    </ng-template>
+                </p-step-panel>
+
             </p-step-panels>
         </p-stepper>
+    </div>
 </div>

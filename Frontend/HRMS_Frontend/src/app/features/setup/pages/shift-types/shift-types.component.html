@@ -42,8 +42,18 @@
         <ng-template pTemplate="body" let-item>
             <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50">
                 <td class="font-medium text-slate-800 dark:text-zinc-200 text-center">{{item.shiftNameAr}}</td>
-                <td class="text-slate-600 dark:text-zinc-400 text-center font-mono bg-slate-50 dark:bg-zinc-800/30">{{item.startTime}}</td>
-                <td class="text-slate-600 dark:text-zinc-400 text-center font-mono bg-slate-50 dark:bg-zinc-800/30">{{item.endTime}}</td>
+                <td class="text-center">
+                    <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border border-emerald-200 dark:border-emerald-800">
+                        <i class="pi pi-play-circle text-emerald-600 dark:text-emerald-400"></i>
+                        <span class="font-mono font-bold text-emerald-700 dark:text-emerald-300 text-sm">{{item.startTime}}</span>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-900/20 dark:to-orange-900/20 border border-rose-200 dark:border-rose-800">
+                        <i class="pi pi-stop-circle text-rose-600 dark:text-rose-400"></i>
+                        <span class="font-mono font-bold text-rose-700 dark:text-rose-300 text-sm">{{item.endTime}}</span>
+                    </div>
+                </td>
                 <td class="text-slate-600 dark:text-zinc-400 text-center">
                     <span class="px-2 py-1 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold">{{item.hoursCount}} س</span>
                 </td>

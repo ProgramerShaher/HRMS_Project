@@ -74,12 +74,15 @@ export interface Dependent {
 
 export interface Address {
     addressId?: number;
-    addressType: string; // e.g., 'National', 'Current'
+    addressTypeId: number; // Changed from addressType string to ID
+    countryId: number; // Added
     cityId: number;
+    district: string;
     street: string;
-    buildingNumber?: string;
-    zipCode?: string;
+    buildingNo?: string; // Renamed from buildingNumber to match DTO if needed, or keep alias
+    postalCode?: string; // Renamed from zipCode
     additionalDetails?: string;
+    isPrimary?: boolean; // Added
 }
 
 export interface EmployeeDocument {

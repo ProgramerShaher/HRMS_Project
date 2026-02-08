@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { CreateDepartmentCommand, DepartmentDto, UpdateDepartmentCommand } from '../models/department.dto';
 
@@ -12,7 +13,12 @@ export class DepartmentService {
   private apiUrl = `${environment.apiUrl}/Departments`;
 
   getAll(): Observable<DepartmentDto[]> {
-    return this.http.get<DepartmentDto[]>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(
+      map(response => {
+        // API returns: { success: true, data: { items: [...], totalCount: X }, message: "..." }
+        return response?.data?.items || response?.items || response?.data || [];
+      })
+    );
   }
 
   getById(id: number): Observable<DepartmentDto> {

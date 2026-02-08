@@ -1,0 +1,95 @@
+<div class="card p-6 bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-slate-100 dark:border-zinc-800" dir="rtl">
+    <p-toast position="bottom-left"></p-toast>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                <i class="pi pi-calendar-clock text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800 dark:text-zinc-100">فترات التقييم</h1>
+                <p class="text-slate-500 dark:text-zinc-400 text-xs mt-1">إعداد الفترات الزمنية لتقييم الأداء</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="بحث..." class="p-inputtext-sm w-64" />
+            </span>
+            <p-button label="إضافة فترة" icon="pi pi-plus" (onClick)="openNew()" styleClass="p-button-rounded p-button-primary"></p-button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <p-table #dt [value]="cycles()" [rows]="10" [paginator]="true" [loading]="loading()"
+             styleClass="p-datatable-sm p-datatable-gridlines"
+             [globalFilterFields]="['cycleName']"
+             [rowHover]="true"
+             responsiveLayout="scroll">
+        
+        <ng-template pTemplate="header">
+            <tr class="bg-slate-50 dark:bg-zinc-950 text-slate-700 dark:text-zinc-300 text-sm">
+                <th pSortableColumn="cycleName" class="text-center">اسم الفترة <p-sortIcon field="cycleName"></p-sortIcon></th>
+                <th pSortableColumn="startDate" class="text-center">تاريخ البداية <p-sortIcon field="startDate"></p-sortIcon></th>
+                <th pSortableColumn="endDate" class="text-center">تاريخ النهاية <p-sortIcon field="endDate"></p-sortIcon></th>
+                <th pSortableColumn="status" class="text-center">الحالة <p-sortIcon field="status"></p-sortIcon></th>
+                <th class="w-32 text-center">الإجراءات</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+            <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50">
+                <td class="font-medium text-slate-800 dark:text-zinc-200 text-center">{{item.cycleName}}</td>
+                <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.startDate | date:'yyyy-MM-dd'}}</td>
+                <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.endDate | date:'yyyy-MM-dd'}}</td>
+                <td class="text-center">
+                    <span [class]="'px-2 py-0.5 rounded text-xs font-semibold block w-fit mx-auto ' + getStatusClass(item.status)">
+                        {{item.status}}
+                    </span>
+                </td>
+                <td>
+                    <div class="flex justify-center gap-1">
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded p-button-sm text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20" (click)="edit(item)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20" (click)="delete(item)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-8 text-slate-500">لا يوجد بيانات لعرضها</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <!-- Dialog -->
+    <p-dialog [(visible)]="dialogVisible" [style]="{width: '450px'}" header="تفاصيل الفترة" [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="field mb-4">
+                <label for="name">اسم الفترة</label>
+                <input type="text" pInputText id="name" [(ngModel)]="currentItem.cycleName" required autofocus />
+                <small class="p-error" *ngIf="submitted && !currentItem.cycleName">اسم الفترة مطلوب.</small>
+            </div>
+            <div class="field mb-4">
+                <label for="startDate">تاريخ البداية</label>
+                <p-datepicker id="startDate" [(ngModel)]="currentItem.startDate" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datepicker>
+            </div>
+             <div class="field mb-4">
+                <label for="endDate">تاريخ النهاية</label>
+                <p-datepicker id="endDate" [(ngModel)]="currentItem.endDate" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datepicker>
+            </div>
+            <div class="field mb-4">
+                <label for="status">الحالة</label>
+                <p-select id="status" [options]="statusOptions" [(ngModel)]="currentItem.status" placeholder="اختر الحالة" styleClass="w-full" appendTo="body"></p-select>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton label="حفظ" icon="pi pi-check" class="p-button-text" (click)="save()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

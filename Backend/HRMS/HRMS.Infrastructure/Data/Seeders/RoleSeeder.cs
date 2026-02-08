@@ -16,6 +16,7 @@ namespace HRMS.Infrastructure.Data.Seeders
             var roles = new List<(string Name, string NameAr, string Description)>
             {
                 ("System_Admin", "مدير النظام", "صلاحيات كاملة على النظام"),
+                ("Admin", "مسؤول", "صلاحيات إدارية عامة"),
                 ("HR_Manager", "مدير الموارد البشرية", "إدارة كاملة للموظفين والعمليات"),
                 ("HR_Employee", "موظف موارد بشرية", "عرض وتعديل بيانات الموظفين"),
                 ("Payroll_Admin", "مدير الرواتب", "إدارة الرواتب والبدلات"),
