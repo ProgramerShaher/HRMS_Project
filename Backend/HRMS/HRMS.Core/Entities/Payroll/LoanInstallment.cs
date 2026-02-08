@@ -30,10 +30,31 @@ namespace HRMS.Core.Entities.Payroll
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Amount { get; set; }
 
-        public byte IsPaid { get; set; } = 0;
+        /// <summary>
+        /// حالة القسط: UNPAID (غير مدفوع), PAID (مدفوع عبر الرواتب), SETTLED_MANUALLY (مسدد يدوياً)
+        /// </summary>
+        [MaxLength(20)]
+        public string Status { get; set; } = "UNPAID";
 
+        /// <summary>
+        /// تاريخ الدفع الفعلي
+        /// </summary>
+        public DateTime? PaidDate { get; set; }
+
+        /// <summary>
+        /// معرف مسير الرواتب الذي تم فيه الخصم
+        /// </summary>
         [Column("PAID_IN_PAYROLL_RUN")]
         public int? PaidInPayrollRun { get; set; }
+
+        /// <summary>
+        /// ملاحظات التسوية اليدوية
+        /// </summary>
+        [MaxLength(500)]
+        public string? SettlementNotes { get; set; }
+
+        [Obsolete("Use Status field instead")]
+        public byte IsPaid { get; set; } = 0;
 
         // Navigation Properties
         public virtual Loan Loan { get; set; } = null!;

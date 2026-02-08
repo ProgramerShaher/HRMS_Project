@@ -39,6 +39,14 @@ namespace HRMS.Core.Entities.Performance
         [Column("FINAL_SCORE", TypeName = "decimal(5, 2)")]
         public decimal? FinalScore { get; set; }
 
+        // Alias or additional property for TotalScore to match codebase usage
+        [NotMapped]
+        public decimal? TotalScore 
+        { 
+            get => FinalScore; 
+            set => FinalScore = value; 
+        }
+
         [MaxLength(20)]
         [Column("GRADE")]
         public string? Grade { get; set; }
@@ -50,6 +58,11 @@ namespace HRMS.Core.Entities.Performance
         [MaxLength(500)]
         [Column("EMPLOYEE_COMMENT")]
         public string? EmployeeComment { get; set; }
+
+        // Adding Comments field to match usage in UpdateAppraisalCommand
+        [MaxLength(1000)]
+        [Column("COMMENTS")]
+        public string? Comments { get; set; }
 
         // Navigation Properties
         public virtual Employee Employee { get; set; } = null!;

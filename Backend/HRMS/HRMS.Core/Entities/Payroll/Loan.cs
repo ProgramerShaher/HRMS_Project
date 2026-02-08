@@ -31,8 +31,33 @@ namespace HRMS.Core.Entities.Payroll
         [Required]
         public short InstallmentCount { get; set; }
 
+        /// <summary>
+        /// حالة القرض: PENDING (قيد الانتظار), APPROVED (موافق عليه), ACTIVE (نشط), SETTLED (مسدد مبكراً), CLOSED (مغلق)
+        /// </summary>
         [MaxLength(20)]
-        public string? Status { get; set; } = "ACTIVE"; // PENDING, ACTIVE, CLOSED
+        public string? Status { get; set; } = "PENDING";
+
+        /// <summary>
+        /// تاريخ الموافقة على القرض
+        /// </summary>
+        public DateTime? ApprovalDate { get; set; }
+
+        /// <summary>
+        /// معرف الموظف الذي وافق على القرض
+        /// </summary>
+        [Column("APPROVED_BY")]
+        public int? ApprovedBy { get; set; }
+
+        /// <summary>
+        /// تاريخ التسوية المبكرة (إن وجدت)
+        /// </summary>
+        public DateTime? SettlementDate { get; set; }
+
+        /// <summary>
+        /// ملاحظات التسوية
+        /// </summary>
+        [MaxLength(500)]
+        public string? SettlementNotes { get; set; }
 
         // Navigation Properties
         public virtual Employee Employee { get; set; } = null!;

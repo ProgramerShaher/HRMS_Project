@@ -1,5 +1,9 @@
 using HRMS.Application.DTOs.Payroll;
 using HRMS.Application.Features.Payroll.Loans.Commands.CreateLoan;
+using HRMS.Application.Features.Payroll.Loans.Commands.ChangeStatus;
+using HRMS.Application.Features.Payroll.Loans.Commands.Settle;
+using HRMS.Application.Features.Payroll.Loans.Queries.GetById;
+using HRMS.Application.Features.Payroll.Loans.Queries.GetEmployeeLoans;
 using HRMS.Application.Features.Payroll.Loans.Queries.GetMonthlyInstallments;
 using HRMS.Application.Features.Payroll.Loans.Queries.GetEmployeeInstallments;
 using HRMS.Core.Utilities;
@@ -24,6 +28,48 @@ public class LoanController : ControllerBase
     {
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// الحصول على تفاصيل قرض
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Result<LoanDto>>> GetLoanById(int id)
+    {
+        var result = await _mediator.Send(new GetLoanByIdQuery { LoanId = id });
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تغيير حالة القرض (PENDING → ACTIVE)
+    /// </summary>
+    [HttpPut("{id}/status")]
+    public async Task<ActionResult<Result<bool>>> ChangeLoanStatus(int id, [FromBody] ChangeLoanStatusCommand command)
+    {
+        command.LoanId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تسوية مبكرة للقرض
+    /// </summary>
+    [HttpPost("{id}/settle")]
+    public async Task<ActionResult<Result<bool>>> SettleLoan(int id, [FromBody] EarlySettlementCommand command)
+    {
+        command.LoanId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// الحصول على قروض موظف
+    /// </summary>
+    [HttpGet("employee/{employeeId}")]
+    public async Task<ActionResult<Result<List<LoanDto>>>> GetEmployeeLoans(int employeeId, [FromQuery] string? status)
+    {
+        var result = await _mediator.Send(new GetEmployeeLoansQuery { EmployeeId = employeeId, Status = status });
+        return Ok(result);
     }
 
     [HttpGet("installments")]

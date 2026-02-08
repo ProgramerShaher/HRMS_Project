@@ -32,9 +32,24 @@ namespace HRMS.Core.Entities.Performance
         [Column("ACTUAL_VALUE", TypeName = "decimal(10, 2)")]
         public decimal? ActualValue { get; set; }
 
-        [Required]
-        [Column("SCORE", TypeName = "decimal(5, 2)")]
-        public decimal Score { get; set; }
+        // Renaming/Upgrading the single Score field to support split scoring
+        
+        [Column("EMPLOYEE_SCORE", TypeName = "decimal(5, 2)")]
+        public decimal EmployeeScore { get; set; }
+
+        [Column("MANAGER_SCORE", TypeName = "decimal(5, 2)")]
+        public decimal ManagerScore { get; set; }
+
+        [Column("FINAL_SCORE", TypeName = "decimal(5, 2)")]
+        public decimal FinalScore { get; set; }
+
+        // Keeping Score for backward compatibility if needed, but logic should use FinalScore
+        [NotMapped]
+        public decimal Score 
+        { 
+            get => FinalScore; 
+            set => FinalScore = value; 
+        }
 
         [MaxLength(200)]
         [Column("COMMENTS")]

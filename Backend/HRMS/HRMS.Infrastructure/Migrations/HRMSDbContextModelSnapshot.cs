@@ -2724,6 +2724,13 @@ namespace HRMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LoanId"));
 
+                    b.Property<DateTime?>("ApprovalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ApprovedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("APPROVED_BY");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("CREATED_AT");
@@ -2749,6 +2756,13 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("SettlementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SettlementNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Status")
                         .HasMaxLength(20)
@@ -2812,9 +2826,21 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("LOAN_ID");
 
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("PaidInPayrollRun")
                         .HasColumnType("int")
                         .HasColumnName("PAID_IN_PAYROLL_RUN");
+
+                    b.Property<string>("SettlementNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -3261,6 +3287,14 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
+                    b.Property<decimal>("EmployeeScore")
+                        .HasColumnType("decimal(5, 2)")
+                        .HasColumnName("EMPLOYEE_SCORE");
+
+                    b.Property<decimal>("FinalScore")
+                        .HasColumnType("decimal(5, 2)")
+                        .HasColumnName("FINAL_SCORE");
+
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
                         .HasColumnName("IS_DELETED");
@@ -3269,9 +3303,9 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("KPI_ID");
 
-                    b.Property<decimal>("Score")
+                    b.Property<decimal>("ManagerScore")
                         .HasColumnType("decimal(5, 2)")
-                        .HasColumnName("SCORE");
+                        .HasColumnName("MANAGER_SCORE");
 
                     b.Property<decimal?>("TargetValue")
                         .HasColumnType("decimal(10, 2)")
@@ -3367,6 +3401,11 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<DateTime>("AppraisalDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("APPRAISAL_DATE");
+
+                    b.Property<string>("Comments")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnName("COMMENTS");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -3575,6 +3614,10 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("VERSION_NO");
 
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(5, 2)")
+                        .HasColumnName("WEIGHT");
+
                     b.HasKey("KpiId");
 
                     b.ToTable("KPI_LIBRARIES", "HR_PERFORMANCE");
@@ -3597,6 +3640,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("DESCRIPTION");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
@@ -4778,10 +4826,6 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
-                    b.Property<string>("Feedback")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FEEDBACK");
-
                     b.Property<string>("InterviewType")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
@@ -4804,9 +4848,18 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("RESULT");
 
+                    b.Property<string>("ResultNotes")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("RESULT_NOTES");
+
                     b.Property<DateTime>("ScheduledTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("SCHEDULED_TIME");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("STATUS");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -4928,6 +4981,10 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("EXPIRY_DATE");
 
                     b.Property<decimal?>("HousingAllowance")
                         .HasColumnType("decimal(10, 2)")

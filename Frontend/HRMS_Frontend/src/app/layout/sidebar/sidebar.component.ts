@@ -22,7 +22,16 @@ export class SidebarComponent {
     { label: 'سجل الحضور', icon: 'pi pi-calendar-plus', route: '/attendance' },
     { label: 'الموظفين', icon: 'pi pi-users', route: '/employees' },
     { label: 'الرواتب', icon: 'pi pi-wallet', route: '/payroll' },
-    { label: 'الإجازات', icon: 'pi pi-send', route: '/leaves' },
+    { 
+      label: 'الإجازات', 
+      icon: 'pi pi-send', 
+      expanded: false,
+      children: [
+        { label: 'إجازاتي', icon: 'pi pi-calendar', route: '/leaves/my-leaves' },
+        { label: 'طلبات الفريق', icon: 'pi pi-users', route: '/leaves/team-leaves' },
+        { label: 'سجل الحركات', icon: 'pi pi-history', route: '/leaves/history' }
+      ]
+    },
     { label: 'التقارير', icon: 'pi pi-chart-pie', route: '/reports' },
     { 
       label: 'تهيئة النظام', 

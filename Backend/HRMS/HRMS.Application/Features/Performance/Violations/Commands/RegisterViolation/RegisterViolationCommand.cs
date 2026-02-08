@@ -122,7 +122,7 @@ public class RegisterViolationCommandHandler : IRequestHandler<RegisterViolation
                 ActionId = request.ActionId,
                 ViolationDate = request.ViolationDate,
                 Description = request.Description,
-                Status = "APPROVED", // Assuming direct approval; change to PENDING if workflow needed
+                Status = "PENDING", // ✅ Default status is now PENDING waiting for approval
                 IsExecuted = 0,
                 CreatedBy = _currentUserService.UserId,
                 CreatedAt = DateTime.UtcNow
@@ -131,65 +131,15 @@ public class RegisterViolationCommandHandler : IRequestHandler<RegisterViolation
             _context.EmployeeViolations.Add(violation);
             await _context.SaveChangesAsync(cancellationToken);
 
-            // ✅ 4. معالجة الخصم المالي (ERP Magic)
-            if (request.ActionId.HasValue)
-            {
-                // جلب الإجراء التأديبي
-                var action = await _context.DisciplinaryActions
-                    .FirstOrDefaultAsync(a => a.ActionId == request.ActionId.Value && a.IsDeleted == 0, cancellationToken);
-
-                if (action == null)
-                    return Result<int>.Failure("الإجراء التأديبي المحدد غير موجود");
-
-                // إذا كان هناك أيام خصم
-                if (action.DeductionDays > 0)
-                {
-                    // 🔍 جلب الراتب الأساسي باستخدام IsBasic flag (Critical!)
-                    var basicSalaryStructure = await _context.SalaryStructures
-                        .Include(s => s.SalaryElement)
-                        .FirstOrDefaultAsync(s => s.EmployeeId == request.EmployeeId 
-                                                && s.IsActive == 1 
-                                                && s.SalaryElement.IsBasic == 1, 
-                                                cancellationToken);
-
-                    if (basicSalaryStructure == null || basicSalaryStructure.Amount <= 0)
-                    {
-                        await transaction.RollbackAsync(cancellationToken);
-                        return Result<int>.Failure("لا يمكن حساب الخصم: لا يوجد راتب أساسي مسجل للموظف");
-                    }
-
-                    // 💰 حساب مبلغ الخصم: (BasicSalary / 30) × DeductionDays
-                    decimal deductionAmount = Math.Round((basicSalaryStructure.Amount / 30m) * action.DeductionDays, 2);
-
-                    // 📝 إنشاء سجل Payroll Adjustment تلقائياً
-                    var adjustment = new PayrollAdjustment
-                    {
-                        EmployeeId = request.EmployeeId,
-                        AdjustmentType = "DEDUCTION",
-                        Amount = deductionAmount,
-                        Reason = $"مخالفة إدارية: {violationType.ViolationNameAr} - {action.ActionNameAr}",
-                        ApprovedBy = int.Parse(_currentUserService.UserId ?? "0"),
-                        CreatedBy = _currentUserService.UserId,
-                        CreatedAt = DateTime.UtcNow
-                    };
-
-                    _context.PayrollAdjustments.Add(adjustment);
-
-                    // ✅ تحديث حالة التنفيذ
-                    violation.IsExecuted = 1;
-
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
-            }
+            // ⚠️ Financial Deduction Logic Removed
+            // It has been moved to ApproveViolationCommand to enforce the approval workflow.
 
             // ✅ 5. Commit Transaction
             await transaction.CommitAsync(cancellationToken);
 
             return Result<int>.Success(
                 violation.ViolationId,
-                violation.IsExecuted == 1
-                    ? "تم تسجيل المخالفة وحساب الخصم المالي تلقائياً"
-                    : "تم تسجيل المخالفة بنجاح");
+                "تم تسجيل المخالفة بنجاح، وهي في انتظار الاعتماد (Pending Approval)");
         }
         catch (Exception ex)
         {

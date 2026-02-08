@@ -175,8 +175,16 @@ public class ViolationTypeDto
 {
     public int ViolationTypeId { get; set; }
     public string ViolationNameAr { get; set; } = string.Empty;
-    public string? ViolationNameEn { get; set; }
+    
+    /// <summary>
+    /// وصف المخالفة
+    /// </summary>
     public string? Description { get; set; }
+
+    /// <summary>
+    /// مستوى الخطورة: 1=بسيط، 2=متوسط، 3=جسيم
+    /// </summary>
+    public byte SeverityLevel { get; set; }
 }
 
 /// <summary>
@@ -186,9 +194,8 @@ public class DisciplinaryActionDto
 {
     public int ActionId { get; set; }
     public string ActionNameAr { get; set; } = string.Empty;
-    public string? ActionNameEn { get; set; }
-    public int DeductionDays { get; set; }
-    public string Severity { get; set; } = string.Empty;
+    public decimal DeductionDays { get; set; }
+    public bool IsTermination { get; set; }
 }
 
 /// <summary>
@@ -198,10 +205,11 @@ public class KpiDto
 {
     public int KpiId { get; set; }
     public string KpiNameAr { get; set; } = string.Empty;
-    public string? KpiNameEn { get; set; }
-    public decimal? DefaultWeight { get; set; }
-    public string? MeasurementCriteria { get; set; }
+    public string KpiDescription { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public string MeasurementUnit { get; set; } = string.Empty;
 }
+
 
 /// <summary>
 /// DTO لفترة التقييم

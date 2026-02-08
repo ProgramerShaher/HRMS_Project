@@ -326,6 +326,11 @@ public interface IApplicationDbContext
     DbSet<PayrollRun> PayrollRuns { get; }
 
     /// <summary>
+    /// تفاصيل قسائم الرواتب
+    /// </summary>
+    DbSet<PayslipDetail> PayslipDetails { get; }
+
+    /// <summary>
     /// السلف
     /// </summary>
     DbSet<Loan> Loans { get; }
@@ -341,9 +346,9 @@ public interface IApplicationDbContext
     DbSet<Payslip> Payslips { get; }
 
     /// <summary>
-    /// تفاصيل قسائم الرواتب
+    /// هيكل رواتب الموظفين
     /// </summary>
-    DbSet<PayslipDetail> PayslipDetails { get; }
+    DbSet<EmployeeSalaryStructure> EmployeeSalaryStructures { get; }
 
     /// <summary>
     /// التعديلات على الرواتب (مكافآت/خصومات)
@@ -371,8 +376,7 @@ public interface IApplicationDbContext
 
     #endregion
 
-    #region Methods
-
+ #region Methods
     /// <summary>
     /// حفظ التغييرات في قاعدة البيانات (Async)
     /// </summary>
@@ -389,4 +393,5 @@ public interface IApplicationDbContext
     #endregion
 
     DatabaseFacade Database { get; }
+
 }

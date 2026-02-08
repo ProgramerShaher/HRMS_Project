@@ -1,5 +1,6 @@
 using HRMS.Application.DTOs.Payroll.Processing;
 using HRMS.Application.Features.Payroll.Processing.Commands.ProcessPayrun;
+using HRMS.Application.Features.Payroll.Processing.Commands.Rollback;
 using HRMS.Application.Features.Payroll.Processing.Commands.PostPayrollToGL;
 using HRMS.Application.Features.Payroll.Processing.Queries.CalculateMonthlySalary;
 using HRMS.Application.Features.Payroll.Processing.Queries.ExportBankFile;
@@ -27,6 +28,17 @@ public class PayrollController : ControllerBase
     public async Task<ActionResult<Result<int>>> ProcessMonth([FromQuery] int month, [FromQuery] int year)
     {
         var result = await _mediator.Send(new ProcessPayrunCommand { Month = month, Year = year });
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// التراجع عن مسير رواتب
+    /// Rollback Payroll Run
+    /// </summary>
+    [HttpPost("rollback/{runId}")]
+    public async Task<ActionResult<Result<bool>>> RollbackPayroll(int runId)
+    {
+        var result = await _mediator.Send(new RollbackPayrollCommand { RunId = runId });
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 

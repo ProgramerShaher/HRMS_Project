@@ -1,5 +1,6 @@
 using HRMS.Application.Features.Recruitment.Offers.Commands.AcceptJobOffer;
 using HRMS.Application.Features.Recruitment.Offers.Commands.Create;
+using HRMS.Application.Features.Recruitment.Offers.Commands.Withdraw;
 using HRMS.Application.Features.Recruitment.Offers.Queries.GetAll;
 using HRMS.Application.Features.Recruitment.Vacancies.Commands.Create;
 using HRMS.Application.Features.Recruitment.Vacancies.Commands.Update;
@@ -13,6 +14,18 @@ using HRMS.Application.Features.Recruitment.Applications.Queries.GetAll;
 using HRMS.Application.Features.Recruitment.Interviews.Commands.Schedule;
 using HRMS.Application.Features.Recruitment.Interviews.Commands.RecordResult;
 using HRMS.Application.Features.Recruitment.Interviews.Queries.GetAll;
+using HRMS.Application.Features.Recruitment.Candidates.Queries.GetAll;
+using HRMS.Application.Features.Recruitment.Vacancies.Commands.Delete;
+using HRMS.Application.Features.Recruitment.Applications.Queries.GetById;
+using HRMS.Application.Features.Recruitment.Applications.Commands.Withdraw;
+using HRMS.Application.Features.Recruitment.Interviews.Queries.GetById;
+using HRMS.Application.Features.Recruitment.Interviews.Commands.Reschedule;
+using HRMS.Application.Features.Recruitment.Interviews.Commands.Cancel;
+using HRMS.Application.Features.Recruitment.Offers.Queries.GetById;
+using HRMS.Application.Features.Recruitment.Offers.Commands.Update;
+using HRMS.Application.Features.Recruitment.Config.Queries.GetInterviewTypes;
+using HRMS.Application.Features.Recruitment.Config.Queries.GetJobGrades;
+using HRMS.Application.Features.Recruitment.Config.Queries.GetRejectionReasons;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -48,51 +61,6 @@ public class RecruitmentController : ControllerBase
     // JOB OFFERS - عروض العمل
     // ═══════════════════════════════════════════════════════════
 
-    /// <summary>
-    /// قبول عرض توظيف - تحويل المرشح إلى موظف (Full Hiring Cycle)
-    /// </summary>
-    /// <param name="offerId">معرف العرض</param>
-    /// <param name="command">بيانات الالتحاق</param>
-    /// <returns>معرف الموظف الجديد</returns>
-    /// <remarks>
-    /// **التكامل ERP الكامل**:
-    /// 
-    /// 1️⃣ **تحديث العرض**: Status = "ACCEPTED"
-    /// 
-    /// 2️⃣ **التوظيف التلقائي (Auto-Hire)**:
-    ///    - إنشاء سجل موظف جديد في `HR_PERSONNEL.EMPLOYEES`
-    ///    - نسخ البيانات الشخصية من `CANDIDATES`:
-    ///      - الاسم الكامل (عربي/إنجليزي)
-    ///      - البريد الإلكتروني
-    ///      - رقم الجوال
-    ///      - الجنسية
-    ///    - تعيين البيانات الوظيفية من `VACANCY`:
-    ///      - الوظيفة (JobId)
-    ///      - القسم (DepartmentId)
-    ///      - تاريخ التعيين (HireDate)
-    ///    - توليد رقم وظيفي فريد تلقائياً (نمط: EMP-YYYY-NNNN)
-    /// 
-    /// 3️⃣ **إعداد الهيكل المالي (Financial Setup)**:
-    ///    - إنشاء `EMPLOYEE_SALARY_STRUCTURE` تلقائياً:
-    ///      - **الراتب الأساسي** (Basic Salary من العرض)
-    ///      - **بدل السكن** (Housing Allowance إن وجد)
-    ///      - **بدل النقل** (Transport Allowance إن وجد)
-    ///    - ربط العناصر بـ `SALARY_ELEMENTS` الموجودة في النظام
-    /// 
-    /// 4️⃣ **Transaction**: كل العمليات في معاملة واحدة (Atomicity)
-    /// 
-    /// **مثال JSON**:
-    /// ```json
-    /// {
-    ///   "joiningDate": "2026-03-01",
-    ///   "employeeNumber": "EMP-2026-0001"
-    /// }
-    /// ```
-    /// 
-    /// **النتيجة**:
-    /// - ✅ موظف جديد في النظام
-    /// - ✅ هيكل راتب كامل
-    /// - ✅ جاهز لتشغيل الرواتب في أول payrun
     /// </remarks>
     [HttpPost("offers/{offerId}/accept")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
@@ -141,6 +109,42 @@ public class RecruitmentController : ControllerBase
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
+    /// <summary>
+    /// الحصول على تفاصيل عرض عمل
+    /// </summary>
+    [HttpGet("offers/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetOfferById(int id)
+    {
+        var query = new GetOfferByIdQuery { OfferId = id };
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تحديث عرض عمل
+    /// </summary>
+    [HttpPut("offers/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> UpdateOffer(int id, [FromBody] UpdateOfferCommand command)
+    {
+        command.OfferId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// سحب عرض عمل
+    /// </summary>
+    [HttpPut("offers/{id}/withdraw")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<bool>>> WithdrawOffer(int id, [FromBody] WithdrawOfferCommand command)
+    {
+        command.OfferId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
     // ═══════════════════════════════════════════════════════════
     // CANDIDATES - المرشحين
     // ═══════════════════════════════════════════════════════════
@@ -156,8 +160,9 @@ public class RecruitmentController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCandidates()
     {
-        // TODO: Implement GetCandidatesQuery
-        return Ok(new { Message = "Endpoint requires implementation" });
+        var query = new GetCandidatesQuery();
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
     /// <summary>
@@ -227,6 +232,19 @@ public class RecruitmentController : ControllerBase
     }
 
     /// <summary>
+    /// حذف وظيفة شاغرة
+    /// </summary>
+    [HttpDelete("vacancies/{id}")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> DeleteVacancy(int id)
+    {
+        var command = new DeleteVacancyCommand { VacancyId = id };
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
     /// الحصول على تفاصيل وظيفة شاغرة
     /// </summary>
     [HttpGet("vacancies/{id}")]
@@ -267,6 +285,18 @@ public class RecruitmentController : ControllerBase
     }
 
     /// <summary>
+    /// الحصول على تفاصيل طلب توظيف
+    /// </summary>
+    [HttpGet("applications/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetApplicationById(int id)
+    {
+        var query = new GetApplicationByIdQuery { AppId = id };
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
     /// تغيير حالة طلب توظيف
     /// </summary>
     [HttpPut("applications/{id}/status")]
@@ -274,6 +304,18 @@ public class RecruitmentController : ControllerBase
     public async Task<ActionResult<Result<bool>>> ChangeApplicationStatus(int id, [FromBody] ChangeApplicationStatusCommand command)
     {
         command.AppId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// سحب طلب توظيف
+    /// </summary>
+    [HttpDelete("applications/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> WithdrawApplication(int id)
+    {
+        var command = new WithdrawApplicationCommand { AppId = id };
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
@@ -306,6 +348,18 @@ public class RecruitmentController : ControllerBase
     }
 
     /// <summary>
+    /// الحصول على تفاصيل مقابلة
+    /// </summary>
+    [HttpGet("interviews/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetInterviewById(int id)
+    {
+        var query = new GetInterviewByIdQuery { InterviewId = id };
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
     /// تسجيل نتيجة مقابلة
     /// </summary>
     [HttpPut("interviews/{id}/result")]
@@ -315,5 +369,86 @@ public class RecruitmentController : ControllerBase
         command.InterviewId = id;
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// إعادة جدولة مقابلة
+    /// </summary>
+    [HttpPut("interviews/{id}/reschedule")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<bool>>> RescheduleInterview(int id, [FromBody] RescheduleInterviewCommand command)
+    {
+        command.InterviewId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// إلغاء مقابلة
+    /// </summary>
+    [HttpDelete("interviews/{id}")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<bool>>> CancelInterview(int id, [FromBody] CancelInterviewCommand command)
+    {
+        command.InterviewId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+    // ═══════════════════════════════════════════════════════════
+    // CONFIGURATION & LOOKUPS - الإعدادات والقوائم
+    // ═══════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// الحصول على جميع الدرجات الوظيفية
+    /// </summary>
+    [HttpGet("config/job-grades")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetJobGrades()
+    {
+        var result = await _mediator.Send(new GetJobGradesQuery());
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// الحصول على أنواع المقابلات
+    /// </summary>
+    [HttpGet("config/interview-types")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetInterviewTypes()
+    {
+        var result = await _mediator.Send(new GetInterviewTypesQuery());
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// الحصول على أسباب الرفض
+    /// </summary>
+    [HttpGet("config/rejection-reasons")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRejectionReasons()
+    {
+        var result = await _mediator.Send(new GetRejectionReasonsQuery());
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// إحصائيات التوظيف
+    /// </summary>
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetRecruitmentStats()
+    {
+         // TODO: Implement proper statistics query
+        return Ok(new
+        {
+            data = new
+            {
+                totalVacancies = 0,
+                activeCandidates = 0,
+                pendingOffers = 0,
+                hiredThisMonth = 0
+            },
+            succeeded = true,
+            message = "تمت العملية بنجاح"
+        });
     }
 }

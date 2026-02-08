@@ -2,6 +2,7 @@ using HRMS.Application.DTOs.Leaves;
 using HRMS.Application.Features.Leaves.LeaveBalances.Commands.AdjustBalance;
 using HRMS.Application.Features.Leaves.LeaveBalances.Commands.InitializeBalances;
 using HRMS.Application.Features.Leaves.LeaveBalances.Queries.GetEmployeeBalance;
+using HRMS.Application.Features.Leaves.Reports.Queries.GetLeaveTransactionReport;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -110,6 +111,39 @@ public class LeaveBalanceController : ControllerBase
         if (result.Succeeded)
             return Ok(result);
         
+        return StatusCode(result.StatusCode, result);
+    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // سجل حركات الأرصدة (المراقبة والتقارير)
+    // Balance Transaction History (Monitoring)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Get leave transaction history (Audit Log).
+    /// Used for monitoring and reporting on all balance changes.
+    /// </summary>
+    /// <param name="employeeId">Filter by Employee</param>
+    /// <param name="fromDate">Filter by Start Date</param>
+    /// <param name="toDate">Filter by End Date</param>
+    /// <param name="leaveTypeId">Filter by Leave Type</param>
+    /// <param name="transactionType">Filter by Transaction Type</param>
+    /// <returns>List of transactions</returns>
+    [HttpGet("history")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [AllowAnonymous] // 🔓 للتطوير فقط
+    public async Task<ActionResult<Result<List<LeaveTransactionDto>>>> GetTransactionHistory(
+        [FromQuery] int? employeeId,
+        [FromQuery] DateTime? fromDate,
+        [FromQuery] DateTime? toDate,
+        [FromQuery] int? leaveTypeId,
+        [FromQuery] string? transactionType)
+    {
+        var query = new GetLeaveTransactionsLogQuery(employeeId, fromDate, toDate, leaveTypeId, transactionType);
+        var result = await _mediator.Send(query);
+
+        if (result.Succeeded)
+            return Ok(result);
+
         return StatusCode(result.StatusCode, result);
     }
 }

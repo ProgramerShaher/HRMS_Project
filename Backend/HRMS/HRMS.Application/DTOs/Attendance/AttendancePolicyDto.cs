@@ -39,11 +39,15 @@ public class AttendancePolicyDto
     /// <summary>
     /// Overtime multiplier for weekends/holidays (e.g., 2.0 means 200% of base rate)
     /// </summary>
-    /// <summary>
-    /// Overtime multiplier for weekends/holidays (e.g., 2.0 means 200% of base rate)
-    /// </summary>
     public decimal WeekendOtMultiplier { get; set; }
 
-    public string? DeptNameAr { get; set; }
-    public string? JobTitleAr { get; set; }
+    /// <summary>
+    /// Department name in Arabic (for display purposes)
+    /// </summary>
+    public string? DepartmentName { get; set; }
+
+    /// <summary>
+    /// Job title in Arabic (for display purposes)
+    /// </summary>
+    public string? JobTitle { get; set; }
 }

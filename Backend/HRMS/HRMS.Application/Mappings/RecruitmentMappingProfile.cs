@@ -31,7 +31,19 @@ public class RecruitmentMappingProfile : Profile
             .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => 
                 src.Department !=  null ? src.Department.DeptNameAr : string.Empty))
             .ForMember(dest => dest.PositionsCount, opt => opt.MapFrom(src => src.RequiredCount))
-            .ForMember(dest => dest.PostedDate, opt => opt.MapFrom(src => src.PublishDate ?? DateTime.Now));
+            .ForMember(dest => dest.PostedDate, opt => opt.MapFrom(src => src.PublishDate ?? DateTime.Now))
+            // ✅ نطاق الراتب من الدرجة الوظيفية الافتراضية
+            .ForMember(dest => dest.MinSalary, opt => opt.MapFrom(src => 
+                src.Job != null && src.Job.DefaultGrade != null 
+                    ? src.Job.DefaultGrade.MinSalary 
+                    : (decimal?)null))
+            .ForMember(dest => dest.MaxSalary, opt => opt.MapFrom(src => 
+                src.Job != null && src.Job.DefaultGrade != null 
+                    ? src.Job.DefaultGrade.MaxSalary 
+                    : (decimal?)null))
+            // ✅ وصف الوظيفة من JobDescription
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => 
+                src.JobDescription ?? ""));
 
         // ═══════════════════════════════════════════════════════════
         // APPLICATIONS MAPPINGS

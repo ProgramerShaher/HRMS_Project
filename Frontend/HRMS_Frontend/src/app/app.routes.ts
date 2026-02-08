@@ -16,4 +16,5 @@ export const routes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'setup', canActivate: [authGuard], loadChildren: () => import('./features/setup/setup.routes').then(m => m.SETUP_ROUTES) },
     { path: 'employees', canActivate: [authGuard], loadChildren: () => import('./features/personnel/personnel.routes').then(m => m.PERSONNEL_ROUTES) },
+    { path: 'leaves', canActivate: [authGuard], loadChildren: () => import('./features/leaves/leaves.routes').then(m => m.leavesRoutes) },
 ];

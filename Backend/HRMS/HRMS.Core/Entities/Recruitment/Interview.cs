@@ -37,12 +37,18 @@ namespace HRMS.Core.Entities.Recruitment
         [Column("RATING")]
         public byte? Rating { get; set; }
 
-        [Column("FEEDBACK")]
-        public string? Feedback { get; set; }
+        // Renamed Feedback to ResultNotes to match command usage and better intent
+        [Column("RESULT_NOTES")] // Was FEEDBACK
+        public string? ResultNotes { get; set; }
 
         [MaxLength(20)]
         [Column("RESULT")]
-        public string? Result { get; set; }
+        public string? Result { get; set; } // PASSED, FAILED, NO_SHOW
+
+        // Added Status property
+        [MaxLength(20)]
+        [Column("STATUS")]
+        public string? Status { get; set; } = "SCHEDULED"; // SCHEDULED, COMPLETED, CANCELLED
 
         // Navigation Properties
         public virtual JobApplication Application { get; set; } = null!;

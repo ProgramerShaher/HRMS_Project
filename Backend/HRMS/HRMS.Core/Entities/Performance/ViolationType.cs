@@ -25,6 +25,10 @@ namespace HRMS.Core.Entities.Performance
         [Column("SEVERITY_LEVEL")]
         public byte SeverityLevel { get; set; } = 1; // 1=بسيط، 2=متوسط، 3=جسيم
 
+        [MaxLength(500)]
+        [Column("DESCRIPTION")]
+        public string? Description { get; set; }
+
         // Navigation Properties
         public virtual ICollection<EmployeeViolation> Violations { get; set; } = new List<EmployeeViolation>();
     }

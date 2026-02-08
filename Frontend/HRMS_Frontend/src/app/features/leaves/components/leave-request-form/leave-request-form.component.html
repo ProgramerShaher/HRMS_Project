@@ -1,0 +1,99 @@
+<div class="bg-white rounded-lg shadow-sm p-4 max-w-2xl mx-auto">
+  <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+    <i class="pi pi-calendar text-blue-500"></i>
+    طلب إجازة جديدة
+  </h2>
+
+  <form [formGroup]="leaveForm" (ngSubmit)="submit()" class="space-y-3">
+    
+    <!-- Leave Type & Balance -->
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">نوع الإجازة *</label>
+        <p-select 
+          formControlName="leaveTypeId"
+          [options]="leaveTypes()"
+          optionLabel="leaveNameAr"
+          optionValue="leaveTypeId"
+          placeholder="اختر نوع الإجازة"
+          styleClass="w-full"
+          [class.border-red-500]="leaveForm.get('leaveTypeId')?.invalid && leaveForm.get('leaveTypeId')?.touched">
+        </p-select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">الرصيد المتاح</label>
+        <div class="flex items-center h-[42px] px-3 bg-blue-50 border border-blue-200 rounded-md">
+          <span class="text-2xl font-bold text-blue-600">{{ selectedBalance() ?? '-' }}</span>
+          <span class="text-xs text-gray-500 mr-2">يوم</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date Range -->
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">من تاريخ *</label>
+        <p-datepicker 
+          formControlName="startDate"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          placeholder="اختر التاريخ"
+          styleClass="w-full"
+          [class.border-red-500]="leaveForm.get('startDate')?.invalid && leaveForm.get('startDate')?.touched">
+        </p-datepicker>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">إلى تاريخ *</label>
+        <p-datepicker 
+          formControlName="endDate"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          placeholder="اختر التاريخ"
+          styleClass="w-full"
+          [class.border-red-500]="leaveForm.get('endDate')?.invalid && leaveForm.get('endDate')?.touched">
+        </p-datepicker>
+      </div>
+    </div>
+
+    <!-- Calculated Days -->
+    <div class="bg-gray-50 border border-gray-200 rounded-md p-2 flex items-center justify-between">
+      <span class="text-sm text-gray-600">عدد الأيام (محسوب تلقائياً):</span>
+      <span class="text-lg font-bold text-gray-800">{{ calculatedDays() }}</span>
+    </div>
+
+    <!-- Reason -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">السبب *</label>
+      <p-textarea 
+        formControlName="reason"
+        rows="3"
+        placeholder="اكتب سبب طلب الإجازة..."
+        class="w-full text-sm"
+        [class.border-red-500]="leaveForm.get('reason')?.invalid && leaveForm.get('reason')?.touched">
+      </p-textarea>
+      <small class="text-xs text-gray-500">الحد الأدنى 10 أحرف</small>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-2 justify-end pt-2">
+      <p-button 
+        label="إلغاء" 
+        severity="secondary" 
+        [outlined]="true"
+        size="small"
+        type="button"
+        (onClick)="leaveForm.reset()">
+      </p-button>
+      <p-button 
+        label="تقديم الطلب" 
+        icon="pi pi-check"
+        size="small"
+        type="submit"
+        [loading]="loading()"
+        [disabled]="leaveForm.invalid">
+      </p-button>
+    </div>
+  </form>
+</div>

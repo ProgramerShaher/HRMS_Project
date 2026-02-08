@@ -1,6 +1,7 @@
 using FluentValidation;
 using HRMS.Application.Interfaces;
 using HRMS.Core.Utilities;
+using HRMS.Core.Entities.Leaves; // ADDED
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -105,11 +106,13 @@ public class CancelLeaveRequestCommandHandler : IRequestHandler<CancelLeaveReque
             // Step 4: Reverse Balance Transaction
             // ═══════════════════════════════════════════════════════════════════════════
             
+            EmployeeLeaveBalance? balance = null;
+
             if (leaveRequest.IsPostedToBalance == 1)
             {
                 // البحث عن الرصيد المرتبط
                 var year = (short)leaveRequest.StartDate.Year;
-                var balance = await _context.EmployeeLeaveBalances
+                balance = await _context.EmployeeLeaveBalances
                     .FirstOrDefaultAsync(b => 
                         b.EmployeeId == leaveRequest.EmployeeId 
                         && b.LeaveTypeId == leaveRequest.LeaveTypeId 
@@ -135,6 +138,22 @@ public class CancelLeaveRequestCommandHandler : IRequestHandler<CancelLeaveReque
             leaveRequest.Status = "CANCELLED";
             leaveRequest.IsPostedToBalance = 0; // لم يعد مخصوماً
             leaveRequest.RejectionReason = "Cancelled by user"; // أو أي سبب مناسب
+
+            // تسجيل حركة عكسية في سجل المعاملات (Audit Trail)
+            if (balance != null) // If we reversed balance (simplified check since we only care if balance was modified/loaded)
+            {
+                 var reversalTransaction = new LeaveTransaction
+                 {
+                     EmployeeId = leaveRequest.EmployeeId,
+                     LeaveTypeId = leaveRequest.LeaveTypeId,
+                     TransactionType = "CANCELLATION",
+                     Days = leaveRequest.DaysCount, // Adding days back
+                     TransactionDate = DateTime.Now,
+                     Notes = $"Reversal of Request #{leaveRequest.RequestId}",
+                     ReferenceId = leaveRequest.RequestId
+                 };
+                 _context.LeaveTransactions.Add(reversalTransaction);
+            }
 
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
