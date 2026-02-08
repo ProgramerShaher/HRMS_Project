@@ -1,5 +1,6 @@
 using FluentValidation;
 using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Leaves;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

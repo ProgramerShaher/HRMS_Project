@@ -1,8 +1,10 @@
 using HRMS.Application.DTOs.Core;
 using HRMS.Application.DTOs.Leaves;
 using HRMS.Application.Features.Leaves.LeaveTypes.Commands.CreateLeaveType;
+using HRMS.Application.Features.Leaves.LeaveTypes.Commands.DeleteLeaveType; // New
 using HRMS.Application.Features.Leaves.LeaveTypes.Commands.UpdateLeaveType;
 using HRMS.Application.Features.Leaves.LeaveTypes.Queries.GetAllLeaveTypes;
+using HRMS.Application.Features.Leaves.LeaveTypes.Queries.GetLeaveTypeById; // New
 using HRMS.Application.Features.Leaves.PublicHolidays.Commands.CreatePublicHoliday; // New
 using HRMS.Application.Features.Leaves.PublicHolidays.Commands.DeletePublicHoliday;
 using HRMS.Core.Utilities;
@@ -67,6 +69,27 @@ public class LeaveConfigurationController : ControllerBase
             return BadRequest(Result<bool>.Failure("ID mismatch"));
 
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    // جلب نوع إجازة بواسطة المعرف
+    [HttpGet("leave-types/{id}")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [AllowAnonymous] // 🔓 للتطوير فقط
+    public async Task<ActionResult<Result<LeaveTypeDto>>> GetLeaveTypeById(int id)
+    {
+        var result = await _mediator.Send(new GetLeaveTypeByIdQuery(id));
+        return Ok(result);
+    }
+
+
+    // حذف نوع إجازة (حذف ناعم)
+    [HttpDelete("leave-types/{id}")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [AllowAnonymous] // 🔓 للتطوير فقط
+    public async Task<ActionResult<Result<bool>>> DeleteLeaveType(int id)
+    {
+        var result = await _mediator.Send(new DeleteLeaveTypeCommand());
         return Ok(result);
     }
 

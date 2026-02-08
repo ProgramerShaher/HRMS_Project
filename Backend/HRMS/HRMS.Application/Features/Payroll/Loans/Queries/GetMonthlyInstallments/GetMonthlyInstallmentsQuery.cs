@@ -42,7 +42,7 @@ public class GetMonthlyInstallmentsQueryHandler : IRequestHandler<GetMonthlyInst
 
         var dtos = installments.Select(i => new LoanInstallmentDto
         {
-            InstallmentId = i.InstallmentId,
+            InstallmentId = (int)i.InstallmentId,
             LoanId = i.LoanId,
             EmployeeId = i.Loan.EmployeeId,
             EmployeeName = i.Loan.Employee.FullNameAr,

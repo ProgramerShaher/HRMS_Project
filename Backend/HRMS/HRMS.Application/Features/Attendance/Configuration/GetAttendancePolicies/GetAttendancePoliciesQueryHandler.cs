@@ -32,6 +32,8 @@ public class GetAttendancePoliciesQueryHandler : IRequestHandler<GetAttendancePo
         
         var policies = await _context.AttendancePolicies
             .AsNoTracking()
+            .Include(p => p.Department)  // جلب بيانات القسم
+            .Include(p => p.Job)          // جلب بيانات الوظيفة
             .Where(p => p.IsDeleted == 0)
             .OrderBy(p => p.PolicyId)
             .Select(p => new AttendancePolicyDto
@@ -42,7 +44,9 @@ public class GetAttendancePoliciesQueryHandler : IRequestHandler<GetAttendancePo
                 JobId = p.JobId,
                 LateGraceMins = p.LateGraceMins,
                 OvertimeMultiplier = p.OvertimeMultiplier,
-                WeekendOtMultiplier = p.WeekendOtMultiplier
+                WeekendOtMultiplier = p.WeekendOtMultiplier,
+                DepartmentName = p.Department != null ? p.Department.DeptNameAr : null,
+                JobTitle = p.Job != null ? p.Job.JobTitleAr : null
             })
             .ToListAsync(cancellationToken);
 

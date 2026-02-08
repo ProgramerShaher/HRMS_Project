@@ -18,19 +18,14 @@ public class CreateViolationTypeCommand : IRequest<Result<int>>
     public string ViolationNameAr { get; set; } = string.Empty;
 
     /// <summary>
-    /// اسم المخالفة بالإنجليزية (اختياري)
-    /// </summary>
-    public string? ViolationNameEn { get; set; }
-
-    /// <summary>
     /// وصف المخالفة
     /// </summary>
     public string? Description { get; set; }
 
     /// <summary>
-    /// مستوى الخطورة (LOW, MEDIUM, HIGH, CRITICAL)
+    /// مستوى الخطورة: 1=بسيط، 2=متوسط، 3=جسيم
     /// </summary>
-    public string Severity { get; set; } = "MEDIUM";
+    public byte SeverityLevel { get; set; } = 1;
 }
 
 /// <summary>
@@ -62,6 +57,8 @@ public class CreateViolationTypeCommandHandler : IRequestHandler<CreateViolation
         var violationType = new ViolationType
         {
             ViolationNameAr = request.ViolationNameAr,
+            Description = request.Description,
+            SeverityLevel = request.SeverityLevel,
             CreatedBy = _currentUserService.UserId,
             CreatedAt = DateTime.UtcNow
         };
@@ -84,14 +81,9 @@ public class CreateViolationTypeCommandValidator : AbstractValidator<CreateViola
             .NotEmpty().WithMessage("اسم المخالفة بالعربية مطلوب")
             .MaximumLength(200).WithMessage("اسم المخالفة لا يمكن أن يتجاوز 200 حرف");
 
-        RuleFor(x => x.ViolationNameEn)
-            .MaximumLength(200).WithMessage("الاسم الإنجليزي لا يمكن أن يتجاوز 200 حرف")
-            .When(x => !string.IsNullOrEmpty(x.ViolationNameEn));
-
-        RuleFor(x => x.Severity)
-            .NotEmpty().WithMessage("مستوى الخطورة مطلوب")
-            .Must(s => new[] { "LOW", "MEDIUM", "HIGH", "CRITICAL" }.Contains(s))
-            .WithMessage("مستوى الخطورة يجب أن يكون أحد القيم: LOW, MEDIUM, HIGH, CRITICAL");
+        RuleFor(x => x.SeverityLevel)
+            .InclusiveBetween((byte)1, (byte)3)
+            .WithMessage("مستوى الخطورة يجب أن يكون 1 (بسيط)، 2 (متوسط)، أو 3 (جسيم)");
 
         RuleFor(x => x.Description)
             .MaximumLength(500).WithMessage("الوصف لا يمكن أن يتجاوز 500 حرف")

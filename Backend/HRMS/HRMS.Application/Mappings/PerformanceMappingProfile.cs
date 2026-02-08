@@ -45,18 +45,29 @@ public class PerformanceMappingProfile : Profile
             .ForMember(dest => dest.Weight, opt => opt.Ignore()); // لا يوجد Weight في KPI entity
 
         // ═══════════════════════════════════════════════════════════
-        // MASTER DATA MAPPINGS
+        // MASTER DATA MAPPINGS - WITH DEFAULT VALUES (NO NULLS)
         // ═══════════════════════════════════════════════════════════
         
-        CreateMap<ViolationType, ViolationTypeDto>();
-        CreateMap<DisciplinaryAction, DisciplinaryActionDto>();
+        // ViolationType Mapping
+        CreateMap<ViolationType, ViolationTypeDto>()
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.SeverityLevel, opt => opt.MapFrom(src => src.SeverityLevel));
+        
+        // DisciplinaryAction Mapping
+        CreateMap<DisciplinaryAction, DisciplinaryActionDto>()
+            .ForMember(dest => dest.DeductionDays, opt => opt.MapFrom(src => src.DeductionDays))
+            .ForMember(dest => dest.IsTermination, opt => opt.MapFrom(src => src.IsTermination == 1));
+        
+        // KPI Mapping - Direct mapping since DTO matches Entity
         CreateMap<KpiLibrary, KpiDto>()
-            .ForMember(dest => dest.KpiId, opt => opt.MapFrom(src => src.KpiId))
-            .ForMember(dest => dest.KpiNameAr, opt => opt.MapFrom(src => src.KpiNameAr))
-            .ForMember(dest => dest.KpiNameEn, opt => opt.Ignore()) // لا يوجد في Entity
-            .ForMember(dest => dest.DefaultWeight, opt => opt.Ignore()) // لا يوجد في Entity
-            .ForMember(dest => dest.MeasurementCriteria, opt => opt.MapFrom(src => src.KpiDescription));
+            .ForMember(dest => dest.KpiDescription, opt => opt.MapFrom(src => src.KpiDescription ?? ""))
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category ?? ""))
+            .ForMember(dest => dest.MeasurementUnit, opt => opt.MapFrom(src => src.MeasurementUnit ?? ""));
 
-        CreateMap<AppraisalCycle, AppraisalCycleDto>();
+        // AppraisalCycle Mapping
+        CreateMap<AppraisalCycle, AppraisalCycleDto>()
+            .ForMember(dest => dest.CycleName, opt => opt.MapFrom(src => src.CycleNameAr))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 
+                src.IsActive == 1 ? "ACTIVE" : "INACTIVE")); // تحويل IsActive إلى Status
     }
 }

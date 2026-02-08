@@ -40,4 +40,16 @@ public class AttendancePolicyDto
     /// Overtime multiplier for weekends/holidays (e.g., 2.0 means 200% of base rate)
     /// </summary>
     public decimal WeekendOtMultiplier { get; set; }
+
+    /// <summary>
+    /// اسم القسم المطبق عليه السياسة
+    /// Department name this policy applies to
+    /// </summary>
+    public string? DepartmentName { get; set; }
+
+    /// <summary>
+    /// اسم الوظيفة المطبق عليها السياسة
+    /// Job title this policy applies to
+    /// </summary>
+    public string? JobTitle { get; set; }
 }

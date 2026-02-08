@@ -22,11 +22,6 @@ public class UpdateViolationTypeCommand : IRequest<Result<bool>>
     public string ViolationNameAr { get; set; } = string.Empty;
 
     /// <summary>
-    /// اسم المخالفة بالإنجليزية
-    /// </summary>
-    public string? ViolationNameEn { get; set; }
-
-    /// <summary>
     /// الوصف
     /// </summary>
     public string? Description { get; set; }
@@ -34,7 +29,7 @@ public class UpdateViolationTypeCommand : IRequest<Result<bool>>
     /// <summary>
     /// مستوى الخطورة
     /// </summary>
-    public string Severity { get; set; } = "MEDIUM";
+    public byte SeverityLevel { get; set; } = 1;
 }
 
 /// <summary>
@@ -72,6 +67,8 @@ public class UpdateViolationTypeCommandHandler : IRequestHandler<UpdateViolation
 
         // تحديث البيانات
         violationType.ViolationNameAr = request.ViolationNameAr;
+        violationType.Description = request.Description;
+        violationType.SeverityLevel = request.SeverityLevel;
         violationType.UpdatedBy = _currentUserService.UserId;
         violationType.UpdatedAt = DateTime.UtcNow;
 
@@ -95,13 +92,12 @@ public class UpdateViolationTypeCommandValidator : AbstractValidator<UpdateViola
             .NotEmpty().WithMessage("اسم المخالفة بالعربية مطلوب")
             .MaximumLength(200).WithMessage("اسم المخالفة لا يمكن أن يتجاوز 200 حرف");
 
-        RuleFor(x => x.ViolationNameEn)
-            .MaximumLength(200).WithMessage("الاسم الإنجليزي لا يمكن أن يتجاوز 200 حرف")
-            .When(x => !string.IsNullOrEmpty(x.ViolationNameEn));
+        RuleFor(x => x.SeverityLevel)
+            .InclusiveBetween((byte)1, (byte)3)
+            .WithMessage("مستوى الخطورة يجب أن يكون 1 (بسيط)، 2 (متوسط)، أو 3 (جسيم)");
 
-        RuleFor(x => x.Severity)
-            .NotEmpty().WithMessage("مستوى الخطورة مطلوب")
-            .Must(s => new[] { "LOW", "MEDIUM", "HIGH", "CRITICAL" }.Contains(s))
-            .WithMessage("مستوى الخطورة يجب أن يكون: LOW, MEDIUM, HIGH, CRITICAL");
+        RuleFor(x => x.Description)
+            .MaximumLength(500).WithMessage("الوصف لا يمكن أن يتجاوز 500 حرف")
+            .When(x => !string.IsNullOrEmpty(x.Description));
     }
 }

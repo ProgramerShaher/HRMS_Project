@@ -34,6 +34,10 @@ namespace HRMS.Core.Entities.Performance
         [Column("MEASUREMENT_UNIT")]
         public string? MeasurementUnit { get; set; }
 
+        // Added Weight property to support weighted scoring logic
+        [Column("WEIGHT", TypeName = "decimal(5, 2)")]
+        public decimal Weight { get; set; } = 1.0m;
+
         // Navigation Properties
         public virtual ICollection<AppraisalDetail> AppraisalDetails { get; set; } = new List<AppraisalDetail>();
     }

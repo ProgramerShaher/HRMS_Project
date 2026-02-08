@@ -134,6 +134,10 @@ public static class ServiceExtensions
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<PayrollAccountingService>();
+        
+        // Payroll & Loan Services
+        services.AddScoped<HRMS.Application.Features.Payroll.Loans.Services.GenerateInstallmentsService>();
+        
         // يمكن إضافة المزيد من الخدمات هنا
 
         return services;

@@ -41,7 +41,7 @@
             <div class="flex flex-col">
                 <a [routerLink]="item.children ? null : item.route"
                    (click)="toggleSubmenu(item)"
-                   routerLinkActive="bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 dark:border-blue-500"
+                   [routerLinkActive]="item.children ? '' : 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 dark:border-blue-500'"
                    [routerLinkActiveOptions]="{exact: false}" 
                    class="group flex items-center px-3 py-3 rounded-l-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer overflow-hidden border-r-4 border-transparent"
                    [class.justify-start]="!layoutService.isSidebarCollapsed()"

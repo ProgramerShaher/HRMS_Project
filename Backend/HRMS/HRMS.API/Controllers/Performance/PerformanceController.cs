@@ -1,5 +1,14 @@
 using HRMS.Application.Features.Performance.Violations.Commands.RegisterViolation;
+using HRMS.Application.Features.Performance.Violations.Commands.ApproveViolation;
+using HRMS.Application.Features.Performance.Violations.Commands.UpdateViolation;
+using HRMS.Application.Features.Performance.Violations.Commands.DeleteViolation;
+using HRMS.Application.Features.Performance.Violations.Queries.GetById;
+using HRMS.Application.Features.Performance.Violations.Queries.GetEmployeeViolations;
 using HRMS.Application.Features.Performance.Appraisals.Commands.SubmitAppraisal;
+using HRMS.Application.Features.Performance.Appraisals.Commands.UpdateAppraisal;
+using HRMS.Application.Features.Performance.Appraisals.Commands.DeleteAppraisal;
+using HRMS.Application.Features.Performance.Appraisals.Queries.GetAll;
+using HRMS.Application.Features.Performance.Appraisals.Queries.GetById;
 using HRMS.Application.Features.Performance.ViolationTypes.Commands.Create;
 using HRMS.Application.Features.Performance.ViolationTypes.Commands.Update;
 using HRMS.Application.Features.Performance.ViolationTypes.Commands.Delete;
@@ -47,13 +56,74 @@ public class PerformanceController : ControllerBase
     // ═══════════════════════════════════════════════════════════
 
     /// <summary>
-    /// تسجيل مخالفة إدارية مع حساب الخصم المالي تلقائياً
+    /// تسجيل مخالفة إدارية (Pending Approval)
     /// </summary>
     [HttpPost("violations")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<int>>> RegisterViolation([FromBody] RegisterViolationCommand command)
     {
         var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// اعتماد مخالفة وتنفيذ الخصم المالي
+    /// </summary>
+    [HttpPut("violations/{id}/approve")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> ApproveViolation(int id)
+    {
+        var command = new ApproveViolationCommand { ViolationId = id };
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تحديث بيانات مخالفة (قبل الاعتماد)
+    /// </summary>
+    [HttpPut("violations/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> UpdateViolation(int id, [FromBody] UpdateViolationCommand command)
+    {
+        command.ViolationId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// حذف مخالفة (قبل الاعتماد)
+    /// </summary>
+    [HttpDelete("violations/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> DeleteViolation(int id)
+    {
+        var command = new DeleteViolationCommand(id);
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تفاصيل مخالفة محددة
+    /// </summary>
+    [HttpGet("violations/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetViolationById(int id)
+    {
+        var query = new GetViolationByIdQuery(id);
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// عرض مخالفات موظف معين
+    /// </summary>
+    [HttpGet("violations/employee/{employeeId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetEmployeeViolations(int employeeId)
+    {
+        var query = new GetEmployeeViolationsQuery { EmployeeId = employeeId };
+        var result = await _mediator.Send(query);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
@@ -69,6 +139,54 @@ public class PerformanceController : ControllerBase
     public async Task<ActionResult<Result<int>>> SubmitAppraisal([FromBody] SubmitAppraisalCommand command)
     {
         var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تحديث تقييم أداء (قبل الاعتماد النهائي)
+    /// </summary>
+    [HttpPut("appraisals/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> UpdateAppraisal(int id, [FromBody] UpdateAppraisalCommand command)
+    {
+        command.AppraisalId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// حذف تقييم أداء
+    /// </summary>
+    [HttpDelete("appraisals/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> DeleteAppraisal(int id)
+    {
+        var command = new DeleteAppraisalCommand(id);
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// عرض تقييمات الأداء (مع فلترة)
+    /// </summary>
+    [HttpGet("appraisals")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAppraisals([FromQuery] int? employeeId, [FromQuery] int? cycleId)
+    {
+        var query = new GetAppraisalsQuery { EmployeeId = employeeId, CycleId = cycleId };
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تفاصيل تقييم محدد
+    /// </summary>
+    [HttpGet("appraisals/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAppraisalById(int id)
+    {
+        var query = new GetAppraisalByIdQuery(id);
+        var result = await _mediator.Send(query);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 

@@ -235,6 +235,7 @@ namespace HRMS.Infrastructure.Data
     // Payroll
     public DbSet<SalaryElement> SalaryElements { get; set; }
     public DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
+    public DbSet<EmployeeSalaryStructure> EmployeeSalaryStructures => SalaryStructures; // Alias for IApplicationDbContext
     public DbSet<PayrollRun> PayrollRuns { get; set; }
     public DbSet<Payslip> Payslips { get; set; }
         public DbSet<PayslipDetail> PayslipDetails { get; set; }
