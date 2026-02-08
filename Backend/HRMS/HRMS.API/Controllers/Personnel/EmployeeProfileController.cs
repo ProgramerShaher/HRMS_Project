@@ -24,6 +24,7 @@ using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using HRMS.Application.Features.Personnel.Employees.DTOs;
+using HRMS.Application.Features.Personnel.Employees.Commands.UploadProfilePicture;
 
 namespace HRMS.API.Controllers.Personnel;
 
@@ -57,6 +58,27 @@ public class EmployeeProfileController : ControllerBase
         // Note: Query returns DTO directly, assume we wrap it or strict API requires Result<T>. 
         // If Query returns DTO, we wrap it here.
         return Ok(Result<DetailedEmployeeProfileDto>.Success(result));
+    }
+
+    // ----------------------------------------------------------------------------------
+    // Profile Picture
+    // ----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// رفع صورة الملف الشخصي
+    /// Upload Profile Picture
+    /// </summary>
+    [HttpPut("photo")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<Result<string>>> UploadProfilePicture(int employeeId, IFormFile file)
+    {
+         var command = new UploadProfilePictureCommand 
+        { 
+            EmployeeId = employeeId, 
+            ProfilePicture = file 
+        };
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     // ----------------------------------------------------------------------------------

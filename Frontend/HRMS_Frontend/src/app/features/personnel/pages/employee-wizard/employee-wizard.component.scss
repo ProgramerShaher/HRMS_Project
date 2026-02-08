@@ -5,8 +5,27 @@
 // Customize PrimeNG Stepper if needed
 ::ng-deep .p-stepper .p-stepper-header {
     @apply font-bold text-lg;
-    
+
     &.p-highlight {
         @apply text-blue-600;
+
+        // Custom Scrollbar for compact containers
+        .custom-scrollbar {
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                @apply bg-slate-300 dark:bg-zinc-700 rounded-full;
+
+                &:hover {
+                    @apply bg-slate-400 dark:bg-zinc-600;
+                }
+            }
+        }
     }
 }

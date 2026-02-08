@@ -1,0 +1,103 @@
+<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
+    <!-- Header -->
+    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
+        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
+            <i class="pi pi-verified text-yellow-500 text-sm"></i>
+            الشهادات المهنية
+        </h3>
+        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showDialog()"></button>
+    </div>
+
+    <!-- Table -->
+    <p-table [value]="certifications()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
+        <ng-template pTemplate="header">
+            <tr class="text-xs text-slate-500 bg-slate-50/50">
+                <th class="!p-2 font-medium">اسم الشهادة</th>
+                <th class="!p-2 font-medium">الجهة المصدرة</th>
+                <th class="!p-2 font-medium">تاريخ الإصدار</th>
+                <th class="!p-2 font-medium">تاريخ الانتهاء</th>
+                <th class="!p-2 w-16 text-center"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cert>
+            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                <td class="!p-2 font-bold text-slate-700">{{ cert.certificationName }}</td>
+                <td class="!p-2">
+                    <span class="px-1.5 py-0.5 rounded bg-yellow-50 text-yellow-600 text-[10px] font-bold border border-yellow-100">{{ cert.issuingOrganization }}</span>
+                </td>
+                <td class="!p-2 text-[10px] text-slate-500 font-mono">{{ cert.issueDate | date:'dd/MM/yyyy' }}</td>
+                <td class="!p-2 text-[10px] text-slate-500 font-mono">
+                    <span *ngIf="cert.expiryDate" [ngClass]="{'text-red-500 font-bold': isExpired(cert.expiryDate)}">
+                        {{ cert.expiryDate | date:'dd/MM/yyyy' }}
+                    </span>
+                    <span *ngIf="!cert.expiryDate" class="text-slate-400">-</span>
+                </td>
+                <td class="!p-2 text-center">
+                    <div class="flex justify-center gap-1">
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-xs opacity-50 hover:opacity-100" (click)="delete(cert.certificationId)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-4 text-slate-400 text-xs">
+                    لا توجد شهادات
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Dialog -->
+<p-dialog [(visible)]="displayDialog" [header]="'إضافة شهادة مهنية'" [modal]="true" [style]="{width: '500px'}" styleClass="p-fluid">
+    <form [formGroup]="certForm" class="flex flex-col gap-4 mt-2">
+        
+        <div class="field">
+            <label class="block text-sm font-medium mb-1">اسم الشهادة <span class="text-red-500">*</span></label>
+            <input pInputText formControlName="certificationName" placeholder="مثال: PMP, CPA" />
+            <small class="text-red-500" *ngIf="submitted && certForm.get('certificationName')?.invalid">مطلوب</small>
+        </div>
+
+        <div class="field">
+            <label class="block text-sm font-medium mb-1">الجهة المصدرة <span class="text-red-500">*</span></label>
+            <input pInputText formControlName="issuingOrganization" />
+            <small class="text-red-500" *ngIf="submitted && certForm.get('issuingOrganization')?.invalid">مطلوب</small>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1">تاريخ الإصدار <span class="text-red-500">*</span></label>
+                <p-datePicker formControlName="issueDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1">تاريخ الانتهاء</label>
+                <p-datePicker formControlName="expiryDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="block text-sm font-medium mb-1">رقم الشهادة / المرجع</label>
+            <input pInputText formControlName="certNumber" />
+        </div>
+
+        <div class="field-checkbox flex items-center gap-2">
+            <p-checkbox formControlName="isMandatory" [binary]="true" inputId="mandatory"></p-checkbox>
+            <label for="mandatory" class="mb-0">هذه الشهادة الزامية للوظيفة</label>
+        </div>
+
+        <div class="field">
+            <label class="block text-sm font-medium mb-1">صورة الشهادة</label>
+            <p-fileUpload mode="basic" chooseLabel="اختر ملف" accept="image/*,application/pdf" maxFileSize="2000000" (onSelect)="onFileSelect($event)" styleClass="w-full"></p-fileUpload>
+            <small class="text-slate-500 block mt-1" *ngIf="selectedFile">{{ selectedFile.name }}</small>
+        </div>
+
+    </form>
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+        <button pButton label="حفظ" icon="pi pi-check" (click)="save()" [loading]="loading()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}" [rtl]="true"></p-confirmDialog>
+<p-toast position="bottom-left"></p-toast>

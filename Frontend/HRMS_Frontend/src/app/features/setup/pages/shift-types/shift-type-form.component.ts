@@ -54,16 +54,49 @@ export class ShiftTypeFormComponent implements OnInit {
       shiftNameAr: ['', [Validators.required]],
       startTime: ['', [Validators.required]], // Mask 99:99
       endTime: ['', [Validators.required]],   // Mask 99:99
-      hoursCount: [8, [Validators.required, Validators.min(0)]],
+      hoursCount: [{value: 8, disabled: true}, [Validators.required, Validators.min(0)]],
       isCrossDay: [false]
     });
+
+    // Subscribe to changes
+    this.form.valueChanges.subscribe(val => {
+       this.calculateHours(val.startTime, val.endTime, val.isCrossDay);
+    });
+  }
+
+  calculateHours(start: string, end: string, isCrossDay: boolean) {
+     if (!start || !end || start.includes('_') || end.includes('_')) return;
+
+     const [startH, startM] = start.split(':').map(Number);
+     const [endH, endM] = end.split(':').map(Number);
+
+     let startDate = new Date();
+     startDate.setHours(startH, startM, 0, 0);
+
+     let endDate = new Date();
+     endDate.setHours(endH, endM, 0, 0);
+
+     if (isCrossDay) {
+        endDate.setDate(endDate.getDate() + 1);
+     } else if (endDate < startDate) {
+        // Handle explicit cross day logic if needed
+     }
+
+     const diffMs = endDate.getTime() - startDate.getTime();
+     const diffHours = diffMs / (1000 * 60 * 60);
+
+     if (diffHours > 0) {
+        // Use getRawValue or just enable before submit, but here we just need to patch.
+        // Since it's disabled, patchValue works but might not update validity if we needed it.
+        this.form.get('hoursCount')?.setValue(Number(diffHours.toFixed(2))); 
+     }
   }
 
   onSubmit() {
     if (this.form.invalid) return;
 
     this.loading = true;
-    const formValue = this.form.value;
+    const formValue = this.form.getRawValue(); // Use getRawValue to include disabled fields
 
     const apiData = {
       ...formValue,

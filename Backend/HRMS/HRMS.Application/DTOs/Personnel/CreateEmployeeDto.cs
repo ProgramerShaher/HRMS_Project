@@ -25,6 +25,7 @@ public class CreateEmployeeDto
     // --- Employment Information ---
     public int DepartmentId { get; set; }
     public int JobId { get; set; }
+    public int? JobGradeId { get; set; }
     public DateTime HireDate { get; set; }
     public int? ManagerId { get; set; }
 

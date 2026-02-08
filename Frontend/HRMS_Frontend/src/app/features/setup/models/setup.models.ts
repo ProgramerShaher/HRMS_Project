@@ -75,6 +75,8 @@ export interface JobGrade {
     jobGradeId: number;
     gradeNameAr: string;
     gradeNameEn: string;
+    gradeCode: string; // Added field
+    gradeLevel: number; // Added field
     minSalary?: number;
     maxSalary?: number;
     isActive: boolean;
@@ -83,6 +85,8 @@ export interface JobGrade {
 export interface CreateJobGradeCommand {
     gradeNameAr: string;
     gradeNameEn: string;
+    gradeCode: string; // Added field
+    gradeLevel: number; // Added field
     minSalary?: number;
     maxSalary?: number;
 }
@@ -97,6 +101,18 @@ export interface PaginatedResult<T> {
     hasPreviousPage: boolean;
     hasNextPage: boolean;
 }
+
+// Jobs DTOs
+export interface Job {
+    jobId: number;
+    jobTitleAr: string;
+    jobTitleEn?: string | null;
+    jobCode?: string | null;
+    description?: string | null;
+    jobGradeId?: number | null;
+    gradeNameAr?: string | null;
+}
+
 // Document Types DTOs
 export interface DocumentType {
     documentTypeId: number;
@@ -148,6 +164,8 @@ export interface AttendancePolicy {
     lateGraceMins: number;
     overtimeMultiplier: number;
     weekendOtMultiplier: number;
+    departmentName?: string;
+    jobTitle?: string;
 }
 
 export interface CreateAttendancePolicyCommand {

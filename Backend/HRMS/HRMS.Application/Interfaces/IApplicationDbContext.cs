@@ -341,6 +341,11 @@ public interface IApplicationDbContext
     DbSet<Payslip> Payslips { get; }
 
     /// <summary>
+    /// تفاصيل قسائم الرواتب
+    /// </summary>
+    DbSet<PayslipDetail> PayslipDetails { get; }
+
+    /// <summary>
     /// التعديلات على الرواتب (مكافآت/خصومات)
     /// </summary>
     DbSet<PayrollAdjustment> PayrollAdjustments { get; }

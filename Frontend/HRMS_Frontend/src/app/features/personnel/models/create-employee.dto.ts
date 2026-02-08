@@ -29,6 +29,7 @@ export interface CreateEmployeeDto {
     // Employment Info
     departmentId: number;
     jobId: number;
+    jobGradeId?: number;
     managerId?: number;
     hireDate: Date | string;
     
@@ -50,7 +51,7 @@ export interface CreateEmployeeDto {
     // Nested Lists
     qualifications: Qualification[];
     experiences: Experience[];
-    emergencyContacts: EmergencyContact[];
+    emergencyContacts?: EmergencyContact[];
     contracts: Contract[];
     certifications: Certification[];
     bankAccounts: BankAccount[];

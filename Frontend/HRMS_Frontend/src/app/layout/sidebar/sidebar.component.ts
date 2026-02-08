@@ -39,7 +39,11 @@ export class SidebarComponent {
         { label: 'أنواع الإجازات', icon: 'pi pi-calendar-times', route: '/setup/leave-types' },
         { label: 'سياسات الحضور', icon: 'pi pi-clock', route: '/setup/attendance-policies' },
         { label: 'أنواع الورديات', icon: 'pi pi-moon', route: '/setup/shift-types' },
-        { label: 'بنود الراتب', icon: 'pi pi-dollar', route: '/setup/payroll-elements' }
+        { label: 'بنود الراتب', icon: 'pi pi-dollar', route: '/setup/payroll-elements' },
+        { label: 'أنواع المخالفات', icon: 'pi pi-exclamation-triangle', route: '/setup/violation-types' },
+        { label: 'الإجراءات التأديبية', icon: 'pi pi-shield', route: '/setup/disciplinary-actions' },
+        { label: 'مكتبة المؤشرات', icon: 'pi pi-chart-bar', route: '/setup/kpi-library' },
+        { label: 'فترات التقييم', icon: 'pi pi-calendar-clock', route: '/setup/appraisal-cycles' }
       ]
     },
   ];

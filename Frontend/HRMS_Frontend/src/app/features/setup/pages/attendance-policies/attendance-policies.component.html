@@ -32,6 +32,8 @@
         <ng-template pTemplate="header">
             <tr class="bg-slate-50 dark:bg-zinc-950 text-slate-700 dark:text-zinc-300 text-sm">
                 <th pSortableColumn="policyNameAr" class="text-center">اسم السياسة <p-sortIcon field="policyNameAr"></p-sortIcon></th>
+                <th pSortableColumn="departmentName" class="text-center">القسم <p-sortIcon field="departmentName"></p-sortIcon></th>
+                <th pSortableColumn="jobTitle" class="text-center">الوظيفة <p-sortIcon field="jobTitle"></p-sortIcon></th>
                 <th pSortableColumn="lateGraceMins" class="text-center">سماحية التأخير (د) <p-sortIcon field="lateGraceMins"></p-sortIcon></th>
                 <th pSortableColumn="overtimeMultiplier" class="text-center">مضاعف الإضافي <p-sortIcon field="overtimeMultiplier"></p-sortIcon></th>
                 <th pSortableColumn="weekendOtMultiplier" class="text-center">مضاعف العطلات <p-sortIcon field="weekendOtMultiplier"></p-sortIcon></th>
@@ -42,9 +44,21 @@
         <ng-template pTemplate="body" let-item>
             <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50">
                 <td class="font-medium text-slate-800 dark:text-zinc-200 text-center">{{item.policyNameAr}}</td>
+                <td class="text-slate-600 dark:text-zinc-400 text-center">
+                    <span *ngIf="item.departmentName" class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs">{{item.departmentName}}</span>
+                    <span *ngIf="!item.departmentName" class="text-slate-400 text-xs italic">عام</span>
+                </td>
+                <td class="text-slate-600 dark:text-zinc-400 text-center">
+                    <span *ngIf="item.jobTitle" class="px-2 py-1 bg-teal-50 text-teal-700 rounded-md text-xs">{{item.jobTitle}}</span>
+                    <span *ngIf="!item.jobTitle" class="text-slate-400 text-xs italic">عام</span>
+                </td>
                 <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.lateGraceMins}} دقيقة</td>
-                <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.overtimeMultiplier}}x</td>
-                <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.weekendOtMultiplier}}x</td>
+                <td class="text-slate-600 dark:text-zinc-400 text-center">
+                    <span class="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-semibold">الراتب × {{item.overtimeMultiplier}}</span>
+                </td>
+                <td class="text-slate-600 dark:text-zinc-400 text-center">
+                    <span class="px-2 py-1 bg-purple-50 text-purple-700 rounded-md text-xs font-semibold">الراتب × {{item.weekendOtMultiplier}}</span>
+                </td>
                 <td>
                     <div class="flex justify-center gap-1">
                         <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded p-button-sm text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20" (click)="edit(item)"></button>

@@ -1,0 +1,133 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full">
+    
+    <!-- Left Column: Job Details -->
+    <div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-5 flex flex-col gap-4">
+        <h3 class="font-bold text-slate-800 dark:text-white text-sm mb-2 flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800">
+            <i class="pi pi-briefcase text-blue-500"></i>
+            بيانات الوظيفة
+        </h3>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">القسم / الإدارة <span class="text-red-500">*</span></label>
+                <p-select [options]="departments" [(ngModel)]="data.departmentId" (onChange)="onChange()" 
+                    optionLabel="label" optionValue="value" appendTo="body"
+                    styleClass="w-full p-inputtext-sm text-xs"
+                    [filter]="true" filterBy="label">
+                </p-select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">المسمى الوظيفي <span class="text-red-500">*</span></label>
+                <p-select [options]="jobs" [(ngModel)]="data.jobId" (onChange)="onChange()" 
+                    optionLabel="label" optionValue="value" appendTo="body"
+                    styleClass="w-full p-inputtext-sm text-xs"
+                    [filter]="true" filterBy="label">
+                </p-select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الدرجة الوظيفية</label>
+                <p-select [options]="jobGrades" [(ngModel)]="data.jobGradeId" (onChange)="onGradeChange()" 
+                    optionLabel="label" optionValue="value" appendTo="body"
+                    styleClass="w-full p-inputtext-sm text-xs"
+                    [filter]="true" filterBy="label"
+                    [placeholder]="jobGrades.length === 0 ? 'لا توجد درجات' : 'اختر الدرجة'"
+                    emptyMessage="لا توجد نتائج">
+                </p-select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">تاريخ التعيين <span class="text-red-500">*</span></label>
+                <p-datePicker [(ngModel)]="data.hireDate" (onSelect)="onChange()" dateFormat="dd/mm/yy" 
+                    [showIcon]="true" styleClass="w-full" inputStyleClass="p-inputtext-sm w-full" appendTo="body">
+                </p-datePicker>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">المدير المباشر</label>
+                <input pInputText disabled class="p-inputtext-sm w-full bg-slate-50 dark:bg-zinc-800" placeholder="سيتم تحديده لاحقاً" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Financial Details -->
+    <div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-5 flex flex-col gap-4">
+        <h3 class="font-bold text-slate-800 dark:text-white text-sm mb-2 flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800">
+            <i class="pi pi-wallet text-green-500"></i>
+            البيانات المالية
+        </h3>
+
+        <div class="flex flex-col gap-4">
+            <!-- Salary Inputs Grid -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
+                    <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الراتب الأساسي <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <input type="number" [(ngModel)]="data.basicSalary" (blur)="onChange()" 
+                            class="p-inputtext-sm w-full font-mono font-bold text-left" 
+                            [class.ng-invalid]="isSalaryInvalid" dir="ltr" placeholder="0.00" />
+                        <span class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] font-bold">R.Y</span>
+                    </div>
+                     <small *ngIf="isSalaryInvalid" class="text-red-500 text-[10px]">خارج النطاق ({{ selectedGradeMinSalary | number }} - {{ selectedGradeMaxSalary | number }})</small>
+                </div>
+
+                <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
+                    <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">بدل سكن</label>
+                     <div class="relative">
+                        <input type="number" [(ngModel)]="data.housingAllowance" (blur)="onChange()" 
+                            class="p-inputtext-sm w-full font-mono text-left" dir="ltr" />
+                         <span class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]">R.Y</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
+                    <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">بدل مواصلات</label>
+                    <div class="relative">
+                        <input type="number" [(ngModel)]="data.transportAllowance" (blur)="onChange()" 
+                            class="p-inputtext-sm w-full font-mono text-left" dir="ltr" />
+                         <span class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]">R.Y</span>
+                    </div>
+                </div>
+
+                 <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
+                    <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">تأمين طبي</label>
+                    <div class="relative">
+                        <input type="number" [(ngModel)]="data.medicalAllowance" (blur)="onChange()" 
+                            class="p-inputtext-sm w-full font-mono text-left" dir="ltr" />
+                         <span class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]">R.Y</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Salary Card -->
+            <div class="bg-green-50 dark:bg-green-900/10 rounded-lg p-3 border border-green-100 dark:border-green-800/30 flex justify-between items-center">
+                <span class="text-green-700 dark:text-green-400 font-bold text-xs">إجمالي الراتب</span>
+                <span class="text-lg font-black text-green-700 dark:text-green-400 font-mono">{{ totalSalary | number:'1.2-2' }} <span class="text-[10px]">R.Y</span></span>
+            </div>
+
+            <!-- Bank Info -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
+                    <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">اسم البنك</label>
+                    <p-select [options]="banks" [(ngModel)]="data.bankId" (onChange)="onChange()" 
+                        optionLabel="label" optionValue="value" appendTo="body"
+                        styleClass="w-full p-inputtext-sm text-xs">
+                    </p-select>
+                </div>
+
+                <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
+                    <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">رقم الآيبان (IBAN)</label>
+                    <input pInputText [(ngModel)]="data.ibanNumber" (blur)="onChange()" 
+                        class="p-inputtext-sm w-full font-mono text-left" dir="ltr" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Buttons -->
+<div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800">
+    <button pButton label="السابق" icon="pi pi-arrow-right" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="onPrev()"></button>
+    <button pButton label="التالي" icon="pi pi-arrow-left" iconPos="left" class="p-button-primary p-button-sm rounded-lg px-6" (click)="onNext()"></button>
+</div>

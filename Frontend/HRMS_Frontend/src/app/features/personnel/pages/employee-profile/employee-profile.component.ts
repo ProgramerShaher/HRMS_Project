@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TabsModule } from 'primeng/tabs';
 import { DividerModule } from 'primeng/divider';
@@ -11,6 +11,15 @@ import { CardModule } from 'primeng/card';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile } from '../../models/employee-profile.model';
 import { Tooltip } from "primeng/tooltip";
+import { MessageService } from 'primeng/api';
+import { ProfileQualificationsComponent } from '../../components/profile-sub-sections/profile-qualifications.component';
+import { ProfileCertificationsComponent } from '../../components/profile-sub-sections/profile-certifications.component';
+import { ProfileExperienceComponent } from '../../components/profile-sub-sections/profile-experience.component';
+import { ProfileEmergencyContactsComponent } from '../../components/profile-sub-sections/profile-emergency-contacts.component';
+import { ProfileDependentsComponent } from '../../components/profile-sub-sections/profile-dependents.component';
+import { ProfileBankAccountsComponent } from '../../components/profile-sub-sections/profile-bank-accounts.component';
+import { ProfileAddressesComponent } from '../../components/profile-sub-sections/profile-addresses.component';
+import { ProfileContractsComponent } from '../../components/profile-sub-sections/profile-contracts.component';
 
 @Component({
   selector: 'app-employee-profile',
@@ -25,14 +34,25 @@ import { Tooltip } from "primeng/tooltip";
     TagModule,
     SkeletonModule,
     CardModule,
-    Tooltip
+    Tooltip,
+    ProfileQualificationsComponent,
+    ProfileCertificationsComponent,
+    ProfileExperienceComponent,
+    ProfileEmergencyContactsComponent,
+    ProfileDependentsComponent,
+    ProfileBankAccountsComponent,
+    ProfileAddressesComponent,
+    ProfileContractsComponent
 ],
   templateUrl: './employee-profile.component.html',
-  styleUrls: ['./employee-profile.component.scss']
+  styleUrls: ['./employee-profile.component.scss'],
+  providers: [MessageService]
 })
 export class EmployeeProfileComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private employeeService = inject(EmployeeService);
+  private messageService = inject(MessageService);
 
   employeeId = signal<number>(0);
   employee = signal<EmployeeProfile | null>(null);
@@ -53,14 +73,31 @@ export class EmployeeProfileComponent implements OnInit {
     // Use the full-profile endpoint to get all employee data in one call
     this.employeeService.getFullProfile(id).subscribe({
       next: (data) => {
+        console.log('API Response for Employee:', data);
+        if (!data) {
+            console.error('API returned null/undefined data');
+        } else if (!data.coreProfile) {
+            console.error('API returned data but missing coreProfile:', data);
+        }
         this.employee.set(data);
         this.loading.set(false);
       },
       error: (err) => {
-        console.error(err);
+        console.error('API Error loading profile:', err);
+        this.messageService.add({severity:'error', summary:'خطأ', detail:'تعذر تحميل بيانات الموظف'});
         this.loading.set(false);
       }
     });
+  }
+
+  editProfile() {
+    const id = this.employeeId();
+    if (id) {
+        // Navigate to the wizard in edit mode
+        // Assuming the route for editing is /employees/edit/:id
+        // We need to inject Router first if not already public or accessible
+        this.router.navigate(['/employees/edit', id]);
+    }
   }
 
   currentCompensation = computed(() => {

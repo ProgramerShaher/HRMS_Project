@@ -1,0 +1,166 @@
+<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
+    <!-- Header -->
+    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
+        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
+            <i class="pi pi-verified text-purple-500 text-sm"></i>
+            المؤهلات العلمية
+        </h3>
+        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showDialog()"></button>
+    </div>
+
+    <!-- Table -->
+    <p-table [value]="qualifications()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
+        <ng-template pTemplate="header">
+            <tr class="text-xs text-slate-500 bg-slate-50/50">
+                <th class="!p-2 font-medium">الدرجة</th>
+                <th class="!p-2 font-medium">التخصص</th>
+                <th class="!p-2 font-medium">الجهة</th>
+                <th class="!p-2 font-medium w-20">سنة التخرج</th>
+                <th class="!p-2 w-16 text-center"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-qual>
+            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                <td class="!p-2">
+                    <span class="px-1.5 py-0.5 rounded bg-purple-50 text-purple-600 text-[10px] font-bold border border-purple-100">{{ qual.degreeType }}</span>
+                </td>
+                <td class="!p-2 font-bold text-slate-700">{{ qual.majorAr }}</td>
+                <td class="!p-2 text-slate-500">{{ qual.universityAr }}</td>
+                <td class="!p-2 font-mono text-center">{{ qual.graduationYear }}</td>
+                <td class="!p-2 text-center">
+                    <div class="flex justify-center gap-1">
+                         <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-xs opacity-50 hover:opacity-100" (click)="delete(qual.qualificationId)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-4 text-slate-400 text-xs">
+                    لا توجد مؤهلات
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Premium Dialog -->
+<p-dialog 
+    [(visible)]="displayDialog" 
+    [header]="'إضافة مؤهل علمي جديد'" 
+    [modal]="true" 
+    [style]="{width: '550px'}" 
+    styleClass="p-fluid rounded-2xl overflow-hidden"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="true">
+    
+    <ng-template pTemplate="closeicon">
+        <i class="pi pi-times text-slate-400 hover:text-slate-600"></i>
+    </ng-template>
+
+    <div class="mt-2">
+        <form [formGroup]="qualificationForm" class="flex flex-col gap-5">
+            
+            <div class="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl border border-purple-100 dark:border-purple-800/30 mb-2">
+                <h5 class="flex items-center gap-2 text-purple-800 dark:text-purple-300 font-bold text-sm mb-1">
+                    <i class="pi pi-info-circle"></i>
+                    بيانات المؤهل
+                </h5>
+                <p class="text-xs text-purple-600 dark:text-purple-400/80">يرجى التأكد من صحة بيانات التخصص والدرجة العلمية.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <span class="p-float-label w-full col-span-2 md:col-span-1">
+                    <p-select 
+                        [options]="['بكلاريوس', 'ماجستير', 'دكتوراه', 'دبلوم', 'ثانوية عامة']" 
+                        formControlName="degreeType" 
+                        appendTo="body" 
+                        styleClass="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700"
+                        [ngClass]="{'ng-invalid ng-dirty': submitted && qualificationForm.get('degreeType')?.invalid}">
+                    </p-select>
+                    <label class="text-slate-500">الدرجة العلمية <span class="text-red-500">*</span></label>
+                </span>
+
+                <span class="p-float-label w-full col-span-2 md:col-span-1">
+                    <p-inputNumber 
+                        formControlName="graduationYear" 
+                        [useGrouping]="false" 
+                        [min]="1950" 
+                        [max]="2030" 
+                        inputStyleClass="p-3 rounded-xl w-full text-center font-bold"
+                        class="w-full">
+                    </p-inputNumber>
+                    <label class="text-slate-500">سنة التخرج <span class="text-red-500">*</span></label>
+                </span>
+
+                <span class="p-float-label w-full col-span-2">
+                    <input 
+                        pInputText 
+                        formControlName="majorAr" 
+                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" 
+                        [ngClass]="{'ng-invalid ng-dirty': submitted && qualificationForm.get('majorAr')?.invalid}" />
+                    <label class="text-slate-500">التخصص (عربي فقط) <span class="text-red-500">*</span></label>
+                </span>
+                <small class="col-span-2 text-red-500 -mt-4 text-xs" *ngIf="submitted && qualificationForm.get('majorAr')?.errors?.['pattern']">يجب استخدام الأحرف العربية فقط</small>
+
+                <span class="p-float-label w-full col-span-2">
+                    <input 
+                        pInputText 
+                        formControlName="universityAr" 
+                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
+                    <label class="text-slate-500">الجامعة / الجهة المانحة <span class="text-red-500">*</span></label>
+                </span>
+
+                <span class="p-float-label w-full col-span-2 md:col-span-1">
+                    <input 
+                        pInputText 
+                        formControlName="grade" 
+                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
+                    <label class="text-slate-500">التقدير (اختياري)</label>
+                </span>
+            </div>
+
+            <!-- File Upload -->
+            <div class="border-2 border-dashed border-slate-200 dark:border-zinc-700 rounded-xl p-4 text-center hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer relative" (click)="fileInput.click()">
+                <input #fileInput type="file" class="hidden" accept="image/*,application/pdf" (change)="onFileSelect({files: fileInput.files})">
+                <div *ngIf="!selectedFile" class="flex flex-col items-center gap-2 text-slate-400">
+                    <i class="pi pi-cloud-upload text-2xl"></i>
+                    <span class="text-sm font-medium">اضغط لإرفاق الشهادة (اختياري)</span>
+                    <span class="text-xs opacity-70">JPG, PNG, PDF (Max 2MB)</span>
+                </div>
+                <div *ngIf="selectedFile" class="flex items-center justify-between bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg text-purple-700 dark:text-purple-300">
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-file text-lg"></i>
+                        <span class="text-sm font-bold truncate max-w-[200px]">{{ selectedFile.name }}</span>
+                    </div>
+                    <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger w-8 h-8" (click)="$event.stopPropagation(); selectedFile = null"></button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+         <div class="flex justify-between items-center w-full pt-4 border-t border-slate-100 dark:border-zinc-800">
+            <button 
+                pButton 
+                label="إلغاء" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary rounded-xl" 
+                (click)="displayDialog = false">
+            </button>
+            <button 
+                pButton 
+                label="حفظ البيانات" 
+                icon="pi pi-check" 
+                class="p-button-primary rounded-xl px-6" 
+                (click)="save()" 
+                [loading]="loading()">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '400px'}" [rtl]="true" styleClass="premium-confirm-dialog"></p-confirmDialog>
+<p-toast position="bottom-left"></p-toast>

@@ -30,6 +30,7 @@ namespace HRMS.Application
             services.AddScoped<IAttendancePolicyService, AttendancePolicyService>();
             services.AddScoped<Features.Payroll.Processing.Services.AttendanceAggregatorService>();
             services.AddScoped<Features.Payroll.Processing.Services.BankFileExportService>();
+            services.AddScoped<Features.Payroll.Processing.Services.PayrollAccountingService>();
             services.AddMemoryCache();
 
             return services;

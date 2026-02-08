@@ -16,7 +16,7 @@
             </div>
             <div class="flex flex-col gap-2">
                 <label for="job" class="text-sm font-medium text-slate-700 dark:text-zinc-300">المسمى الوظيفي المطبق عليه</label>
-                <p-select id="job" [options]="jobs()" formControlName="jobId" optionLabel="jobTitleAr" optionValue="jobId" placeholder="اختر الوظيفة" styleClass="w-full" [showClear]="true"></p-select>
+                <p-select id="job" [options]="filteredJobs()" formControlName="jobId" optionLabel="jobTitleAr" optionValue="jobId" placeholder="اختر الوظيفة" styleClass="w-full" [showClear]="true"></p-select>
             </div>
         </div>
 
@@ -41,6 +41,6 @@
     <!-- Actions -->
     <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
         <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
-        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading()" [disabled]="form.invalid"></button>
     </div>
 </div>

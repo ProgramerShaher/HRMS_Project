@@ -67,7 +67,7 @@
 
                     <!-- Actions -->
                     <div class="grid grid-cols-2 gap-2 mb-6">
-                        <button pButton icon="pi pi-pencil" label="تعديل"
+                        <button pButton icon="pi pi-pencil" label="تعديل" (click)="editProfile()"
                             class="p-button-outlined p-button-sm w-full justification-center !text-xs !py-2 !rounded-xl"></button>
                         <button pButton icon="pi pi-print" label="طباعة"
                             class="p-button-outlined p-button-secondary p-button-sm w-full justification-center !text-xs !py-2 !rounded-xl"></button>
@@ -261,323 +261,110 @@
 
                             <!-- PERSONAL TAB -->
                             <p-tabpanel value="1">
-                                <div class="p-8">
+                                <div class="p-5">
                                     <h4
-                                        class="font-bold text-lg text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-zinc-800 pb-4">
-                                        البيانات الأساسية</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                                        class="font-bold text-base text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                                        <i class="pi pi-user text-blue-500"></i> البيانات الأساسية
+                                    </h4>
+                                    <div class="bg-slate-50 dark:bg-zinc-900/50 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 border border-slate-100 dark:border-zinc-800">
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">الاسم
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الاسم
                                                 بالعربي</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white">{{
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
                                                 employee()?.coreProfile?.fullNameAr }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">الاسم
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الاسم
                                                 بالإنجليزي</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white font-mono">{{
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white font-mono">{{
                                                 employee()?.coreProfile?.fullNameEn }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">تاريخ
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">تاريخ
                                                 الميلاد</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white font-mono">{{
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white font-mono">{{
                                                 employee()?.coreProfile?.birthDate | date:'dd/MM/yyyy' }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">الهوية
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الهوية
                                                 الوطنية</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white font-mono">{{
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white font-mono">{{
                                                 employee()?.coreProfile?.nationalityId }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">الجنس</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white">{{
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الجنس</label>
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
                                                 employee()?.coreProfile?.gender === 'M' ? 'ذكر' : 'أنثى' }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">الجنسية</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white">{{
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الجنسية</label>
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
                                                 employee()?.coreProfile?.nationalityName }}</p>
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                        <!-- Addresses -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> العناوين
-                                            </h4>
-                                            <ul class="space-y-4 border-r-2 border-slate-100 dark:border-zinc-800 pr-4">
-                                                <li *ngFor="let addr of employee()?.addresses" class="relative">
-                                                    <div
-                                                        class="absolute -right-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-white dark:bg-zinc-900 border-2 border-orange-500">
-                                                    </div>
-                                                    <span
-                                                        class="block text-sm font-bold text-slate-800 dark:text-white">{{
-                                                        addr.cityId }} <span
-                                                            class="text-slate-400 font-normal text-xs mx-1">- {{
-                                                            addr.addressType }}</span></span>
-                                                    <span class="text-xs text-slate-500 block mt-1">{{ addr.street }} -
-                                                        {{ addr.buildingNumber }}</span>
-                                                </li>
-                                                <li *ngIf="!employee()?.addresses?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- Dependents -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span> المعولين
-                                            </h4>
-                                            <ul class="space-y-4">
-                                                <li *ngFor="let dep of employee()?.dependents"
-                                                    class="flex items-center gap-3">
-                                                    <div
-                                                        class="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center font-bold text-xs">
-                                                        {{ getInitials(dep.fullNameAr) }}
-                                                    </div>
-                                                    <div>
-                                                        <p class="font-bold text-xs text-slate-800 dark:text-white">{{
-                                                            dep.fullNameAr }}</p>
-                                                        <p class="text-[10px] text-slate-500">{{ dep.relationship }}</p>
-                                                    </div>
-                                                </li>
-                                                <li *ngIf="!employee()?.dependents?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- Emergency Contacts -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> جهات الطوارئ
-                                            </h4>
-                                            <ul class="space-y-4">
-                                                <li *ngFor="let contact of employee()?.emergencyContacts"
-                                                    class="flex items-center gap-3">
-                                                    <div
-                                                        class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold text-xs">
-                                                        <i class="pi pi-phone"></i>
-                                                    </div>
-                                                    <div>
-                                                        <p class="font-bold text-xs text-slate-800 dark:text-white">{{
-                                                            contact.contactNameAr }}</p>
-                                                        <p class="text-[10px] text-slate-500">{{ contact.relationship }}
-                                                            <span *ngIf="contact.phonePrimary"
-                                                                class="mr-1 dir-ltr inline-block text-slate-400">({{
-                                                                contact.phonePrimary }})</span>
-                                                        </p>
-                                                    </div>
-                                                </li>
-                                                <li *ngIf="!employee()?.emergencyContacts?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- Bank Accounts -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> الحسابات
-                                                البنكية
-                                            </h4>
-                                            <ul class="space-y-3">
-                                                <li *ngFor="let bank of employee()?.bankAccounts"
-                                                    class="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 flex gap-3 text-xs items-start">
-                                                    <div
-                                                        class="w-8 h-8 rounded-lg bg-white dark:bg-zinc-800 flex items-center justify-center text-blue-600 shadow-sm text-sm shrink-0">
-                                                        <i class="pi pi-wallet"></i>
-                                                    </div>
-                                                    <div class="flex-1">
-                                                        <p class="font-bold text-slate-800 dark:text-white mb-0.5">{{
-                                                            bank.accountHolderName }}</p>
-                                                        <p
-                                                            class="text-slate-500 font-mono tracking-wider break-all text-[10px]">
-                                                            {{ bank.ibanNumber }}</p>
-                                                    </div>
-                                                    <span *ngIf="bank.isPrimary"
-                                                        class="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded text-[9px] font-bold shrink-0">أساسي</span>
-                                                </li>
-                                                <li *ngIf="!employee()?.bankAccounts?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
+                                    <div class="flex flex-col gap-4">
+                                        <app-profile-addresses [employeeId]="employeeId()"></app-profile-addresses>
+                                        <app-profile-dependents [employeeId]="employeeId()"></app-profile-dependents>
+                                        <app-profile-emergency-contacts [employeeId]="employeeId()"></app-profile-emergency-contacts>
+                                        <app-profile-bank-accounts [employeeId]="employeeId()"></app-profile-bank-accounts>
                                     </div>
                                 </div>
                             </p-tabpanel>
 
                             <!-- EMPLOYMENT TAB -->
                             <p-tabpanel value="2">
-                                <div class="p-8">
+                                <div class="p-5">
                                     <h4
-                                        class="font-bold text-lg text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-zinc-800 pb-4">
-                                        تفاصيل الوظيفة</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                                        class="font-bold text-base text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                                        <i class="pi pi-briefcase text-teal-500"></i> تفاصيل الوظيفة
+                                    </h4>
+                                    <div class="bg-slate-50 dark:bg-zinc-900/50 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 border border-slate-100 dark:border-zinc-800">
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">المسمى
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">المسمى
                                                 الوظيفي</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white">{{
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
                                                 employee()?.coreProfile?.jobTitle }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">القسم</label>
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white">{{
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">القسم</label>
+                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
                                                 employee()?.coreProfile?.departmentName }}</p>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">المدير
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">المدير
                                                 المباشر</label>
                                             <div class="flex items-center gap-2">
-                                                <p-avatar icon="pi pi-user" shape="circle" [size]!="small"
-                                                    styleClass="!w-6 !h-6 !text-[10px]"></p-avatar>
-                                                <p class="font-bold text-sm text-slate-900 dark:text-white">{{
+                                                <p-avatar icon="pi pi-user" shape="circle" size="small"
+                                                    styleClass="!w-5 !h-5 !text-[10px] bg-white"></p-avatar>
+                                                <p class="font-bold text-sm text-slate-800 dark:text-white">{{
                                                     employee()?.coreProfile?.managerName || '-' }}</p>
                                             </div>
                                         </div>
                                         <div class="group">
                                             <label
-                                                class="block text-slate-400 text-xs mb-1.5 group-hover:text-blue-600 transition-colors">الحالة</label>
-                                            <span class="px-2 py-0.5 rounded text-xs font-bold"
-                                                [ngClass]="employee()?.coreProfile?.status === 'ACTIVE' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">
+                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الحالة</label>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold"
+                                                [ngClass]="employee()?.coreProfile?.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                                                 {{ employee()?.coreProfile?.status === 'ACTIVE' ? 'نشط' : 'غير نشط' }}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                        <!-- Experience Timeline -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> الخبرات
-                                                السابقة
-                                            </h4>
-                                            <div
-                                                class="relative border-r-2 border-slate-100 dark:border-zinc-800 pr-6 space-y-6">
-                                                <div *ngFor="let exp of employee()?.experiences" class="relative group">
-                                                    <div
-                                                        class="absolute -right-[31px] top-1 w-4 h-4 rounded-full bg-white dark:bg-zinc-900 border-2 border-teal-500 group-hover:bg-teal-500 transition-colors">
-                                                    </div>
-                                                    <h5 class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                        exp.jobTitleAr }}</h5>
-                                                    <p class="text-xs text-slate-600 dark:text-slate-400 mb-1">{{
-                                                        exp.companyNameAr }}</p>
-                                                    <span class="text-[10px] font-mono text-slate-400 block">{{
-                                                        exp.startDate | date:'yyyy' }} - {{ exp.endDate ? (exp.endDate |
-                                                        date:'yyyy') : 'Present' }}</span>
-                                                </div>
-                                                <div *ngIf="!employee()?.experiences?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Qualifications -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> المؤهلات
-                                            </h4>
-                                            <ul class="space-y-3">
-                                                <li *ngFor="let qual of employee()?.qualifications"
-                                                    class="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 flex gap-3 items-center">
-                                                    <div
-                                                        class="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 flex items-center justify-center text-purple-600 shadow-sm text-lg">
-                                                        <i class="pi pi-verified"></i>
-                                                    </div>
-                                                    <div>
-                                                        <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                            qual.degreeType }}</p>
-                                                        <p class="text-xs text-slate-500">{{ qual.majorAr }} - {{
-                                                            qual.universityAr }}</p>
-                                                    </div>
-                                                </li>
-                                                <li *ngIf="!employee()?.qualifications?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- Contracts -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> العقود
-                                            </h4>
-                                            <ul class="space-y-3">
-                                                <li *ngFor="let contract of employee()?.contracts"
-                                                    class="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 text-xs">
-                                                    <div class="flex justify-between mb-1.5 items-center">
-                                                        <span
-                                                            class="font-bold text-slate-800 dark:text-white bg-white dark:bg-zinc-800 px-2 py-0.5 rounded shadow-sm">{{
-                                                            contract.contractType }}</span>
-                                                        <span
-                                                            [ngClass]="contract.contractStatus === 'ACTIVE' ? 'text-green-600 bg-green-50' : 'text-slate-500 bg-slate-100'"
-                                                            class="font-bold text-[10px] px-2 py-0.5 rounded">{{
-                                                            contract.contractStatus }}</span>
-                                                    </div>
-                                                    <div
-                                                        class="text-slate-500 font-mono mb-2 flex items-center gap-2 text-[10px]">
-                                                        <i class="pi pi-calendar"></i>
-                                                        <span>{{ contract.startDate | date:'dd/MM/yyyy' }}</span>
-                                                        <i class="pi pi-arrow-left text-[8px]"></i>
-                                                        <span>{{ contract.endDate | date:'dd/MM/yyyy' }}</span>
-                                                    </div>
-                                                    <div
-                                                        class="text-[10px] text-slate-400 bg-white dark:bg-zinc-800 p-2 rounded border border-slate-100 dark:border-zinc-700 flex justify-between">
-                                                        <span>الراتب الأساسي</span>
-                                                        <span
-                                                            class="font-bold text-slate-700 dark:text-slate-300 font-mono">{{
-                                                            contract.basicSalary | number }}</span>
-                                                    </div>
-                                                </li>
-                                                <li *ngIf="!employee()?.contracts?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- Certifications -->
-                                        <div>
-                                            <h4
-                                                class="font-bold text-base text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> الشهادات
-                                                المهنية
-                                            </h4>
-                                            <ul class="space-y-3">
-                                                <li *ngFor="let cert of employee()?.certifications"
-                                                    class="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 flex gap-3 items-center">
-                                                    <div
-                                                        class="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 flex items-center justify-center text-yellow-600 shadow-sm text-lg shrink-0">
-                                                        <i class="pi pi-verified"></i>
-                                                    </div>
-                                                    <div>
-                                                        <p
-                                                            class="font-bold text-sm text-slate-800 dark:text-white mb-0.5">
-                                                            {{ cert.certificationName }}</p>
-                                                        <div class="flex items-center gap-2 text-[10px] text-slate-500">
-                                                            <span>{{ cert.issuingOrganization }}</span>
-                                                            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                                                            <span class="font-mono">{{ cert.issueDate | date:'yyyy'
-                                                                }}</span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li *ngIf="!employee()?.certifications?.length"
-                                                    class="text-slate-400 text-xs">لا توجد بيانات</li>
-                                            </ul>
-                                        </div>
+                                    <div class="flex flex-col gap-4">
+                                        <app-profile-experience [employeeId]="employeeId()"></app-profile-experience>
+                                        <app-profile-qualifications [employeeId]="employeeId()"></app-profile-qualifications>
+                                        <app-profile-contracts [employeeId]="employeeId()"></app-profile-contracts>
+                                        <app-profile-certifications [employeeId]="employeeId()"></app-profile-certifications>
                                     </div>
                                 </div>
                             </p-tabpanel>

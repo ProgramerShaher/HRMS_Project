@@ -1,0 +1,125 @@
+<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
+    <!-- Header -->
+    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
+        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
+            <i class="pi pi-file text-cyan-500 text-sm"></i>
+            العقود الوظيفية
+        </h3>
+        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showAddDialog()"></button>
+    </div>
+
+    <!-- Table -->
+    <p-table [value]="contracts()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
+        <ng-template pTemplate="header">
+            <tr class="text-xs text-slate-500 bg-slate-50/50">
+                <th class="!p-2 font-medium">نوع العقد</th>
+                <th class="!p-2 font-medium">الحالة</th>
+                <th class="!p-2 font-medium">الفترة</th>
+                <th class="!p-2 font-medium">الراتب الأساسي</th>
+                <th class="!p-2 w-20 text-center">إجراءات</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-contract>
+            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                <td class="!p-2 font-bold text-slate-700">{{ contract.contractType }}</td>
+                <td class="!p-2">
+                    <span [ngClass]="contract.contractStatus === 'ACTIVE' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'" class="px-1.5 py-0.5 rounded text-[10px] font-bold border">
+                        {{ contract.contractStatus }}
+                    </span>
+                </td>
+                <td class="!p-2">
+                    <div class="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
+                        <span>{{ contract.startDate | date:'dd/MM/yyyy' }}</span>
+                        <i class="pi pi-arrow-left text-[8px]"></i>
+                        <span>{{ contract.endDate | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                </td>
+                <td class="!p-2 font-mono font-bold text-slate-700">{{ contract.basicSalary | number }}</td>
+                <td class="!p-2 text-center">
+                    <button *ngIf="contract.contractStatus === 'ACTIVE'" pButton icon="pi pi-refresh" class="p-button-text p-button-help !w-6 !h-6 !p-0 !text-xs" (click)="showRenewDialog(contract)" pTooltip="تجديد"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-4 text-slate-400 text-xs">
+                    لا توجد عقود مسجلة
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Dialog -->
+<p-dialog [(visible)]="displayDialog" [header]="isRenewMode ? 'تجديد العقد السابق' : 'إنشاء عقد جديد'" [modal]="true" [style]="{width: '700px'}" styleClass="p-fluid">
+    <form [formGroup]="contractForm" class="flex flex-col gap-4 mt-2">
+        
+        <div class="grid grid-cols-2 gap-4" *ngIf="!isRenewMode">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1">نوع العقد <span class="text-red-500">*</span></label>
+                <p-select [options]="contractTypes" formControlName="contractType" appendTo="body" placeholder="اختر النوع" styleClass="w-full"></p-select>
+            </div>
+             <div class="field flex items-center pt-8">
+                 <p-checkbox formControlName="isRenewable" [binary]="true" label="قابل للتجديد" class="mr-2"></p-checkbox>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1">تاريخ البدء <span class="text-red-500">*</span></label>
+                <p-datePicker formControlName="startDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1">تاريخ الانتهاء <span class="text-red-500">*</span></label>
+                <p-datePicker formControlName="endDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-100 dark:border-zinc-700 my-2 pt-4">
+             <h4 class="font-bold text-sm mb-3 text-blue-600">تفاصيل الراتب والبدلات</h4>
+             
+             <div class="grid grid-cols-2 gap-4">
+                 <div class="field">
+                    <label class="block text-sm font-medium mb-1">الراتب الأساسي <span class="text-red-500">*</span></label>
+                    <p-inputNumber formControlName="basicSalary" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
+                 </div>
+                 <div class="field">
+                    <label class="block text-sm font-medium mb-1">بدل السكن</label>
+                    <p-inputNumber formControlName="housingAllowance" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
+                 </div>
+                 <div class="field">
+                    <label class="block text-sm font-medium mb-1">بدل المواصلات</label>
+                    <p-inputNumber formControlName="transportAllowance" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
+                 </div>
+                 <div class="field">
+                    <label class="block text-sm font-medium mb-1">بدلات أخرى</label>
+                    <p-inputNumber formControlName="otherAllowances" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
+                 </div>
+             </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4" *ngIf="!isRenewMode">
+             <div class="field">
+                 <label class="block text-sm font-medium mb-1">أيام الإجازة السنوية</label>
+                 <p-inputNumber formControlName="vacationDays" [min]="0" suffix=" يوم"></p-inputNumber>
+            </div>
+             <div class="field">
+                 <label class="block text-sm font-medium mb-1">ساعات العمل اليومية</label>
+                 <p-inputNumber formControlName="workingHoursDaily" [min]="0" suffix=" ساعة"></p-inputNumber>
+            </div>
+        </div>
+        
+        <div class="field" *ngIf="isRenewMode">
+            <label class="block text-sm font-medium mb-1">ملاحظات التجديد</label>
+            <input pInputText formControlName="notes" />
+        </div>
+
+    </form>
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
+        <button pButton label="حفظ" icon="pi pi-check" (click)="save()" [loading]="loading()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}" [rtl]="true"></p-confirmDialog>
+<p-toast position="bottom-left"></p-toast>

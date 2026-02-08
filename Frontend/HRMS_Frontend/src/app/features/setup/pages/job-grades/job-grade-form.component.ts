@@ -18,12 +18,31 @@ import { MessageService } from 'primeng/api';
     <form [formGroup]="form" (ngSubmit)="save()" class="p-4" dir="rtl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
+            <!-- Code -->
+            <div class="col-span-1">
+                <p-floatLabel>
+                    <input pInputText id="gradeCode" formControlName="gradeCode" class="w-full" />
+                    <label for="gradeCode">رمز الدرجة</label>
+                </p-floatLabel>
+                <small class="p-error block mt-1" *ngIf="form.get('gradeCode')?.invalid && form.get('gradeCode')?.touched">رمز الدرجة مطلوب</small>
+            </div>
+
+            <!-- Level -->
+            <div class="col-span-1">
+                <p-floatLabel>
+                    <p-inputNumber inputId="gradeLevel" formControlName="gradeLevel" [min]="1" styleClass="w-full" class="w-full" inputStyleClass="w-full"></p-inputNumber>
+                    <label for="gradeLevel">مستوى الدرجة</label>
+                </p-floatLabel>
+                <small class="p-error block mt-1" *ngIf="form.get('gradeLevel')?.invalid && form.get('gradeLevel')?.touched">مستوى الدرجة مطلوب</small>
+            </div>
+
             <!-- Ar Name -->
             <div class="col-span-1">
                 <p-floatLabel>
                     <input pInputText id="gradeNameAr" formControlName="gradeNameAr" class="w-full" />
                     <label for="gradeNameAr">اسم الدرجة (عربي)</label>
                 </p-floatLabel>
+                <small class="p-error block mt-1" *ngIf="form.get('gradeNameAr')?.invalid && form.get('gradeNameAr')?.touched">الاسم العربي مطلوب</small>
             </div>
 
             <!-- En Name -->
@@ -83,6 +102,8 @@ export class JobGradeFormComponent implements OnInit {
         this.id = this.config.data?.jobGradeId;
 
         this.form = this.fb.group({
+            gradeCode: [this.config.data?.gradeCode || '', Validators.required],
+            gradeLevel: [this.config.data?.gradeLevel || null, [Validators.required, Validators.min(1)]],
             gradeNameAr: [this.config.data?.gradeNameAr || '', Validators.required],
             gradeNameEn: [this.config.data?.gradeNameEn || ''],
             minSalary: [this.config.data?.minSalary || 0],
@@ -92,7 +113,10 @@ export class JobGradeFormComponent implements OnInit {
     }
 
     save() {
-        if (this.form.invalid) return;
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
+            return;
+        }
 
         this.loading = true;
         const payload = this.form.value;
@@ -101,14 +125,31 @@ export class JobGradeFormComponent implements OnInit {
             : this.setupService.create('JobGrades', payload);
 
         request.subscribe({
-            next: () => {
+            next: (res: any) => {
                 this.loading = false;
-                this.messageService.add({severity:'success', summary:'نجاح', detail: 'تم الحفظ بنجاح'});
-                this.ref.close(true);
+                if (res.succeeded) {
+                    this.messageService.add({severity:'success', summary:'نجاح', detail: 'تم الحفظ بنجاح'});
+                    this.ref.close(true);
+                } else {
+                     this.messageService.add({severity:'error', summary:'خطأ', detail: res.message || 'فشل الحفظ'});
+                }
             },
-            error: () => {
+            error: (err) => {
                 this.loading = false;
-                this.messageService.add({severity:'error', summary:'خطأ', detail: 'حدث خطأ أثناء الحفظ'});
+                console.error('Error saving Job Grade:', err);
+                
+                // Handle FluentValidation ValidationException format
+                if (err.error && err.error.errors) {
+                    const validationErrors = err.error.errors;
+                    Object.keys(validationErrors).forEach(key => {
+                         const messages = validationErrors[key];
+                         messages.forEach((msg: string) => {
+                             this.messageService.add({severity:'error', summary: 'خطأ تحقق', detail: msg});
+                         });
+                    });
+                } else {
+                    this.messageService.add({severity:'error', summary:'خطأ', detail: 'حدث خطأ أثناء الحفظ'});
+                }
             }
         });
     }
