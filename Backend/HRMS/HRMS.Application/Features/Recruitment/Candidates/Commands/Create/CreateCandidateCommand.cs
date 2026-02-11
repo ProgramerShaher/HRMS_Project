@@ -48,6 +48,11 @@ public class CreateCandidateCommand : IRequest<Result<int>>
     public string? CvFilePath { get; set; }
 
     /// <summary>
+    /// ملف السيرة الذاتية (لرفع الملف مباشرة)
+    /// </summary>
+    public Microsoft.AspNetCore.Http.IFormFile? CvFile { get; set; }
+
+    /// <summary>
     /// رابط حساب LinkedIn
     /// </summary>
     public string? LinkedinProfile { get; set; }
@@ -57,13 +62,16 @@ public class CreateCandidateCommandHandler : IRequestHandler<CreateCandidateComm
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IFileService _fileService;
 
     public CreateCandidateCommandHandler(
         IApplicationDbContext context,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IFileService fileService)
     {
         _context = context;
         _currentUserService = currentUserService;
+        _fileService = fileService;
     }
 
     public async Task<Result<int>> Handle(CreateCandidateCommand request, CancellationToken cancellationToken)
@@ -85,6 +93,21 @@ public class CreateCandidateCommandHandler : IRequestHandler<CreateCandidateComm
                 return Result<int>.Failure("الجنسية المحددة غير موجودة");
         }
 
+        string? cvPath = request.CvFilePath;
+
+        // معالجة رفع الملف إذا وجد
+        if (request.CvFile != null && request.CvFile.Length > 0)
+        {
+            try 
+            {
+                cvPath = await _fileService.UploadFileAsync(request.CvFile, "candidates/cvs");
+            }
+            catch (Exception ex)
+            {
+                return Result<int>.Failure($"فشل رفع ملف السيرة الذاتية: {ex.Message}");
+            }
+        }
+
         // إنشاء المرشح
         var candidate = new Candidate
         {
@@ -94,14 +117,25 @@ public class CreateCandidateCommandHandler : IRequestHandler<CreateCandidateComm
             Email = request.Email,
             Phone = request.Phone,
             NationalityId = request.NationalityId,
-            CvFilePath = request.CvFilePath,
+            CvFilePath = cvPath,
             LinkedinProfile = request.LinkedinProfile,
             CreatedBy = _currentUserService.UserId,
             CreatedAt = DateTime.UtcNow
         };
 
         _context.Candidates.Add(candidate);
-        await _context.SaveChangesAsync(cancellationToken);
+        // await _context.SaveChangesAsync(cancellationToken); // Moved after Add
+
+        try 
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            // If DB save fails but file was uploaded, strictly speaking we should delete the file
+            // But for now keeping it simple.
+            return Result<int>.Failure($"حدث خطأ أثناء حفظ البيانات: {ex.Message}");
+        }
 
         return Result<int>.Success(candidate.CandidateId, "تم تسجيل المرشح بنجاح");
     }

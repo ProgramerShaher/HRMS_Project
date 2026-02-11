@@ -6835,3 +6835,37 @@ FROM [HR_PAYROLL].[SALARY_ELEMENTS] AS [s]
 2026-02-09 02:28:26.708 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Payroll.PayrollSettingsController.GetElements (HRMS.API)'
 2026-02-09 02:28:26.709 +03:00 [INF] HTTP GET /api/PayrollSettings/elements responded 200 in 64.1340 ms
 2026-02-09 02:28:26.722 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/PayrollSettings/elements - 200 null application/json; charset=utf-8 83.6032ms
+2026-02-09 21:19:26.448 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-09 21:19:33.118 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-02-09 21:19:35.770 +03:00 [WRN] No store type was specified for the decimal property 'Hours' on entity type 'PermissionRequest'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-09 21:19:35.774 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-09 21:19:35.780 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-09 21:19:35.785 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-09 21:19:39.817 +03:00 [INF] Executed DbCommand (271ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-02-09 21:19:40.129 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-02-09 21:19:40.151 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-02-09 21:19:40.221 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[EmployeeId], [a].[FullNameAr], [a].[FullNameEn], [a].[IsActive], [a].[LastLoginAt], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshToken], [a].[RefreshTokenExpiryTime], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2026-02-09 21:19:40.493 +03:00 [INF] ✅ Default roles and admin user seeded successfully
+2026-02-09 21:19:40.541 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-02-09 21:19:40.852 +03:00 [INF] Now listening on: http://localhost:5000
+2026-02-09 21:19:40.864 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-02-09 21:19:40.866 +03:00 [INF] Hosting environment: Development
+2026-02-09 21:19:40.867 +03:00 [INF] Content root path: D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API
+2026-02-09 21:20:05.142 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/ - null null
+2026-02-09 21:20:06.213 +03:00 [WRN] Failed to determine the https port for redirect.
+2026-02-09 21:20:10.268 +03:00 [INF] HTTP GET / responded 404 in 4054.6352 ms
+2026-02-09 21:20:10.684 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/ - 404 0 null 5544.7431ms
+2026-02-09 21:20:11.172 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5000/, Response status code: 404
+2026-02-09 21:30:38.226 +03:00 [INF] Application is shutting down...

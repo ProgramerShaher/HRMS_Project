@@ -15,15 +15,84 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using HRMS.Core.Entities.Notifications;
+
 namespace HRMS.Infrastructure.Data
 {
+    public interface IHRMSDbContext
+    {
+        // ...
+        DbSet<HRMS.Core.Entities.Notifications.Notification> Notifications { get; set; }
+        DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
+        DbSet<ReportTemplate> ReportTemplates { get; set; }
+        DbSet<Employee> Employees { get; set; }
+        DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+        DbSet<EmployeeCompensation> EmployeeCompensations { get; set; }
+        DbSet<Contract> Contracts { get; set; }
+        DbSet<ContractRenewal> ContractRenewals { get; set; }
+        DbSet<Dependent> Dependents { get; set; }
+        DbSet<EmployeeQualification> Qualifications { get; set; }
+        DbSet<EmployeeExperience> Experiences { get; set; }
+        DbSet<EmployeeCertification> Certifications { get; set; }
+        DbSet<EmployeeAddress> Addresses { get; set; }
+        DbSet<EmergencyContact> EmergencyContacts { get; set; }
+        DbSet<EmployeeBankAccount> BankAccounts { get; set; }
+        DbSet<EmployeeBankAccount> EmployeeBankAccounts { get; }
+        DbSet<ShiftType> ShiftTypes { get; set; }
+        DbSet<RosterPeriod> RosterPeriods { get; set; }
+        DbSet<EmployeeRoster> EmployeeRosters { get; set; }
+        DbSet<RawPunchLog> RawPunchLogs { get; set; }
+        DbSet<DailyAttendance> DailyAttendances { get; set; }
+        DbSet<AttendanceCorrection> AttendanceCorrections { get; set; }
+        DbSet<ShiftSwapRequest> ShiftSwapRequests { get; set; }
+        DbSet<OvertimeRequest> OvertimeRequests { get; set; }
+        DbSet<AttendancePolicy> AttendancePolicies { get; set; }
+        DbSet<PermissionRequest> PermissionRequests { get; set; }
+        DbSet<LeaveType> LeaveTypes { get; set; }
+        DbSet<EmployeeLeaveBalance> LeaveBalances { get; set; }
+        DbSet<EmployeeLeaveBalance> EmployeeLeaveBalances { get; }
+        DbSet<LeaveRequest> LeaveRequests { get; set; }
+        DbSet<PublicHoliday> PublicHolidays { get; set; }
+        DbSet<LeaveAccrualRule> LeaveAccrualRules { get; set; }
+        DbSet<LeaveEncashment> LeaveEncashments { get; set; }
+        DbSet<LeaveTransaction> LeaveTransactions { get; set; }
+        DbSet<LeaveApprovalHistory> LeaveApprovalHistory { get; set; }
+        DbSet<EmployeeViolation> EmployeeViolations { get; set; }
+        DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
+        DbSet<EmployeeAppraisal> EmployeeAppraisals { get; set; }
+        DbSet<AppraisalDetail> AppraisalDetails { get; set; }
+        DbSet<KpiLibrary> KpiLibraries { get; set; }
+        DbSet<ViolationType> ViolationTypes { get; set; }
+        DbSet<AppraisalCycle> AppraisalCycles { get; set; }
+        DbSet<Candidate> Candidates { get; set; }
+        DbSet<JobApplication> JobApplications { get; set; }
+        DbSet<JobOffer> JobOffers { get; set; }
+        DbSet<JobVacancy> JobVacancies { get; set; }
+        DbSet<Interview> Interviews { get; set; }
+        DbSet<SalaryElement> SalaryElements { get; set; }
+        DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
+        DbSet<EmployeeSalaryStructure> EmployeeSalaryStructures { get; }
+        DbSet<PayrollRun> PayrollRuns { get; set; }
+        DbSet<Payslip> Payslips { get; set; }
+        DbSet<PayslipDetail> PayslipDetails { get; set; }
+        DbSet<Loan> Loans { get; set; }
+        DbSet<LoanInstallment> LoanInstallments { get; set; }
+        DbSet<EndOfServiceCalc> EndOfServiceCalcs { get; set; }
+        DbSet<PayrollAdjustment> PayrollAdjustments { get; set; }
+        DbSet<Account> Accounts { get; set; }
+        DbSet<JournalEntry> JournalEntries { get; set; }
+        DbSet<JournalEntryLine> JournalEntryLines { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    }
+
     /// <summary>
     /// سياق قاعدة البيانات الرئيسي - يرث من IdentityDbContext ويطبق IApplicationDbContext
     /// </summary>
     /// <remarks>
     /// تطبيق Dependency Inversion Principle - Infrastructure ينفذ واجهة من Application
     /// </remarks>
-    public class HRMSDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>, IApplicationDbContext
+    public class HRMSDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>, IApplicationDbContext, IHRMSDbContext
     {
         private readonly ICurrentUserService _currentUserService;
 
@@ -156,8 +225,8 @@ namespace HRMS.Infrastructure.Data
         public DbSet<Bank> Banks { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
+        public DbSet<HRMS.Core.Entities.Notifications.Notification> Notifications { get; set; } = null!;
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
         public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
         public DbSet<ReportTemplate> ReportTemplates { get; set; }
 
@@ -176,7 +245,7 @@ namespace HRMS.Infrastructure.Data
         public DbSet<EmployeeAddress> Addresses { get; set; }
         public DbSet<EmergencyContact> EmergencyContacts { get; set; }
         public DbSet<EmployeeBankAccount> BankAccounts { get; set; }
-        
+
         // Aliases for IApplicationDbContext
         public DbSet<EmployeeBankAccount> EmployeeBankAccounts => BankAccounts;
 
@@ -232,12 +301,12 @@ namespace HRMS.Infrastructure.Data
         // ===================================
         // HR_PAYROLL Schema
         // ===================================
-    // Payroll
-    public DbSet<SalaryElement> SalaryElements { get; set; }
-    public DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
-    public DbSet<EmployeeSalaryStructure> EmployeeSalaryStructures => SalaryStructures; // Alias for IApplicationDbContext
-    public DbSet<PayrollRun> PayrollRuns { get; set; }
-    public DbSet<Payslip> Payslips { get; set; }
+        // Payroll
+        public DbSet<SalaryElement> SalaryElements { get; set; }
+        public DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
+        public DbSet<EmployeeSalaryStructure> EmployeeSalaryStructures => SalaryStructures; // Alias for IApplicationDbContext
+        public DbSet<PayrollRun> PayrollRuns { get; set; }
+        public DbSet<Payslip> Payslips { get; set; }
         public DbSet<PayslipDetail> PayslipDetails { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanInstallment> LoanInstallments { get; set; }
@@ -306,7 +375,7 @@ namespace HRMS.Infrastructure.Data
             // EXCEPTION: Employee Sub-Entities (Cascade Delete Required)
             // ═══════════════════════════════════════════════════════════
             // These entities are "owned" by the Employee and should be deleted if removed from collection
-            
+
             // 1. Qualifications
             modelBuilder.Entity<EmployeeQualification>()
                 .HasOne(e => e.Employee)
@@ -334,7 +403,7 @@ namespace HRMS.Infrastructure.Data
                 .WithMany(e => e.Contracts)
                 .HasForeignKey(e => e.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             // 5. Certifications
             modelBuilder.Entity<EmployeeCertification>()
                 .HasOne(e => e.Employee)
@@ -370,40 +439,49 @@ namespace HRMS.Infrastructure.Data
                 .HasForeignKey(e => e.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-             // 10. Compensation (One-to-One)
+            // 10. Compensation (One-to-One)
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Compensation)
                 .WithOne(c => c.Employee)
                 .HasForeignKey<EmployeeCompensation>(c => c.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-			#endregion
+            #endregion
 
-			// --- حل مشكلة الـ Byte الشامل لكل الجداول ---
-			// ═══════════════════════════════════════════════════════════
-			// الحل النهائي: محول صريح من byte (C#) إلى bit (SQL) والعكس
-			// ═══════════════════════════════════════════════════════════
+            // ═══════════════════════════════════════════════════════════
+            // CRITICAL FIX: Explicit Table Name Configuration
+            // ═══════════════════════════════════════════════════════════
+            // Force EF Core to use the [Table] attribute value instead of DbSet name
+            modelBuilder.Entity<EmployeeSalaryStructure>()
+                .ToTable("EMPLOYEE_SALARY_STRUCTURE", "HR_PAYROLL");
 
-			// تعريف المحول يدوياً لضمان عدم حدوث InvalidOperationException
-			// بدلاً من السطر القديم الذي سبب المشكلة في الصورة:
-			foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-			{
-				var byteProperties = entityType.GetProperties()
-					.Where(p => p.ClrType == typeof(byte));
+            #region Byte to Tinyint Conversion
+            // --- حل مشكلة الـ Byte الشامل لكل الجداول ---
+            // ═══════════════════════════════════════════════════════════
+            // الحل النهائي: محول صريح من byte (C#) إلى bit (SQL) والعكس
+            // ═══════════════════════════════════════════════════════════
 
-				foreach (var property in byteProperties)
-				{
-					// 1. إزالة أي محولات سابقة قد تسبب تعارضاً
-					property.SetValueConverter((Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter)null);
+            // تعريف المحول يدوياً لضمان عدم حدوث InvalidOperationException
+            // بدلاً من السطر القديم الذي سبب المشكلة في الصورة:
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var byteProperties = entityType.GetProperties()
+                    .Where(p => p.ClrType == typeof(byte));
 
-					// 2. إخبار EF Core أن النوع في قاعدة البيانات هو tinyint
-					// (SQL Server TINYINT = C# Byte) - مطابقة 100%
-					property.SetColumnType("tinyint");
-				}
-			}
-			// ═══════════════════════════════════════════════════════════
-			// ═══════════════════════════════════════════════════════════
-			// -------------------------------------------
-		}
-	}
+                foreach (var property in byteProperties)
+                {
+                    // 1. إزالة أي محولات سابقة قد تسبب تعارضاً
+                    property.SetValueConverter((Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter)null);
+
+                    // 2. إخبار EF Core أن النوع في قاعدة البيانات هو tinyint
+                    // (SQL Server TINYINT = C# Byte) - مطابقة 100%
+                    property.SetColumnType("tinyint");
+                }
+            }
+            #endregion
+            // ═══════════════════════════════════════════════════════════
+            // ═══════════════════════════════════════════════════════════
+            // -------------------------------------------
+        }
+    }
 }

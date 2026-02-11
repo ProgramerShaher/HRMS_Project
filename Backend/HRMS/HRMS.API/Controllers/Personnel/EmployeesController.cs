@@ -10,6 +10,7 @@ using HRMS.Application.DTOs.Personnel;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using HRMS.Application.Features.Personnel.Employees.Commands.UploadDocument;
 
 namespace HRMS.API.Controllers.Personnel;
 
@@ -98,6 +99,19 @@ public class EmployeesController : ControllerBase
             EmployeeId = id, 
             ProfilePicture = photo 
         };
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// رفع وثائق الموظف (هوية، شهادات، عقود)
+    /// Upload Employee Documents
+    /// </summary>
+    [HttpPost("{id}/documents")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<Result<int>>> UploadDocument(int id, [FromForm] UploadEmployeeDocumentCommand command)
+    {
+        if (id != command.EmployeeId) command.EmployeeId = id;
         var result = await _mediator.Send(command);
         return Ok(result);
     }

@@ -1,0 +1,319 @@
+2026-02-11 03:22:51.080 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:22:51.702 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:23:38.517 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:23:39.073 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:29:00.904 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:29:01.366 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:31:17.019 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:31:17.478 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:32:06.444 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:32:06.911 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:33:48.779 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:33:49.179 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:48:02.054 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:48:02.526 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:48:43.118 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:48:43.582 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:49:23.266 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:49:23.627 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:49:41.431 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:49:41.879 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:50:31.340 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:50:31.730 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:52:44.182 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:52:44.554 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:53:29.878 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:53:30.311 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:54:14.497 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:54:15.037 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:54:50.674 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:54:51.113 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:55:32.813 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:55:33.337 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 03:56:18.784 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 03:56:19.189 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 16:29:19.044 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 16:29:20.855 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 16:30:12.523 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 16:30:12.835 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 16:31:54.731 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 16:31:55.169 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 16:32:33.750 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 16:32:34.203 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 16:34:13.863 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 16:34:14.360 +03:00 [FTL] ❌ Application terminated unexpectedly
+Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Program.cs:line 76
+2026-02-11 17:04:03.858 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-02-11 17:04:06.420 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-02-11 17:04:08.467 +03:00 [WRN] No store type was specified for the decimal property 'Hours' on entity type 'PermissionRequest'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-11 17:04:08.471 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-11 17:04:08.472 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-11 17:04:08.474 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-02-11 17:04:09.980 +03:00 [INF] Executed DbCommand (208ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-02-11 17:04:10.107 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-02-11 17:04:10.115 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-02-11 17:04:10.145 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[EmployeeId], [a].[FullNameAr], [a].[FullNameEn], [a].[IsActive], [a].[LastLoginAt], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshToken], [a].[RefreshTokenExpiryTime], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2026-02-11 17:04:10.210 +03:00 [INF] ✅ Default roles and admin user seeded successfully
+2026-02-11 17:04:10.217 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-02-11 17:04:10.370 +03:00 [INF] Expiry Notification Service Started.
+2026-02-11 17:04:10.774 +03:00 [INF] Executed DbCommand (32ms) [Parameters=[@__thirtyDaysFromNow_0='?' (DbType = DateTime2), @__today_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[DOCUMENT_ID], [e].[CONTENT_TYPE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DOCUMENT_NUMBER], [e].[DOCUMENT_TYPE_ID], [e].[EMPLOYEE_ID], [e].[EXPIRY_DATE], [e].[FILE_NAME], [e].[FILE_PATH], [e].[FILE_SIZE], [e].[IS_DELETED], [e].[ISSUE_DATE], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DOCUMENT_TYPE_ID], [d].[ALLOWED_EXTENSIONS], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEFAULT_EXPIRY_DAYS], [d].[DESCRIPTION], [d].[DOCUMENT_TYPE_NAME_AR], [d].[DOCUMENT_TYPE_NAME_EN], [d].[HAS_EXPIRY], [d].[IS_DELETED], [d].[IS_REQUIRED], [d].[MAX_FILE_SIZE_MB], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEE_DOCUMENTS] AS [e]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e0] ON [e].[EMPLOYEE_ID] = [e0].[EMPLOYEE_ID]
+INNER JOIN [HR_CORE].[DOCUMENT_TYPES] AS [d] ON [e].[DOCUMENT_TYPE_ID] = [d].[DOCUMENT_TYPE_ID]
+WHERE [e].[EXPIRY_DATE] IS NOT NULL AND [e].[EXPIRY_DATE] <= @__thirtyDaysFromNow_0 AND [e].[EXPIRY_DATE] >= @__today_1
+2026-02-11 17:04:10.781 +03:00 [INF] Found 0 expiring documents.
+2026-02-11 17:04:10.820 +03:00 [INF] Now listening on: https://localhost:5001
+2026-02-11 17:04:10.825 +03:00 [INF] Now listening on: http://localhost:5000
+2026-02-11 17:04:11.122 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-02-11 17:04:11.124 +03:00 [INF] Hosting environment: Development
+2026-02-11 17:04:11.125 +03:00 [INF] Content root path: D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API
+2026-02-11 17:04:14.221 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger - null null
+2026-02-11 17:04:17.864 +03:00 [INF] HTTP GET /swagger responded 301 in 3212.4684 ms
+2026-02-11 17:04:17.879 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger - 301 null null 3673.6776ms
+2026-02-11 17:04:17.889 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/index.html - null null
+2026-02-11 17:04:18.091 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 183.5289 ms
+2026-02-11 17:04:18.095 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/index.html - 200 null text/html;charset=utf-8 206.0147ms
+2026-02-11 17:04:18.106 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/swagger-ui-bundle.js - null null
+2026-02-11 17:04:18.108 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/swagger-ui-standalone-preset.js - null null
+2026-02-11 17:04:18.108 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/swagger-ui.css - null null
+2026-02-11 17:04:18.109 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - null null
+2026-02-11 17:04:18.162 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 53.6991ms
+2026-02-11 17:04:18.283 +03:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2026-02-11 17:04:18.268 +03:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2026-02-11 17:04:18.460 +03:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2026-02-11 17:04:18.557 +03:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 438.6119 ms
+2026-02-11 17:04:18.557 +03:00 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 442.0978 ms
+2026-02-11 17:04:18.570 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/swagger-ui-standalone-preset.js - 200 230280 text/javascript 462.9951ms
+2026-02-11 17:04:18.567 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/swagger-ui.css - 200 152034 text/css 460.7372ms
+2026-02-11 17:04:18.557 +03:00 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 446.9490 ms
+2026-02-11 17:04:18.589 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/swagger-ui-bundle.js - 200 1456926 text/javascript 483.3705ms
+2026-02-11 17:04:18.934 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/_vs/browserLink - null null
+2026-02-11 17:04:19.378 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/_vs/browserLink - 200 null text/javascript; charset=UTF-8 443.6413ms
+2026-02-11 17:04:20.507 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - null null
+2026-02-11 17:04:21.335 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 824.8503 ms
+2026-02-11 17:04:21.353 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 846.082ms
+2026-02-11 17:05:02.338 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/api/Attendance/timesheet?employeeId=23&month=2&year=2026 - null null
+2026-02-11 17:05:02.355 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetTimesheet (HRMS.API)'
+2026-02-11 17:05:02.433 +03:00 [INF] Route matched with {action = "GetTimesheet", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Queries.GetDailyTimesheet.TimesheetDayDto]]]] GetTimesheet(Int32, Int32, Int32) on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-11 17:05:02.552 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__startDate_1='?' (DbType = DateTime2), @__endDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [d].[ATTENDANCE_DATE] >= @__startDate_1 AND [d].[ATTENDANCE_DATE] <= @__endDate_2 AND [d].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-11 17:05:02.577 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__endDate_0='?' (DbType = DateTime2), @__startDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[HOLIDAY_ID], [p].[CREATED_AT], [p].[CREATED_BY], [p].[END_DATE], [p].[HOLIDAY_NAME_AR], [p].[IS_DELETED], [p].[START_DATE], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p].[YEAR]
+FROM [HR_LEAVES].[PUBLIC_HOLIDAYS] AS [p]
+WHERE [p].[IS_DELETED] = CAST(0 AS tinyint) AND [p].[START_DATE] <= @__endDate_0 AND [p].[END_DATE] >= @__startDate_1
+2026-02-11 17:05:02.614 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__endDate_1='?' (DbType = DateTime2), @__startDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO], [l0].[LEAVE_TYPE_ID], [l0].[CREATED_AT], [l0].[CREATED_BY], [l0].[DEFAULT_DAYS], [l0].[IS_CARRY_FORWARD], [l0].[IS_DEDUCTIBLE], [l0].[IS_DELETED], [l0].[IS_PAID], [l0].[LEAVE_NAME_AR], [l0].[LEAVE_NAME_EN], [l0].[MAX_DAYS_PER_YEAR], [l0].[REQUIRES_ATTACHMENT], [l0].[UPDATED_AT], [l0].[UPDATED_BY], [l0].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+INNER JOIN [HR_LEAVES].[LEAVE_TYPES] AS [l0] ON [l].[LEAVE_TYPE_ID] = [l0].[LEAVE_TYPE_ID]
+WHERE [l].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [l].[STATUS] = N'APPROVED' AND [l].[IS_DELETED] = CAST(0 AS tinyint) AND [l].[START_DATE] <= @__endDate_1 AND [l].[END_DATE] >= @__startDate_2
+2026-02-11 17:05:02.646 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Queries.GetDailyTimesheet.TimesheetDayDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-11 17:05:02.692 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.GetTimesheet (HRMS.API) in 249.9112ms
+2026-02-11 17:05:02.695 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetTimesheet (HRMS.API)'
+2026-02-11 17:05:02.697 +03:00 [INF] HTTP GET /api/Attendance/timesheet responded 200 in 346.8853 ms
+2026-02-11 17:05:02.705 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/api/Attendance/timesheet?employeeId=23&month=2&year=2026 - 200 null application/json; charset=utf-8 367.2115ms
+2026-02-11 17:12:30.913 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/api/Attendance/my-roster - null null
+2026-02-11 17:12:30.927 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetMyRoster (HRMS.API)'
+2026-02-11 17:12:30.936 +03:00 [INF] Route matched with {action = "GetMyRoster", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster.MyRosterDto]]]] GetMyRoster() on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-11 17:12:30.944 +03:00 [INF] Executing UnauthorizedObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster.MyRosterDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-11 17:12:30.956 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.GetMyRoster (HRMS.API) in 16.9194ms
+2026-02-11 17:12:30.958 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetMyRoster (HRMS.API)'
+2026-02-11 17:12:30.959 +03:00 [INF] HTTP GET /api/Attendance/my-roster responded 401 in 33.0498 ms
+2026-02-11 17:12:30.962 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5001/api/Attendance/my-roster - 401 null application/json; charset=utf-8 49.1562ms
+2026-02-11 18:12:52.386 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5001/api/Attendance/correction-history/23 - null null
+2026-02-11 18:12:52.400 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetCorrectionHistory (HRMS.API)'
+2026-02-11 18:12:52.438 +03:00 [INF] Route matched with {action = "GetCorrectionHistory", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory.CorrectionHistoryDto]]]] GetCorrectionHistory(Int32) on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-11 18:12:52.725 +03:00 [INF] Executed DbCommand (43ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[CORRECTION_ID], [a].[ATTENDANCE_DATE], [a].[AUDIT_NOTE], [a].[CREATED_AT], [a].[CREATED_BY], [a].[DAILY_ATTENDANCE_ID], [a].[EMPLOYEE_ID], [a].[FIELD_NAME], [a].[IS_DELETED], [a].[NEW_VALUE], [a].[OLD_VALUE], [a].[UPDATED_AT], [a].[UPDATED_BY], [a].[VERSION_NO]
+FROM [HR_ATTENDANCE].[ATTENDANCE_CORRECTIONS] AS [a]
+WHERE [a].[EMPLOYEE_ID] = @__request_EmployeeId_0
+ORDER BY [a].[CREATED_AT] DESC

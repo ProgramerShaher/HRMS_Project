@@ -376,6 +376,15 @@ public interface IApplicationDbContext
 
     #endregion
 
+    #region Common Entities
+
+    /// <summary>
+    /// التنبيهات والإشعارات
+    /// </summary>
+    DbSet<HRMS.Core.Entities.Notifications.Notification> Notifications { get; }
+
+    #endregion
+
  #region Methods
     /// <summary>
     /// حفظ التغييرات في قاعدة البيانات (Async)

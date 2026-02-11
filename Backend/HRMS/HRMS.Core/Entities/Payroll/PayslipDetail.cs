@@ -20,10 +20,9 @@ namespace HRMS.Core.Entities.Payroll
         [ForeignKey(nameof(Payslip))]
         public long PayslipId { get; set; }
 
-        [Required]
         [Column("ELEMENT_ID")]
         [ForeignKey(nameof(SalaryElement))]
-        public int ElementId { get; set; }
+        public int? ElementId { get; set; }
 
         [MaxLength(100)]
         public string? ElementNameAr { get; set; }
@@ -37,6 +36,6 @@ namespace HRMS.Core.Entities.Payroll
 
         // Navigation Properties
         public virtual Payslip Payslip { get; set; } = null!;
-        public virtual SalaryElement SalaryElement { get; set; } = null!;
+        public virtual SalaryElement? SalaryElement { get; set; }
     }
 }

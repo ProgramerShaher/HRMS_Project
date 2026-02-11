@@ -65,10 +65,23 @@ public class ProcessPayrunCommandHandler : IRequestHandler<ProcessPayrunCommand,
                 EmployeeId = employeeId,
                 BasicSalary = calc.BasicSalary,
                 TotalAllowances = calc.TotalAllowances,
-                TotalDeductions = calc.TotalStructureDeductions + calc.LoanDeductions + calc.AttendancePenalties,
-                NetSalary = calc.NetSalary,
+                TotalDeductions = calc.TotalStructureDeductions + calc.LoanDeductions + calc.AttendancePenalties + calc.TotalViolations + calc.OtherDeductions,
                 
                 // Detailed Breakdown
+                TotalViolations = calc.TotalViolations,
+                OtherDeductions = calc.OtherDeductions,
+                NetSalary = calc.NetSalary,
+                
+                // Detailed Breakdown List
+                Details = calc.Details.Select(d => new PayslipDetail 
+                {
+                    ElementId = d.ElementId,
+                    ElementNameAr = d.NameAr,
+                    Amount = d.Amount,
+                    Type = d.Type
+                }).ToList(),
+
+                // Attendance & OT Breakdown
                 TotalLateMinutes = calc.TotalLateMinutes,
                 AbsenceDays = calc.AbsenceDays,
                 TotalOvertimeMinutes = calc.TotalOvertimeMinutes,

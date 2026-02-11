@@ -20,8 +20,24 @@ public class MonthlySalaryCalculationDto
     public int TotalOvertimeMinutes { get; set; }
     public decimal OvertimeEarnings { get; set; }
 
+    public decimal TotalViolations { get; set; } // New: Explicit Violation Deduction
+    public decimal OtherDeductions { get; set; } // New: Other Manual Deductions
+
     // Warnings (e.g., Missing Punches)
     public List<string> Warnings { get; set; } = new();
 
     public decimal NetSalary { get; set; }
+
+    // Professional Breakdown List
+    public List<SalaryDetailItem> Details { get; set; } = new();
+}
+
+public class SalaryDetailItem
+{
+    public string NameAr { get; set; } = string.Empty;
+    public string NameEn { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public string Type { get; set; } = string.Empty; // EARNING, DEDUCTION
+    public string Reference { get; set; } = string.Empty; // e.g., "Violation", "Loan", "Basic"
+    public int? ElementId { get; set; }
 }

@@ -14,16 +14,21 @@ public class ActionOvertimeCommandHandler : IRequestHandler<ActionOvertimeComman
 {
     private readonly IApplicationDbContext _context;
     private readonly IMediator _mediator;
+    private readonly INotificationService _notificationService;
 
-    public ActionOvertimeCommandHandler(IApplicationDbContext context, IMediator mediator)
+    public ActionOvertimeCommandHandler(IApplicationDbContext context, IMediator mediator, INotificationService notificationService)
     {
         _context = context;
         _mediator = mediator;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<bool>> Handle(ActionOvertimeCommand request, CancellationToken cancellationToken)
     {
-        var otRequest = await _context.OvertimeRequests.FindAsync(new object[] { request.RequestId }, cancellationToken);
+        var otRequest = await _context.OvertimeRequests
+            .Include(r => r.Employee)
+            .FirstOrDefaultAsync(r => r.OtRequestId == request.RequestId, cancellationToken);
+
         if (otRequest == null) return Result<bool>.Failure("الطلب غير موجود");
 
         if (otRequest.Status != "PENDING") 
@@ -52,6 +57,24 @@ public class ActionOvertimeCommandHandler : IRequestHandler<ActionOvertimeComman
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // إرسال تنبيه للموظف
+        try
+        {
+            if (otRequest.Employee?.UserId != null)
+            {
+                var title = request.Action == "APPROVE" ? "موافقة على العمل الإضافي" : "رفض طلب العمل الإضافي";
+                var message = request.Action == "APPROVE" 
+                    ? $"تمت الموافقة على طلب العمل الإضافي ليوم {otRequest.WorkDate:yyyy-MM-dd}."
+                    : $"تم رفض طلب العمل الإضافي ليوم {otRequest.WorkDate:yyyy-MM-dd}.";
+
+                await _notificationService.SendAsync(otRequest.Employee.UserId, title, message);
+            }
+        }
+        catch (Exception)
+        {
+            // Ignore notification errors
+        }
 
         // إعادة معالجة الحضور عند الموافقة لحساب الوقت الإضافي
         // Reprocess attendance on approval to calculate overtime

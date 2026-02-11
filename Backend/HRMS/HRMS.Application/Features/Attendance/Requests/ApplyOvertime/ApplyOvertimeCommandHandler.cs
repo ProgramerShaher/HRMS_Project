@@ -13,10 +13,12 @@ namespace HRMS.Application.Features.Attendance.Requests.ApplyOvertime;
 public class ApplyOvertimeCommandHandler : IRequestHandler<ApplyOvertimeCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public ApplyOvertimeCommandHandler(IApplicationDbContext context)
+    public ApplyOvertimeCommandHandler(IApplicationDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<int>> Handle(ApplyOvertimeCommand request, CancellationToken cancellationToken)
@@ -41,6 +43,28 @@ public class ApplyOvertimeCommandHandler : IRequestHandler<ApplyOvertimeCommand,
 
         _context.OvertimeRequests.Add(otRequest);
         await _context.SaveChangesAsync(cancellationToken);
+
+        // إرسال تنبيه للمدير المباشر
+        try
+        {
+            var employee = await _context.Employees
+                .Include(e => e.Manager)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.EmployeeId == request.EmployeeId, cancellationToken);
+
+            if (employee?.Manager != null && !string.IsNullOrEmpty(employee.Manager.UserId))
+            {
+                await _notificationService.SendAsync(
+                    userId: employee.Manager.UserId,
+                    title: "طلب عمل إضافي جديد",
+                    message: $"قام الموظف {employee.FullNameAr} بتقديم طلب عمل إضافي بتاريخ {request.WorkDate:yyyy-MM-dd} لمدة {request.HoursRequested} ساعة."
+                );
+            }
+        }
+        catch (Exception)
+        {
+            // Log error silently
+        }
 
         return Result<int>.Success(otRequest.OtRequestId, "تم تقديم طلب العمل الإضافي بنجاح");
     }

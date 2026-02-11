@@ -170,7 +170,7 @@ public class RecruitmentController : ControllerBase
     /// </summary>
     [HttpPost("candidates")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<Result<int>>> CreateCandidate([FromBody] CreateCandidateCommand command)
+    public async Task<ActionResult<Result<int>>> CreateCandidate([FromForm] CreateCandidateCommand command)
     {
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result) : BadRequest(result);

@@ -26,6 +26,9 @@ namespace HRMS.Application
             // تسجيل FluentValidation
             services.AddValidatorsFromAssembly(assembly);
 
+            // تسجيل خدمات MediatR Manual Registration (Fix for Scanning Issue)
+            services.AddTransient<IRequestHandler<Features.Personnel.Employees.Commands.UploadDocument.UploadEmployeeDocumentCommand, Core.Utilities.Result<int>>, Features.Personnel.Employees.Commands.UploadDocument.UploadEmployeeDocumentCommandHandler>();
+
             // تسجيل خدمات السياسات والذاكرة المؤقتة
             services.AddScoped<IAttendancePolicyService, AttendancePolicyService>();
             services.AddScoped<Features.Payroll.Processing.Services.AttendanceAggregatorService>();
