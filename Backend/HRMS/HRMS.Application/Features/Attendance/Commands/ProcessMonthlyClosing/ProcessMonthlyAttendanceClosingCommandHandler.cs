@@ -1,297 +1,205 @@
 using HRMS.Application.DTOs.Attendance;
 using HRMS.Application.Exceptions;
 using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Payroll;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.Application.Features.Attendance.Commands.ProcessMonthlyClosing;
 
-/// <summary>
-/// Handler for processing monthly attendance closing with dynamic policy application.
-/// Implements ERP-grade calculations with complete audit trail.
-/// </summary>
-public class ProcessMonthlyAttendanceClosingCommandHandler 
-    : IRequestHandler<ProcessMonthlyAttendanceClosingCommand, MonthlyClosingResultDto>
+public class ProcessMonthlyAttendanceClosingCommandHandler
+	: IRequestHandler<ProcessMonthlyAttendanceClosingCommand, MonthlyClosingResultDto>
 {
-    private readonly IApplicationDbContext _context;
+	private readonly IApplicationDbContext _context;
 
-    public ProcessMonthlyAttendanceClosingCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
+	public ProcessMonthlyAttendanceClosingCommandHandler(IApplicationDbContext context)
+	{
+		_context = context;
+	}
 
-    public async Task<MonthlyClosingResultDto> Handle(
-        ProcessMonthlyAttendanceClosingCommand request, 
-        CancellationToken cancellationToken)
-    {
-        // ═══════════════════════════════════════════════════════════
-        // المرحلة 1: التحقق من وجود الفترة وحالة القفل
-        // Phase 1: Validate period existence and lock status
-        // ═══════════════════════════════════════════════════════════
-
-        var period = await _context.Database
-            .SqlQuery<RosterPeriodDto>($@"
-                SELECT 
-                    PERIOD_ID as PeriodId,
-                    YEAR as Year,
-                    MONTH as Month,
-                    IS_LOCKED as IsLocked,
-                    START_DATE as StartDate,
-                    END_DATE as EndDate
+	public async Task<MonthlyClosingResultDto> Handle(
+		ProcessMonthlyAttendanceClosingCommand request,
+		CancellationToken cancellationToken)
+	{
+		// 1. التحقق من وجود الفترة
+		var period = await _context.Database
+			.SqlQuery<RosterPeriodDto>($@"
+                SELECT PERIOD_ID as PeriodId, IS_LOCKED as IsLocked, START_DATE as StartDate, END_DATE as EndDate
                 FROM [HR_ATTENDANCE].[ROSTER_PERIODS]
-                WHERE YEAR = {request.Year} AND MONTH = {request.Month}
-            ")
-            .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
+                WHERE YEAR = {request.Year} AND MONTH = {request.Month}")
+			.FirstOrDefaultAsync(cancellationToken);
 
-        if (period == null)
-            throw new NotFoundException(
-                $"لا توجد فترة روستر للشهر {request.Month}/{request.Year}. " +
-                "يجب إنشاء الفترة أولاً قبل الإغلاق.");
+		if (period == null)
+			throw new NotFoundException($"فترة الحضور {request.Month}/{request.Year} غير موجودة.");
 
-        if (period.IsLocked == 1)
-            throw new InvalidOperationException(
-                $"الفترة {request.Month}/{request.Year} مغلقة بالفعل. " +
-                "لا يمكن إعادة المعالجة.");
+		if (period.IsLocked == 1)
+			throw new InvalidOperationException($"الفترة {request.Month}/{request.Year} مغلقة بالفعل.");
 
-        // ═══════════════════════════════════════════════════════════
-        // المرحلة 2: بدء معاملة ذرية لضمان تكامل البيانات
-        // Phase 2: Start atomic transaction
-        // ═══════════════════════════════════════════════════════════
+		using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
-        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+		try
+		{
+			var result = new MonthlyClosingResultDto { LockedPeriodId = period.PeriodId, ClosedAt = DateTime.Now };
 
-        try
-        {
-            var result = new MonthlyClosingResultDto
-            {
-                LockedPeriodId = period.PeriodId,
-                ClosedAt = DateTime.Now
-            };
+			// 2. جلب سجلات الحضور
+			// ملاحظة: قمنا بإزالة .ThenInclude(e => e.Salaries) لأنها تسببت في خطأ
+			var attendanceRecords = await _context.DailyAttendances
+				.Include(a => a.Employee)
+				.Where(a => a.AttendanceDate >= period.StartDate && a.AttendanceDate <= period.EndDate)
+				.ToListAsync(cancellationToken);
 
-            // ═══════════════════════════════════════════════════════════
-            // المرحلة 3: جلب جميع سجلات الحضور للفترة المحددة
-            // Phase 3: Fetch all attendance records for the period
-            // ═══════════════════════════════════════════════════════════
+			// 3. جلب الرواتب الأساسية للموظفين الموجودين في الحضور (استعلام مباشر لضمان الدقة)
+			// هذا يحل مشكلة عدم وجود Navigation Property
+			var employeeIds = attendanceRecords.Select(x => x.EmployeeId).Distinct().ToList();
 
-            var attendanceRecords = await _context.DailyAttendances
-                .Include(a => a.Employee)
-                    .ThenInclude(e => e.Department)
-                .Where(a => a.AttendanceDate >= period.StartDate 
-                         && a.AttendanceDate <= period.EndDate)
-                .ToListAsync(cancellationToken);
+			var salariesDict = new Dictionary<int, decimal>();
 
-            if (!attendanceRecords.Any())
-            {
-                // لا توجد سجلات حضور - نغلق الفترة فقط
-                await LockPeriod(period.PeriodId, request.ClosedByUserId, cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-                return result;
-            }
+			if (employeeIds.Any())
+			{
+				var empIdsStr = string.Join(",", employeeIds);
+				// نجلب أحدث راتب أساسي لكل موظف
+				var salariesDto = await _context.Database
+					.SqlQuery<EmployeeSalaryDto>($@"
+                        SELECT t.EMPLOYEE_ID as EmployeeId, t.BASIC_SALARY as BasicSalary
+                        FROM [HR_PAYROLL].[SALARIES] t
+                        INNER JOIN (
+                            SELECT EMPLOYEE_ID, MAX(SALARY_ID) as MaxId
+                            FROM [HR_PAYROLL].[SALARIES]
+                            WHERE EMPLOYEE_ID IN ({empIdsStr})
+                            GROUP BY EMPLOYEE_ID
+                        ) tm ON t.EMPLOYEE_ID = tm.EMPLOYEE_ID AND t.SALARY_ID = tm.MaxId
+                    ")
+					.ToListAsync(cancellationToken);
 
-            // ═══════════════════════════════════════════════════════════
-            // المرحلة 4: تجميع السجلات حسب الموظف والقسم
-            // Phase 4: Group records by employee and department
-            // ═══════════════════════════════════════════════════════════
+				salariesDict = salariesDto.ToDictionary(k => k.EmployeeId, v => v.BasicSalary);
+			}
 
-            var employeeGroups = attendanceRecords
-                .GroupBy(a => new 
-                { 
-                    a.EmployeeId, 
-                    DeptId = a.Employee.DepartmentId 
-                })
-                .ToList();
+			// تجميع السجلات حسب الموظف
+			var employeeGroups = attendanceRecords.GroupBy(a => new { a.EmployeeId, a.Employee.DepartmentId });
 
-            result.TotalEmployeesProcessed = employeeGroups.Count;
+			var financialAdjustments = new List<PayrollAdjustment>();
 
-            // ═══════════════════════════════════════════════════════════
-            // المرحلة 5: معالجة كل موظف بناءً على سياسة قسمه
-            // Phase 5: Process each employee based on department policy
-            // ═══════════════════════════════════════════════════════════
+			foreach (var group in employeeGroups)
+			{
+				var employeeId = group.Key.EmployeeId;
+				var deptId = group.Key.DepartmentId;
 
-            foreach (var employeeGroup in employeeGroups)
-            {
-                // جلب السياسة الخاصة بقسم الموظف (ديناميكياً - بدون قيم ثابتة)
-                // Fetch policy for employee's department (dynamic - zero hardcoding)
-                var policy = await GetDepartmentPolicy(employeeGroup.Key.DeptId, cancellationToken);
+				// حساب سعر الدقيقة من الراتب الذي جلبناه يدوياً
+				decimal basicSalary = salariesDict.ContainsKey(employeeId) ? salariesDict[employeeId] : 0;
 
-                if (policy == null)
-                {
-                    // في حالة عدم وجود سياسة خاصة، نستخدم السياسة الافتراضية
-                    // If no specific policy exists, use default policy
-                    policy = await GetDefaultPolicy(cancellationToken);
-                }
+				// المعادلة: الراتب / 30 يوم / 8 ساعات / 60 دقيقة
+				decimal minuteRate = (basicSalary > 0) ? (basicSalary / 30 / 8 / 60) : 0;
 
-                if (policy == null)
-                    throw new InvalidOperationException(
-                        $"لا توجد سياسة حضور معرفة للقسم {employeeGroup.Key.DeptId}. " +
-                        "يجب تعريف سياسة افتراضية على الأقل.");
+				// جلب السياسة
+				var policy = await GetDepartmentPolicy(deptId, cancellationToken) ?? await GetDefaultPolicy(cancellationToken);
+				if (policy == null) continue;
 
-                // معالجة سجلات الموظف
-                // Process employee records
-                foreach (var attendance in employeeGroup)
-                {
-                    // ═══════════════════════════════════════════════════════════
-                    // حساب التأخير المحتسب (بعد فترة السماح)
-                    // Calculate chargeable late time (after grace period)
-                    // ═══════════════════════════════════════════════════════════
+				int totalLateMinutes = 0;
+				int totalOvertimeMinutes = 0;
 
-                    short chargeableLateMinutes = 0;
-                    
-                    if (attendance.LateMinutes > policy.LateGraceMins)
-                    {
-                        // إذا تجاوز التأخير فترة السماح، نحتسب كامل وقت التأخير
-                        // If late time exceeds grace period, charge full late time
-                        chargeableLateMinutes = attendance.LateMinutes;
-                    }
-                    // else: التأخير ضمن فترة السماح = لا يُحتسب
-                    // else: Late time within grace = not charged
+				foreach (var record in group)
+				{
+					if (record.LateMinutes > policy.LateGraceMins)
+						totalLateMinutes += record.LateMinutes;
 
-                    result.TotalLateMinutesCharged += chargeableLateMinutes;
+					if (record.OvertimeMinutes > 0)
+					{
+						var isWeekend = record.Status == "OFF" || record.Status == "WEEKEND";
+						var multiplier = isWeekend ? policy.WeekendOtMultiplier : policy.OvertimeMultiplier;
+						totalOvertimeMinutes += (int)(record.OvertimeMinutes * multiplier);
+					}
+				}
 
-                    // ═══════════════════════════════════════════════════════════
-                    // حساب الوقت الإضافي باستخدام المعامل من السياسة
-                    // Calculate overtime using policy multiplier
-                    // ═══════════════════════════════════════════════════════════
+				// =========================================================
+				// التكامل المالي (تم تصحيح أسماء الحقول)
+				// =========================================================
 
-                    if (attendance.OvertimeMinutes > 0)
-                    {
-                        // المعامل يأتي من السياسة ديناميكياً
-                        // Multiplier comes from policy dynamically
-                        var multiplier = policy.OvertimeMultiplier;
-                        
-                        // يمكن حفظ الوقت الإضافي المحسوب في جدول منفصل للرواتب
-                        // Can save calculated overtime to separate payroll table
-                        var calculatedOvertimeValue = attendance.OvertimeMinutes * multiplier;
-                        
-                        result.TotalOvertimeMinutes += attendance.OvertimeMinutes;
+				// 1. خصم التأخير
+				if (totalLateMinutes > 0 && minuteRate > 0)
+				{
+					var deductionAmount = totalLateMinutes * minuteRate;
 
-                        // ملاحظة: في نظام ERP حقيقي، نحفظ هذه القيم في جدول PAYROLL_INPUTS
-                        // Note: In real ERP, save these values to PAYROLL_INPUTS table
-                    }
+					financialAdjustments.Add(new PayrollAdjustment
+					{
+						EmployeeId = employeeId,
+						AdjustmentType = "DEDUCTION",
+						Amount = Math.Round(deductionAmount, 2),
+						Reason = $"Late: {totalLateMinutes} mins ({request.Month}/{request.Year})",
+						// تم التصحيح: استخدام CreatedAt بدلاً من AdjustmentDate
+						CreatedAt = DateTime.Now,
+						CreatedBy = request.ClosedByUserId.ToString()
+					});
+				}
 
-                    // هنا يمكن إضافة منطق إضافي مثل:
-                    // Additional logic can be added here such as:
-                    // - حساب خصومات الغياب (Absence deductions)
-                    // - حساب بدل المواصلات (Transportation allowance)
-                    // - تطبيق قواعد الانصراف المبكر (Early leave rules)
-                }
-            }
+				// 2. استحقاق الإضافي
+				if (totalOvertimeMinutes > 0 && minuteRate > 0)
+				{
+					var earningAmount = totalOvertimeMinutes * minuteRate;
 
-            // ═══════════════════════════════════════════════════════════
-            // المرحلة 6: قفل الفترة لمنع التعديلات المستقبلية
-            // Phase 6: Lock period to prevent future modifications
-            // ═══════════════════════════════════════════════════════════
+					financialAdjustments.Add(new PayrollAdjustment
+					{
+						EmployeeId = employeeId,
+						AdjustmentType = "EARNING",
+						Amount = Math.Round(earningAmount, 2),
+						Reason = $"Overtime: {totalOvertimeMinutes} paid mins ({request.Month}/{request.Year})",
+						// تم التصحيح: استخدام CreatedAt بدلاً من AdjustmentDate
+						CreatedAt = DateTime.Now,
+						CreatedBy = request.ClosedByUserId.ToString()
+					});
+				}
 
-            await LockPeriod(period.PeriodId, request.ClosedByUserId, cancellationToken);
+				result.TotalLateMinutesCharged += totalLateMinutes;
+				result.TotalOvertimeMinutes += totalOvertimeMinutes;
+			}
 
-            // ═══════════════════════════════════════════════════════════
-            // المرحلة 7: حفظ التغييرات وإتمام المعاملة
-            // Phase 7: Save changes and commit transaction
-            // ═══════════════════════════════════════════════════════════
+			if (financialAdjustments.Any())
+			{
+				await _context.PayrollAdjustments.AddRangeAsync(financialAdjustments, cancellationToken);
+			}
 
-            await _context.SaveChangesAsync(cancellationToken);
-            await transaction.CommitAsync(cancellationToken);
+			await LockPeriod(period.PeriodId, request.ClosedByUserId, cancellationToken);
+			await _context.SaveChangesAsync(cancellationToken);
+			await transaction.CommitAsync(cancellationToken);
 
-            return result;
-        }
-        catch (Exception)
-        {
-            // في حالة حدوث خطأ، نلغي جميع التغييرات
-            // On error, rollback all changes
-            await transaction.RollbackAsync(cancellationToken);
-            throw;
-        }
-    }
+			result.TotalEmployeesProcessed = employeeGroups.Count();
+			return result;
+		}
+		catch
+		{
+			await transaction.RollbackAsync(cancellationToken);
+			throw;
+		}
+	}
 
-    /// <summary>
-    /// Retrieves attendance policy for a specific department (dynamic lookup)
-    /// </summary>
-    private async Task<AttendancePolicyDto?> GetDepartmentPolicy(
-        int? deptId, 
-        CancellationToken cancellationToken)
-    {
-        if (deptId == null)
-            return null;
+	// --- Helpers ---
 
-        return await _context.Database
-            .SqlQuery<AttendancePolicyDto>($@"
-                SELECT TOP 1
-                    POLICY_ID as PolicyId,
-                    LATE_GRACE_MINS as LateGraceMins,
-                    OVERTIME_MULTIPLIER as OvertimeMultiplier,
-                    WEEKEND_OT_MULTIPLIER as WeekendOtMultiplier
-                FROM [HR_ATTENDANCE].[ATTENDANCE_POLICIES]
-                WHERE DEPT_ID = {deptId}
-                ORDER BY POLICY_ID DESC
-            ")
-            .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
-    }
+	private async Task<AttendancePolicyDto?> GetDepartmentPolicy(int? deptId, CancellationToken cancellationToken)
+	{
+		if (deptId == null) return null;
+		return await _context.Database.SqlQuery<AttendancePolicyDto>($@"
+            SELECT TOP 1 POLICY_ID as PolicyId, LATE_GRACE_MINS as LateGraceMins, 
+                         OVERTIME_MULTIPLIER as OvertimeMultiplier, WEEKEND_OT_MULTIPLIER as WeekendOtMultiplier
+            FROM [HR_ATTENDANCE].[ATTENDANCE_POLICIES] WHERE DEPT_ID = {deptId} ORDER BY POLICY_ID DESC")
+		   .FirstOrDefaultAsync(cancellationToken);
+	}
 
-    /// <summary>
-    /// Retrieves default attendance policy when no department-specific policy exists
-    /// </summary>
-    private async Task<AttendancePolicyDto?> GetDefaultPolicy(CancellationToken cancellationToken)
-    {
-        return await _context.Database
-            .SqlQuery<AttendancePolicyDto>($@"
-                SELECT TOP 1
-                    POLICY_ID as PolicyId,
-                    LATE_GRACE_MINS as LateGraceMins,
-                    OVERTIME_MULTIPLIER as OvertimeMultiplier,
-                    WEEKEND_OT_MULTIPLIER as WeekendOtMultiplier
-                FROM [HR_ATTENDANCE].[ATTENDANCE_POLICIES]
-                WHERE DEPT_ID IS NULL AND JOB_ID IS NULL
-                ORDER BY POLICY_ID DESC
-            ")
-            .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
-    }
+	private async Task<AttendancePolicyDto?> GetDefaultPolicy(CancellationToken cancellationToken)
+	{
+		return await _context.Database.SqlQuery<AttendancePolicyDto>($@"
+            SELECT TOP 1 POLICY_ID as PolicyId, LATE_GRACE_MINS as LateGraceMins, 
+                         OVERTIME_MULTIPLIER as OvertimeMultiplier, WEEKEND_OT_MULTIPLIER as WeekendOtMultiplier
+            FROM [HR_ATTENDANCE].[ATTENDANCE_POLICIES] WHERE DEPT_ID IS NULL ORDER BY POLICY_ID DESC")
+			.FirstOrDefaultAsync(cancellationToken);
+	}
 
-    /// <summary>
-    /// Locks the roster period to prevent further modifications
-    /// </summary>
-    private async Task LockPeriod(
-        int periodId, 
-        int lockedByUserId, 
-        CancellationToken cancellationToken)
-    {
-        await _context.Database.ExecuteSqlRawAsync($@"
-            UPDATE [HR_ATTENDANCE].[ROSTER_PERIODS]
-            SET IS_LOCKED = 1,
-                LOCKED_BY = {lockedByUserId},
-                UPDATED_AT = GETDATE(),
-                UPDATED_BY = {lockedByUserId}
-            WHERE PERIOD_ID = {periodId}
-        ", cancellationToken);
-    }
+	private async Task LockPeriod(int periodId, int userId, CancellationToken ct)
+	{
+		await _context.Database.ExecuteSqlRawAsync(
+			$"UPDATE [HR_ATTENDANCE].[ROSTER_PERIODS] SET IS_LOCKED = 1, LOCKED_BY = {userId}, UPDATED_AT = GETDATE() WHERE PERIOD_ID = {periodId}", ct);
+	}
 
-    #region Internal DTOs for Raw SQL Queries
-
-    /// <summary>
-    /// DTO for roster period raw SQL queries
-    /// </summary>
-    internal class RosterPeriodDto
-    {
-        public int PeriodId { get; set; }
-        public short Year { get; set; }
-        public byte Month { get; set; }
-        public byte IsLocked { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-    }
-
-    /// <summary>
-    /// DTO for attendance policy raw SQL queries
-    /// </summary>
-    internal class AttendancePolicyDto
-    {
-        public int PolicyId { get; set; }
-        public short LateGraceMins { get; set; }
-        public decimal OvertimeMultiplier { get; set; }
-        public decimal WeekendOtMultiplier { get; set; }
-    }
-
-    #endregion
+	internal class RosterPeriodDto { public int PeriodId { get; set; } public byte IsLocked { get; set; } public DateTime StartDate { get; set; } public DateTime EndDate { get; set; } }
+	internal class AttendancePolicyDto { public int PolicyId { get; set; } public short LateGraceMins { get; set; } public decimal OvertimeMultiplier { get; set; } public decimal WeekendOtMultiplier { get; set; } }
+	// كلاس مساعد لجلب الراتب
+	internal class EmployeeSalaryDto { public int EmployeeId { get; set; } public decimal BasicSalary { get; set; } }
 }

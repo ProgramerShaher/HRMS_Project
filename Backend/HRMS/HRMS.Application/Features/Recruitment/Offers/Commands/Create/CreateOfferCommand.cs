@@ -100,7 +100,7 @@ public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Res
         // STEP 2: Verify Candidate Passed Interview
         // ═══════════════════════════════════════════════════════════
         var hasPassedInterview = await _context.Interviews
-            .AnyAsync(i => i.AppId == request.AppId && i.Result == "PASS" && i.IsDeleted == 0, cancellationToken);
+            .AnyAsync(i => i.AppId == request.AppId && i.Result == "PASSED" && i.IsDeleted == 0, cancellationToken);
 
         if (!hasPassedInterview)
             return Result<int>.Failure("يجب أن يجتاز المرشح مقابلة واحدة على الأقل قبل تقديم عرض");

@@ -9,9 +9,9 @@ namespace HRMS.Application.Features.Payroll.Processing.Queries.CalculateMonthlyS
 
 public class CalculateMonthlySalaryQuery : IRequest<Result<MonthlySalaryCalculationDto>>
 {
-    public int EmployeeId { get; set; }
-    public int Month { get; set; }
-    public int Year { get; set; }
+	public int EmployeeId { get; set; }
+	public int Month { get; set; }
+	public int Year { get; set; }
 }
 
 public class CalculateMonthlySalaryQueryHandler : IRequestHandler<CalculateMonthlySalaryQuery, Result<MonthlySalaryCalculationDto>>

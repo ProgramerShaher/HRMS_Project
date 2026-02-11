@@ -111,16 +111,32 @@ export class TeamLeavesComponent implements OnInit {
 
   loadPendingRequests() {
     this.loading.set(true);
+    console.log('🔄 Loading pending leave requests...');
+    
     this.leaveRequestService.getPendingRequests().subscribe({
       next: (res) => {
+        console.log('✅ Pending Requests API Response:', res);
         if (res.succeeded) {
           this.pendingRequests.set(res.data);
+          console.log('📋 Pending requests loaded:', res.data);
+        } else {
+          console.error('❌ Pending Requests API failed:', res.message);
+          this.messageService.add({ 
+            severity: 'warn', 
+            summary: 'تحذير', 
+            detail: res.message || 'لا توجد طلبات معلقة' 
+          });
         }
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
+        console.error('❌ Pending Requests API Error:', err);
         this.loading.set(false);
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'فشل تحميل الطلبات' });
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'خطأ', 
+          detail: err.error?.message || 'فشل تحميل الطلبات' 
+        });
       }
     });
   }

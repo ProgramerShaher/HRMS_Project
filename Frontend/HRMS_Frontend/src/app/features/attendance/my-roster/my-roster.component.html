@@ -1,0 +1,42 @@
+<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">جدول مناوباتي للحالية</h2>
+    
+    <p-table [value]="roster()" [loading]="loading()" [rowHover]="true" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">اليوم</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">التاريخ</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">المناوبة</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">التوقيت</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">الحالة</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+            <tr [ngClass]="{'bg-amber-50/50 dark:bg-amber-900/10': item.isOffDay}">
+                <td class="font-bold">{{ item.dayName }}</td>
+                <td>{{ item.date | date:'dd/MM/yyyy' }}</td>
+                <td>
+                    <span class="font-medium" [ngClass]="{'text-slate-400': item.isOffDay}">{{ item.shiftName }}</span>
+                </td>
+                <td>
+                    <div *ngIf="!item.isOffDay" class="flex items-center gap-2 text-sm">
+                        <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded">{{ item.startTime }}</span>
+                        <i class="pi pi-arrow-left text-xs text-slate-400"></i>
+                        <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded">{{ item.endTime }}</span>
+                    </div>
+                    <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
+                </td>
+                <td>
+                    <p-tag [value]="item.isOffDay ? 'إجازة' : 'دوام'" [severity]="getSeverity(item.isOffDay)"></p-tag>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-8 text-slate-500">
+                    لا يوجد جدول مناوبات متاح حالياً
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,116 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- Total Employees -->
+    <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-6 border border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+        <div>
+            <span class="block text-slate-500 dark:text-zinc-400 text-sm font-medium mb-1">الموظفين</span>
+            <div class="text-2xl font-bold text-slate-900 dark:text-white">{{ liveStatus()?.totalEmployees || 0 }}</div>
+        </div>
+        <div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <i class="pi pi-users text-xl"></i>
+        </div>
+    </div>
+
+    <!-- Currently In -->
+    <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-6 border border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+        <div>
+            <span class="block text-slate-500 dark:text-zinc-400 text-sm font-medium mb-1">حاضر الآن</span>
+            <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ liveStatus()?.currentlyIn || 0 }}</div>
+        </div>
+        <div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <i class="pi pi-check-circle text-xl"></i>
+        </div>
+    </div>
+
+    <!-- Checked Out / Not In -->
+    <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-6 border border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+        <div>
+            <span class="block text-slate-500 dark:text-zinc-400 text-sm font-medium mb-1">لم يحضر</span>
+            <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ liveStatus()?.notYetIn || 0 }}</div>
+        </div>
+        <div class="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+            <i class="pi pi-clock text-xl"></i>
+        </div>
+    </div>
+
+    <!-- Absent/Leave -->
+    <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-6 border border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+        <div>
+            <span class="block text-slate-500 dark:text-zinc-400 text-sm font-medium mb-1">غياب / إجازة</span>
+            <div class="text-2xl font-bold text-rose-600 dark:text-rose-400">{{ (liveStatus()?.absent || 0) + (liveStatus()?.onLeave || 0) }}</div>
+        </div>
+        <div class="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
+            <i class="pi pi-exclamation-circle text-xl"></i>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Exceptions List -->
+    <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">استثناءات اليوم</h3>
+            <button pButton icon="pi pi-refresh" (click)="loadData()" class="p-button-text p-button-rounded"></button>
+        </div>
+        
+        <p-table [value]="exceptions() || []" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>الموظف</th>
+                    <th>الوقت</th>
+                    <th>الحالة</th>
+                    <th>الاجراء</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ex>
+                <tr>
+                    <td>
+                        <div class="font-medium text-slate-900 dark:text-white">{{ ex.employeeName }}</div>
+                        <div class="text-xs text-slate-500">ID: {{ ex.employeeId }}</div>
+                    </td>
+                    <td>
+                        <div *ngIf="ex.inTime" class="text-sm">دخول: {{ ex.inTime | date:'shortTime' }}</div>
+                        <div *ngIf="ex.outTime" class="text-sm">خروج: {{ ex.outTime | date:'shortTime' }}</div>
+                    </td>
+                    <td>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400">
+                            {{ ex.issue }}
+                        </span>
+                    </td>
+                    <td>
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded p-button-sm" pTooltip="تصحيح"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-slate-500">لا توجد استثناءات اليوم</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Quick Stats / Actions -->
+    <div class="space-y-6">
+        <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
+             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">إجراءات سريعة</h3>
+             <div class="grid grid-cols-2 gap-4">
+                 <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                     <i class="pi pi-clock text-2xl text-blue-600 mb-2"></i>
+                     <span class="text-sm font-medium text-slate-700 dark:text-slate-300">تسجيل بصمة</span>
+                 </button>
+                 <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                     <i class="pi pi-calendar-plus text-2xl text-purple-600 mb-2"></i>
+                     <span class="text-sm font-medium text-slate-700 dark:text-slate-300">طلب إجازة</span>
+                 </button>
+                  <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                     <i class="pi pi-users text-2xl text-amber-600 mb-2"></i>
+                     <span class="text-sm font-medium text-slate-700 dark:text-slate-300">مناوبات</span>
+                 </button>
+                  <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                     <i class="pi pi-file-edit text-2xl text-emerald-600 mb-2"></i>
+                     <span class="text-sm font-medium text-slate-700 dark:text-slate-300">تقارير</span>
+                 </button>
+             </div>
+        </div>
+    </div>
+</div>
