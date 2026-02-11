@@ -5,15 +5,15 @@ namespace HRMS.Application.Interfaces;
 public interface IReportingService
 {
     // HR & Personnel Analytics
-    Task<HROverviewDto> GetHROverviewAsync();
+    Task<AnalyticsHROverviewDto> GetHROverviewAsync();
     
     // Attendance Analytics
-    Task<AttendanceStatsDto> GetAttendanceStatsAsync(DateTime startDate, DateTime endDate);
+    Task<AnalyticsAttendanceStatsDto> GetAttendanceStatsAsync(DateTime startDate, DateTime endDate);
     
     // Payroll Analytics
-    Task<PayrollStatsDto> GetPayrollStatsAsync(int month, int year);
+    Task<AnalyticsPayrollStatsDto> GetPayrollStatsAsync(int month, int year);
 
-    // Operational Reports
+    // Operational Reports (Keeping original names for now unless conflict found)
     Task<List<EmployeeCensusDto>> GetEmployeeCensusReportAsync(int? departmentId = null, string? status = null);
     
     Task<List<DailyAttendanceDetailsDto>> GetDetailedAttendanceReportAsync(DateTime startDate, DateTime endDate, int? departmentId = null);

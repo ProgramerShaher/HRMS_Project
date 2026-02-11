@@ -18,7 +18,7 @@ public class ReportingService : IReportingService
     // ═══════════════════════════════════════════════════════════
     // 1. HR & Personnel Analytics
     // ═══════════════════════════════════════════════════════════
-    public async Task<HROverviewDto> GetHROverviewAsync()
+    public async Task<AnalyticsHROverviewDto> GetHROverviewAsync()
     {
         var today = DateTime.UtcNow.Date;
         var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -33,13 +33,12 @@ public class ReportingService : IReportingService
             .CountAsync(e => e.HireDate >= firstDayOfMonth);
 
         // 2. Department Distribution
-        // Group by DeptNameAr (String Key)
         var deptDist = await _context.Employees
             .Where(e => e.IsActive && e.TerminationDate == null)
-            .GroupBy(e => e.Department.DeptNameAr) 
-            .Select(g => new DepartmentDistributionDto
+            .GroupBy(e => e.Department != null ? e.Department.DeptNameAr : "غير معرف")
+            .Select(g => new AnalyticsDepartmentDistributionDto
             {
-                DepartmentName = g.Key, // Key IS the DeptNameAr (String)
+                DepartmentName = g.Key,
                 EmployeeCount = g.Count()
             })
             .ToListAsync();
@@ -50,7 +49,7 @@ public class ReportingService : IReportingService
             .Include(d => d.Employee)
             .Include(d => d.DocumentType)
             .Where(d => d.ExpiryDate != null && d.ExpiryDate >= today && d.ExpiryDate <= thirtyDaysFromNow)
-            .Select(d => new DocumentExpiryDto
+            .Select(d => new AnalyticsDocumentExpiryDto
             {
                 EmployeeId = d.EmployeeId,
                 EmployeeName = d.Employee.FirstNameAr + " " + d.Employee.LastNameAr,
@@ -62,7 +61,7 @@ public class ReportingService : IReportingService
             .Take(10)
             .ToListAsync();
 
-        return new HROverviewDto
+        return new AnalyticsHROverviewDto
         {
             TotalEmployees = totalEmployees,
             TotalDepartments = totalDepartments,
@@ -75,7 +74,7 @@ public class ReportingService : IReportingService
     // ═══════════════════════════════════════════════════════════
     // 2. Attendance Analytics
     // ═══════════════════════════════════════════════════════════
-    public async Task<AttendanceStatsDto> GetAttendanceStatsAsync(DateTime startDate, DateTime endDate)
+    public async Task<AnalyticsAttendanceStatsDto> GetAttendanceStatsAsync(DateTime startDate, DateTime endDate)
     {
         var logs = await _context.DailyAttendances
             .Include(d => d.Employee)
@@ -92,7 +91,7 @@ public class ReportingService : IReportingService
         // 1. Daily Trend
         var trend = logs
             .GroupBy(l => l.AttendanceDate.Date)
-            .Select(g => new DailyAttendanceSummaryDto
+            .Select(g => new AnalyticsDailyAttendanceSummaryDto
             {
                 Date = g.Key,
                 PresentCount = g.Count(x => x.Status == "Present" || x.Status == "Late"),
@@ -105,11 +104,10 @@ public class ReportingService : IReportingService
         // 2. Top Late Employees
         var topLate = logs
             .Where(l => l.Status == "Late" && l.LateMinutes > 0)
-            .GroupBy(l => l.Employee) // Group by Employee Object
-            .Select(g => new EmployeeAttendanceRankingDto
+            .GroupBy(l => l.Employee)
+            .Select(g => new AnalyticsEmployeeAttendanceRankingDto
             {
                 EmployeeName = g.Key.FirstNameAr + " " + g.Key.LastNameAr,
-                // Accessing Department via g.Key (Employee) -> Department -> DeptNameAr
                 Department = g.Key.Department != null ? g.Key.Department.DeptNameAr : "-",
                 Count = g.Sum(x => x.LateMinutes)
             })
@@ -117,7 +115,7 @@ public class ReportingService : IReportingService
             .Take(5)
             .ToList();
 
-        return new AttendanceStatsDto
+        return new AnalyticsAttendanceStatsDto
         {
             TotalWorkingDays = totalDays,
             TotalPresent = totalPresent,
@@ -132,7 +130,7 @@ public class ReportingService : IReportingService
     // ═══════════════════════════════════════════════════════════
     // 3. Payroll Analytics
     // ═══════════════════════════════════════════════════════════
-    public async Task<PayrollStatsDto> GetPayrollStatsAsync(int month, int year)
+    public async Task<AnalyticsPayrollStatsDto> GetPayrollStatsAsync(int month, int year)
     {
         var slips = await _context.Payslips
             .Include(p => p.Employee)
@@ -146,10 +144,10 @@ public class ReportingService : IReportingService
         var totalAllowances = slips.Sum(p => p.TotalAllowances ?? 0);
         var totalDeductions = slips.Sum(p => p.TotalDeductions ?? 0);
 
-        // Cost by Department (String Key)
+        // Cost by Department
         var deptCost = slips
             .GroupBy(p => p.Employee.Department != null ? p.Employee.Department.DeptNameAr : "غير معرف")
-            .Select(g => new PayrollBreakdownDto
+            .Select(g => new AnalyticsPayrollBreakdownDto
             {
                 Category = g.Key,
                 Amount = g.Sum(p => p.NetSalary ?? 0)
@@ -157,7 +155,7 @@ public class ReportingService : IReportingService
             .OrderByDescending(x => x.Amount)
             .ToList();
 
-        return new PayrollStatsDto
+        return new AnalyticsPayrollStatsDto
         {
             Month = month,
             Year = year,
@@ -170,7 +168,7 @@ public class ReportingService : IReportingService
     }
 
     // ═══════════════════════════════════════════════════════════
-    // 4. Operational Reports
+    // 4. Operational Reports (Unchanged DTO names for now)
     // ═══════════════════════════════════════════════════════════
     public async Task<List<EmployeeCensusDto>> GetEmployeeCensusReportAsync(int? departmentId = null, string? status = null)
     {
@@ -201,7 +199,7 @@ public class ReportingService : IReportingService
             JobTitle = e.Job != null ? e.Job.JobTitleAr : "-",
             HireDate = e.HireDate,
             Status = (e.IsActive && e.TerminationDate == null) ? "نشط" : "منتهي",
-            Nationality = e.NationalityId != null ? e.NationalityId.ToString() : "-", // Using ID as fallback since Entity doesn't verify easily
+            Nationality = e.NationalityId != null ? e.NationalityId.ToString() : "-",
             MobileNumber = e.Mobile ?? "-",
             Email = e.Email ?? "-",
             BasicSalary = e.Compensation != null ? e.Compensation.BasicSalary : 0
@@ -290,7 +288,7 @@ public class ReportingService : IReportingService
             EndDate = l.EndDate,
             Days = l.DaysCount,
             Status = l.Status,
-            Reason = l.Reason ?? "-",
+            Reason = l.Reason ?? "-"
         })
         .OrderByDescending(l => l.RequestDate)
         .ToListAsync();

@@ -1,21 +1,21 @@
 namespace HRMS.Application.DTOs.Reports.Analytics;
 
-public class HROverviewDto
+public class AnalyticsHROverviewDto
 {
     public int TotalEmployees { get; set; }
     public int TotalDepartments { get; set; }
     public int NewHiresThisMonth { get; set; }
-    public List<DepartmentDistributionDto> DepartmentDistribution { get; set; } = new();
-    public List<DocumentExpiryDto> UpcomingDocumentExpirations { get; set; } = new();
+    public List<AnalyticsDepartmentDistributionDto> DepartmentDistribution { get; set; } = new();
+    public List<AnalyticsDocumentExpiryDto> UpcomingDocumentExpirations { get; set; } = new();
 }
 
-public class DepartmentDistributionDto
+public class AnalyticsDepartmentDistributionDto
 {
     public string DepartmentName { get; set; } = string.Empty;
     public int EmployeeCount { get; set; }
 }
 
-public class DocumentExpiryDto
+public class AnalyticsDocumentExpiryDto
 {
     public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = string.Empty;
@@ -24,18 +24,18 @@ public class DocumentExpiryDto
     public int DaysRemaining { get; set; }
 }
 
-public class AttendanceStatsDto
+public class AnalyticsAttendanceStatsDto
 {
     public int TotalWorkingDays { get; set; }
     public int TotalPresent { get; set; }
     public int TotalAbsent { get; set; }
     public int TotalLate { get; set; }
     public double AbsenteeismRate { get; set; }
-    public List<DailyAttendanceSummaryDto> DailyTrend { get; set; } = new();
-    public List<EmployeeAttendanceRankingDto> TopLateEmployees { get; set; } = new();
+    public List<AnalyticsDailyAttendanceSummaryDto> DailyTrend { get; set; } = new();
+    public List<AnalyticsEmployeeAttendanceRankingDto> TopLateEmployees { get; set; } = new();
 }
 
-public class DailyAttendanceSummaryDto
+public class AnalyticsDailyAttendanceSummaryDto
 {
     public DateTime Date { get; set; }
     public int PresentCount { get; set; }
@@ -43,14 +43,14 @@ public class DailyAttendanceSummaryDto
     public int LateCount { get; set; }
 }
 
-public class EmployeeAttendanceRankingDto
+public class AnalyticsEmployeeAttendanceRankingDto
 {
     public string EmployeeName { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
     public int Count { get; set; } // Minutes or Days
 }
 
-public class PayrollStatsDto
+public class AnalyticsPayrollStatsDto
 {
     public int Month { get; set; }
     public int Year { get; set; }
@@ -58,10 +58,10 @@ public class PayrollStatsDto
     public decimal TotalBasicSalary { get; set; }
     public decimal TotalAllowances { get; set; }
     public decimal TotalDeductions { get; set; }
-    public List<PayrollBreakdownDto> DepartmentCost { get; set; } = new();
+    public List<AnalyticsPayrollBreakdownDto> DepartmentCost { get; set; } = new();
 }
 
-public class PayrollBreakdownDto
+public class AnalyticsPayrollBreakdownDto
 {
     public string Category { get; set; } = string.Empty;
     public decimal Amount { get; set; }

@@ -33,6 +33,10 @@ namespace HRMS.Infrastructure
 
             // التسجيل الصحيح والواضح للواجهة
             services.AddScoped<IApplicationDbContext, HRMSDbContext>();
+            
+            // تسجيل الخدمات الأساسية (Domain Services)
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IReportingService, ReportingService>();
 
             return services;
         }
