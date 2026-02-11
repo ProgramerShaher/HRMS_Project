@@ -66,13 +66,14 @@
     <!-- Reason -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">السبب *</label>
-      <p-textarea 
+      <textarea 
+        pTextarea
         formControlName="reason"
         rows="3"
         placeholder="اكتب سبب طلب الإجازة..."
         class="w-full text-sm"
         [class.border-red-500]="leaveForm.get('reason')?.invalid && leaveForm.get('reason')?.touched">
-      </p-textarea>
+      </textarea>
       <small class="text-xs text-gray-500">الحد الأدنى 10 أحرف</small>
     </div>
 

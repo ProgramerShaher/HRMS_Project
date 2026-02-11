@@ -7,6 +7,7 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { LeaveTransactionService } from '../../services/leave-transaction.service';
 import { LeaveTransaction } from '../../models/leave.models';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-transaction-history',
@@ -85,11 +86,11 @@ import { LeaveTransaction } from '../../models/leave.models';
 export class TransactionHistoryComponent implements OnInit {
   transactions = signal<LeaveTransaction[]>([]);
   loading = signal(false);
-  employeeId = 1; // TODO: Get from auth
 
   constructor(
     private transactionService: LeaveTransactionService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -97,8 +98,11 @@ export class TransactionHistoryComponent implements OnInit {
   }
 
   loadTransactions() {
+    const employeeId = this.authService.currentUser()?.employeeId;
+    if (!employeeId) return;
+
     this.loading.set(true);
-    this.transactionService.getTransactionHistory(this.employeeId).subscribe({
+    this.transactionService.getTransactionHistory(employeeId).subscribe({
       next: (res) => {
         if (res.succeeded) {
           this.transactions.set(res.data);

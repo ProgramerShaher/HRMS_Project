@@ -10,6 +10,7 @@ import { LeaveRequestService } from '../../services/leave-request.service';
 import { LeaveBalanceService } from '../../services/leave-balance.service';
 import { LeaveConfigurationService } from '../../services/leave-configuration.service';
 import { LeaveType, LeaveBalance } from '../../models/leave.models';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-leave-request-form',
@@ -25,14 +26,14 @@ export class LeaveRequestFormComponent implements OnInit {
   selectedBalance = signal<number | null>(null);
   calculatedDays = signal<number>(0);
   loading = signal(false);
-  employeeId = 1; // TODO: Get from auth service
 
   constructor(
     private fb: FormBuilder,
     private leaveRequestService: LeaveRequestService,
     private leaveBalanceService: LeaveBalanceService,
     private leaveConfigService: LeaveConfigurationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -54,6 +55,9 @@ export class LeaveRequestFormComponent implements OnInit {
   }
 
   loadData() {
+    const employeeId = this.authService.currentUser()?.employeeId;
+    if (!employeeId) return;
+
     this.loading.set(true);
     
     this.leaveConfigService.getLeaveTypes().subscribe({
@@ -65,7 +69,7 @@ export class LeaveRequestFormComponent implements OnInit {
       error: () => this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'فشل تحميل أنواع الإجازات' })
     });
 
-    this.leaveBalanceService.getEmployeeBalances(this.employeeId).subscribe({
+    this.leaveBalanceService.getEmployeeBalances(employeeId).subscribe({
       next: (res) => {
         if (res.succeeded) {
           this.balances.set(res.data);
@@ -101,9 +105,15 @@ export class LeaveRequestFormComponent implements OnInit {
       return;
     }
 
+    const employeeId = this.authService.currentUser()?.employeeId;
+    if (!employeeId) {
+      this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'لم يتم العثور على معرف الموظف' });
+      return;
+    }
+
     const formValue = this.leaveForm.value;
     const request = {
-      employeeId: this.employeeId,
+      employeeId: employeeId,
       leaveTypeId: formValue.leaveTypeId,
       startDate: formValue.startDate.toISOString().split('T')[0],
       endDate: formValue.endDate.toISOString().split('T')[0],

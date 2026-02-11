@@ -8,6 +8,7 @@ import { LeaveRequestListComponent } from '../../components/leave-request-list/l
 import { LeaveRequestService } from '../../services/leave-request.service';
 import { LeaveBalanceService } from '../../services/leave-balance.service';
 import { LeaveRequest, LeaveBalance } from '../../models/leave.models';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-my-leaves',
@@ -61,12 +62,12 @@ export class MyLeavesComponent implements OnInit {
   balances = signal<LeaveBalance[]>([]);
   requests = signal<LeaveRequest[]>([]);
   loading = signal(false);
-  employeeId = 1; // TODO: Get from auth service
 
   constructor(
     private leaveRequestService: LeaveRequestService,
     private leaveBalanceService: LeaveBalanceService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -74,36 +75,71 @@ export class MyLeavesComponent implements OnInit {
   }
 
   loadData() {
-    this.loading.set(true);
+    // Get employee ID from logged-in user
+    const currentUser = this.authService.currentUser();
+    const employeeId = currentUser?.employeeId;
 
-    this.leaveBalanceService.getEmployeeBalances(this.employeeId).subscribe({
+    if (!employeeId) {
+      console.error('❌ No employee ID found for current user');
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'خطأ', 
+        detail: 'لم يتم العثور على معرف الموظف. يرجى تسجيل الدخول مرة أخرى.' 
+      });
+      return;
+    }
+
+    this.loading.set(true);
+    console.log('🔄 Loading leaves data for employee:', employeeId);
+
+    this.leaveBalanceService.getEmployeeBalances(employeeId).subscribe({
       next: (res) => {
+        console.log('✅ Balance API Response:', res);
         if (res.succeeded) {
           this.balances.set(res.data);
+          console.log('📊 Balances loaded:', res.data);
+        } else {
+          console.error('❌ Balance API failed:', res.message);
+          this.messageService.add({ 
+            severity: 'warn', 
+            summary: 'تحذير', 
+            detail: res.message || 'لا توجد أرصدة متاحة' 
+          });
         }
       },
-      error: () => {
+      error: (err) => {
+        console.error('❌ Balance API Error:', err);
         this.messageService.add({ 
           severity: 'error', 
           summary: 'خطأ', 
-          detail: 'فشل تحميل الأرصدة' 
+          detail: err.error?.message || 'فشل تحميل الأرصدة' 
         });
       }
     });
 
-    this.leaveRequestService.getEmployeeRequests(this.employeeId).subscribe({
+    this.leaveRequestService.getEmployeeRequests(employeeId).subscribe({
       next: (res) => {
+        console.log('✅ Requests API Response:', res);
         if (res.succeeded) {
           this.requests.set(res.data);
+          console.log('📋 Requests loaded:', res.data);
+        } else {
+          console.error('❌ Requests API failed:', res.message);
+          this.messageService.add({ 
+            severity: 'warn', 
+            summary: 'تحذير', 
+            detail: res.message || 'لا توجد طلبات' 
+          });
         }
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
+        console.error('❌ Requests API Error:', err);
         this.loading.set(false);
         this.messageService.add({ 
           severity: 'error', 
           summary: 'خطأ', 
-          detail: 'فشل تحميل الطلبات' 
+          detail: err.error?.message || 'فشل تحميل الطلبات' 
         });
       }
     });
