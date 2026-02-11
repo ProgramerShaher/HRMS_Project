@@ -109,10 +109,12 @@ public class CreateLeaveRequestCommandValidator : AbstractValidator<CreateLeaveR
 public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveRequestCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public CreateLeaveRequestCommandHandler(IApplicationDbContext context)
+    public CreateLeaveRequestCommandHandler(IApplicationDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<int>> Handle(CreateLeaveRequestCommand request, CancellationToken cancellationToken)
@@ -130,6 +132,7 @@ public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveReque
             // ═══════════════════════════════════════════════════════════════════════════
 
             var employee = await _context.Employees
+                .Include(e => e.Manager)
                 .FirstOrDefaultAsync(e => e.EmployeeId == request.EmployeeId && e.IsDeleted == 0, cancellationToken);
 
             if (employee == null)
@@ -260,22 +263,26 @@ public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveReque
                 
                 _context.WorkflowApprovals.Add(workflowApproval);
                 await _context.SaveChangesAsync(cancellationToken);
+
+                // ═══════════════════════════════════════════════════════════════════════════
+                // الخطوة 8: إرسال تنبيه للمدير المباشر
+                // Step 8: Send Notification to Manager
+                // ═══════════════════════════════════════════════════════════════════════════
+                if (employee.Manager != null && !string.IsNullOrEmpty(employee.Manager.UserId))
+                {
+                    await _notificationService.SendAsync(
+                        userId: employee.Manager.UserId,
+                        title: "طلب إجازة جديد",
+                        message: $"قام الموظف {employee.FullNameAr} بتقديم طلب إجازة {leaveType.LeaveNameAr} لمدة {daysCount} يوم.",
+                        type: "Info",
+                        referenceType: "LeaveRequest",
+                        referenceId: leaveRequest.RequestId.ToString()
+                    );
+                }
             }
             else
             {
-                // If no manager, logic depends on requirements. 
-                // Either auto-approve or assign to HR.
-                // For now, we proceed but log warning or similar? 
-                // Or maybe the HR is the default approver?
-                // User requirement: "Fetch the MANAGER_ID...". If null, who approves?
-                // Assuming validation prior or just creating request without workflow if no manager?
-                // Or maybe this is a critical failure? 
-                // Let's create the request but without workflow entry if no manager, 
-                // effectively leaving it in PENDING state for HR Intervention maybe.
-                // However, user said "must automatically insert". 
-                // If ManagerId is null, I cannot insert a valid ApproverId.
-                // I will proceed without inserting workflow for now if ManagerId is null, 
-                // as creating it with null ApproverId (int) is impossible (unless 0).
+                // If no manager...
             }
 
             await transaction.CommitAsync(cancellationToken);

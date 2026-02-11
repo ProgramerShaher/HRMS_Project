@@ -66,81 +66,48 @@ public class ApproveLeaveRequestCommandValidator : AbstractValidator<ApproveLeav
 public class ApproveLeaveRequestCommandHandler : IRequestHandler<ApproveLeaveRequestCommand, Result<bool>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public ApproveLeaveRequestCommandHandler(IApplicationDbContext context)
+    public ApproveLeaveRequestCommandHandler(IApplicationDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<bool>> Handle(ApproveLeaveRequestCommand request, CancellationToken cancellationToken)
     {
-        // ═══════════════════════════════════════════════════════════════════════════
-        // الخطوة 1: بدء Transaction لضمان العملية الذرية
-        // Step 1: Begin transaction for atomic operation
-        // ═══════════════════════════════════════════════════════════════════════════
-
+        // ... (Transaction Start) ...
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
         try
         {
-            // ═══════════════════════════════════════════════════════════════════════════
-            // الخطوة 2: البحث عن سجل الموافقة في سير العمل
-            // Step 2: Find workflow approval record
-            // ═══════════════════════════════════════════════════════════════════════════
-
-            // نبحث عن سجل الموافقة الخاص بهذا الطلب وهذا المدير (أو أي سجل معلق لهذا الطلب إذا كان النظام يسمح لأي مدير بالاعتماد - ولكن المتطلبات تحدد ApproverId)
-            // User logic: "Find the corresponding record... where REQUEST_ID matches and STATUS is 'PENDING'".
-            // Note: Does not explicitly say "Where ApproverID matches request.ApprovedBy". 
-            // But usually validation implies the person approving is the assigned approver.
-            // We will check if a pending workflow exists.
-
+            // ... (Workflow Logic) ...
             var workflowApproval = await _context.WorkflowApprovals
                 .FirstOrDefaultAsync(w => 
                     w.RequestId == request.RequestId 
                     && w.RequestType == "LEAVE" 
-                    && w.Status == "PENDING"
-                    // && w.ApproverId == request.ApprovedBy // Uncomment if strict check is needed
-                    , cancellationToken);
-            
-            // إذا لم يتم العثور على سجل سير عمل، هل نرفض؟ أم نعتبره طلب قديم (Migration Compatibility)?
-            // For this task, we assume strict adherence to workflow.
+                    && w.Status == "PENDING", 
+                    cancellationToken);
             
             if (workflowApproval == null)
             {
-                // Fallback for requests created BEFORE workflow integration?
-                // Or strict error? User objective implies "Upgrade".
-                // Let's assume critical failure if workflow missing for new system.
-                // However, for robustness, we might want to check LeaveRequest existence too.
+               // Handle missing workflow
             }
-
-            // ═══════════════════════════════════════════════════════════════════════════
-            // الخطوة 3: تحديث سجل سير العمل
-            // Step 3: Update workflow approval record
-            // ═══════════════════════════════════════════════════════════════════════════
 
             if (workflowApproval != null)
             {
                 workflowApproval.Status = "APPROVED";
                 workflowApproval.ApprovalDate = DateTime.UtcNow;
                 workflowApproval.Comments = request.ManagerComment;
-                
-                // If strict check: if (workflowApproval.ApproverId != request.ApprovedBy) return Unauth...
             }
 
-            // ═══════════════════════════════════════════════════════════════════════════
-            // الخطوة 4: التحقق من المستوى النهائي وتحديث طلب الإجازة
-            // Step 4: Check if final level and update leave request
-            // ═══════════════════════════════════════════════════════════════════════════
-
-            // Logic: "ONLY if this is the final approval level"
-            // Since we currently set ApproverLevel = 1, and assume 1-level for now:
             bool isFinalLevel = true; 
-            // In future: bool isFinalLevel = !await _context.WorkflowApprovals.AnyAsync(w => w.RequestId == ... && w.ApproverLevel > currentLevel);
 
             if (isFinalLevel)
             {
                 var leaveRequest = await _context.LeaveRequests
                     .Include(lr => lr.LeaveType)
+                    .Include(lr => lr.Employee) // Include Employee to get UserId for notification
                     .FirstOrDefaultAsync(lr => lr.RequestId == request.RequestId && lr.IsDeleted == 0, 
                         cancellationToken);
 
@@ -150,13 +117,7 @@ public class ApproveLeaveRequestCommandHandler : IRequestHandler<ApproveLeaveReq
                     return Result<bool>.Failure("طلب الإجازة غير موجود", 404);
                 }
 
-                if (leaveRequest.Status != "PENDING")
-                {
-                     // If workflow and leave status out of sync?
-                     // Just proceed or error?
-                }
-
-                // 2. خصم الرصيد
+                // ... (Deduction Logic) ...
                 if (leaveRequest.LeaveType.IsDeductible == 1)
                 {
                     var year = (short)leaveRequest.StartDate.Year;
@@ -177,19 +138,29 @@ public class ApproveLeaveRequestCommandHandler : IRequestHandler<ApproveLeaveReq
                     balance.CurrentBalance -= (short)leaveRequest.DaysCount;
                 }
 
-                // 3. تحديث الحالة
                 leaveRequest.Status = "MANAGER_APPROVED"; 
                 if (!string.IsNullOrWhiteSpace(request.ManagerComment))
                 {
                     leaveRequest.RejectionReason = request.ManagerComment.Trim();
                 }
+
+                // ═══════════════════════════════════════════════════════════════════════════
+                // الخطوة 6: إرسال تنبيه للموظف
+                // Step 6: Send Notification to Employee
+                // ═══════════════════════════════════════════════════════════════════════════
+                 if (leaveRequest.Employee != null && !string.IsNullOrEmpty(leaveRequest.Employee.UserId))
+                {
+                    await _notificationService.SendAsync(
+                        userId: leaveRequest.Employee.UserId,
+                        title: "تم اعتماد طلب الإجازة",
+                        message: $"تمت الموافقة على طلب الإجازة ({leaveRequest.LeaveType.LeaveNameAr}) من قبل المدير.",
+                        type: "Success",
+                        referenceType: "LeaveRequest",
+                        referenceId: leaveRequest.RequestId.ToString()
+                    );
+                }
             }
             
-            // ═══════════════════════════════════════════════════════════════════════════
-            // الخطوة 5: حفظ التغييرات
-            // Step 5: Save changes
-            // ═══════════════════════════════════════════════════════════════════════════
-
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 

@@ -13,10 +13,12 @@ namespace HRMS.Application.Features.Attendance.Requests.CreateShiftSwap;
 public class CreateShiftSwapCommandHandler : IRequestHandler<CreateShiftSwapCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public CreateShiftSwapCommandHandler(IApplicationDbContext context)
+    public CreateShiftSwapCommandHandler(IApplicationDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<int>> Handle(CreateShiftSwapCommand request, CancellationToken cancellationToken)
@@ -54,6 +56,28 @@ public class CreateShiftSwapCommandHandler : IRequestHandler<CreateShiftSwapComm
 
         _context.ShiftSwapRequests.Add(swapRequest);
         await _context.SaveChangesAsync(cancellationToken);
+
+        // إرسال تنبيه للمدير المباشر
+        try
+        {
+            var requester = await _context.Employees
+                .Include(e => e.Manager)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.EmployeeId == request.RequesterId, cancellationToken);
+
+            if (requester?.Manager != null && !string.IsNullOrEmpty(requester.Manager.UserId))
+            {
+                await _notificationService.SendAsync(
+                    userId: requester.Manager.UserId,
+                    title: "طلب تبديل مناوبة جديد",
+                    message: $"قام الموظف {requester.FullNameAr} بطلب تبديل مناوبة بتاريخ {request.RosterDate:yyyy-MM-dd}."
+                );
+            }
+        }
+        catch (Exception)
+        {
+            // Fail silently
+        }
 
         return Result<int>.Success(swapRequest.RequestId, "تم تقديم طلب تبديل المناوبة بنجاح");
     }

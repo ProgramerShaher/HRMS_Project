@@ -12,10 +12,12 @@ namespace HRMS.Application.Features.Attendance.Requests.ActionShiftSwap;
 public class ActionShiftSwapCommandHandler : IRequestHandler<ActionShiftSwapCommand, Result<bool>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public ActionShiftSwapCommandHandler(IApplicationDbContext context)
+    public ActionShiftSwapCommandHandler(IApplicationDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<bool>> Handle(ActionShiftSwapCommand request, CancellationToken cancellationToken)
@@ -63,6 +65,38 @@ public class ActionShiftSwapCommandHandler : IRequestHandler<ActionShiftSwapComm
 
         swapRequest.ManagerComment = request.Comment;
         await _context.SaveChangesAsync(cancellationToken);
+
+        // إرسال التنبيهات
+        try
+        {
+            var requester = await _context.Employees.FindAsync(new object[] { swapRequest.RequesterId }, cancellationToken);
+            var target = await _context.Employees.FindAsync(new object[] { swapRequest.TargetEmployeeId }, cancellationToken);
+
+            // 1. تنبيه مقدم الطلب
+            if (requester?.UserId != null)
+            {
+                var title = request.Action == "APPROVE" ? "موافقة على تبديل المناوبة" : "رفض تبديل المناوبة";
+                var message = request.Action == "APPROVE"
+                    ? $"تمت الموافقة على طلب تبديل المناوبة ليوم {swapRequest.RosterDate:yyyy-MM-dd}."
+                    : $"تم رفض طلب تبديل المناوبة ليوم {swapRequest.RosterDate:yyyy-MM-dd}.";
+                
+                await _notificationService.SendAsync(requester.UserId, title, message);
+            }
+
+            // 2. تنبيه الطرف الآخر (في حال الموافقة فقط)
+            if (request.Action == "APPROVE" && target?.UserId != null)
+            {
+                await _notificationService.SendAsync(
+                    userId: target.UserId, 
+                    title: "تغيير في المناوبة", 
+                    message: $"تم اعتماد تبديل مناوبتك ليوم {swapRequest.RosterDate:yyyy-MM-dd} مع الموظف {requester?.FullNameAr}."
+                );
+            }
+        }
+        catch (Exception)
+        {
+            // Ignore logic
+        }
 
         return Result<bool>.Success(true, request.Action == "APPROVE" ? "تمت الموافقة على التبديل" : "تم رفض التبديل");
     }

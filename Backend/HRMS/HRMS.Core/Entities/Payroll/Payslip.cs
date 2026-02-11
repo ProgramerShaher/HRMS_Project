@@ -39,6 +39,13 @@ namespace HRMS.Core.Entities.Payroll
         [Column(TypeName = "decimal(10, 2)")]
         public decimal? NetSalary { get; set; }
 
+        // --- New Deduction Details ---
+        [Column("TOTAL_VIOLATIONS", TypeName = "decimal(10, 2)")]
+        public decimal TotalViolations { get; set; } = 0;
+
+        [Column("OTHER_DEDUCTIONS", TypeName = "decimal(10, 2)")]
+        public decimal OtherDeductions { get; set; } = 0;
+
         // --- Attendance & OT Breakdown ---
         [Column("TOTAL_LATE_MINUTES")]
         public int TotalLateMinutes { get; set; }
