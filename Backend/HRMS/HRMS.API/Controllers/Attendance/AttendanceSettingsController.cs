@@ -12,6 +12,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using HRMS.Application.Features.Attendance.Requests.ApplyOvertime;
 using HRMS.Application.Features.Attendance.Requests.ActionOvertime;
+using HRMS.Application.Features.Attendance.Roster.Commands.UpdateRosterDay;
+using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
+using HRMS.Core.Utilities; // Reusing Query
 
 namespace HRMS.API.Controllers.Attendance;
 
@@ -81,6 +84,20 @@ public class AttendanceSettingsController : ControllerBase
     public async Task<ActionResult<int>> ProcessAttendance([FromBody] ProcessAttendanceCommand command)
     {
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPost("roster/update-day")]
+    public async Task<ActionResult<Result<bool>>> UpdateRosterDay([FromBody] UpdateRosterDayCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("roster/{employeeId}")]
+    public async Task<ActionResult<Result<List<MyRosterDto>>>> GetEmployeeRoster(int employeeId)
+    {
+        var result = await _mediator.Send(new GetMyRosterQuery { EmployeeId = employeeId });
         return Ok(result);
     }
 

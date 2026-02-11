@@ -1,0 +1,72 @@
+<div class="card p-6 bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800">
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">إدارة المناوبات</h1>
+        <button pButton label="إضافة مناوبة" icon="pi pi-plus" class="p-button-primary" (click)="openNew()"></button>
+    </div>
+
+    <p-table [value]="shifts()" [rowHover]="true" styleClass="p-datatable-sm" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>اسم المناوبة</th>
+                <th>وقت البدء</th>
+                <th>وقت النهاية</th>
+                <th>عدد الساعات</th>
+                <th>عبر يومين</th>
+                <th>الإجراءات</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-shift>
+            <tr>
+                <td>{{ shift.shiftNameAr }}</td>
+                <td>{{ shift.startTime }}</td>
+                <td>{{ shift.endTime }}</td>
+                <td>{{ shift.hoursCount }}</td>
+                <td>
+                    <i class="pi" [ngClass]="{'pi-check text-green-500': shift.isCrossDay, 'pi-times text-slate-400': !shift.isCrossDay}"></i>
+                </td>
+                <td>
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-warning mr-2" (click)="editShift(shift)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteShift(shift)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="shiftDialog" [style]="{width: '450px'}" header="تفاصيل المناوبة" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="shiftForm">
+            <div class="field mb-4">
+                <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">اسم المناوبة</label>
+                <input type="text" pInputText id="name" formControlName="shiftNameAr" required />
+                <small class="text-red-500" *ngIf="shiftForm.get('shiftNameAr')?.invalid && shiftForm.get('shiftNameAr')?.touched">الاسم مطلوب</small>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="field mb-4">
+                    <label for="startTime" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">وقت البدء (HH:mm)</label>
+                    <input type="text" pInputText id="startTime" formControlName="startTime" placeholder="08:00" />
+                    <small class="text-red-500" *ngIf="shiftForm.get('startTime')?.invalid && shiftForm.get('startTime')?.touched">صيغة الوقت غير صحيحة</small>
+                </div>
+                <div class="field mb-4">
+                    <label for="endTime" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">وقت النهاية (HH:mm)</label>
+                    <input type="text" pInputText id="endTime" formControlName="endTime" placeholder="16:00" />
+                    <small class="text-red-500" *ngIf="shiftForm.get('endTime')?.invalid && shiftForm.get('endTime')?.touched">صيغة الوقت غير صحيحة</small>
+                </div>
+            </div>
+
+            <div class="field-checkbox mb-4 flex items-center gap-2">
+                <p-checkbox formControlName="isCrossDay" [binary]="true" inputId="isCrossDay"></p-checkbox>
+                <label for="isCrossDay" class="text-sm font-medium text-slate-700 dark:text-slate-300">هل المناوبة تعبر منتصف الليل؟</label>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton label="حفظ" icon="pi pi-check" class="p-button-text" (click)="saveShift()"></button>
+    </ng-template>
+</p-dialog>

@@ -1,0 +1,59 @@
+<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">طلبات قيد الانتظار</h2>
+    <p-toast></p-toast>
+
+    <p-table [value]="requests" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>نوع الطلب</th>
+                <th>الموظف</th>
+                <th>التاريخ</th>
+                <th>التفاصيل</th>
+                <th>الإجراء</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-req>
+            <tr>
+                <td>
+                    <span class="px-2 py-1 rounded text-xs font-bold" 
+                          [ngClass]="{
+                            'bg-blue-100 text-blue-800': req.type === 'Swap',
+                            'bg-purple-100 text-purple-800': req.type === 'Overtime'
+                          }">
+                        {{ req.type }}
+                    </span>
+                </td>
+                <td class="font-medium">{{ req.employeeName }}</td>
+                <td>{{ req.date }}</td>
+                <td class="text-slate-500">{{ req.details }}</td>
+                <td>
+                    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-button-rounded mr-2" (click)="openAction(req, 'Approve')"></button>
+                    <button pButton icon="pi pi-times" class="p-button-danger p-button-sm p-button-rounded" (click)="openAction(req, 'Reject')"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="dialogVisible" header="تأكيد الإجراء" [modal]="true" [style]="{width: '400px'}">
+    <div class="p-4">
+        <p class="mb-4">
+            هل أنت متأكد من 
+            <span [ngClass]="{'text-green-600': actionType === 'Approve', 'text-red-600': actionType === 'Reject'}" class="font-bold">
+                {{ actionType === 'Approve' ? 'قبول' : 'رفض' }}
+            </span>
+             الطلب؟
+        </p>
+        
+        <div class="field">
+            <label class="block text-sm font-medium mb-1">ملاحظات الإدارة</label>
+            <textarea pTextarea [(ngModel)]="comment" rows="3" class="w-full"></textarea>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" class="p-button-text" (click)="dialogVisible = false"></button>
+        <button pButton [label]="actionType === 'Approve' ? 'تأكيد القبول' : 'تأكيد الرفض'" 
+                [class]="actionType === 'Approve' ? 'p-button-success' : 'p-button-danger'" 
+                (click)="submitAction()"></button>
+    </ng-template>
+</p-dialog>
