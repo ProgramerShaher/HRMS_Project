@@ -23,5 +23,20 @@ public class MonthlySalaryCalculationDto
 	// Warnings (e.g., Missing Punches)
 	public List<string> Warnings { get; set; } = new();
 
+    public decimal TotalViolations { get; set; }
+    public decimal OtherDeductions { get; set; }
+
     public decimal NetSalary { get; set; }
+
+    public List<SalaryDetailItem> Details { get; set; } = new();
+}
+
+public class SalaryDetailItem
+{
+    public string NameAr { get; set; } = string.Empty;
+    public string NameEn { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public string Type { get; set; } = string.Empty; // EARNING, DEDUCTION
+    public string Reference { get; set; } = string.Empty; // BASIC, ALLOWANCE, LOAN, etc.
+    public int? ElementId { get; set; }
 }
