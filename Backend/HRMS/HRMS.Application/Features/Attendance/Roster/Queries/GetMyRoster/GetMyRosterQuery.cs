@@ -19,6 +19,9 @@ public class MyRosterDto
     public TimeSpan StartTime { get; set; }
     public TimeSpan EndTime { get; set; }
     public bool IsOffDay { get; set; }
+    public DateTime? ActualInTime { get; set; }
+    public DateTime? ActualOutTime { get; set; }
+    public string Status { get; set; } = string.Empty;
 }
 
 public class GetMyRosterQueryHandler : IRequestHandler<GetMyRosterQuery, Result<List<MyRosterDto>>>
@@ -36,20 +39,26 @@ public class GetMyRosterQueryHandler : IRequestHandler<GetMyRosterQuery, Result<
         var startOfMonth = new DateTime(today.Year, today.Month, 1);
         var endOfNextMonth = startOfMonth.AddMonths(2).AddDays(-1);
 
-        var rosters = await _context.EmployeeRosters
-            .Include(x => x.ShiftType)
-            .Where(x => x.EmployeeId == request.EmployeeId && x.RosterDate >= startOfMonth && x.RosterDate <= endOfNextMonth)
-            .OrderBy(x => x.RosterDate)
-            .ToListAsync(cancellationToken);
+        var rosters = await (from r in _context.EmployeeRosters.Include(x => x.ShiftType)
+                             join da in _context.DailyAttendances
+                             on new { r.EmployeeId, JoinDate = r.RosterDate.Date } equals new { da.EmployeeId, JoinDate = da.AttendanceDate.Date } into attendanceGroup
+                             from da in attendanceGroup.DefaultIfEmpty()
+                             where r.EmployeeId == request.EmployeeId && r.RosterDate >= startOfMonth && r.RosterDate <= endOfNextMonth
+                             orderby r.RosterDate
+                             select new { r, da })
+                             .ToListAsync(cancellationToken);
 
-        var dtos = rosters.Select(r => new MyRosterDto
+        var dtos = rosters.Select(item => new MyRosterDto
         {
-            Date = r.RosterDate,
-            DayName = r.RosterDate.DayOfWeek.ToString(),
-            ShiftName = r.ShiftType != null ? r.ShiftType.ShiftNameAr : "Off",
-            StartTime = r.ShiftType != null && TimeSpan.TryParse(r.ShiftType.StartTime, out var start) ? start : TimeSpan.Zero,
-            EndTime = r.ShiftType != null && TimeSpan.TryParse(r.ShiftType.EndTime, out var end) ? end : TimeSpan.Zero,
-            IsOffDay = r.IsOffDay == 1
+            Date = item.r.RosterDate,
+            DayName = item.r.RosterDate.DayOfWeek.ToString(),
+            ShiftName = item.r.ShiftType != null ? item.r.ShiftType.ShiftNameAr : "Off",
+            StartTime = item.r.ShiftType != null && TimeSpan.TryParse(item.r.ShiftType.StartTime, out var start) ? start : TimeSpan.Zero,
+            EndTime = item.r.ShiftType != null && TimeSpan.TryParse(item.r.ShiftType.EndTime, out var end) ? end : TimeSpan.Zero,
+            IsOffDay = item.r.IsOffDay == 1,
+            ActualInTime = item.da?.ActualInTime,
+            ActualOutTime = item.da?.ActualOutTime,
+            Status = item.da?.Status ?? (item.r.IsOffDay == 1 ? "OFF" : "Scheduled")
         }).ToList();
 
         return Result<List<MyRosterDto>>.Success(dtos);

@@ -14,11 +14,14 @@ using HRMS.Application.Features.Attendance.Commands.ManualCorrection;
 using HRMS.Application.Features.Attendance.Reports.Queries.GetMonthlyPayrollSummary;
 using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.CreatePermissionRequest;
 using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.ApproveRejectPermissionRequest;
-using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
-using HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory;
+using HRMS.Application.Features.Attendance.Requests.Permissions.Queries.GetMyPermissions;
+using HRMS.Application.Features.Attendance.Requests.Queries.GetMyOvertimeRequests;
+using HRMS.Application.Features.Attendance.Requests.Queries.GetMyShiftSwapRequests;
 using HRMS.Core.Utilities; // For Result<T>
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory;
+using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
 
 namespace HRMS.API.Controllers.Attendance;
 
@@ -185,10 +188,40 @@ public class AttendanceController : ControllerBase
     [HttpGet("my-roster")]
     public async Task<ActionResult<Result<List<MyRosterDto>>>> GetMyRoster()
     {
-         var userId = User.FindFirst("EmployeeId")?.Value; // Assuming EmployeeId claim exists
+         var userId = User.FindFirst("EmployeeId")?.Value;
          if (userId == null) return Unauthorized(Result<List<MyRosterDto>>.Failure("EmployeeId claim not found"));
 
         var result = await _mediator.Send(new GetMyRosterQuery { EmployeeId = int.Parse(userId) });
+        return Ok(result);
+    }
+
+    [HttpGet("my-permissions")]
+    public async Task<ActionResult<Result<List<PermissionRequestDto>>>> GetMyPermissions()
+    {
+         var userId = User.FindFirst("EmployeeId")?.Value;
+         if (userId == null) return Unauthorized(Result<List<PermissionRequestDto>>.Failure("EmployeeId claim not found"));
+
+        var result = await _mediator.Send(new GetMyPermissionsQuery { EmployeeId = int.Parse(userId) });
+        return Ok(result);
+    }
+
+    [HttpGet("my-overtime")]
+    public async Task<ActionResult<Result<List<OvertimeRequestDto>>>> GetMyOvertime()
+    {
+         var userId = User.FindFirst("EmployeeId")?.Value;
+         if (userId == null) return Unauthorized(Result<List<OvertimeRequestDto>>.Failure("EmployeeId claim not found"));
+
+        var result = await _mediator.Send(new GetMyOvertimeRequestsQuery { EmployeeId = int.Parse(userId) });
+        return Ok(result);
+    }
+
+    [HttpGet("my-swaps")]
+    public async Task<ActionResult<Result<List<ShiftSwapRequestDto>>>> GetMySwaps()
+    {
+         var userId = User.FindFirst("EmployeeId")?.Value;
+         if (userId == null) return Unauthorized(Result<List<ShiftSwapRequestDto>>.Failure("EmployeeId claim not found"));
+
+        var result = await _mediator.Send(new GetMyShiftSwapRequestsQuery { EmployeeId = int.Parse(userId) });
         return Ok(result);
     }
 

@@ -16,7 +16,10 @@ import {
   PayrollAttendanceSummaryDto, 
   CreatePermissionRequestCommand, 
   ApproveRejectPermissionRequestCommand, 
-  MyRosterDto 
+  MyRosterDto, 
+  PermissionRequestDto,
+  OvertimeRequestDto,
+  ShiftSwapRequestDto
 } from '../models/attendance.models';
 
 @Injectable({
@@ -113,5 +116,18 @@ export class AttendanceService {
   // Roster
   getMyRoster(): Observable<Result<MyRosterDto[]>> {
     return this.http.get<Result<MyRosterDto[]>>(`${this.apiUrl}/my-roster`);
+  }
+
+  // Request History
+  getMyPermissions(): Observable<Result<PermissionRequestDto[]>> {
+    return this.http.get<Result<PermissionRequestDto[]>>(`${this.apiUrl}/my-permissions`);
+  }
+
+  getMyOvertimeRequests(): Observable<Result<OvertimeRequestDto[]>> {
+    return this.http.get<Result<OvertimeRequestDto[]>>(`${this.apiUrl}/my-overtime`);
+  }
+
+  getMySwapRequests(): Observable<Result<ShiftSwapRequestDto[]>> {
+    return this.http.get<Result<ShiftSwapRequestDto[]>>(`${this.apiUrl}/my-swaps`);
   }
 }

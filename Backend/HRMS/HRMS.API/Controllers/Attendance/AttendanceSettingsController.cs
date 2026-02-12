@@ -22,13 +22,13 @@ namespace HRMS.API.Controllers.Attendance;
 [ApiController]
 public class AttendanceSettingsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+
+ private readonly IMediator _mediator;
 
     public AttendanceSettingsController(IMediator mediator)
     {
         _mediator = mediator;
     }
-
     // ═══════════════════════════════════════════════════════════
     // Shift Types Endpoints
     // ═══════════════════════════════════════════════════════════

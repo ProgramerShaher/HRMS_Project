@@ -22,20 +22,11 @@ public class CorrectionHistoryDto
     public string ManagerName { get; set; } = string.Empty;
 }
 
-public class GetCorrectionHistoryQueryHandler : IRequestHandler<GetCorrectionHistoryQuery, Result<List<CorrectionHistoryDto>>>
+public class GetCorrectionHistoryQueryHandler(IApplicationDbContext context, UserManager<ApplicationUser> userManager) : IRequestHandler<GetCorrectionHistoryQuery, Result<List<CorrectionHistoryDto>>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public GetCorrectionHistoryQueryHandler(IApplicationDbContext context, UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _userManager = userManager;
-    }
-
     public async Task<Result<List<CorrectionHistoryDto>>> Handle(GetCorrectionHistoryQuery request, CancellationToken cancellationToken)
     {
-        var corrections = await _context.AttendanceCorrections
+        var corrections = await context.AttendanceCorrections
             .Where(c => c.EmployeeId == request.EmployeeId)
             .OrderByDescending(c => c.CreatedAt)
             .ToListAsync(cancellationToken);
@@ -47,7 +38,7 @@ public class GetCorrectionHistoryQueryHandler : IRequestHandler<GetCorrectionHis
             var managerName = "System";
             if (!string.IsNullOrEmpty(c.CreatedBy))
             {
-                var user = await _userManager.FindByIdAsync(c.CreatedBy);
+                var user = await userManager.FindByIdAsync(c.CreatedBy);
                 managerName = user?.FullNameAr ?? user?.FullNameEn ?? c.CreatedBy;
             }
 

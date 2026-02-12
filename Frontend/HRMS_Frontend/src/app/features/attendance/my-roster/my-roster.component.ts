@@ -35,7 +35,28 @@ export class MyRosterComponent implements OnInit {
     });
   }
 
-  getSeverity(isOffDay: boolean): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined {
-    return isOffDay ? 'warn' : 'success';
+  getSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined {
+    switch (status?.toUpperCase()) {
+      case 'PRESENT': return 'success';
+      case 'ABSENT': return 'danger';
+      case 'LEAVE': return 'info';
+      case 'OFF': return 'warn';
+      case 'HOLIDAY': return 'info';
+      case 'MISSING_PUNCH': return 'danger';
+      default: return 'secondary';
+    }
+  }
+
+  getStatusLabel(item: MyRosterDto): string {
+    if (item.isOffDay) return 'إجازة';
+    switch (item.status?.toUpperCase()) {
+      case 'PRESENT': return 'حاضر';
+      case 'ABSENT': return 'غائب';
+      case 'LEAVE': return 'في إجازة';
+      case 'OFF': return 'يوم راحة';
+      case 'HOLIDAY': return 'عطلة';
+      case 'MISSING_PUNCH': return 'نقص بصمة';
+      default: return 'مجدول';
+    }
   }
 }

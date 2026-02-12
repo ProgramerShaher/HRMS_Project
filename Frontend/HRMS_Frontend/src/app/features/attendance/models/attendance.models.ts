@@ -62,6 +62,49 @@ export interface AttendanceStatsDto {
     attendancePercentage: number;
 }
 
+export interface PermissionRequestDto {
+    permissionRequestId: number;
+    employeeId: number;
+    employeeName: string;
+    permissionDate: string;
+    permissionType: string;
+    hours: number;
+    reason: string;
+    status: string;
+    rejectionReason?: string;
+    createdAt: string;
+    approverId?: number;
+    approverName?: string;
+}
+
+export interface OvertimeRequestDto {
+    overtimeRequestId: number;
+    employeeId: number;
+    employeeName: string;
+    requestDate: string;
+    hoursRequested: number;
+    hoursApproved?: number;
+    reason: string;
+    status: string;
+    managerComment?: string;
+    createdAt: string;
+    managerId?: number;
+    managerName?: string;
+}
+
+export interface ShiftSwapRequestDto {
+    swapRequestId: number;
+    requesterId: number;
+    requesterName: string;
+    targetEmployeeId: number;
+    targetEmployeeName: string;
+    rosterDate: string;
+    reason: string;
+    status: string;
+    managerComment?: string;
+    createdAt: string;
+}
+
 export interface TimesheetDayDto {
   date: string;
   dayName: string;
@@ -135,6 +178,9 @@ export interface MyRosterDto {
     startTime: string;
     endTime: string;
     isOffDay: boolean;
+    actualInTime?: string;
+    actualOutTime?: string;
+    status: string;
 }
 
 export interface ShiftTypeDto {
