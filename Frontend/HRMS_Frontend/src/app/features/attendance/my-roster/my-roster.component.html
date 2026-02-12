@@ -8,8 +8,8 @@
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">التاريخ</th>
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">المناوبة</th>
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">مخطط</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">الدخول الفعلي</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">الخروج الفعلي</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">دخول فعلي</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">خروج فعلي</th>
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">الحالة</th>
             </tr>
         </ng-template>
@@ -28,17 +28,17 @@
                     <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
                 </td>
                 <td>
-                    <span *ngIf="item.actualInTime" class="text-emerald-600 dark:text-emerald-400 font-mono text-sm">
+                    <span *ngIf="item.actualInTime" class="text-emerald-600 dark:text-emerald-400 font-mono text-sm" dir="ltr">
                         {{ item.actualInTime | date:'HH:mm:ss' }}
                     </span>
-                    <span *ngIf="!item.actualInTime && !item.isOffDay" class="text-slate-300 text-xs">--:--:--</span>
+                    <span *ngIf="!item.actualInTime && !item.isOffDay" class="text-slate-300 text-xs text-center block">--:--:--</span>
                     <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
                 </td>
                 <td>
-                    <span *ngIf="item.actualOutTime" class="text-rose-600 dark:text-rose-400 font-mono text-sm">
+                    <span *ngIf="item.actualOutTime" class="text-rose-600 dark:text-rose-400 font-mono text-sm" dir="ltr">
                         {{ item.actualOutTime | date:'HH:mm:ss' }}
                     </span>
-                    <span *ngIf="!item.actualOutTime && !item.isOffDay" class="text-slate-300 text-xs">--:--:--</span>
+                    <span *ngIf="!item.actualOutTime && !item.isOffDay" class="text-slate-300 text-xs text-center block">--:--:--</span>
                     <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
                 </td>
                 <td>

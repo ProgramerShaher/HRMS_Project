@@ -16,13 +16,12 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">
                     <form [formGroup]="swapForm" (ngSubmit)="submitSwap()" class="space-y-4">
                         <div class="field">
-                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ المناوبة</label>
-                            <p-datepicker formControlName="rosterDate" [showIcon]="true" styleClass="w-full" inputStyleClass="w-full"></p-datepicker>
+                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف البديل</label>
+                            <p-select [options]="employees" formControlName="targetEmployeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف البديل" styleClass="w-full"></p-select>
                         </div>
                         <div class="field">
-                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف البديل (ID)</label>
-                            <p-inputNumber formControlName="targetEmployeeId" styleClass="w-full" inputStyleClass="w-full"></p-inputNumber>
-                            <small class="text-gray-500">أدخل رقم الموظف الذي تريد التبديل معه</small>
+                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ المناوبة</label>
+                            <p-datepicker formControlName="rosterDate" [showIcon]="true" styleClass="w-full" inputStyleClass="w-full"></p-datepicker>
                         </div>
                         <div class="field">
                             <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
@@ -47,6 +46,10 @@
             <p-tabpanel value="1">
                 <form [formGroup]="overtimeForm" (ngSubmit)="submitOvertime()" class="max-w-xl space-y-4 pt-4">
                     <div class="field">
+                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
+                        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+                    </div>
+                    <div class="field">
                         <label class="block text-sm font-medium mb-1 dark:text-gray-300">التاريخ</label>
                         <p-datepicker formControlName="workDate" [showIcon]="true" styleClass="w-full"></p-datepicker>
                     </div>
@@ -65,6 +68,10 @@
             <!-- Permission Request Tab -->
             <p-tabpanel value="2">
                  <form [formGroup]="permissionForm" (ngSubmit)="submitPermission()" class="max-w-xl space-y-4 pt-4">
+                    <div class="field">
+                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
+                        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+                    </div>
                     <div class="field">
                         <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الإذن</label>
                         <p-datepicker formControlName="permissionDate" [showIcon]="true" [showTime]="true" styleClass="w-full"></p-datepicker>
@@ -88,11 +95,10 @@
             <!-- Correction Request Tab -->
             <p-tabpanel value="3">
                  <form [formGroup]="correctionForm" (ngSubmit)="submitCorrection()" class="max-w-xl space-y-4 pt-4">
-                     <div class="p-4 mb-4 bg-orange-50 text-orange-700 rounded border border-orange-200">
-                         <i class="pi pi-info-circle mr-2"></i>
-                         يستخدم هذا النموذج لتصحيح النسيان في تسجيل الدخول أو الخروج.
-                     </div>
-                     
+                    <div class="field">
+                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
+                        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+                    </div>
                     <div class="field">
                         <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الواقعة</label>
                         <p-datepicker formControlName="attendanceDate" [showIcon]="true" styleClass="w-full"></p-datepicker>

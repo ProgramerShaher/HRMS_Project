@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-slate-50 dark:bg-zinc-950 flex flex-col items-center py-8 px-4">
+    
+    <!-- Header / Clock -->
+    <div class="mb-8 text-center animate-fade-in-down">
+        <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-2">نظام الحضور الذكي</h1>
+        <div class="text-5xl font-mono dir-ltr font-bold text-blue-600 dark:text-blue-400 drop-shadow-md tracking-wider">
+            {{ currentTime() | date:'HH:mm:ss' }}
+        </div>
+        <div class="text-lg text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            {{ currentTime() | date:'fullDate' }}
+        </div>
+        <div class="mt-2 inline-block px-3 py-1 bg-slate-200 dark:bg-zinc-800 rounded-full text-xs font-mono text-slate-600 dark:text-slate-400">
+            Device ID: {{ DEVICE_ID }}
+        </div>
+    </div>
+
+    <!-- Search Tool -->
+    <div class="w-full max-w-6xl mb-6 relative group">
+        <i class="pi pi-search absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 z-10"></i>
+        <input type="text" 
+               [(ngModel)]="searchQuery" 
+               (input)="filterEmployees()" 
+               placeholder="ابحث برقم الموظف أو الاسم..." 
+               class="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-lg shadow-slate-200/50 dark:shadow-black/50 bg-white dark:bg-zinc-900 text-lg focus:ring-2 focus:ring-blue-500/50 transition-all outline-none">
+    </div>
+
+    <!-- Employees Table -->
+    <div class="w-full max-w-6xl card bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-zinc-800">
+        <p-table [value]="filteredEmployees" [paginator]="true" [rows]="10" styleClass="p-datatable-lg">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="text-right">الموظف</th>
+                    <th class="text-right">الوظيفة</th>
+                    <th class="text-right">المناوبة (اليوم)</th>
+                    <th class="text-center">سجل الحركة اليومي</th>
+                    <th class="text-center">تسجيل الحركة</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-emp>
+                <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors">
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
+                                {{ emp.fullNameAr?.charAt(0) }}
+                            </div>
+                            <div>
+                                <div class="font-bold text-slate-900 dark:text-white">{{ emp.fullNameAr }}</div>
+                                <div class="text-xs text-slate-500">#{{ emp.id }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-slate-600 dark:text-slate-400">{{ emp.jobTitle }}</td>
+                    <td>
+                        <span class="px-2 py-1 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                            {{ emp.currentShift }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <div class="flex flex-col gap-1 items-center justify-center text-xs">
+                            <div *ngIf="emp.lastPunchIn" class="flex items-center gap-1 text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded border border-green-100 dark:border-green-800">
+                                <i class="pi pi-arrow-down"></i>
+                                <span>{{ emp.lastPunchIn | date:'hh:mm a' }}</span>
+                            </div>
+                            <div *ngIf="emp.lastPunchOut" class="flex items-center gap-1 text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded border border-red-100 dark:border-red-800">
+                                <i class="pi pi-arrow-up"></i>
+                                <span>{{ emp.lastPunchOut | date:'hh:mm a' }}</span>
+                            </div>
+                            <span *ngIf="!emp.lastPunchIn && !emp.lastPunchOut" class="text-slate-400">-- : --</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-center gap-2">
+                            <button pButton 
+                                    (click)="quickPunch(emp, 'IN')" 
+                                    [disabled]="punchLoading"
+                                    class="p-button-rounded p-button-success p-button-outlined hover:bg-green-500 hover:text-white transition-all shadow-sm"
+                                    icon="pi pi-sign-in" 
+                                    label="دخول"
+                                    pTooltip="تسجيل دخول"></button>
+                                    
+                            <button pButton 
+                                    (click)="quickPunch(emp, 'OUT')" 
+                                    [disabled]="punchLoading"
+                                    class="p-button-rounded p-button-danger p-button-outlined hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                                    icon="pi pi-sign-out" 
+                                    label="خروج"
+                                    pTooltip="تسجيل خروج"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        
+        <div *ngIf="filteredEmployees.length === 0" class="text-center py-12">
+            <i class="pi pi-users text-4xl text-slate-300 mb-4"></i>
+            <p class="text-slate-500">لا يوجد موظفين مطابقين للبحث</p>
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>
+<p-toast></p-toast>

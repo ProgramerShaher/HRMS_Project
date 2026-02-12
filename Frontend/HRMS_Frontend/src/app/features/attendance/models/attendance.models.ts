@@ -197,67 +197,6 @@ export interface CreateShiftTypeCommand {
     startTime: string;
     endTime: string;
     isCrossDay: number;
-}
-
-export interface InitializeRosterCommand {
-    employeeId?: number; // Optional for bulk
-    startDate: string;
-    endDate: string;
-    shiftId: number;
-}
-
-export interface AssignShiftCommand {
-    employeeId: number;
-    shiftId: number;
-    month: number;
-    year: number;
-    offDays: number[];
-}
-
-export interface CreateShiftSwapCommand {
-    requesterId: number;
-    targetEmployeeId: number;
-    rosterDate: string;
-    reason: string;
-}
-
-export interface ActionShiftSwapCommand {
-    requestId: number;
-    managerId: number;
-    action: 'Approve' | 'Reject';
-    comment?: string;
-}
-
-export interface ApplyOvertimeCommand {
-    employeeId: number;
-    workDate: string;
-    hoursRequested: number;
-    reason: string;
-}
-
-export interface ActionOvertimeCommand {
-    requestId: number;
-    managerId: number;
-    action: 'Approve' | 'Reject';
-    approvedHours?: number;
-    comment?: string;
-}
-
-
-export interface ShiftTypeDto {
-    shiftId: number;
-    shiftNameAr: string;
-    startTime: string;
-    endTime: string;
-    hoursCount: number;
-    isCrossDay: number;
-}
-
-export interface CreateShiftTypeCommand {
-    shiftNameAr: string;
-    startTime: string;
-    endTime: string;
-    isCrossDay: number;
     gracePeriodMins?: number;
 }
 
@@ -286,7 +225,7 @@ export interface CreateShiftSwapCommand {
 export interface ActionShiftSwapCommand {
     requestId: number;
     managerId: number;
-    action: 'Approve' | 'Reject';
+    action: 'APPROVE' | 'REJECT';
     comment?: string;
 }
 
@@ -300,7 +239,7 @@ export interface ApplyOvertimeCommand {
 export interface ActionOvertimeCommand {
     requestId: number;
     managerId: number;
-    action: 'Approve' | 'Reject';
+    action: 'APPROVE' | 'REJECT';
     approvedHours?: number;
     comment?: string;
 }
@@ -315,4 +254,15 @@ export interface MonthlyClosingResultDto {
 
 export interface ProcessAttendanceCommand {
     targetDate: string;
+}
+
+export interface PendingApprovalDto {
+    id: number;
+    requestType: string;
+    employeeId: number;
+    employeeName: string;
+    requestDate: string;
+    targetDate: string;
+    details: string;
+    status: string;
 }

@@ -24,7 +24,7 @@
                 </div>
                 <div class="field">
                     <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف (اختياري)</label>
-                    <p-inputNumber formControlName="employeeId" placeholder="ID (الكل إذا فارغ)" styleClass="w-full" inputStyleClass="w-full"></p-inputNumber>
+                    <p-select [options]="employees()" formControlName="employeeId" optionLabel="fullName" optionValue="id" [showClear]="true" placeholder="الكل (اختياري)" styleClass="w-full"></p-select>
                 </div>
             </div>
             <button pButton type="submit" label="إنشاء الجدول" icon="pi pi-check" [disabled]="initForm.invalid" class="w-full md:w-auto"></button>
@@ -39,9 +39,9 @@
         </h3>
         
         <div class="flex items-center gap-4 mb-6">
-            <div class="flex-1 max-w-xs">
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300">رقم الموظف</label>
-                <p-inputNumber [(ngModel)]="selectedEmployeeId" placeholder="أدخل رقم الموظف" styleClass="w-full" inputStyleClass="w-full"></p-inputNumber>
+            <div class="flex-1 max-w-md">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">اختر الموظف</label>
+                <p-select [options]="employees()" [(ngModel)]="selectedEmployeeId" optionLabel="fullName" optionValue="id" [filter]="true" filterBy="fullName" placeholder="ابحث عن الموظف..." styleClass="w-full"></p-select>
             </div>
             <button pButton label="عرض الجدول" icon="pi pi-search" (click)="fetchEmployeeRoster()" class="mt-6"></button>
         </div>

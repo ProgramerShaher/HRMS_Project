@@ -11,4 +11,8 @@ public class EmployeeListDto
     public string Mobile { get; set; } = string.Empty;
     public DateTime HireDate { get; set; }
     public bool IsActive { get; set; }
+
+    // Attendance Info (Live Status)
+    public DateTime? LastPunchIn { get; set; }
+    public DateTime? LastPunchOut { get; set; }
 }

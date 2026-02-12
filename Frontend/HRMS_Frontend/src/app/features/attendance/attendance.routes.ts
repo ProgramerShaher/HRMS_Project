@@ -15,8 +15,16 @@ export const ATTENDANCE_ROUTES: Routes = [
         loadComponent: () => import('./my-roster/my-roster.component').then(m => m.MyRosterComponent)
     },
     {
+        path: 'reports',
+        loadComponent: () => import('./reports/attendance-reports.component').then(m => m.AttendanceReportsComponent)
+    },
+    {
         path: 'punch',
         loadComponent: () => import('./punch/punch.component').then(m => m.PunchComponent)
+    },
+    {
+        path: 'device',
+        loadComponent: () => import('./punch/device-punch/device-punch.component').then(m => m.DevicePunchComponent)
     },
     {
         path: 'requests',

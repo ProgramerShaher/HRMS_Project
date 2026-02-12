@@ -17,6 +17,12 @@ using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.Approve
 using HRMS.Application.Features.Attendance.Requests.Permissions.Queries.GetMyPermissions;
 using HRMS.Application.Features.Attendance.Requests.Queries.GetMyOvertimeRequests;
 using HRMS.Application.Features.Attendance.Requests.Queries.GetMyShiftSwapRequests;
+using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
+using HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory;
+using HRMS.Application.Features.Attendance.Queries.GetPendingSwapRequests;
+using HRMS.Application.Features.Attendance.Queries.GetPendingOvertimeRequests;
+using HRMS.Application.Features.Attendance.Queries.GetPendingPermissionRequests;
+using HRMS.Application.Features.Attendance.Queries.PendingApprovals;
 using HRMS.Core.Utilities; // For Result<T>
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -116,6 +122,34 @@ public class AttendanceController : ControllerBase
     public async Task<ActionResult<Result<List<AttendanceExceptionDto>>>> GetExceptions()
     {
         var result = await _mediator.Send(new GetAttendanceExceptionsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("requests/pending-swaps")]
+    public async Task<ActionResult<Result<List<PendingSwapRequestDto>>>> GetPendingSwaps()
+    {
+        var result = await _mediator.Send(new GetPendingSwapRequestsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("requests/pending-overtime")]
+    public async Task<ActionResult<Result<List<PendingOvertimeRequestDto>>>> GetPendingOvertime()
+    {
+        var result = await _mediator.Send(new GetPendingOvertimeRequestsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("requests/pending-permissions")]
+    public async Task<ActionResult<Result<List<PendingPermissionRequestDto>>>> GetPendingPermissions()
+    {
+        var result = await _mediator.Send(new GetPendingPermissionRequestsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("pending-approvals")]
+    public async Task<ActionResult<Result<List<PendingApprovalDto>>>> GetPendingApprovalsUnified()
+    {
+        var result = await _mediator.Send(new GetPendingApprovalsQuery());
         return Ok(result);
     }
 
