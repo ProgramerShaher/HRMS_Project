@@ -25,4 +25,19 @@ export class LeaveConfigurationService {
     
     return this.http.get<ApiResponse<PublicHoliday[]>>(url);
   }
+
+  // Create leave type
+  createLeaveType(leaveType: Partial<LeaveType>): Observable<ApiResponse<number>> {
+    return this.http.post<ApiResponse<number>>(`${this.apiUrl}/leave-types`, leaveType);
+  }
+
+  // Update leave type
+  updateLeaveType(id: number, leaveType: Partial<LeaveType>): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/leave-types/${id}`, leaveType);
+  }
+
+  // Delete leave type
+  deleteLeaveType(id: number): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/leave-types/${id}`);
+  }
 }

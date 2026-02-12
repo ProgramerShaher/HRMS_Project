@@ -12,7 +12,7 @@ namespace HRMS.Application.Features.Leaves.Balances.Commands.InitializeBalances;
 /// Handler for bulk leave balance initialization.
 /// Implements dynamic entitlement based on leave configuration with duplicate prevention and proration support.
 /// </summary>
-public class InitializeBalancesCommandHandler 
+public class InitializeBalancesCommandHandler
     : IRequestHandler<InitializeBalancesCommand, Result<InitializeBalancesResultDto>>
 {
     private readonly IApplicationDbContext _context;

@@ -1,0 +1,126 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <!-- Header with Glass Effect -->
+  <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">نظرة عامة على الإجازات</h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1">تتبع أرصدتك، استهلاكك، وحالة طلباتك في مكان واحد.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button pButton icon="pi pi-plus" label="طلب إجازة جديد" 
+              class="p-button-raised p-button-primary rounded-xl px-6"
+              (click)="navigateToNewRequest()"></button>
+      <button pButton icon="pi pi-refresh" 
+              class="p-button-text p-button-rounded"
+              [loading]="loading()" (click)="loadStats()"></button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Consumed Days Card -->
+    <div class="card-floating relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all duration-500"></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">الأيام المستهلكة</p>
+          <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">{{ stats()?.consumedDays || 0 }}</h2>
+        </div>
+        <div class="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+          <i class="pi pi-chart-bar text-2xl"></i>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-2 text-xs">
+        <span class="text-emerald-500 font-bold">من أصل {{ stats()?.totalEntitlement || 0 }}</span>
+        <span class="text-slate-400">إجمالي الرصيد السنوي</span>
+      </div>
+    </div>
+
+    <!-- Remaining Balance Card -->
+    <div class="card-floating relative overflow-hidden group border-emerald-100 dark:border-emerald-900/30">
+      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">الرصيد المتبقي</p>
+          <h2 class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ stats()?.remainingDays || 0 }}</h2>
+        </div>
+        <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
+          <i class="pi pi-wallet text-2xl"></i>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="w-full bg-slate-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-emerald-500 h-full rounded-full transition-all duration-1000" 
+               [style.width.%]="calculatePercentage(stats()?.remainingDays, stats()?.totalEntitlement)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Requests Card -->
+    <div class="card-floating relative overflow-hidden group border-amber-100 dark:border-amber-900/30">
+      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all duration-500"></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">طلبات قيد الانتظار</p>
+          <h2 class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ stats()?.pendingRequestsCount || 0 }}</h2>
+        </div>
+        <div class="p-3 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl">
+          <i class="pi pi-clock text-2xl"></i>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-1 text-xs text-amber-600">
+        <i class="pi pi-info-circle"></i>
+        <span>تحتاج لمتابعة من المدير</span>
+      </div>
+    </div>
+
+    <!-- Success Rate Card -->
+    <div class="card-floating relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">نسبة القبول</p>
+          <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">{{ calculateAcceptanceRate() }}%</h2>
+        </div>
+        <div class="p-3 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-xl">
+          <i class="pi pi-thumbs-up text-2xl"></i>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-2 text-xs">
+        <span class="text-purple-500 font-bold">{{ stats()?.approvedRequestsCount || 0 }} طلب مقبول</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visualizations & Charts -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Chart Section -->
+    <div class="lg:col-span-2 glass-panel p-6 rounded-2xl border-none shadow-sm">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">توزيع الإجازات حسب النوع</h3>
+        <span class="px-3 py-1 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-xs font-medium">مباشر</span>
+      </div>
+      <div class="h-64 flex items-center justify-center">
+        <!-- Placeholder for Chart.js -->
+        <canvas id="leaveDistributionChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Balance Summary List -->
+    <div class="glass-panel p-6 rounded-2xl border-none shadow-sm flex flex-col">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">تفاصيل الرصيد</h3>
+      <div class="space-y-4 flex-1 overflow-y-auto">
+        @for (item of stats()?.leaveTypeSummaries; track item.leaveTypeId) {
+          <div class="p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl border border-slate-100 dark:border-zinc-800 transition-hover hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-semibold text-slate-700 dark:text-zinc-300">{{ item.leaveTypeNameAr }}</span>
+              <span class="text-xs font-bold text-blue-600">{{ item.remainingDays }}/{{ item.totalDays }} يوم</span>
+            </div>
+            <div class="w-full bg-slate-200 dark:bg-zinc-700 h-1 rounded-full overflow-hidden">
+              <div class="bg-blue-500 h-full rounded-full" [style.width.%]="calculatePercentage(item.consumedDays, item.totalDays)"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

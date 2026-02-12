@@ -4,6 +4,7 @@ using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using HRMS.Core.Entities.Core;
+using HRMS.Core.Entities.Leaves;
 
 namespace HRMS.Application.Features.Leaves.Requests.Commands.ApproveLeaveRequest;
 
@@ -25,9 +26,9 @@ public record ApproveLeaveRequestCommand : IRequest<Result<bool>>
 
     /// <summary>
     /// تعليق المدير (اختياري)
-    /// Manager comment (optional)
+    /// Approver comment (optional)
     /// </summary>
-    public string? ManagerComment { get; init; }
+    public string? ApproverComments { get; init; }
 
     /// <summary>
     /// معرف المدير المعتمد
@@ -98,7 +99,7 @@ public class ApproveLeaveRequestCommandHandler : IRequestHandler<ApproveLeaveReq
             {
                 workflowApproval.Status = "APPROVED";
                 workflowApproval.ApprovalDate = DateTime.UtcNow;
-                workflowApproval.Comments = request.ManagerComment;
+                workflowApproval.Comments = request.ApproverComments;
             }
 
             bool isFinalLevel = true; 
@@ -115,6 +116,17 @@ public class ApproveLeaveRequestCommandHandler : IRequestHandler<ApproveLeaveReq
                 {
                     await transaction.RollbackAsync(cancellationToken);
                     return Result<bool>.Failure("طلب الإجازة غير موجود", 404);
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.ApproverComments))
+                {
+                    // Assuming RejectionReason is used for comments even on approval if needed,
+                    // or this logic might be intended for a 'Reject' command.
+                    // For 'Approve', comments are usually stored in workflowApproval.Comments.
+                    // If this is meant to store approver comments on the leave request itself,
+                    // a dedicated field like 'ApproverComments' on LeaveRequest would be better.
+                    // For now, applying as per instruction, but noting potential semantic mismatch.
+                    leaveRequest.RejectionReason = request.ApproverComments.Trim();
                 }
 
                 // ... (Deduction Logic) ...
@@ -136,13 +148,23 @@ public class ApproveLeaveRequestCommandHandler : IRequestHandler<ApproveLeaveReq
                     }
 
                     balance.CurrentBalance -= (short)leaveRequest.DaysCount;
+
+                    // إنشاء حركة خصم من الرصيد
+                    var transactionRecord = new LeaveTransaction
+                    {
+                        EmployeeId = leaveRequest.EmployeeId,
+                        LeaveTypeId = leaveRequest.LeaveTypeId,
+                        TransactionType = "DEDUCTION",
+                        Days = -leaveRequest.DaysCount,
+                        TransactionDate = DateTime.UtcNow,
+                        ReferenceId = leaveRequest.RequestId,
+                        Notes = $"إجازة معتمدة: {leaveRequest.LeaveType.LeaveNameAr}"
+                    };
+                    _context.LeaveTransactions.Add(transactionRecord);
                 }
 
-                leaveRequest.Status = "MANAGER_APPROVED"; 
-                if (!string.IsNullOrWhiteSpace(request.ManagerComment))
-                {
-                    leaveRequest.RejectionReason = request.ManagerComment.Trim();
-                }
+                leaveRequest.Status = "APPROVED"; 
+                leaveRequest.IsPostedToBalance = 1;
 
                 // ═══════════════════════════════════════════════════════════════════════════
                 // الخطوة 6: إرسال تنبيه للموظف

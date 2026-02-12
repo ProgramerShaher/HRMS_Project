@@ -1,7 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { LeaveRequestFormComponent } from '../../components/leave-request-form/leave-request-form.component';
 import { LeaveBalanceCardsComponent } from '../../components/leave-balance-cards/leave-balance-cards.component';
 import { LeaveRequestListComponent } from '../../components/leave-request-list/leave-request-list.component';
@@ -16,51 +18,85 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
   imports: [
     CommonModule, 
     ToastModule,
+    ButtonModule,
+    DialogModule,
     LeaveRequestFormComponent, 
     LeaveBalanceCardsComponent,
     LeaveRequestListComponent
   ],
   providers: [MessageService],
   template: `
-    <div class="p-4 space-y-4">
+    <div class="p-6 space-y-6 animate-in fade-in duration-500">
       <p-toast></p-toast>
       
       <!-- Page Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md p-4 text-white">
-        <h1 class="text-2xl font-bold flex items-center gap-2">
-          <i class="pi pi-calendar"></i>
-          إجازاتي
-        </h1>
-        <p class="text-sm text-blue-100 mt-1">إدارة طلبات الإجازة والأرصدة المتاحة</p>
+      <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-none shadow-sm">
+        <div>
+          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+            <i class="pi pi-calendar-plus text-blue-600"></i>
+            طلبات إجازاتي
+          </h1>
+          <p class="text-slate-500 dark:text-zinc-400 mt-1">إدارة طلبات الإجازة ومتابعة الأرصدة المتاحة للعام الحالي.</p>
+        </div>
+        <p-button 
+            label="تقديم طلب جديد" 
+            icon="pi pi-plus" 
+            styleClass="p-button-raised p-button-primary rounded-xl px-6"
+            (onClick)="showRequestDialog.set(true)">
+        </p-button>
       </div>
 
-      <!-- Balance Cards -->
-      <div>
-        <h2 class="text-lg font-semibold text-gray-800 mb-3">أرصدة الإجازات</h2>
+      <!-- Balance Section -->
+      <div class="space-y-4">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+          أرصدة الإجازات المتاحة
+        </h2>
         <app-leave-balance-cards [balanceData]="balances()"></app-leave-balance-cards>
       </div>
 
-      <!-- Request Form -->
-      <div>
-        <app-leave-request-form></app-leave-request-form>
-      </div>
-
       <!-- Requests List -->
-      <div>
+      <div class="space-y-4">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-emerald-600 rounded-full"></span>
+          سجل الطلبات السابقة
+        </h2>
         <app-leave-request-list 
           [requests]="requests()"
           (cancelRequest)="handleCancelRequest($event)">
         </app-leave-request-list>
       </div>
+
+      <!-- Request Modal -->
+      <p-dialog 
+        [(visible)]="showRequestDialog" 
+        [modal]="true" 
+        [header]="'تقديم طلب إجازة جديد'" 
+        [style]="{ width: '500px' }"
+        [draggable]="false"
+        [resizable]="false"
+        styleClass="custom-dialog">
+        <app-leave-request-form 
+          (submitted)="onFormSubmitted()" 
+          (cancelled)="showRequestDialog.set(false)">
+        </app-leave-request-form>
+      </p-dialog>
     </div>
   `,
   styles: [`
     :host { display: block; }
+    ::ng-deep .custom-dialog .p-dialog-header {
+      @apply bg-slate-50 dark:bg-zinc-900 border-b border-slate-100 dark:border-zinc-800 rounded-t-2xl;
+    }
+    ::ng-deep .custom-dialog .p-dialog-content {
+      @apply bg-white dark:bg-zinc-900 p-0 rounded-b-2xl;
+    }
   `]
 })
 export class MyLeavesComponent implements OnInit {
   balances = signal<LeaveBalance[]>([]);
   requests = signal<LeaveRequest[]>([]);
+  showRequestDialog = signal(false);
   loading = signal(false);
 
   constructor(
@@ -75,73 +111,37 @@ export class MyLeavesComponent implements OnInit {
   }
 
   loadData() {
-    // Get employee ID from logged-in user
-    const currentUser = this.authService.currentUser();
-    const employeeId = currentUser?.employeeId;
-
-    if (!employeeId) {
-      console.error('❌ No employee ID found for current user');
-      this.messageService.add({ 
-        severity: 'error', 
-        summary: 'خطأ', 
-        detail: 'لم يتم العثور على معرف الموظف. يرجى تسجيل الدخول مرة أخرى.' 
-      });
-      return;
-    }
+    const employeeId = this.authService.currentUser()?.employeeId;
+    if (!employeeId) return;
 
     this.loading.set(true);
-    console.log('🔄 Loading leaves data for employee:', employeeId);
-
+    
     this.leaveBalanceService.getEmployeeBalances(employeeId).subscribe({
       next: (res) => {
-        console.log('✅ Balance API Response:', res);
         if (res.succeeded) {
           this.balances.set(res.data);
-          console.log('📊 Balances loaded:', res.data);
-        } else {
-          console.error('❌ Balance API failed:', res.message);
-          this.messageService.add({ 
-            severity: 'warn', 
-            summary: 'تحذير', 
-            detail: res.message || 'لا توجد أرصدة متاحة' 
-          });
         }
-      },
-      error: (err) => {
-        console.error('❌ Balance API Error:', err);
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'خطأ', 
-          detail: err.error?.message || 'فشل تحميل الأرصدة' 
-        });
       }
     });
 
     this.leaveRequestService.getEmployeeRequests(employeeId).subscribe({
       next: (res) => {
-        console.log('✅ Requests API Response:', res);
         if (res.succeeded) {
           this.requests.set(res.data);
-          console.log('📋 Requests loaded:', res.data);
-        } else {
-          console.error('❌ Requests API failed:', res.message);
-          this.messageService.add({ 
-            severity: 'warn', 
-            summary: 'تحذير', 
-            detail: res.message || 'لا توجد طلبات' 
-          });
         }
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error('❌ Requests API Error:', err);
-        this.loading.set(false);
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'خطأ', 
-          detail: err.error?.message || 'فشل تحميل الطلبات' 
-        });
-      }
+      error: () => this.loading.set(false)
+    });
+  }
+
+  onFormSubmitted() {
+    this.showRequestDialog.set(false);
+    this.loadData();
+    this.messageService.add({ 
+      severity: 'success', 
+      summary: 'نجح', 
+      detail: 'تم تقديم الطلب بنجاح' 
     });
   }
 
@@ -157,13 +157,6 @@ export class MyLeavesComponent implements OnInit {
             });
             this.loadData();
           }
-        },
-        error: () => {
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'خطأ', 
-            detail: 'فشل إلغاء الطلب' 
-          });
         }
       });
     }

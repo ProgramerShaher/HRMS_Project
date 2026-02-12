@@ -6,7 +6,8 @@ import {
   LeaveRequest,
   CreateLeaveRequestDto,
   ApiResponse,
-  LeaveRequestStatus
+  LeaveRequestStatus,
+  LeaveDashboardStats
 } from '../models/leave.models';
 
 @Injectable({
@@ -54,5 +55,15 @@ export class LeaveRequestService {
       `${this.apiUrl}/${requestId}/cancel`,
       { requestId }
     );
+  }
+
+  // Get employee dashboard stats
+  getEmployeeStats(employeeId: number): Observable<ApiResponse<LeaveDashboardStats>> {
+    return this.http.get<ApiResponse<LeaveDashboardStats>>(`${this.apiUrl}/stats/employee/${employeeId}`);
+  }
+
+  // Get manager dashboard stats (for team overview)
+  getManagerStats(): Observable<ApiResponse<LeaveDashboardStats>> {
+    return this.http.get<ApiResponse<LeaveDashboardStats>>(`${this.apiUrl}/stats/manager`);
   }
 }

@@ -225,6 +225,17 @@ public class InitializeBalancesCommandHandler : IRequestHandler<InitializeBalanc
                     // Update existing balance
                     existingBalance.CurrentBalance = (short)initialBalance;
                     updatedCount++;
+
+                    // إضافة حركة تحديث (اختياري، لكن مفيد للتدقيق)
+                    _context.LeaveTransactions.Add(new LeaveTransaction
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        LeaveTypeId = leaveType.LeaveTypeId,
+                        TransactionType = "ACCRUAL",
+                        Days = initialBalance,
+                        TransactionDate = DateTime.UtcNow,
+                        Notes = $"تحديث رصيد بداية السنة {request.Year}"
+                    });
                 }
                 else
                 {
@@ -240,6 +251,17 @@ public class InitializeBalancesCommandHandler : IRequestHandler<InitializeBalanc
 
                     _context.EmployeeLeaveBalances.Add(newBalance);
                     createdCount++;
+
+                    // إضافة حركة استحقاق أول المادة
+                    _context.LeaveTransactions.Add(new LeaveTransaction
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        LeaveTypeId = leaveType.LeaveTypeId,
+                        TransactionType = "ACCRUAL",
+                        Days = initialBalance,
+                        TransactionDate = DateTime.UtcNow,
+                        Notes = $"تهيئة رصيد بداية السنة {request.Year}"
+                    });
                 }
             }
         }

@@ -9,8 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HRMS.Application.Features.Leaves.Requests.Queries.GetEmployeeLeaveRequests;
 using HRMS.Application.Features.Leaves.Requests.Queries.GetPendingRequests;
+using HRMS.Application.Features.Leaves.Dashboard.Queries.GetEmployeeLeaveStats;
+using HRMS.Application.Features.Leaves.Dashboard.Queries.GetManagerLeaveStats;
 
 namespace HRMS.API.Controllers.Leaves;
+
 
 /// <summary>
 /// Leave Requests Management Controller.
@@ -173,6 +176,35 @@ public class LeaveRequestsController : ControllerBase
     public async Task<ActionResult<Result<List<LeaveRequestDto>>>> GetPendingRequests()
     {
         var result = await _mediator.Send(new GetPendingRequestsQuery());
+        return Ok(result);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // إحصائيات لوحة التحكم
+    // Dashboard Statistics
+    // ═══════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Get leave dashboard stats for a specific employee.
+    /// </summary>
+    [HttpGet("stats/employee/{id}")]
+    [Authorize]
+    [AllowAnonymous] // 🔓 للتطوير فقط
+    public async Task<ActionResult<Result<LeaveDashboardStatsDto>>> GetEmployeeStats(int id)
+    {
+        var result = await _mediator.Send(new GetEmployeeLeaveStatsQuery(id));
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Get leave dashboard stats for a manager (Global/Team view).
+    /// </summary>
+    [HttpGet("stats/manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Manager")]
+    [AllowAnonymous] // 🔓 للتطوير فقط
+    public async Task<ActionResult<Result<LeaveDashboardStatsDto>>> GetManagerStats()
+    {
+        var result = await _mediator.Send(new GetManagerLeaveStatsQuery());
         return Ok(result);
     }
 }

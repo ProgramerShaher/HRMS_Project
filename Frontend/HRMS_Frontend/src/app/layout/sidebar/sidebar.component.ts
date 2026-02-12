@@ -49,9 +49,11 @@ export class SidebarComponent {
       icon: 'pi pi-send', 
       expanded: false,
       children: [
+        { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/leaves/dashboard' },
         { label: 'إجازاتي', icon: 'pi pi-calendar', route: '/leaves/my-leaves' },
-        { label: 'طلبات الفريق', icon: 'pi pi-users', route: '/leaves/team-leaves' },
-        { label: 'سجل الحركات', icon: 'pi pi-history', route: '/leaves/history' }
+        { label: 'الاعتمادات', icon: 'pi pi-check-square', route: '/leaves/approvals' },
+        { label: 'سجل الحركات', icon: 'pi pi-history', route: '/leaves/history' },
+        { label: 'إعدادات الإجازات', icon: 'pi pi-cog', route: '/leaves/setup' }
       ]
     },
     { label: 'التقارير', icon: 'pi pi-chart-pie', route: '/reports' },

@@ -109,3 +109,24 @@ export interface LeaveRequestFilter {
   toDate?: string;
   leaveTypeId?: number;
 }
+
+// Dashboard Stats
+export interface LeaveDashboardStats {
+  totalEntitlement: number;
+  totalRequestedDays: number;
+  consumedDays: number;
+  remainingDays: number;
+  pendingRequestsCount: number;
+  approvedRequestsCount: number;
+  rejectedRequestsCount: number;
+  leaveTypeSummaries: LeaveTypeSummary[];
+}
+
+export interface LeaveTypeSummary {
+  leaveTypeId: number;
+  leaveTypeNameAr: string;
+  leaveTypeNameEn: string;
+  totalDays: number;
+  consumedDays: number;
+  remainingDays: number;
+}

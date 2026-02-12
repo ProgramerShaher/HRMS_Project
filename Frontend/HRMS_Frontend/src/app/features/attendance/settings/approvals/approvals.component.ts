@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AttendanceSettingsService } from '../../services/attendance-settings.service';
 import { ActionShiftSwapCommand, ActionOvertimeCommand, PendingApprovalDto } from '../../models/attendance.models';
@@ -23,6 +23,7 @@ export class ApprovalsComponent implements OnInit {
 
   private settingsService = inject(AttendanceSettingsService);
   private messageService = inject(MessageService);
+  private cdr = inject(ChangeDetectorRef);
 
   dialogVisible = false;
   currentRequest: any = null;
@@ -39,10 +40,12 @@ export class ApprovalsComponent implements OnInit {
           next: (res) => {
               this.requests = res.data;
               this.loading = false;
+              this.cdr.detectChanges();
           },
           error: () => {
               this.loading = false;
               this.messageService.add({severity:'error', summary: 'خطأ', detail: 'فشل تحميل الطلبات'});
+              this.cdr.detectChanges();
           }
       });
   }

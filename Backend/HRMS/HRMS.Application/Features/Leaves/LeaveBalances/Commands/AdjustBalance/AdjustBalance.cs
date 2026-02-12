@@ -174,6 +174,18 @@ public class AdjustBalanceCommandHandler : IRequestHandler<AdjustBalanceCommand,
 
         balance.CurrentBalance = newBalance;
 
+        // إنشاء حركة تعديل رصيد
+        var transactionRecord = new LeaveTransaction
+        {
+            EmployeeId = request.EmployeeId,
+            LeaveTypeId = request.LeaveTypeId,
+            TransactionType = "ADJUSTMENT",
+            Days = request.AdjustmentDays,
+            TransactionDate = DateTime.UtcNow,
+            Notes = request.Reason
+        };
+        _context.LeaveTransactions.Add(transactionRecord);
+
         await _context.SaveChangesAsync(cancellationToken);
 
         // ═══════════════════════════════════════════════════════════════════════════
