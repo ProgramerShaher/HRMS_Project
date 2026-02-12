@@ -12,8 +12,9 @@ import {
   ApplyOvertimeCommand, 
   ActionOvertimeCommand, 
   MonthlyClosingResultDto,
-  ProcessAttendanceCommand, // Added import
+  ProcessAttendanceCommand,
   Result,
+  PendingApprovalDto
 } from '../models/attendance.models';
 
 @Injectable({
@@ -21,9 +22,13 @@ import {
 })
 export class AttendanceSettingsService {
   private apiUrl = `${environment.apiUrl}/AttendanceSettings`;
-  private attendanceApiUrl = `${environment.apiUrl}/Attendance`; // For monthly closing if it's there
+  private attendanceApiUrl = `${environment.apiUrl}/Attendance`; 
 
   constructor(private http: HttpClient) { }
+
+  getPendingApprovals(): Observable<Result<PendingApprovalDto[]>> {
+    return this.http.get<Result<PendingApprovalDto[]>>(`${this.attendanceApiUrl}/pending-approvals`);
+  }
 
   // Shifts
   getAllShifts(): Observable<ShiftTypeDto[]> {
@@ -79,6 +84,10 @@ export class AttendanceSettingsService {
 
   actionOvertime(command: ActionOvertimeCommand): Observable<boolean> {
     return this.http.post<boolean>(`${this.apiUrl}/action-overtime`, command);
+  }
+
+  actionPermission(command: any): Observable<Result<boolean>> {
+      return this.http.post<Result<boolean>>(`${environment.apiUrl}/Attendance/permissions/action`, command);
   }
   
   // Monthly Closing (Located in AttendanceController in backend but related to settings/admin)

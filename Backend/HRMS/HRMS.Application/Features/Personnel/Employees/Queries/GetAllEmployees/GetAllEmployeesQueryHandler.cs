@@ -4,6 +4,7 @@ using HRMS.Application.DTOs.Personnel;
 using HRMS.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using HRMS.Core.Entities.Attendance;
 
 namespace HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees;
 
@@ -58,18 +59,54 @@ public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery,
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
 
-        // In-Memory Mapping to use computed FullNameAr
-        var dtos = items.Select(e => new EmployeeListDto
-        {
-            EmployeeId = e.EmployeeId,
-            EmployeeNumber = e.EmployeeNumber,
-            FullNameAr = e.FullNameAr, // Now works because 'e' is in memory
-            FullNameEn = e.FullNameEn,
-            DepartmentName = e.Department?.DeptNameAr ?? "",
-            JobTitle = e.Job?.JobTitleAr ?? "", // Safety check
-            Mobile = e.Mobile,
-            HireDate = e.HireDate,
-            IsActive = e.IsDeleted == 0
+        // 3. Fetch Attendance Data (Raw Punches) for the fetched employees
+        // Using RawPunchLogs to ensure immediate "Live" status update without waiting for processing
+        var employeeIds = items.Select(e => e.EmployeeId).ToList();
+        var today = DateTime.Today;
+        var tomorrow = today.AddDays(1);
+
+        var rawPunches = await _context.RawPunchLogs
+            .AsNoTracking()
+            .Where(p => employeeIds.Contains(p.EmployeeId) 
+                        && p.PunchTime >= today 
+                        && p.PunchTime < tomorrow)
+            .Select(p => new { p.EmployeeId, p.PunchType, p.PunchTime })
+            .ToListAsync(cancellationToken);
+
+        // Group by Employee and find latest punches
+        // Logic: Find latest IN and latest OUT for today
+        // Note: This is a simplification for the "Device" view. 
+        // For accurate shift logic, we'd need complex pairing, but for "Last Action", this works.
+        var employeePunchStatus = rawPunches
+            .GroupBy(p => p.EmployeeId)
+            .ToDictionary(g => g.Key, g => new {
+                LastIn = g.Where(p => p.PunchType == "IN").OrderByDescending(p => p.PunchTime).FirstOrDefault()?.PunchTime,
+                LastOut = g.Where(p => p.PunchType == "OUT").OrderByDescending(p => p.PunchTime).FirstOrDefault()?.PunchTime,
+                LatestAction = g.OrderByDescending(p => p.PunchTime).FirstOrDefault()
+            });
+
+        // In-Memory Mapping
+        var dtos = items.Select(e => {
+            var status = employeePunchStatus.ContainsKey(e.EmployeeId) ? employeePunchStatus[e.EmployeeId] : null;
+            
+            // Determine effective LastPunchIn/Out based on sequence
+            // If LatestAction is IN, then we are IN. If OUT, we are OUT.
+            // But we want to show BOTH times if they exist today.
+            
+            return new EmployeeListDto
+            {
+                EmployeeId = e.EmployeeId,
+                EmployeeNumber = e.EmployeeNumber,
+                FullNameAr = e.FullNameAr, 
+                FullNameEn = e.FullNameEn,
+                DepartmentName = e.Department?.DeptNameAr ?? "",
+                JobTitle = e.Job?.JobTitleAr ?? "", 
+                Mobile = e.Mobile,
+                HireDate = e.HireDate,
+                IsActive = e.IsDeleted == 0,
+                LastPunchIn = status?.LastIn,
+                LastPunchOut = status?.LastOut
+            };
         }).ToList();
 
         return new PagedResult<EmployeeListDto>

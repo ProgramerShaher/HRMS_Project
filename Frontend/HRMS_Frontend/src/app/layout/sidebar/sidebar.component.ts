@@ -19,7 +19,29 @@ export class SidebarComponent {
 
   menuItems = [
     { label: 'لوحة التحكم', icon: 'pi pi-objects-column', route: '/dashboard' },
-    { label: 'سجل الحضور', icon: 'pi pi-calendar-plus', route: '/attendance' },
+    {
+      label: 'الحـضـور',
+      icon: 'pi pi-id-card',
+      expanded: false,
+      children: [
+        { label: 'لوحة الحضور', icon: 'pi pi-chart-line', route: '/attendance/dashboard' },
+        { label: 'تسجيل الحضور', icon: 'pi pi-check-circle', route: '/attendance/punch' },
+        { label: 'جهاز البصمة (محاكاة)', icon: 'pi pi-desktop', route: '/attendance/device' },
+        { label: 'تقرير التحضير', icon: 'pi pi-list', route: '/attendance/reports' },
+        { label: 'جدول دوامي', icon: 'pi pi-calendar', route: '/attendance/my-roster' },
+        { label: 'الطلبات', icon: 'pi pi-file-edit', route: '/attendance/requests' }
+      ]
+    },
+    {
+      label: 'إدارة الحضور',
+      icon: 'pi pi-calendar-plus',
+      expanded: false,
+      children: [
+        { label: 'المناوبات', icon: 'pi pi-clock', route: '/attendance/settings/shifts' },
+        { label: 'توزيع الجداول', icon: 'pi pi-th-large', route: '/attendance/settings/roster' },
+        { label: 'الموافقات', icon: 'pi pi-check-square', route: '/attendance/settings/approvals' }
+      ]
+    },
     { label: 'الموظفين', icon: 'pi pi-users', route: '/employees' },
     { label: 'الرواتب', icon: 'pi pi-wallet', route: '/payroll' },
     { 

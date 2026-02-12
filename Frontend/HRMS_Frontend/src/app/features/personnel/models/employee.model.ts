@@ -8,6 +8,8 @@ export interface Employee {
     mobile: string;
     hireDate: Date | string;
     isActive: boolean;
+    lastPunchIn?: string; // ISO Date String
+    lastPunchOut?: string; // ISO Date String
     // Optional detailed fields for list view if needed
     compensation?: {
         basicSalary: number;

@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { Result } from '../models/attendance.models';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Toast } from "primeng/toast";
+import { EmployeeService } from '../../personnel/services/employee.service';
 
 @Component({
   selector: 'app-requests',
@@ -34,6 +35,7 @@ import { Toast } from "primeng/toast";
 export class RequestsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private attendanceService = inject(AttendanceService);
+  private personnelService = inject(EmployeeService);
   private messageService = inject(MessageService);
 
   // Forms
@@ -56,9 +58,16 @@ export class RequestsComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    // Fetch Employees List for Swap Target if API available
-    // this.personnelService.getEmployees()...
-    // For now, using input for ID or simplified
+    this.loadEmployees();
+  }
+
+  loadEmployees() {
+    this.personnelService.getAll(1, 100).subscribe({
+      next: (res) => {
+        this.employees = res.items || res.data || res;
+      },
+      error: () => console.error('Failed to load employees')
+    });
   }
 
   initForms() {
@@ -71,6 +80,7 @@ export class RequestsComponent implements OnInit {
 
     // Overtime Request
     this.overtimeForm = this.fb.group({
+      employeeId: [null, [Validators.required]],
       workDate: [null, [Validators.required]],
       hoursRequested: [null, [Validators.required, Validators.min(1)]],
       reason: ['', [Validators.required]]
@@ -78,6 +88,7 @@ export class RequestsComponent implements OnInit {
 
     // Permission Request
     this.permissionForm = this.fb.group({
+      employeeId: [null, [Validators.required]],
       permissionDate: [null, [Validators.required]],
       permissionType: [null, [Validators.required]],
       hours: [null, [Validators.required, Validators.min(0.5)]],
@@ -86,8 +97,9 @@ export class RequestsComponent implements OnInit {
 
     // Correction Request
     this.correctionForm = this.fb.group({
-      dailyAttendanceId: [null], // This might need a dropdown of recent attendance records
-      attendanceDate: [null, [Validators.required]], // Helper to find ID
+      employeeId: [null, [Validators.required]],
+      dailyAttendanceId: [null], 
+      attendanceDate: [null, [Validators.required]],
       correctionType: [null, [Validators.required]],
       newValue: ['', [Validators.required]],
       auditNote: ['', [Validators.required]]
@@ -119,7 +131,7 @@ export class RequestsComponent implements OnInit {
     if (this.overtimeForm.invalid) return;
     const val = this.overtimeForm.value;
     const cmd = {
-      employeeId: 0,
+      employeeId: val.employeeId,
       workDate: val.workDate.toISOString(),
       hoursRequested: val.hoursRequested,
       reason: val.reason
@@ -138,7 +150,7 @@ export class RequestsComponent implements OnInit {
     if (this.permissionForm.invalid) return;
     const val = this.permissionForm.value;
     const cmd = {
-        employeeId: 0,
+        employeeId: val.employeeId,
         permissionDate: val.permissionDate.toISOString(),
         permissionType: val.permissionType,
         hours: val.hours,
@@ -154,7 +166,22 @@ export class RequestsComponent implements OnInit {
   }
 
   submitCorrection() {
-      // Logic to get ID from Date would go here
-      this.messageService.add({severity:'warn', summary: 'تنبيه', detail: 'ميزة التصحيح تتطلب تحديد سجل الحضور أولاً'});
+      if (this.correctionForm.invalid) return;
+      const val = this.correctionForm.value;
+      const cmd = {
+          employeeId: val.employeeId,
+          dailyAttendanceId: val.dailyAttendanceId,
+          correctionType: val.correctionType,
+          newValue: val.newValue,
+          auditNote: val.auditNote
+      };
+      
+      this.attendanceService.manualCorrection(cmd as any).subscribe({
+          next: () => {
+              this.messageService.add({severity:'success', summary: 'تم', detail: 'تم إرسال طلب التصحيح'});
+              this.correctionForm.reset();
+          },
+          error: () => this.messageService.add({severity:'error', summary: 'خطأ', detail: 'فشل إرسال طلب التصحيح'})
+      });
   }
 }

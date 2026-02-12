@@ -2,14 +2,14 @@
     <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">طلبات قيد الانتظار</h2>
     <p-toast></p-toast>
 
-    <p-table [value]="requests" styleClass="p-datatable-striped">
+    <p-table [value]="requests" [loading]="loading" styleClass="p-datatable-striped" [rowHover]="true">
         <ng-template pTemplate="header">
             <tr>
-                <th>نوع الطلب</th>
+                <th style="width: 120px">نوع الطلب</th>
                 <th>الموظف</th>
                 <th>التاريخ</th>
                 <th>التفاصيل</th>
-                <th>الإجراء</th>
+                <th style="width: 150px">الإجراء</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-req>
@@ -17,18 +17,42 @@
                 <td>
                     <span class="px-2 py-1 rounded text-xs font-bold" 
                           [ngClass]="{
-                            'bg-blue-100 text-blue-800': req.type === 'Swap',
-                            'bg-purple-100 text-purple-800': req.type === 'Overtime'
+                            'bg-blue-100 text-blue-800': req.requestType === 'Swap',
+                            'bg-purple-100 text-purple-800': req.requestType === 'Overtime',
+                            'bg-amber-100 text-amber-800': req.requestType === 'Permission'
                           }">
-                        {{ req.type }}
+                        {{ 
+                            req.requestType === 'Swap' ? 'تبديل مناوبة' : 
+                            (req.requestType === 'Overtime' ? 'عمل إضافي' : 'إذن خروج') 
+                        }}
                     </span>
                 </td>
-                <td class="font-medium">{{ req.employeeName }}</td>
-                <td>{{ req.date }}</td>
-                <td class="text-slate-500">{{ req.details }}</td>
+                <td class="font-medium">
+                    <div class="flex flex-col">
+                        <span>{{ req.employeeName }}</span>
+                        <small class="text-slate-400">ID: {{ req.employeeId }}</small>
+                    </div>
+                </td>
                 <td>
-                    <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-button-rounded mr-2" (click)="openAction(req, 'Approve')"></button>
-                    <button pButton icon="pi pi-times" class="p-button-danger p-button-sm p-button-rounded" (click)="openAction(req, 'Reject')"></button>
+                    <div class="flex flex-col text-sm">
+                        <span title="تاريخ الطلب"><i class="pi pi-calendar-plus text-xs mr-1"></i> {{ req.requestDate | date:'dd/MM/yyyy' }}</span>
+                        <span title="تاريخ التنفيذ" class="text-blue-600 font-bold"><i class="pi pi-calendar text-xs mr-1"></i> {{ req.targetDate | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                </td>
+                <td class="text-slate-600 text-sm">{{ req.details }}</td>
+                <td>
+                    <div class="flex gap-2">
+                        <button pButton icon="pi pi-check" label="قبول" class="p-button-success p-button-sm p-outlined" (click)="openAction(req, 'APPROVE')"></button>
+                        <button pButton icon="pi pi-times" label="رفض" class="p-button-danger p-button-sm p-outlined" (click)="openAction(req, 'REJECT')"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-8 text-slate-400">
+                    <i class="pi pi-inbox text-4xl mb-2 block"></i>
+                    لا توجد طلبات قيد الانتظار حالياً
                 </td>
             </tr>
         </ng-template>
@@ -39,8 +63,8 @@
     <div class="p-4">
         <p class="mb-4">
             هل أنت متأكد من 
-            <span [ngClass]="{'text-green-600': actionType === 'Approve', 'text-red-600': actionType === 'Reject'}" class="font-bold">
-                {{ actionType === 'Approve' ? 'قبول' : 'رفض' }}
+            <span [ngClass]="{'text-green-600': actionType === 'APPROVE', 'text-red-600': actionType === 'REJECT'}" class="font-bold">
+                {{ actionType === 'APPROVE' ? 'قبول' : 'رفض' }}
             </span>
              الطلب؟
         </p>
@@ -52,8 +76,8 @@
     </div>
     <ng-template pTemplate="footer">
         <button pButton label="إلغاء" class="p-button-text" (click)="dialogVisible = false"></button>
-        <button pButton [label]="actionType === 'Approve' ? 'تأكيد القبول' : 'تأكيد الرفض'" 
-                [class]="actionType === 'Approve' ? 'p-button-success' : 'p-button-danger'" 
+        <button pButton [label]="actionType === 'APPROVE' ? 'تأكيد القبول' : 'تأكيد الرفض'" 
+                [class]="actionType === 'APPROVE' ? 'p-button-success' : 'p-button-danger'" 
                 (click)="submitAction()"></button>
     </ng-template>
 </p-dialog>

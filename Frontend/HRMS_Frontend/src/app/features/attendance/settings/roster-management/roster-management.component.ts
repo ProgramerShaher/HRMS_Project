@@ -13,6 +13,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
+import { EmployeeService } from '../../../personnel/services/employee.service';
 
 @Component({
   selector: 'app-roster-management',
@@ -37,6 +38,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 export class RosterManagementComponent implements OnInit {
   private fb = inject(FormBuilder);
   private settingsService = inject(AttendanceSettingsService);
+  private employeeService = inject(EmployeeService);
   private messageService = inject(MessageService);
 
   // Forms
@@ -45,6 +47,7 @@ export class RosterManagementComponent implements OnInit {
 
   // State
   shifts = signal<ShiftTypeDto[]>([]);
+  employees = signal<any[]>([]); // Employee List
   employeeRoster = signal<MyRosterDto[]>([]);
   selectedEmployeeId = signal<number | null>(null);
   
@@ -55,6 +58,43 @@ export class RosterManagementComponent implements OnInit {
   ngOnInit() {
     this.createForms();
     this.loadShifts();
+    this.loadEmployees();
+  }
+
+  loadEmployees() {
+      // Fetching a large number to populate the dropdown
+      this.employeeService.getAll(1, 1000).subscribe({
+          next: (res: any) => {
+              // Handle various response structures:
+              // 1. Direct array: [ ... ]
+              // 2. Result wrapper with data array: { succeeded: true, data: [ ... ] }
+              // 3. Paginated result: { succeeded: true, data: { items: [ ... ], totalCount: ... } }
+              
+              let data: any[] = [];
+              
+              if (Array.isArray(res)) {
+                  data = res;
+              } else if (Array.isArray(res.data)) {
+                  data = res.data;
+              } else if (res.data && Array.isArray(res.data.items)) {
+                  data = res.data.items;
+              } else if (res.items && Array.isArray(res.items)) {
+                   data = res.items;
+              }
+
+              if(data.length > 0) {
+                  const formatted = data.map((e: any) => ({
+                      id: e.employeeId,
+                      fullName: `${e.fullNameAr} (#${e.employeeId})`
+                  }));
+                  this.employees.set(formatted);
+                  console.log('Employees loaded:', formatted.length);
+              } else {
+                  console.warn('No employees found in response', res);
+              }
+          },
+          error: (err) => console.error('Failed to load employees', err)
+      });
   }
 
   createForms() {
@@ -72,7 +112,7 @@ export class RosterManagementComponent implements OnInit {
   }
 
   loadShifts() {
-    this.settingsService.getAllShifts().subscribe(data => this.shifts.set(data));
+    this.settingsService.getAllShifts().subscribe((data: ShiftTypeDto[]) => this.shifts.set(data));
   }
 
   onInitialize() {
@@ -96,7 +136,7 @@ export class RosterManagementComponent implements OnInit {
   fetchEmployeeRoster() {
       if (!this.selectedEmployeeId()) return;
       this.settingsService.getEmployeeRoster(this.selectedEmployeeId()!).subscribe({
-          next: (res) => {
+          next: (res: any) => {
               if (res.succeeded) {
                   this.employeeRoster.set(res.data);
                   this.messageService.add({severity:'success', summary: 'تم', detail: 'تم تحميل الجدول'});
@@ -138,7 +178,7 @@ export class RosterManagementComponent implements OnInit {
       };
 
       this.settingsService.updateRosterDay(cmd).subscribe({
-          next: (res) => {
+          next: (res: any) => {
               if (res.succeeded) {
                   this.messageService.add({severity:'success', summary: 'تم', detail: 'تم تحديث المناوبة'});
                   this.editDialogVisible = false;

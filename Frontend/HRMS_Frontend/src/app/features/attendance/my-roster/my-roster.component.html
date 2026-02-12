@@ -8,6 +8,8 @@
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">التاريخ</th>
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">المناوبة</th>
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">التوقيت</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">دخول فعلي</th>
+                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">خروج فعلي</th>
                 <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">الحالة</th>
             </tr>
         </ng-template>
@@ -26,8 +28,20 @@
                     </div>
                     <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
                 </td>
+                <!-- Actual In -->
                 <td>
-                    <p-tag [value]="item.isOffDay ? 'إجازة' : 'دوام'" [severity]="getSeverity(item.isOffDay)"></p-tag>
+                     <span *ngIf="item.actualIn" class="text-green-600 font-bold" dir="ltr">{{ item.actualIn }}</span>
+                     <span *ngIf="!item.actualIn" class="text-slate-300">-</span>
+                </td>
+                 <!-- Actual Out -->
+                 <td>
+                    <span *ngIf="item.actualOut" class="text-red-600 font-bold" dir="ltr">{{ item.actualOut }}</span>
+                    <span *ngIf="!item.actualOut" class="text-slate-300">-</span>
+               </td>
+                <td>
+                    <p-tag [value]="item.status || (item.isOffDay ? 'إجازة' : 'غائب')" 
+                           [severity]="item.status === 'Present' ? 'success' : (item.isOffDay ? 'info' : 'danger')">
+                    </p-tag>
                 </td>
             </tr>
         </ng-template>

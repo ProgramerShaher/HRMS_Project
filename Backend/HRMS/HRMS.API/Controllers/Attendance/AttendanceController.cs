@@ -16,6 +16,9 @@ using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.CreateP
 using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.ApproveRejectPermissionRequest;
 using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
 using HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory;
+using HRMS.Application.Features.Attendance.Queries.GetPendingSwapRequests;
+using HRMS.Application.Features.Attendance.Queries.GetPendingOvertimeRequests;
+using HRMS.Application.Features.Attendance.Queries.GetPendingPermissionRequests;
 using HRMS.Core.Utilities; // For Result<T>
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -113,6 +116,27 @@ public class AttendanceController : ControllerBase
     public async Task<ActionResult<Result<List<AttendanceExceptionDto>>>> GetExceptions()
     {
         var result = await _mediator.Send(new GetAttendanceExceptionsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("requests/pending-swaps")]
+    public async Task<ActionResult<Result<List<PendingSwapRequestDto>>>> GetPendingSwaps()
+    {
+        var result = await _mediator.Send(new GetPendingSwapRequestsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("requests/pending-overtime")]
+    public async Task<ActionResult<Result<List<PendingOvertimeRequestDto>>>> GetPendingOvertime()
+    {
+        var result = await _mediator.Send(new GetPendingOvertimeRequestsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("requests/pending-permissions")]
+    public async Task<ActionResult<Result<List<PendingPermissionRequestDto>>>> GetPendingPermissions()
+    {
+        var result = await _mediator.Send(new GetPendingPermissionRequestsQuery());
         return Ok(result);
     }
 
