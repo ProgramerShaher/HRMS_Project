@@ -6,25 +6,25 @@ import { ButtonModule } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CheckboxModule } from 'primeng/checkbox';
-import { SelectModule } from 'primeng/select'; 
+import { SelectModule } from 'primeng/select';
 import { SetupService } from '../../services/setup.service';
 import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-department-form',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
-    InputTextModule, 
-    ButtonModule, 
-    FloatLabelModule, 
-    CheckboxModule,
-    SelectModule 
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'app-department-form',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        InputTextModule,
+        ButtonModule,
+        FloatLabelModule,
+        CheckboxModule,
+        SelectModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <form [formGroup]="form" (ngSubmit)="save()" class="p-4" dir="rtl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
@@ -146,7 +146,7 @@ export class DepartmentFormComponent implements OnInit {
         private setupService: SetupService,
         private messageService: MessageService,
         private cdr: ChangeDetectorRef
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.isEdit = !!this.config.data?.deptId;
@@ -157,7 +157,7 @@ export class DepartmentFormComponent implements OnInit {
             deptNameAr: [this.config.data?.deptNameAr || '', Validators.required],
             deptNameEn: [this.config.data?.deptNameEn || ''],
             parentDeptId: [this.config.data?.parentDeptId || null],
-            managerId: [this.config.data?.managerId || null], 
+            managerId: [this.config.data?.managerId || null],
             costCenterCode: [this.config.data?.costCenterCode || ''],
             isActive: [this.config.data?.isActive === undefined ? true : (this.config.data.isActive == 1 || this.config.data.isActive === true)]
         });
@@ -170,9 +170,9 @@ export class DepartmentFormComponent implements OnInit {
         // 1. Load Employees
         this.setupService.getAll<any>('Employees').subscribe({
             next: (res: any) => {
-                this.employeesList = res.items || res.data || res || [];
+                this.employeesList = res.data?.items || res.items || res.data || res || [];
                 // Manually trigger change detection after data loads
-                this.cdr.markForCheck(); 
+                this.cdr.markForCheck();
             },
             error: () => this.cdr.markForCheck()
         });
@@ -180,11 +180,11 @@ export class DepartmentFormComponent implements OnInit {
         // 2. Load Departments
         this.setupService.getAll<any>('Departments').subscribe({
             next: (res: any) => {
-                let allDepts = res.items || res.data || res || [];
-                if (this.isEdit) {
+                let allDepts = res.data?.items || res.items || res.data || res || [];
+                if (Array.isArray(allDepts) && this.isEdit) {
                     allDepts = allDepts.filter((d: any) => d.deptId !== this.id);
                 }
-                this.departmentsList = allDepts;
+                this.departmentsList = Array.isArray(allDepts) ? allDepts : [];
                 this.cdr.markForCheck();
             },
             error: () => this.cdr.markForCheck()
@@ -199,12 +199,12 @@ export class DepartmentFormComponent implements OnInit {
 
         this.loading = true;
         this.cdr.markForCheck();
-        
+
         const formVal = this.form.value;
         const payload = {
             ...formVal,
             parentDeptId: formVal.parentDeptId || null,
-            managerId: formVal.managerId || 0,
+            managerId: formVal.managerId || null,
             isActive: formVal.isActive ? 1 : 0
         };
 
@@ -213,15 +213,18 @@ export class DepartmentFormComponent implements OnInit {
             : this.setupService.create('Departments', payload);
 
         request.subscribe({
-            next: () => {
+            next: (res: any) => {
                 this.loading = false;
-                this.messageService.add({severity:'success', summary:'نجاح', detail: 'تم الحفظ بنجاح'});
+                this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم الحفظ بنجاح' });
+                // Small delay to ensure message is shown before closing if needed, 
+                // but usually ref.close(true) is fine.
                 this.ref.close(true);
             },
             error: (err) => {
                 this.loading = false;
-                console.error(err);
-                this.messageService.add({severity:'error', summary:'خطأ', detail: 'حدث خطأ أثناء الحفظ'});
+                console.error('Save error:', err);
+                const errorDetail = err.error?.message || 'حدث خطأ أثناء الحفظ';
+                this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorDetail });
                 this.cdr.markForCheck();
             }
         });

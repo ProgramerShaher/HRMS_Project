@@ -28,6 +28,9 @@ public class UpdateCountryCommandHandler : IRequestHandler<UpdateCountryCommand,
             throw new KeyNotFoundException($"الدولة برقم {request.CountryId} غير موجودة");
 
         _mapper.Map(request, country);
+        if (!string.IsNullOrEmpty(country.IsoCode))
+            country.IsoCode = country.IsoCode.ToUpper();
+            
         country.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
