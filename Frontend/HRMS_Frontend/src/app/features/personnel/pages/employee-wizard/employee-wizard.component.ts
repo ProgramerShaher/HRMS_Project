@@ -145,7 +145,14 @@ export class EmployeeWizardComponent implements OnInit {
     // Check if all required fields are filled
     return required.every(field => {
       const value = (data as any)[field];
-      return value !== undefined && value !== null && value !== '';
+      // Check for empty, null, undefined
+      if (value === undefined || value === null || value === '') return false;
+
+      // Specifically for IDs and numbers, check that they are not 0 
+      // except if it's explicitly allowed (though none of the required fields are allowed to be 0 currently)
+      if (typeof value === 'number' && value === 0) return false;
+
+      return true;
     });
   });
 
@@ -159,6 +166,14 @@ export class EmployeeWizardComponent implements OnInit {
     { label: 'العائلة وجهات الاتصال', icon: 'pi pi-users' }
   ];
 
+  generateEmployeeNumber() {
+    const year = new Date().getFullYear();
+    const random = Math.floor(1000 + Math.random() * 9000);
+    const generated = `${year}${random}`;
+
+    this.employeeData.update(data => ({ ...data, employeeNumber: generated }));
+  }
+
   ngOnInit(): void {
     // Check if edit mode
     this.route.paramMap.subscribe(params => {
@@ -167,6 +182,9 @@ export class EmployeeWizardComponent implements OnInit {
         this.isEditMode.set(true);
         this.employeeId.set(+id);
         this.loadEmployeeData(+id);
+      } else {
+        // Only generate for new employees
+        this.generateEmployeeNumber();
       }
     });
   }
@@ -477,7 +495,10 @@ export class EmployeeWizardComponent implements OnInit {
         // Parse validation errors from backend
         if (err.status === 400 && err.error?.errors) {
           const errors = Object.entries(err.error.errors)
-            .map(([key, value]) => `${key}: ${(value as string[]).join(', ')}`)
+            .map(([key, value]) => {
+              const msg = Array.isArray(value) ? value.join(', ') : value;
+              return `${key}: ${msg}`;
+            })
             .join('\n');
           errorMessage = `خطأ في التحقق:\n${errors}`;
         }

@@ -43,14 +43,14 @@ export class SidebarComponent {
       ]
     },
     { label: 'الموظفين', icon: 'pi pi-users', route: '/employees' },
-    { 
-      label: 'الرواتب', 
-      icon: 'pi pi-wallet', 
+    {
+      label: 'الرواتب',
+      icon: 'pi pi-wallet',
       expanded: false,
       children: [
         { label: 'لوحة التحكم', icon: 'pi pi-chart-line', route: '/payroll/dashboard' },
-        { 
-          label: 'رواتب الموظفين', 
+        {
+          label: 'رواتب الموظفين',
           icon: 'pi pi-money-bill',
           expanded: false,
           children: [
@@ -58,8 +58,8 @@ export class SidebarComponent {
             { label: 'تفاصيل راتب', icon: 'pi pi-file', route: '/payroll/salaries/breakdown/0' }
           ]
         },
-        { 
-          label: 'إدارة السلف', 
+        {
+          label: 'إدارة السلف',
           icon: 'pi pi-credit-card',
           expanded: false,
           children: [
@@ -69,8 +69,8 @@ export class SidebarComponent {
             { label: 'سلفي', icon: 'pi pi-user', route: '/payroll/loans/my-loans' }
           ]
         },
-        { 
-          label: 'عناصر الراتب', 
+        {
+          label: 'عناصر الراتب',
           icon: 'pi pi-th-large',
           expanded: false,
           children: [
@@ -78,8 +78,8 @@ export class SidebarComponent {
             { label: 'إضافة عنصر', icon: 'pi pi-plus', route: '/payroll/elements/form' }
           ]
         },
-        { 
-          label: 'هياكل الرواتب', 
+        {
+          label: 'هياكل الرواتب',
           icon: 'pi pi-sitemap',
           expanded: false,
           children: [
@@ -87,8 +87,8 @@ export class SidebarComponent {
             { label: 'هيكل راتبي', icon: 'pi pi-user', route: '/payroll/salary/my-structure' }
           ]
         },
-        { 
-          label: 'معالجة الرواتب', 
+        {
+          label: 'معالجة الرواتب',
           icon: 'pi pi-cog',
           expanded: false,
           children: [
@@ -96,8 +96,8 @@ export class SidebarComponent {
             { label: 'مسيرات الرواتب', icon: 'pi pi-list', route: '/payroll/processing/runs' }
           ]
         },
-        { 
-          label: 'التقارير', 
+        {
+          label: 'التقارير',
           icon: 'pi pi-chart-bar',
           expanded: false,
           children: [
@@ -108,9 +108,9 @@ export class SidebarComponent {
         { label: 'قسائم رواتبي', icon: 'pi pi-file-pdf', route: '/payroll/payslips' }
       ]
     },
-    { 
-      label: 'الإجازات', 
-      icon: 'pi pi-send', 
+    {
+      label: 'الإجازات',
+      icon: 'pi pi-send',
       expanded: false,
       children: [
         { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/leaves/dashboard' },
@@ -120,10 +120,20 @@ export class SidebarComponent {
         { label: 'إعدادات الإجازات', icon: 'pi pi-cog', route: '/leaves/setup' }
       ]
     },
+    {
+      label: 'الأداء والتقييم',
+      icon: 'pi pi-chart-line',
+      expanded: false,
+      children: [
+        { label: 'لوحة التحكم', icon: 'pi pi-home', route: '/performance' },
+        { label: 'المخالفات والجزاءات', icon: 'pi pi-exclamation-triangle', route: '/performance/violations' },
+        { label: 'تقييم الأداء', icon: 'pi pi-star', route: '/performance/appraisals' }
+      ]
+    },
     { label: 'التقارير', icon: 'pi pi-chart-pie', route: '/reports' },
-    { 
-      label: 'تهيئة النظام', 
-      icon: 'pi pi-cog', 
+    {
+      label: 'تهيئة النظام',
+      icon: 'pi pi-cog',
       expanded: false,
       children: [
         { label: 'تهيئة الدول', icon: 'pi pi-flag', route: '/setup/countries' },

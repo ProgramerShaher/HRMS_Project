@@ -1,0 +1,108 @@
+<div class="mb-8">
+  <h2 class="text-3xl font-bold text-slate-800 tracking-tight">الأداء والتقييم</h2>
+  <p class="text-slate-500 mt-2 text-lg">منصة إدارة الأداء المؤسسي ومتابعة انضباط الموظفين</p>
+</div>
+
+<!-- Stats / Quick Overview (Placeholder for future stats) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg shadow-blue-200">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="text-blue-100 font-medium mb-1">إجمالي التقييمات</p>
+        <h3 class="text-3xl font-bold">--</h3>
+      </div>
+      <div class="bg-white/20 p-2 rounded-lg">
+        <i class="pi pi-chart-line text-xl"></i>
+      </div>
+    </div>
+    <p class="text-sm text-blue-100 mt-4 flex items-center gap-1">
+      <i class="pi pi-arrow-up"></i>
+      <span>هذا العام</span>
+    </p>
+  </div>
+
+  <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-lg shadow-red-200">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="text-red-100 font-medium mb-1">المخالفات النشطة</p>
+        <h3 class="text-3xl font-bold">--</h3>
+      </div>
+      <div class="bg-white/20 p-2 rounded-lg">
+        <i class="pi pi-exclamation-circle text-xl"></i>
+      </div>
+    </div>
+    <p class="text-sm text-red-100 mt-4 flex items-center gap-1">
+      <i class="pi pi-info-circle"></i>
+      <span>تتطلب إجراء إداري</span>
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="text-slate-500 font-medium mb-1">دورة التقييم الحالية</p>
+        <h3 class="text-xl font-bold text-slate-800">2024 - Q1</h3>
+      </div>
+      <div class="bg-slate-50 p-2 rounded-lg text-slate-400">
+        <i class="pi pi-calendar text-xl"></i>
+      </div>
+    </div>
+    <div class="mt-4">
+      <div class="w-full bg-slate-100 rounded-full h-2 mb-1">
+        <div class="bg-green-500 h-2 rounded-full" style="width: 45%"></div>
+      </div>
+      <span class="text-xs text-slate-400">متبقي 45 يوم للإغلاق</span>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+  <!-- Violations Card -->
+  <div
+    class="card p-0 overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 border-0 shadow-sm rounded-xl bg-white relative"
+    [routerLink]="['violations']">
+    <div class="absolute top-0 right-0 w-2 h-full bg-red-500 group-hover:w-3 transition-all"></div>
+    <div class="p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div
+          class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 text-2xl shadow-inner group-hover:scale-110 group-hover:bg-red-500 group-hover:text-white transition-all duration-300">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+        <div
+          class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-red-50 group-hover:text-red-500 transition-colors">
+          <i class="pi pi-arrow-left"></i>
+        </div>
+      </div>
+      <h3 class="text-2xl font-bold text-slate-800 group-hover:text-red-600 transition-colors mb-3">المخالفات والجزاءات
+      </h3>
+      <p class="text-slate-500 leading-relaxed">
+        إدارة المخالفات السلوكية والإدارية للموظفين، تسجيل الجزاءات، واعتماد الخصومات وفقاً للائحة العمل.
+      </p>
+    </div>
+  </div>
+
+  <!-- Appraisals Card -->
+  <div
+    class="card p-0 overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 border-0 shadow-sm rounded-xl bg-white relative"
+    [routerLink]="['appraisals']">
+    <div class="absolute top-0 right-0 w-2 h-full bg-blue-500 group-hover:w-3 transition-all"></div>
+    <div class="p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div
+          class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 text-2xl shadow-inner group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+          <i class="pi pi-star"></i>
+        </div>
+        <div
+          class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+          <i class="pi pi-arrow-left"></i>
+        </div>
+      </div>
+      <h3 class="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors mb-3">تقييم الأداء</h3>
+      <p class="text-slate-500 leading-relaxed">
+        إدارة دورات التقييم السنوية، تحديد الأهداف ومؤشرات الأداء KPI، ومتابعة نتائج تقييم الموظفين.
+      </p>
+    </div>
+  </div>
+
+</div>
