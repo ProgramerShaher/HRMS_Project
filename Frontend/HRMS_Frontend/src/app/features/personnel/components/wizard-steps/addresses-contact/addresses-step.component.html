@@ -1,137 +1,118 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full">
-    
-    <!-- Left Column: National Address -->
-    <div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-5 flex flex-col gap-4">
-        <h3 class="font-bold text-slate-800 dark:text-white text-sm mb-2 flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800">
-            <i class="pi pi-map-marker text-orange-500"></i>
-            العنوان الوطني
-        </h3>
-
-        <div class="grid grid-cols-2 gap-3">
-            <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
-                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">المدينة</label>
-                <p-select [options]="cities" [(ngModel)]="currentAddress.cityId" (onChange)="onChange()" 
-                    optionLabel="label" optionValue="value" appendTo="body"
-                    styleClass="w-full p-inputtext-sm text-xs"
-                    [filter]="true" filterBy="label">
-                </p-select>
-            </div>
-
-            <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
-                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الحي</label>
-                <input pInputText [(ngModel)]="currentAddress.district" (blur)="onChange()" 
-                    class="p-inputtext-sm w-full" />
-            </div>
-
-            <div class="flex flex-col gap-1 col-span-2">
-                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">اسم الشارع</label>
-                <input pInputText [(ngModel)]="currentAddress.street" (blur)="onChange()" 
-                    class="p-inputtext-sm w-full" />
-            </div>
-
-            <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
-                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">رقم المبنى</label>
-                <input pInputText [(ngModel)]="currentAddress.buildingNo" (blur)="onChange()" 
-                    class="p-inputtext-sm w-full" />
-            </div>
-
-            <div class="flex flex-col gap-1 col-span-2 md:col-span-1">
-                <label class="text-xs font-medium text-slate-700 dark:text-zinc-300">الرمز البريدي</label>
-                <input pInputText [(ngModel)]="currentAddress.postalCode" (blur)="onChange()" 
-                    class="p-inputtext-sm w-full font-mono" />
-            </div>
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
+  
+  <!-- Address Management Dashboard Header -->
+  <div class="bg-white dark:bg-slate-800/40 backdrop-blur-md rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-700/50 shadow-sm">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-5">
+        <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/20 rotate-3 transition-transform hover:rotate-0">
+          <i class="pi pi-map-marker text-2xl"></i>
         </div>
+        <div>
+          <h2 class="text-xl font-black text-slate-800 dark:text-white tracking-tight">إدارة العناوين والحسابات البنكية</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">سجل العناوين السكنية وبيانات تحويل الراتب بدقة</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <div class="px-4 py-2 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Active System</span>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Right Column: Emergency Contacts -->
-    <div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 p-5 flex flex-col gap-4">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-2 mb-2">
-            <h3 class="font-bold text-slate-800 dark:text-white text-sm flex items-center gap-2">
-                <i class="pi pi-phone text-red-500"></i>
-                جهات الطوارئ
-            </h3>
-            <button pButton icon="pi pi-plus" label="إضافة" class="p-button-text p-button-sm p-button-danger text-xs" (click)="openAddDialog()"></button>
-        </div>
-
-        <div class="flex flex-col gap-2 flex-1 overflow-y-auto max-h-[350px]">
-            <!-- Empty State -->
-            <div *ngIf="!data.emergencyContacts || data.emergencyContacts.length === 0" class="flex flex-col items-center justify-center py-6 text-center bg-slate-50 dark:bg-zinc-900 rounded-lg border border-dashed border-slate-200 dark:border-zinc-800">
-                <i class="pi pi-users text-xl text-slate-300 mb-1"></i>
-                <p class="text-xs text-slate-500">لا توجد جهات اتصال</p>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Addresses Section -->
+    <section class="space-y-4">
+      <app-dynamic-array-list
+        [items]="data.addresses || []"
+        title="العناوين المسجلة"
+        itemLabel="عنوان"
+        icon="pi pi-map"
+        [columns]="addressColumns"
+        (save)="onSaveAddress($event)"
+        (delete)="onDeleteAddress($event)">
+        
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+            <!-- Address Type -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">نوع العنوان</label>
+              <p-select [options]="addressTypes" [(ngModel)]="item.addressType" appendTo="body" placeholder="المنزل، العمل..." styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
             </div>
 
-            <!-- Contacts Cards -->
-            <div *ngFor="let contact of data.emergencyContacts; let i = index" class="p-3 rounded-lg border border-slate-100 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-red-200 transition-colors group relative">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 flex items-center justify-center text-[10px] font-bold shrink-0">
-                            {{ i + 1 }}
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 dark:text-zinc-200 text-xs">{{ contact.contactNameAr }}</h4>
-                            <span class="text-[10px] text-slate-500">{{ contact.relationship }}</span>
-                        </div>
-                    </div>
-                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-secondary w-6 h-6 !p-0" (click)="openEditDialog(i)"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger w-6 h-6 !p-0" (click)="removeContact(i)"></button>
-                    </div>
-                </div>
-                <div class="mt-2 pt-2 border-t border-slate-50 dark:border-zinc-800 flex items-center gap-3 text-[10px]">
-                    <div class="flex items-center gap-1 text-slate-600 dark:text-zinc-400">
-                        <i class="pi pi-phone text-[10px]"></i>
-                        <span class="font-mono dir-ltr">{{ contact.phonePrimary }}</span>
-                    </div>
-                    <div *ngIf="contact.phoneSecondary" class="flex items-center gap-1 text-slate-400">
-                        <i class="pi pi-mobile text-[10px]"></i>
-                        <span class="font-mono dir-ltr">{{ contact.phoneSecondary }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add/Edit Contact Dialog -->
-<div *ngIf="showContactDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-    <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in-up">
-        <div class="p-3 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-950">
-            <h3 class="font-bold text-slate-800 dark:text-white text-sm">{{ editingContactIndex !== null ? 'تعديل جهة' : 'إضافة جهة' }}</h3>
-            <button pButton icon="pi pi-times" class="p-button-text p-button-secondary w-6 h-6" (click)="closeDialog()"></button>
-        </div>
-
-        <div class="p-4 flex flex-col gap-3">
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-slate-700">الاسم (عربي) <span class="text-red-500">*</span></label>
-                <input pInputText [(ngModel)]="newContact.contactNameAr" class="p-inputtext-sm w-full" />
-            </div>
-            
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-slate-700">صلة القرابة <span class="text-red-500">*</span></label>
-                <input pInputText [(ngModel)]="newContact.relationship" class="p-inputtext-sm w-full" />
+            <!-- Country -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الدولة</label>
+              <p-select [options]="countries" [(ngModel)]="item.countryId" (ngModelChange)="onCountryChange($event)" optionLabel="countryNameAr" optionValue="countryId" [filter]="true" appendTo="body" placeholder="اختر الدولة" styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-700">رقم الجوال <span class="text-red-500">*</span></label>
-                    <input pInputText [(ngModel)]="newContact.phonePrimary" class="p-inputtext-sm w-full font-mono" dir="ltr" />
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-700">رقم بديل</label>
-                    <input pInputText [(ngModel)]="newContact.phoneSecondary" class="p-inputtext-sm w-full font-mono" dir="ltr" />
-                </div>
+            <!-- City -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">المدينة</label>
+              <p-select [options]="cities()" [(ngModel)]="item.cityId" optionLabel="cityNameAr" optionValue="cityId" [filter]="true" appendTo="body" [disabled]="!item.countryId" placeholder="اختر المدينة" styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
             </div>
-        </div>
 
-        <div class="p-3 border-t border-slate-100 dark:border-zinc-800 flex justify-end gap-2 bg-slate-50 dark:bg-zinc-950">
-            <button pButton label="إلغاء" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="closeDialog()"></button>
-            <button pButton label="حفظ" class="p-button-primary p-button-sm rounded-lg px-4" (click)="addContact()"></button>
-        </div>
-    </div>
-</div>
+            <!-- Postal Code -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1 font-sans">Zip Code</label>
+              <input pInputText [(ngModel)]="item.zipCode" class="w-full !h-11 !rounded-xl !text-sm font-mono" placeholder="12345" />
+            </div>
 
-<!-- Navigation Buttons -->
-<div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800 w-full col-span-2">
-    <button pButton label="السابق" icon="pi pi-arrow-right" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="onPrev()"></button>
-    <button pButton label="التالي" icon="pi pi-arrow-left" iconPos="left" class="p-button-primary p-button-sm rounded-lg px-6" (click)="onNext()"></button>
+            <!-- Street -->
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الشارع / تفاصيل إضافية</label>
+              <textarea pInputTextarea [(ngModel)]="item.street" class="w-full !p-3 !rounded-xl !border-slate-100 dark:!border-slate-700 !bg-slate-50 dark:!bg-slate-900/50 !text-sm" placeholder="اسم الشارع، رقم المبنى، الحي..."></textarea>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
+
+    <!-- Bank Accounts Section -->
+    <section class="space-y-4">
+      <app-dynamic-array-list
+        [items]="data.bankAccounts || []"
+        title="الحسابات البنكية"
+        itemLabel="حساب"
+        icon="pi pi-credit-card"
+        [columns]="bankAccountColumns"
+        (save)="onSaveBankAccount($event)"
+        (delete)="onDeleteBankAccount($event)">
+        
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+            <!-- Bank -->
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">البنك <span class="text-red-500">*</span></label>
+              <p-select [options]="banks()" [(ngModel)]="item.bankId" optionLabel="bankNameAr" optionValue="bankId" [filter]="true" appendTo="body" placeholder="اختر البنك" styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
+            </div>
+
+            <!-- Account Holder -->
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">اسم صاحب الحساب <span class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.accountHolderName" class="w-full !h-11 !rounded-xl !text-sm" placeholder="As in official records" />
+            </div>
+
+            <!-- IBAN -->
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1 font-sans">IBAN Number (YE) <span class="text-red-500">*</span></label>
+              <div class="relative group" dir="ltr">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-xs">YE</span>
+                <input pInputText [(ngModel)]="item.ibanNumber" (onBlur)="onDataChange()" maxlength="22" class="w-full !h-11 !pl-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 font-mono text-sm tracking-wider" placeholder="22-digit account number" />
+              </div>
+            </div>
+
+            <!-- Is Primary -->
+            <div class="md:col-span-2">
+               <div class="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-100 dark:border-emerald-900/40">
+                 <input type="checkbox" [(ngModel)]="item.isPrimary" class="w-4 h-4 accent-emerald-600 rounded" id="isPrimaryBank" />
+                 <label for="isPrimaryBank" class="text-[11px] font-bold text-emerald-800 dark:text-emerald-400 cursor-pointer">تعيين كحساب أساسي للرواتب</label>
+               </div>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
+  </div>
 </div>

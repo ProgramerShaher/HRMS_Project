@@ -1,87 +1,119 @@
-<div class="h-full flex flex-col gap-4">
-    <!-- Header -->
-    <div class="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-2">
-        <h3 class="font-bold text-slate-800 dark:text-white text-sm flex items-center gap-2">
-            <i class="pi pi-users text-pink-500"></i>
-            البيانات العائلية
-        </h3>
-        <button pButton icon="pi pi-plus" label="إضافة تابع" class="p-button-outlined p-button-sm rounded-lg text-xs" (click)="addDependent()"></button>
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
+  
+  <!-- Header Card (Compact & Modern) -->
+  <div class="bg-indigo-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-500/20 relative overflow-hidden group">
+    <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+    <div class="relative z-10 flex items-center gap-6">
+      <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
+        <i class="pi pi-users text-3xl"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-black tracking-tight">العائلة وجهات الطوارئ</h2>
+        <p class="text-sm text-indigo-100/80 font-medium">إدارة المرافقين ومعلومات الاتصال في الحالات العاجلة</p>
+      </div>
     </div>
+  </div>
 
-    <!-- Dependents Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 flex-1 content-start overflow-y-auto max-h-[400px]">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Emergency Contacts Section -->
+    <section class="space-y-4">
+      <app-dynamic-array-list
+        [items]="data.emergencyContacts || []"
+        title="جهات الاتصال للطوارئ"
+        itemLabel="جهة اتصال"
+        icon="pi pi-phone"
+        [columns]="contactColumns"
+        (save)="onSaveContact($event)"
+        (delete)="onDeleteContact($event)">
         
-        <!-- Empty State -->
-        <div *ngIf="!data.dependents || data.dependents.length === 0" class="col-span-full py-8 flex flex-col items-center justify-center text-center bg-slate-50 dark:bg-zinc-900 rounded-lg border border-dashed border-slate-200 dark:border-zinc-800">
-            <i class="pi pi-users text-xl text-slate-300 mb-1"></i>
-            <p class="text-xs text-slate-500">لا يوجد تابعين</p>
-        </div>
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+            <!-- Name -->
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الاسم الكامل <span class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.contactNameAr" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" placeholder="الاسم الرباعي المعتمد" />
+            </div>
 
-        <div *ngFor="let dep of data.dependents; let i = index" class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 shadow-sm p-3 relative group hover:border-pink-200 transition-colors">
-            <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 flex items-center justify-center text-sm font-bold shrink-0">
-                        {{ dep.fullNameAr ? dep.fullNameAr.charAt(0) : '?' }}
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 dark:text-zinc-200 text-xs truncate max-w-[100px]">{{ dep.fullNameAr }}</h4>
-                        <span class="text-[10px] bg-slate-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-slate-500">{{ dep.relationship }}</span>
-                    </div>
-                </div>
-                <button pButton icon="pi pi-times" class="p-button-text p-button-danger p-button-sm w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity" (click)="removeDependent(i)"></button>
+            <!-- Phone -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">رقم الجوال <span class="text-red-500">*</span></label>
+              <div class="relative group" dir="ltr">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-[10px]">+967</span>
+              <input pInputText [(ngModel)]="item.phonePrimary" (onBlur)="onDataChange()" maxlength="9" class="w-full !h-11 !pl-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 font-mono text-sm" placeholder="7XXXXXXXX" />
             </div>
-            
-            <div class="border-t border-slate-50 dark:border-zinc-800 pt-2 text-[10px] text-slate-500 flex flex-col gap-1">
-                <div class="flex justify-between">
-                    <span>تاريخ الميلاد:</span>
-                    <span class="font-mono">{{ dep.birthDate | date:'dd/MM/yyyy' }}</span>
-                </div>
-                <div class="flex justify-between" *ngIf="dep.nationalId">
-                    <span>الهوية:</span>
-                    <span class="font-mono">{{ dep.nationalId }}</span>
-                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Dependent Dialog -->
-    <div *ngIf="showDependentDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in-up" [formGroup]="depForm">
-            <div class="p-3 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-950">
-                <h3 class="font-bold text-slate-800 dark:text-white text-sm">إضافة تابع</h3>
-                <button pButton icon="pi pi-times" class="p-button-text p-button-secondary w-6 h-6" (click)="showDependentDialog = false"></button>
+            <!-- Relationship -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">صلة القرابة</label>
+              <input pInputText [(ngModel)]="item.relationship" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm" placeholder="مثال: أب، زوج..." />
             </div>
-            
-            <div class="p-4 flex flex-col gap-3">
-                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-700">الاسم (عربي) <span class="text-red-500">*</span></label>
-                    <input pInputText formControlName="fullNameAr" class="p-inputtext-sm w-full" />
-                </div>
-                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-700">صلة القرابة <span class="text-red-500">*</span></label>
-                    <p-select [options]="relations" formControlName="relationship" optionLabel="label" optionValue="value" appendTo="body" styleClass="w-full p-inputtext-sm text-xs"></p-select>
-                </div>
-                 <div class="grid grid-cols-2 gap-3">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-xs font-medium text-slate-700">تاريخ الميلاد <span class="text-red-500">*</span></label>
-                        <p-datePicker formControlName="birthDate" appendTo="body" styleClass="w-full" inputStyleClass="w-full p-inputtext-sm text-xs"></p-datePicker>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-xs font-medium text-slate-700">الجنس</label>
-                         <p-select [options]="genders" formControlName="gender" optionLabel="label" optionValue="value" appendTo="body" styleClass="w-full p-inputtext-sm text-xs"></p-select>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 border-t border-slate-100 dark:border-zinc-800 flex justify-end gap-2 bg-slate-50 dark:bg-zinc-950">
-                <button pButton label="إلغاء" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="showDependentDialog = false"></button>
-                <button pButton label="حفظ" class="p-button-primary p-button-sm rounded-lg px-4" (click)="saveDependent()"></button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Navigation -->
-    <div class="flex justify-between items-center mt-2 pt-3 border-t border-slate-100 dark:border-zinc-800 shrink-0">
-        <button pButton label="السابق: الوثائق" icon="pi pi-arrow-right" class="p-button-text p-button-secondary p-button-sm rounded-lg" (click)="onPrev()"></button>
-        <button pButton label="حفظ وإتمام" icon="pi pi-check" iconPos="left" class="p-button-success p-button-sm rounded-lg px-6 font-bold" (click)="onSubmit()"></button>
-    </div>
+            <!-- Is Primary -->
+            <div class="md:col-span-2">
+               <div class="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/40">
+                 <input type="checkbox" [(ngModel)]="item.isPrimary" class="w-4 h-4 accent-blue-600 rounded" id="isPrimaryContact" />
+                 <label for="isPrimaryContact" class="text-[11px] font-bold text-blue-800 dark:text-blue-400">جهة الاتصال الأساسية</label>
+               </div>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
+
+    <!-- Dependents Section -->
+    <section class="space-y-4">
+      <app-dynamic-array-list
+        [items]="data.dependents || []"
+        title="أفراد العائلة (المرافقين)"
+        itemLabel="مرافق"
+        icon="pi pi-heart"
+        [columns]="dependentColumns"
+        (save)="onSaveDependent($event)"
+        (delete)="onDeleteDependent($event)">
+        
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+            <!-- Name -->
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الاسم الكامل للمرافق</label>
+              <input pInputText [(ngModel)]="item.fullNameAr" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+            </div>
+
+            <!-- National ID -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">رقم الهوية</label>
+              <input pInputText [(ngModel)]="item.nationalId" maxlength="10" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 font-mono text-sm tracking-widest" />
+            </div>
+
+            <!-- Birth Date -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">تاريخ الميلاد</label>
+              <p-datePicker [(ngModel)]="item.birthDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm"></p-datePicker>
+            </div>
+
+            <!-- Relationship -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">صلة القرابة</label>
+              <input pInputText [(ngModel)]="item.relationship" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm" />
+            </div>
+
+            <!-- Gender -->
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الجنس</label>
+              <div class="flex gap-2 h-11">
+                @for (gender of genders; track gender.value) {
+                  <button class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 transition-all font-bold text-[10px]"
+                    [ngClass]="item.gender === gender.value ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-50 bg-slate-50 text-slate-400'"
+                    (click)="item.gender = gender.value">
+                    {{ gender.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
+  </div>
 </div>

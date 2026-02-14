@@ -12,6 +12,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EmployeeService } from '../../services/employee.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { environment } from '../../../../../environments/environment';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-qualifications',
@@ -27,8 +29,9 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     FileUploadModule,
     ToastModule,
     InputNumberModule,
-    ConfirmDialogModule
-  ],
+    ConfirmDialogModule,
+    Tag
+],
   templateUrl: './profile-qualifications.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -42,6 +45,8 @@ export class ProfileQualificationsComponent implements OnInit {
   // Dialog State
   displayDialog = false;
   submitted = false;
+  isEditMode = false;
+  selectedQualificationId: number | null = null;
   qualificationForm: FormGroup;
   selectedFile: File | null = null;
 
@@ -51,21 +56,37 @@ export class ProfileQualificationsComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
 
+  levels = signal<any[]>([
+    { qualificationLevelNameAr: 'Bachelor', qualificationLevelId: 1 },
+    { qualificationLevelNameAr: 'Master', qualificationLevelId: 2 },
+    { qualificationLevelNameAr: 'PhD', qualificationLevelId: 3 },
+    { qualificationLevelNameAr: 'Diploma', qualificationLevelId: 4 }
+  ]);
+
+  get fileName(): string {
+    return this.selectedFile ? this.selectedFile.name : '';
+  }
+
+  getAttachmentUrl(path: string): string {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    return `${environment.apiUrl}/${path.startsWith('/') ? path.substring(1) : path}`;
+  }
+
   // Constants
   currentYear = new Date().getFullYear();
   years: number[] = [];
 
   constructor() {
     this.qualificationForm = this.fb.group({
-      degreeType: ['', Validators.required],
+      qualificationLevelId: [null, Validators.required],
       majorAr: ['', [
           Validators.required,
           Validators.pattern(/^[\u0600-\u06FF\s]+$/) // Arabic only
       ]],
       universityAr: ['', Validators.required],
-      countryId: [null], 
       graduationYear: [this.currentYear, [Validators.required, Validators.min(1950), Validators.max(this.currentYear + 5)]],
-      grade: ['']
+      grade: [null]
     });
 
     // Generate years for dropdown
@@ -92,7 +113,25 @@ export class ProfileQualificationsComponent implements OnInit {
   }
 
   showDialog() {
+    this.isEditMode = false;
+    this.selectedQualificationId = null;
     this.qualificationForm.reset({ graduationYear: this.currentYear });
+    this.selectedFile = null;
+    this.submitted = false;
+    this.displayDialog = true;
+  }
+
+  showEditDialog(qual: any) {
+    this.isEditMode = true;
+    this.selectedQualificationId = qual.qualificationId;
+    this.qualificationForm.patchValue({
+        degreeType: qual.degreeType,
+        majorAr: qual.majorAr,
+        universityAr: qual.universityAr,
+        graduationYear: qual.graduationYear,
+        grade: qual.grade,
+        countryId: qual.countryId
+    });
     this.selectedFile = null;
     this.submitted = false;
     this.displayDialog = true;
@@ -109,20 +148,44 @@ export class ProfileQualificationsComponent implements OnInit {
     if (this.qualificationForm.invalid) return;
 
     this.loading.set(true);
-    const data = { ...this.qualificationForm.value, employeeId: this.employeeId };
+    const formVal = this.qualificationForm.value;
+    const selectedLevel = this.levels().find(l => l.qualificationLevelId === formVal.qualificationLevelId);
+    
+    const data = { 
+        ...formVal,
+        employeeId: this.employeeId,
+        qualificationId: this.selectedQualificationId,
+        DegreeType: selectedLevel ? selectedLevel.qualificationLevelNameAr : '', // Map ID to String Name
+    };
 
-    // Assuming ADD only for now as per endpoints, if EDIT is needed logic changes
-    this.employeeService.addQualification(this.employeeId, data, this.selectedFile || undefined).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم إضافة المؤهل بنجاح' });
-        this.displayDialog = false;
-        this.loadData();
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
-        this.loading.set(false);
-      }
-    });
+    if (this.isEditMode && this.selectedQualificationId) {
+        // Backend update via JSON only, file update skipped
+        this.employeeService.updateQualification(this.employeeId, this.selectedQualificationId, data).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم تحديث المؤهل بنجاح' });
+              this.displayDialog = false;
+              this.loadData();
+            },
+            error: () => {
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء التحديث' });
+              this.loading.set(false);
+            }
+        });
+    } else {
+        this.employeeService.addQualification(this.employeeId, data, this.selectedFile || undefined).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم إضافة المؤهل بنجاح' });
+              this.displayDialog = false;
+              this.loadData();
+            },
+            error: (err) => {
+              console.error('Save Error:', err);
+              const errorMessage = err.error?.message || err.error?.detail || 'حدث خطأ أثناء الحفظ';
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorMessage });
+              this.loading.set(false);
+            }
+        });
+    }
   }
 
   delete(id: number) {

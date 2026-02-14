@@ -90,6 +90,12 @@ export class EmployeeProfileComponent implements OnInit {
     });
   }
 
+    // getProfilePictureUrl(path: string | null): string | null {
+    //     if (!path) return null;
+    //     if (path.startsWith('http')) return path;
+    //     return `https://localhost:5201/${path}`; 
+    // }
+
   editProfile() {
     const id = this.employeeId();
     if (id) {
@@ -133,7 +139,7 @@ export class EmployeeProfileComponent implements OnInit {
     if (path.startsWith('http')) return path;
     
     // Build full URL from backend base
-    const baseUrl = 'https://localhost:5001';
+    const baseUrl = 'https://localhost:5201';
     // Remove leading slash if exists to avoid double slashes
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
     const fullUrl = `${baseUrl}/${cleanPath}`;

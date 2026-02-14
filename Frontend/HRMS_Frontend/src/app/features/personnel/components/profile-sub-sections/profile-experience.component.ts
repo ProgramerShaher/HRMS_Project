@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../services/employee.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-experience',
@@ -27,8 +28,9 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     ToastModule,
     DatePickerModule,
     ConfirmDialogModule,
-    CheckboxModule
-  ],
+    CheckboxModule,
+    Tag
+],
   templateUrl: './profile-experience.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -40,7 +42,9 @@ export class ProfileExperienceComponent implements OnInit {
   
   displayDialog = false;
   submitted = false;
-  expForm: FormGroup;
+  isEditMode = false;
+  selectedExperienceId: number | null = null;
+  experienceForm: FormGroup;
 
   private employeeService = inject(EmployeeService);
   private messageService = inject(MessageService);
@@ -48,7 +52,7 @@ export class ProfileExperienceComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   constructor() {
-    this.expForm = this.fb.group({
+    this.experienceForm = this.fb.group({
       companyNameAr: ['', Validators.required],
       jobTitleAr: ['', Validators.required],
       startDate: [null, Validators.required],
@@ -77,48 +81,81 @@ export class ProfileExperienceComponent implements OnInit {
   }
 
   showDialog() {
-    this.expForm.reset({ isCurrent: false });
+    this.isEditMode = false;
+    this.selectedExperienceId = null;
+    this.experienceForm.reset({ isCurrent: false });
+    this.submitted = false;
+    this.displayDialog = true;
+  }
+
+  showEditDialog(exp: any) {
+    this.isEditMode = true;
+    this.selectedExperienceId = exp.experienceId;
+    this.experienceForm.patchValue({
+      companyNameAr: exp.companyNameAr,
+      jobTitleAr: exp.jobTitleAr,
+      startDate: exp.startDate ? new Date(exp.startDate) : null,
+      endDate: exp.endDate ? new Date(exp.endDate) : null,
+      isCurrent: exp.isCurrent,
+      responsibilities: exp.responsibilities,
+      reasonForLeaving: exp.reasonForLeaving
+    });
+    this.onCurrentChange();
     this.submitted = false;
     this.displayDialog = true;
   }
 
   onCurrentChange() {
-    if (this.expForm.get('isCurrent')?.value) {
-      this.expForm.get('endDate')?.setValue(null);
-      this.expForm.get('endDate')?.disable();
+    if (this.experienceForm.get('isCurrent')?.value) {
+      this.experienceForm.get('endDate')?.setValue(null);
+      this.experienceForm.get('endDate')?.disable();
     } else {
-      this.expForm.get('endDate')?.enable();
+      this.experienceForm.get('endDate')?.enable();
     }
   }
 
   save() {
     this.submitted = true;
-    if (this.expForm.invalid) return;
+    if (this.experienceForm.invalid) return;
 
     this.loading.set(true);
-    const formVal = this.expForm.value;
-    const data = {
-        EmployeeId: this.employeeId,
-        CompanyNameAr: formVal.companyNameAr,
-        JobTitleAr: formVal.jobTitleAr,
+    const formVal = this.experienceForm.value;
+    const data = { 
+        ...formVal, 
+        employeeId: this.employeeId,
+        experienceId: this.selectedExperienceId,
+        IsCurrent: formVal.isCurrent ? 1 : 0, // Convert boolean to byte
         StartDate: formVal.startDate ? new Date(formVal.startDate).toISOString() : null,
         EndDate: formVal.isCurrent ? null : (formVal.endDate ? new Date(formVal.endDate).toISOString() : null),
-        IsCurrent: formVal.isCurrent ? 1 : 0,
-        Responsibilities: formVal.responsibilities,
-        ReasonForLeaving: formVal.reasonForLeaving
     };
 
-    this.employeeService.addExperience(this.employeeId, data).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم إضافة الخبرة بنجاح' });
-        this.displayDialog = false;
-        this.loadData();
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
-        this.loading.set(false);
-      }
-    });
+    if (this.isEditMode && this.selectedExperienceId) {
+        this.employeeService.updateExperience(this.employeeId, this.selectedExperienceId, data).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم تحديث الخبرة بنجاح' });
+              this.displayDialog = false;
+              this.loadData();
+            },
+            error: (err) => {
+              console.error('Save Error:', err);
+              const errorMessage = err.error?.message || err.error?.detail || 'حدث خطأ أثناء الحفظ';
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorMessage });
+              this.loading.set(false);
+            }
+        });
+    } else {
+        this.employeeService.addExperience(this.employeeId, data).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم إضافة الخبرة بنجاح' });
+              this.displayDialog = false;
+              this.loadData();
+            },
+            error: () => {
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+              this.loading.set(false);
+            }
+        });
+    }
   }
 
   delete(id: number) {

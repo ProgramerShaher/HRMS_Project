@@ -1,0 +1,263 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <!-- Action Buttons -->
+  <app-action-buttons
+    [showBack]="true"
+    [showHome]="true"
+    [showPrint]="true"
+    backRoute="/payroll/salaries/all"
+    (print)="printBreakdown()"
+  ></app-action-buttons>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-20">
+      <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+    </div>
+  } @else if (breakdown()) {
+    <!-- Employee Header -->
+    <div class="glass-panel p-6 rounded-2xl">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl">
+          {{ breakdown()!.employee.employeeNameAr?.charAt(0) }}
+        </div>
+        <div class="flex-1">
+          <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">
+            {{ breakdown()!.employee.employeeNameAr }}
+          </h1>
+          <div class="flex items-center gap-4 mt-1 text-sm text-slate-500 dark:text-zinc-400">
+            <span><i class="pi pi-id-card ml-1"></i>{{ breakdown()!.employee.employeeCode }}</span>
+            <span *ngIf="breakdown()!.employee.departmentName">
+              <i class="pi pi-building ml-1"></i>{{ breakdown()!.employee.departmentName }}
+            </span>
+            <span *ngIf="breakdown()!.employee.jobTitle">
+              <i class="pi pi-briefcase ml-1"></i>{{ breakdown()!.employee.jobTitle }}
+            </span>
+          </div>
+        </div>
+        <div class="text-left">
+          <p class="text-sm text-slate-500 dark:text-zinc-400">صافي الراتب</p>
+          <h2 class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+            {{ formatCurrency(breakdown()!.summary.netSalary) }}
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Basic Salary -->
+      <div class="card-floating">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500 dark:text-zinc-400">الراتب الأساسي</p>
+            <h3 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
+              {{ formatCurrency(breakdown()!.basicSalary) }}
+            </h3>
+          </div>
+          <div class="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+            <i class="pi pi-wallet text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Allowances -->
+      <div class="card-floating">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500 dark:text-zinc-400">إجمالي البدلات</p>
+            <h3 class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+              +{{ formatCurrency(breakdown()!.summary.totalEarnings - breakdown()!.basicSalary) }}
+            </h3>
+          </div>
+          <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
+            <i class="pi pi-plus-circle text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Deductions -->
+      <div class="card-floating">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500 dark:text-zinc-400">إجمالي الخصومات</p>
+            <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
+              -{{ formatCurrency(breakdown()!.summary.totalDeductions) }}
+            </h3>
+          </div>
+          <div class="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl">
+            <i class="pi pi-minus-circle text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gross Salary -->
+      <div class="card-floating">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500 dark:text-zinc-400">إجمالي الراتب</p>
+            <h3 class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
+              {{ formatCurrency(breakdown()!.summary.grossSalary) }}
+            </h3>
+          </div>
+          <div class="p-3 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-xl">
+            <i class="pi pi-chart-line text-2xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Left Column -->
+      <div class="space-y-6">
+        <!-- Allowances (Earnings) -->
+        <div class="glass-panel p-6 rounded-2xl">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <i class="pi pi-plus-circle text-emerald-600"></i>
+            البدلات والإضافات
+          </h3>
+          <p-table [value]="breakdown()!.earnings" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>العنصر</th>
+                <th>النسبة</th>
+                <th class="text-left">المبلغ</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-earning>
+              <tr>
+                <td>{{ earning.elementNameAr }}</td>
+                <td>
+                  <p-tag *ngIf="earning.percentage > 0" [value]="earning.percentage + '%'" severity="info"></p-tag>
+                  <span *ngIf="!earning.percentage || earning.percentage === 0">-</span>
+                </td>
+                <td class="text-left font-bold text-emerald-600">
+                  +{{ formatCurrency(earning.amount) }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3" class="text-center text-slate-500">لا توجد بدلات</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <!-- Deductions -->
+        <div class="glass-panel p-6 rounded-2xl">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <i class="pi pi-minus-circle text-red-600"></i>
+            الخصومات
+          </h3>
+          <p-table [value]="breakdown()!.deductions" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>العنصر</th>
+                <th>النسبة</th>
+                <th class="text-left">المبلغ</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-deduction>
+              <tr>
+                <td>{{ deduction.elementNameAr }}</td>
+                <td>
+                  <p-tag *ngIf="deduction.percentage > 0" [value]="deduction.percentage + '%'" severity="warn"></p-tag>
+                  <span *ngIf="!deduction.percentage || deduction.percentage === 0">-</span>
+                </td>
+                <td class="text-left font-bold text-red-600">
+                  -{{ formatCurrency(deduction.amount) }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3" class="text-center text-slate-500">لا توجد خصومات</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="space-y-6">
+        <!-- Salary Distribution Chart -->
+        <div class="glass-panel p-6 rounded-2xl">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">
+            توزيع الراتب
+          </h3>
+          <div class="h-64">
+            <p-chart type="doughnut" [data]="chartData" [options]="chartOptions"></p-chart>
+          </div>
+        </div>
+
+        <!-- Attendance Impact -->
+        <div class="glass-panel p-6 rounded-2xl">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <i class="pi pi-clock text-amber-600"></i>
+            تأثير الحضور ({{ breakdown()!.attendance.month }}/{{ breakdown()!.attendance.year }})
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <span class="text-sm text-slate-700 dark:text-zinc-300">ساعات إضافية</span>
+              <div class="text-left">
+                <span class="text-xs text-slate-500">{{ breakdown()!.attendance.overtimeHours }} ساعة</span>
+                <p class="font-bold text-emerald-600">+{{ formatCurrency(breakdown()!.attendance.overtimeAmount) }}</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+              <span class="text-sm text-slate-700 dark:text-zinc-300">خصم التأخير</span>
+              <div class="text-left">
+                <span class="text-xs text-slate-500">{{ breakdown()!.attendance.lateMinutes }} دقيقة</span>
+                <p class="font-bold text-amber-600">-{{ formatCurrency(breakdown()!.attendance.latenessDeduction) }}</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              <span class="text-sm text-slate-700 dark:text-zinc-300">خصم الغياب</span>
+              <div class="text-left">
+                <span class="text-xs text-slate-500">{{ breakdown()!.attendance.absenceDays }} يوم</span>
+                <p class="font-bold text-red-600">-{{ formatCurrency(breakdown()!.attendance.absenceDeduction) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loans -->
+        @if (breakdown()!.activeLoans && breakdown()!.activeLoans.length > 0) {
+          <div class="glass-panel p-6 rounded-2xl">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <i class="pi pi-credit-card text-blue-600"></i>
+              السلف القائمة
+            </h3>
+            <div class="space-y-3">
+              @for (loan of breakdown()!.activeLoans; track loan.loanId) {
+                <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-slate-700 dark:text-zinc-300">
+                      سلفة #{{ loan.loanId }}
+                    </span>
+                    <span class="text-xs text-slate-500">
+                      القسط {{ loan.installmentNumber }}
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-slate-600 dark:text-zinc-400">القسط الشهري</span>
+                    <span class="font-bold text-blue-600">-{{ formatCurrency(loan.monthlyInstallment) }}</span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs mt-1">
+                    <span class="text-slate-500">المتبقي</span>
+                    <span class="text-slate-600 dark:text-zinc-400">{{ formatCurrency(loan.remainingAmount) }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="glass-panel p-12 rounded-2xl text-center">
+      <i class="pi pi-exclamation-circle text-6xl text-slate-400 mb-4"></i>
+      <p class="text-slate-500 dark:text-zinc-400">لم يتم العثور على بيانات</p>
+    </div>
+  }
+</div>

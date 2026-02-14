@@ -3140,7 +3140,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<int>("ElementId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ELEMENT_ID");
+                        .HasColumnName("ElementId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ElementId"));
 
@@ -3155,22 +3155,22 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Property<decimal?>("DefaultPercentage")
                         .HasColumnType("decimal(5, 2)")
-                        .HasColumnName("DEFAULT_PERCENTAGE");
+                        .HasColumnName("DefaultPercentage");
 
                     b.Property<string>("ElementNameAr")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("ELEMENT_NAME_AR");
+                        .HasColumnName("ElementNameAr");
 
                     b.Property<string>("ElementType")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
-                        .HasColumnName("ELEMENT_TYPE");
+                        .HasColumnName("ElementType");
 
                     b.Property<byte>("IsBasic")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_BASIC");
+                        .HasColumnName("IsBasic");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
@@ -3178,15 +3178,15 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Property<byte>("IsGosiBase")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_GOSI_BASE");
+                        .HasColumnName("IsGosiBase");
 
                     b.Property<byte>("IsRecurring")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_RECURRING");
+                        .HasColumnName("IsRecurring");
 
                     b.Property<byte>("IsTaxable")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_TAXABLE");
+                        .HasColumnName("IsTaxable");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")

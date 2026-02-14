@@ -1,0 +1,42 @@
+.structures-container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+@variant dark {
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+:host ::v-deep {
+  .p-datatable.no-border {
+    .p-datatable-thead > tr > th {
+      border: none;
+      @apply py-6;
+    }
+    .p-datatable-tbody > tr > td {
+      border-color: rgba(226, 232, 240, 0.5);
+      @apply py-4;
+    }
+  }
+
+  .p-paginator {
+    @apply bg-transparent border-none py-8;
+    
+    .p-paginator-page, .p-paginator-next, .p-paginator-last, .p-paginator-first, .p-paginator-prev {
+      @apply rounded-xl border-none font-bold transition-all;
+      &.p-highlight {
+        @apply bg-indigo-600 text-white shadow-lg shadow-indigo-600/20;
+      }
+    }
+  }
+}

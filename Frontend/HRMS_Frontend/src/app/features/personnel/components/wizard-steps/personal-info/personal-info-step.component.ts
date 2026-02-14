@@ -1,104 +1,107 @@
-import { Component, EventEmitter, Input, Output, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
+import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ImageModule } from 'primeng/image';
+import { TooltipModule } from 'primeng/tooltip';
 import { CreateEmployeeDto } from '../../../models/create-employee.dto';
-import { MessageService } from 'primeng/api';
-import { SetupService } from '../../../../setup/services/setup.service';
+import { LookupService, Country } from '../../../../../core/services/lookup.service';
 
 @Component({
   selector: 'app-personal-info-step',
   standalone: true,
   imports: [
     CommonModule, 
-    ReactiveFormsModule, 
     FormsModule,
     InputTextModule,
     DatePickerModule,
-    ButtonModule,
     SelectModule,
-    FileUploadModule
+    RadioButtonModule,
+    FileUploadModule,
+    ImageModule,
+    TooltipModule
   ],
   templateUrl: './personal-info-step.component.html',
-  styles: []
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class PersonalInfoStepComponent implements OnInit {
   @Input() data!: CreateEmployeeDto;
   @Output() dataChange = new EventEmitter<Partial<CreateEmployeeDto>>();
-  @Output() next = new EventEmitter<void>();
+  @Output() profilePictureChange = new EventEmitter<File>();
 
-  private messageService = inject(MessageService);
+  private lookupService = inject(LookupService);
   
-  profileImagePreview: string | ArrayBuffer | null = null;
+  countries: Country[] = [];
+  profileImagePreview: string | null = null;
+  maxDate = new Date();
+  minDate = new Date(1900, 0, 1);
 
   genders = [
-    { label: 'ذكر', value: 'M' },
-    { label: 'أنثى', value: 'F' }
+    { label: 'ذكر', value: 'Male', icon: 'pi pi-mars' },
+    { label: 'أنثى', value: 'Female', icon: 'pi pi-venus' }
   ];
 
-  private setupService = inject(SetupService);
-  private cdr = inject(ChangeDetectorRef);
-
-  nationalities: any[] = [];
+  maritalStatuses = [
+    { label: 'أعزب', value: 'Single' },
+    { label: 'متزوج', value: 'Married' },
+    { label: 'مطلق', value: 'Divorced' },
+    { label: 'أرمل', value: 'Widowed' }
+  ];
 
   ngOnInit() {
     this.loadLookups();
   }
 
   loadLookups() {
-      this.setupService.getAll('Countries').subscribe({
-          next: (res: any) => {
-              const items = res.data?.items || res.items || res.data || res || [];
-              this.nationalities = items.map((c: any) => ({ label: c.countryNameAr, value: c.countryId }));
-              this.cdr.markForCheck();
-          },
-          error: (err) => {
-              console.error('Failed to load countries', err);
-              // Fallback or show error
-          }
-      });
+    this.lookupService.getCountries().subscribe(countries => {
+      this.countries = countries;
+    });
   }
 
   onFileSelect(event: any) {
-    const files = event.target?.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      this.fileSelect.emit(file);
-
+    const file = event.files[0];
+    if (file) {
+      this.profilePictureChange.emit(file);
+      
       const reader = new FileReader();
       reader.onload = (e) => this.profileImagePreview = e.target?.result as string;
       reader.readAsDataURL(file);
     }
   }
 
-  @Output() fileSelect = new EventEmitter<File>();
-
-  onChange() {
-    this.dataChange.emit(this.data);
+  onDataChange() {
+    this.dataChange.emit({ ...this.data });
   }
 
-  onNext() {
-    // strict validation
-    if (!this.data.employeeNumber) {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'الرقم الوظيفي مطلوب' });
-        return;
+  // Helper to validate English name
+  validateEnglishName(event: any) {
+    const pattern = /^[a-zA-Z\s]*$/;
+    if (!pattern.test(event.key)) {
+      event.preventDefault();
     }
-    if (!this.data.firstNameAr || !this.data.lastNameAr) {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'الاسم الأول والأخير مطلوبان' });
-        return;
+  }
+
+  // Helper to validate Arabic name
+  validateArabicName(event: any) {
+    const pattern = /^[\u0600-\u06FF\s]*$/;
+    if (!pattern.test(event.key)) {
+      event.preventDefault();
     }
-    if (!this.data.nationalId || !/^\d{10}$/.test(this.data.nationalId)) {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'رقم الهوية يجب أن يتكون من 10 أرقام' });
-        return;
+  }
+
+  // Helper to validate Numbers only
+  validateNumber(event: any) {
+    const pattern = /[0-9]/;
+    if (!pattern.test(event.key)) {
+      event.preventDefault();
     }
-    if (!this.data.birthDate) {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'تاريخ الميلاد مطلوب' });
-        return;
-    }
-    this.next.emit();
   }
 }

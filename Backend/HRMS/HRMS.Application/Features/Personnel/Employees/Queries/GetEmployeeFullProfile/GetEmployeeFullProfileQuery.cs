@@ -64,6 +64,7 @@ public class GetEmployeeFullProfileQueryHandler : IRequestHandler<GetEmployeeFul
                 NationalityId = employee.NationalityId,
                 NationalityName = employee.Country?.CountryNameAr,
                 JobId = employee.JobId,
+                JobGradeId = employee.JobGradeId, 
                 JobTitle = employee.Job?.JobTitleAr, // ✅ Fixed: DTO uses JobTitle (not JobTitleAr)
                 DepartmentId = employee.DepartmentId, // ✅ Fixed: Entity uses DepartmentId (not DeptId)
                 DepartmentName = employee.Department?.DeptNameAr,
@@ -84,7 +85,9 @@ public class GetEmployeeFullProfileQueryHandler : IRequestHandler<GetEmployeeFul
                 HousingAllowance = employee.Compensation.HousingAllowance,
                 TransportAllowance = employee.Compensation.TransportAllowance,
                 MedicalAllowance = employee.Compensation.MedicalAllowance,
-                OtherAllowances = employee.Compensation.OtherAllowances // ✅ Fixed: Include OtherAllowances
+                OtherAllowances = employee.Compensation.OtherAllowances, // ✅ Fixed: Include OtherAllowances
+                BankId = employee.Compensation.BankId,
+                IbanNumber = employee.Compensation.IbanNumber
                 // ✅ TotalSalary is computed property in DTO
             } : null,
 

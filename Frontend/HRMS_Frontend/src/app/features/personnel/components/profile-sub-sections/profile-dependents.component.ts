@@ -8,8 +8,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../services/employee.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-dependents',
@@ -23,8 +26,11 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     InputTextModule,
     ToastModule,
     ConfirmDialogModule,
-    DatePickerModule
-  ],
+    DatePickerModule,
+    SelectModule,
+    CheckboxModule,
+    Tag
+],
   templateUrl: './profile-dependents.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -44,6 +50,17 @@ export class ProfileDependentsComponent implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
+  
+  relationships = [
+    { label: 'Son / Daughter', value: 'CHILD' },
+    { label: 'Spouse', value: 'SPOUSE' },
+    { label: 'Parent', value: 'PARENT' },
+    { label: 'Other', value: 'OTHER' }
+  ];
+
+  getRelationshipLabel(val: string): string {
+    return this.relationships.find(r => r.value === val)?.label || val;
+  }
 
   constructor() {
     this.dependentForm = this.fb.group({
@@ -51,7 +68,8 @@ export class ProfileDependentsComponent implements OnInit {
       relationship: ['', Validators.required],
       nationalId: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       birthDate: [null, Validators.required],
-      gender: ['M', Validators.required]
+      gender: ['M'], // Optional if not in HTML
+      hasHealthInsurance: [false]
     });
   }
 
@@ -95,18 +113,30 @@ export class ProfileDependentsComponent implements OnInit {
 
   save() {
     this.submitted = true;
-    if (this.dependentForm.invalid) return;
+    console.log('Dependent Form Status:', this.dependentForm.status);
+    console.log('Dependent Form Errors:', this.dependentForm.errors);
+    console.log('Dependent Form Value:', this.dependentForm.value);
+    
+    if (this.dependentForm.invalid) {
+        Object.keys(this.dependentForm.controls).forEach(key => {
+            const controlErrors = this.dependentForm.get(key)?.errors;
+            if (controlErrors) {
+                console.log(`Key control: ${key}, Errors:`, controlErrors);
+            }
+        });
+        return;
+    }
 
     this.loading.set(true);
     const formVal = this.dependentForm.value;
-    const data = {
-        EmployeeId: this.employeeId,
-        DependentId: this.selectedDependentId, // For update
-        FullNameAr: formVal.fullNameAr,
-        Relationship: formVal.relationship,
-        NationalId: formVal.nationalId,
+    const data = { 
+        ...formVal,
+        NameAr: formVal.fullNameAr, // Backend expects NameAr
+        Relation: formVal.relationship, // Backend expects Relation
+        employeeId: this.employeeId,
+        dependentId: this.selectedDependentId,
+        hasMedicalInsurance: formVal.hasHealthInsurance,
         BirthDate: formVal.birthDate ? new Date(formVal.birthDate).toISOString() : null,
-        Gender: formVal.gender
     };
 
     if (this.isEditMode && this.selectedDependentId) {
@@ -128,8 +158,10 @@ export class ProfileDependentsComponent implements OnInit {
               this.displayDialog = false;
               this.loadData();
             },
-            error: () => {
-              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+            error: (err) => {
+              console.error('Save Error:', err);
+              const errorMessage = err.error?.message || err.error?.detail || 'حدث خطأ أثناء الحفظ';
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorMessage });
               this.loading.set(false);
             }
         });

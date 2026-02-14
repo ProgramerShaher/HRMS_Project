@@ -1,125 +1,159 @@
-<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
-    <!-- Header -->
-    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
-        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
-            <i class="pi pi-file text-cyan-500 text-sm"></i>
-            العقود الوظيفية
-        </h3>
-        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showAddDialog()"></button>
+<p-toast position="top-center"></p-toast>
+<div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] border border-slate-200/60 shadow-lg p-4 relative group">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-sm">
+                <i class="pi pi-file-edit text-base font-bold"></i>
+            </div>
+            <h3 class="text-base font-black text-slate-900">العقود والتعيينات</h3>
+        </div>
+        <button (click)="showAddDialog()" 
+            class="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md transition-all active:scale-95 text-[10px] font-bold">
+            <i class="pi pi-plus"></i>
+            إضافة عقد
+        </button>
     </div>
-
-    <!-- Table -->
-    <p-table [value]="contracts()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
-        <ng-template pTemplate="header">
-            <tr class="text-xs text-slate-500 bg-slate-50/50">
-                <th class="!p-2 font-medium">نوع العقد</th>
-                <th class="!p-2 font-medium">الحالة</th>
-                <th class="!p-2 font-medium">الفترة</th>
-                <th class="!p-2 font-medium">الراتب الأساسي</th>
-                <th class="!p-2 w-20 text-center">إجراءات</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-contract>
-            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
-                <td class="!p-2 font-bold text-slate-700">{{ contract.contractType }}</td>
-                <td class="!p-2">
-                    <span [ngClass]="contract.contractStatus === 'ACTIVE' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'" class="px-1.5 py-0.5 rounded text-[10px] font-bold border">
-                        {{ contract.contractStatus }}
-                    </span>
-                </td>
-                <td class="!p-2">
-                    <div class="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
-                        <span>{{ contract.startDate | date:'dd/MM/yyyy' }}</span>
-                        <i class="pi pi-arrow-left text-[8px]"></i>
-                        <span>{{ contract.endDate | date:'dd/MM/yyyy' }}</span>
-                    </div>
-                </td>
-                <td class="!p-2 font-mono font-bold text-slate-700">{{ contract.basicSalary | number }}</td>
-                <td class="!p-2 text-center">
-                    <button *ngIf="contract.contractStatus === 'ACTIVE'" pButton icon="pi pi-refresh" class="p-button-text p-button-help !w-6 !h-6 !p-0 !text-xs" (click)="showRenewDialog(contract)" pTooltip="تجديد"></button>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="5" class="text-center py-4 text-slate-400 text-xs">
-                    لا توجد عقود مسجلة
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    
+    <div class="space-y-4">
+        <div *ngIf="contracts().length > 0" class="overflow-x-auto rounded-xl border border-slate-100">
+            <table class="w-full text-right">
+                <thead class="bg-slate-50/80 border-b border-slate-100">
+                    <tr>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الدرجة الوظيفية</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الفترة</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الراتب</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right text-center">الحالة</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    <tr *ngFor="let contract of contracts()" class="hover:bg-slate-50/50 transition-colors group/row">
+                        <td class="px-3 py-2">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-black text-slate-900 leading-tight">{{ contract.jobGradeAr || 'غير محدد' }}</span>
+                                <span class="text-[9px] text-slate-400 font-mono">#{{ contract.contractId }}</span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1 text-[9px] font-bold">
+                                <span class="text-slate-400">{{ contract.startDate | date:'MM/yy' }}</span>
+                                <span class="text-slate-300">→</span>
+                                <span class="text-emerald-600 bg-emerald-50 px-1.5 rounded">{{ contract.endDate | date:'MM/yy' }}</span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-baseline gap-0.5">
+                                <span class="text-xs font-black text-slate-900">{{ contract.totalSalary | number }}</span>
+                                <span class="text-[8px] text-slate-400 font-bold uppercase">YER</span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2 text-center">
+                            <div [class]="'inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[9px] font-black ' + (contract.isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-100 text-slate-400 border-slate-200')">
+                                <span *ngIf="contract.isActive" class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span>
+                                {{ contract.isActive ? 'نشط' : 'منتهي' }}
+                            </div>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1">
+                                <button (click)="showRenewDialog(contract)" class="px-2 py-1 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-600 hover:text-white transition-all shadow-sm text-[9px] font-black">
+                                    تجديد
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<!-- Dialog -->
-<p-dialog [(visible)]="displayDialog" [header]="isRenewMode ? 'تجديد العقد السابق' : 'إنشاء عقد جديد'" [modal]="true" [style]="{width: '700px'}" styleClass="p-fluid">
-    <form [formGroup]="contractForm" class="flex flex-col gap-4 mt-2">
-        
-        <div class="grid grid-cols-2 gap-4" *ngIf="!isRenewMode">
-            <div class="field">
-                <label class="block text-sm font-medium mb-1">نوع العقد <span class="text-red-500">*</span></label>
-                <p-select [options]="contractTypes" formControlName="contractType" appendTo="body" placeholder="اختر النوع" styleClass="w-full"></p-select>
+<!-- Premium Dialog Style -->
+<p-dialog [(visible)]="displayDialog" 
+    [header]="isRenewMode ? 'تجديد العقد' : (isEditMode ? 'تعديل ملحق العقد' : 'إضافة عقد جديد')" 
+    [modal]="true" 
+    [style]="{width: '650px', borderRadius: '24px', overflow: 'hidden'}" 
+    [draggable]="false" 
+    [resizable]="false"
+    styleClass="premium-dialog">
+    
+    <div class="pt-6 px-1 text-right">
+        <form [formGroup]="contractForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">الدرجة الوظيفية</label>
+                <p-select [options]="jobGrades()" formControlName="jobGradeId" optionLabel="gradeNameAr" optionValue="jobGradeId" 
+                    [filter]="true" appendTo="body" placeholder="اختر الدرجة" 
+                    styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-select>
             </div>
-             <div class="field flex items-center pt-8">
-                 <p-checkbox formControlName="isRenewable" [binary]="true" label="قابل للتجديد" class="mr-2"></p-checkbox>
-            </div>
-        </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div class="field">
-                <label class="block text-sm font-medium mb-1">تاريخ البدء <span class="text-red-500">*</span></label>
-                <p-datePicker formControlName="startDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">حالة التأمين الطبي</label>
+                <p-select [options]="medicalStatuses()" formControlName="medicalStatusId" optionLabel="statusNameAr" optionValue="statusId" 
+                    [filter]="true" appendTo="body" placeholder="اختر الحالة" 
+                    styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-select>
             </div>
-            <div class="field">
-                <label class="block text-sm font-medium mb-1">تاريخ الانتهاء <span class="text-red-500">*</span></label>
-                <p-datePicker formControlName="endDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
-            </div>
-        </div>
 
-        <div class="border-t border-slate-100 dark:border-zinc-700 my-2 pt-4">
-             <h4 class="font-bold text-sm mb-3 text-blue-600">تفاصيل الراتب والبدلات</h4>
-             
-             <div class="grid grid-cols-2 gap-4">
-                 <div class="field">
-                    <label class="block text-sm font-medium mb-1">الراتب الأساسي <span class="text-red-500">*</span></label>
-                    <p-inputNumber formControlName="basicSalary" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
-                 </div>
-                 <div class="field">
-                    <label class="block text-sm font-medium mb-1">بدل السكن</label>
-                    <p-inputNumber formControlName="housingAllowance" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
-                 </div>
-                 <div class="field">
-                    <label class="block text-sm font-medium mb-1">بدل المواصلات</label>
-                    <p-inputNumber formControlName="transportAllowance" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
-                 </div>
-                 <div class="field">
-                    <label class="block text-sm font-medium mb-1">بدلات أخرى</label>
-                    <p-inputNumber formControlName="otherAllowances" mode="currency" currency="YER" locale="ar-YE"></p-inputNumber>
-                 </div>
-             </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4" *ngIf="!isRenewMode">
-             <div class="field">
-                 <label class="block text-sm font-medium mb-1">أيام الإجازة السنوية</label>
-                 <p-inputNumber formControlName="vacationDays" [min]="0" suffix=" يوم"></p-inputNumber>
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">تاريخ البداية</label>
+                <p-datePicker formControlName="startDate" appendTo="body" dateFormat="dd/mm/yy" 
+                    styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-datePicker>
             </div>
-             <div class="field">
-                 <label class="block text-sm font-medium mb-1">ساعات العمل اليومية</label>
-                 <p-inputNumber formControlName="workingHoursDaily" [min]="0" suffix=" ساعة"></p-inputNumber>
+            
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">تاريخ النهاية</label>
+                <p-datePicker formControlName="endDate" appendTo="body" dateFormat="dd/mm/yy" 
+                    styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-datePicker>
             </div>
-        </div>
-        
-        <div class="field" *ngIf="isRenewMode">
-            <label class="block text-sm font-medium mb-1">ملاحظات التجديد</label>
-            <input pInputText formControlName="notes" />
-        </div>
 
-    </form>
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">الراتب الأساسي</label>
+                <p-inputNumber formControlName="basicSalary" mode="decimal" [minFractionDigits]="2" suffix=" ر.ي." 
+                    styleClass="w-full !bg-slate-50/50 !border-slate-200 !rounded-2xl focus:!ring-2 focus:!ring-emerald-500/20"></p-inputNumber>
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">بدل السكن</label>
+                <p-inputNumber formControlName="housingAllowance" mode="decimal" [minFractionDigits]="2" suffix=" ر.ي." 
+                    styleClass="w-full !bg-slate-50/50 !border-slate-200 !rounded-2xl focus:!ring-2 focus:!ring-emerald-500/20"></p-inputNumber>
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">بدل المواصلات</label>
+                <p-inputNumber formControlName="transportAllowance" mode="decimal" [minFractionDigits]="2" suffix=" ر.ي." 
+                    styleClass="w-full !bg-slate-50/50 !border-slate-200 !rounded-2xl focus:!ring-2 focus:!ring-emerald-500/20"></p-inputNumber>
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">بدل طبيعة العمل</label>
+                <p-inputNumber formControlName="medicalAllowance" mode="decimal" [minFractionDigits]="2" suffix=" ر.ي." 
+                    styleClass="w-full !bg-slate-50/50 !border-slate-200 !rounded-2xl focus:!ring-2 focus:!ring-emerald-500/20"></p-inputNumber>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 flex items-center gap-3 p-4 bg-emerald-50/50 border border-emerald-100/50 rounded-2xl transition-all hover:bg-emerald-50">
+                <p-checkbox formControlName="isActive" [binary]="true" inputId="isAct text-right"></p-checkbox>
+                <label for="isAct" class="text-sm font-semibold text-emerald-900 cursor-pointer select-none">
+                    اعتبار هذا العقد هو العقد الرئيسي والنشط حالياً للموظف
+                </label>
+            </div>
+
+        </form>
+    </div>
+
     <ng-template pTemplate="footer">
-        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
-        <button pButton label="حفظ" icon="pi pi-check" (click)="save()" [loading]="loading()"></button>
+        <div class="flex items-center justify-between w-full pt-4 border-t border-slate-100 mt-4">
+            <button (click)="displayDialog = false" 
+                class="px-6 py-2 text-slate-400 hover:text-slate-600 font-semibold transition-colors">
+                إلغاء
+            </button>
+            <button (click)="save()" [disabled]="loading()"
+                class="flex items-center gap-2 px-8 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-2xl shadow-lg shadow-emerald-200 transition-all font-bold">
+                <i class="pi" [ngClass]="isRenewMode ? 'pi-refresh' : 'pi-check'" *ngIf="!loading()"></i>
+                <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+                <span>{{ isRenewMode ? 'تجديد العقد الآن' : 'حفظ بيانات العقد' }}</span>
+            </button>
+        </div>
     </ng-template>
 </p-dialog>
 
-<p-confirmDialog [style]="{width: '450px'}" [rtl]="true"></p-confirmDialog>
-<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '400px'}" [rtl]="true"></p-confirmDialog>
+

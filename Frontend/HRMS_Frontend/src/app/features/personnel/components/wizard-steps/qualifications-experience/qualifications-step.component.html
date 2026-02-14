@@ -1,172 +1,115 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full p-2">
-    
-    <!-- Left Column: Qualifications -->
-    <div class="bg-white dark:bg-zinc-950 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm p-6 flex flex-col gap-6">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-sm">
-                    <i class="pi pi-verified text-xl"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-slate-800 dark:text-white text-lg">المؤهلات العلمية</h3>
-                    <p class="text-xs text-slate-500 dark:text-zinc-400">الشهادات والدرجات الأكاديمية</p>
-                </div>
-            </div>
-            <button 
-                pButton 
-                icon="pi pi-plus" 
-                label="إضافة" 
-                class="p-button-rounded p-button-sm p-button-text p-button-help"
-                (click)="openAddQual()">
-            </button>
-        </div>
-
-        <div class="flex flex-col gap-3 flex-1 overflow-y-auto max-h-[400px]">
-            <!-- Empty State -->
-            <div *ngIf="!data.qualifications || data.qualifications.length === 0" class="flex flex-col items-center justify-center py-8 text-center bg-slate-50 dark:bg-zinc-900 rounded-xl border border-dashed border-slate-200 dark:border-zinc-800">
-                <i class="pi pi-graduation-cap text-2xl text-slate-300 mb-2"></i>
-                <p class="text-sm text-slate-500">لا توجد مؤهلات مضافة</p>
-            </div>
-
-            <!-- List -->
-            <div *ngFor="let qual of data.qualifications; let i = index" class="p-4 rounded-xl border border-slate-100 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-purple-200 dark:hover:border-purple-900/50 transition-colors group relative">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-slate-800 dark:text-zinc-200">{{ qual.degreeType }}</span>
-                            <span class="text-xs font-mono bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 px-2 py-0.5 rounded">{{ qual.graduationYear }}</span>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-zinc-400">{{ qual.majorAr }}</p>
-                        <p class="text-xs text-slate-400 mt-1">{{ qual.universityAr }}</p>
-                    </div>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" (click)="removeQual(i)"></button>
-                </div>
-            </div>
-        </div>
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
+  
+  <!-- Section Header Card -->
+  <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-[2.5rem] p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden group">
+    <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+    <div class="relative z-10 flex items-center gap-6">
+      <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
+        <i class="pi pi-graduation-cap text-3xl"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-black tracking-tight">المؤهلات والخبرات</h2>
+        <p class="text-sm text-blue-100/80 font-medium">سجل السيرة الذاتية والمؤهلات العلمية والشهادات المهنية</p>
+      </div>
     </div>
+  </div>
 
-    <!-- Right Column: Experience -->
-    <div class="bg-white dark:bg-zinc-950 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm p-6 flex flex-col gap-6">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-sm">
-                    <i class="pi pi-briefcase text-xl"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-slate-800 dark:text-white text-lg">الخبرات العملية</h3>
-                    <p class="text-xs text-slate-500 dark:text-zinc-400">سجل الخبرات والوظائف السابقة</p>
-                </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Qualifications Section -->
+    <section class="space-y-4">
+      <app-dynamic-array-list
+        [items]="data.qualifications || []"
+        title="المؤهلات العلمية"
+        itemLabel="مؤهل"
+        icon="pi pi-book"
+        [columns]="qualColumns"
+        (save)="onSaveQualification($event)"
+        (delete)="onDeleteQualification($event)">
+        
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الدرجة العلمية <span class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.degreeType" placeholder="بكالوريوس، ماجستير..." class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
             </div>
-            <button 
-                pButton 
-                icon="pi pi-plus" 
-                label="إضافة" 
-                class="p-button-rounded p-button-sm p-button-text p-button-success"
-                (click)="openAddExp()">
-            </button>
-        </div>
-
-        <div class="flex flex-col gap-3 flex-1 overflow-y-auto max-h-[400px]">
-            <!-- Empty State -->
-            <div *ngIf="!data.experiences || data.experiences.length === 0" class="flex flex-col items-center justify-center py-8 text-center bg-slate-50 dark:bg-zinc-900 rounded-xl border border-dashed border-slate-200 dark:border-zinc-800">
-                <i class="pi pi-history text-2xl text-slate-300 mb-2"></i>
-                <p class="text-sm text-slate-500">لا توجد خبرات سابقة</p>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">التخصص <span class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.majorAr" placeholder="مجال الدراسة" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
             </div>
-
-            <!-- List -->
-            <div *ngFor="let exp of data.experiences; let i = index" class="p-4 rounded-xl border border-slate-100 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-teal-200 dark:hover:border-teal-900/50 transition-colors group relative">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <h4 class="font-bold text-slate-800 dark:text-zinc-200 text-sm mb-1">{{ exp.jobTitleAr }}</h4>
-                        <p class="text-xs text-slate-500 font-medium mb-2">{{ exp.companyNameAr }}</p>
-                        <div class="flex items-center gap-2 text-xs text-slate-400 font-mono dir-ltr">
-                             <span>{{ exp.startDate | date:'MMM yyyy' }}</span>
-                             <i class="pi pi-arrow-right text-[10px]"></i>
-                             <span>{{ exp.endDate ? (exp.endDate | date:'MMM yyyy') : 'Current' }}</span>
-                        </div>
-                    </div>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" (click)="removeExp(i)"></button>
-                </div>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">المؤسسة التعليمية</label>
+              <input pInputText [(ngModel)]="item.universityAr" placeholder="اسم الجامعة" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm" />
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Qualification Dialog -->
-<p-dialog [(visible)]="showQualDialog" header="إضافة مؤهل جديد" [modal]="true" [style]="{width: '450px'}" styleClass="p-fluid rounded-2xl overflow-hidden">
-    <div class="mt-2" [formGroup]="qualForm">
-        <div class="flex flex-col gap-4">
-             <span class="p-float-label w-full">
-                <p-select [options]="['بكلاريوس', 'ماجستير', 'دكتوراه', 'دبلوم', 'ثانوية عامة']" formControlName="degreeType" appendTo="body" styleClass="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700"></p-select>
-                <label>الدرجة العلمية <span class="text-red-500">*</span></label>
-            </span>
-             <span class="p-float-label w-full">
-                <input pInputText formControlName="majorAr" class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                <label>التخصص (عربي) <span class="text-red-500">*</span></label>
-            </span>
-             <span class="p-float-label w-full">
-                <input pInputText formControlName="universityAr" class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                <label>الجهة المانحة <span class="text-red-500">*</span></label>
-            </span>
-             <span class="p-float-label w-full">
-                <p-inputNumber formControlName="graduationYear" [useGrouping]="false" [min]="1950" [max]="2030" placeholder="YYYY" inputStyleClass="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700 text-center"></p-inputNumber>
-                <label>سنة التخرج</label>
-            </span>
-        </div>
-        <div class="flex justify-end gap-2 mt-6">
-            <button pButton label="إلغاء" class="p-button-text p-button-secondary rounded-xl" (click)="showQualDialog = false"></button>
-            <button pButton label="حفظ" class="p-button-primary rounded-xl px-6" (click)="saveQual()"></button>
-        </div>
-    </div>
-</p-dialog>
-
-<!-- Experience Dialog -->
-<p-dialog [(visible)]="showExpDialog" header="إضافة خبرة عملية" [modal]="true" [style]="{width: '450px'}" styleClass="p-fluid rounded-2xl overflow-hidden">
-    <div class="mt-2" [formGroup]="expForm">
-        <div class="flex flex-col gap-4">
-             <span class="p-float-label w-full">
-                <input pInputText formControlName="companyNameAr" class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                <label>اسم الشركة / الجهة <span class="text-red-500">*</span></label>
-            </span>
-             <span class="p-float-label w-full">
-                <input pInputText formControlName="jobTitleAr" class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                <label>المسمى الوظيفي <span class="text-red-500">*</span></label>
-            </span>
-            <div class="grid grid-cols-2 gap-4">
-                 <span class="p-float-label w-full">
-                    <p-datePicker formControlName="startDate" view="month" dateFormat="mm/yy" [readonlyInput]="true" appendTo="body" styleClass="w-full" inputStyleClass="p-3 rounded-xl border-slate-200 dark:border-zinc-700"></p-datePicker>
-                    <label>تاريخ البداية <span class="text-red-500">*</span></label>
-                </span>
-                 <span class="p-float-label w-full">
-                    <p-datePicker formControlName="endDate" view="month" dateFormat="mm/yy" [readonlyInput]="true" appendTo="body" styleClass="w-full" inputStyleClass="p-3 rounded-xl border-slate-200 dark:border-zinc-700"></p-datePicker>
-                    <label>تاريخ النهاية</label>
-                </span>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">سنة التخرج</label>
+              <p-inputNumber [(ngModel)]="item.graduationYear" [useGrouping]="false" placeholder="YYYY" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold"></p-inputNumber>
             </div>
-        </div>
-        <div class="flex justify-end gap-2 mt-6">
-            <button pButton label="إلغاء" class="p-button-text p-button-secondary rounded-xl" (click)="showExpDialog = false"></button>
-            <button pButton label="حفظ" class="p-button-primary rounded-xl px-6" (click)="saveExp()"></button>
-        </div>
-    </div>
-</p-dialog>
+            <div class="md:col-span-2 pt-2">
+              <div class="flex items-center gap-4 p-4 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-dashed border-blue-200 dark:border-blue-900/40">
+                <p-fileUpload mode="basic" [auto]="true" chooseLabel="إرفاق الشهادة" styleClass="p-button-sm !rounded-xl !bg-blue-600 !border-none text-[10px]" (onSelect)="onQualFileSelect($event, item)"></p-fileUpload>
+                <span class="text-[10px] text-slate-400 font-bold truncate max-w-[150px]">{{ item.file ? item.file.name : 'PDF/JPG' }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
 
+    <!-- Experience Section -->
+    <section class="space-y-4">
+      <app-dynamic-array-list
+        [items]="data.experiences || []"
+        title="الخبرات السابقة"
+        itemLabel="خبرة"
+        icon="pi pi-history"
+        [columns]="expColumns"
+        (save)="onSaveExperience($event)"
+        (delete)="onDeleteExperience($event)">
+        
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">المسمى السابق <span class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.jobTitleAr" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الشركة <span class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.companyNameAr" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">تاريخ البدء</label>
+              <p-datePicker [(ngModel)]="item.startDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm"></p-datePicker>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">تاريخ الانتهاء</label>
+              <p-datePicker [(ngModel)]="item.endDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm"></p-datePicker>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
+  </div>
 
-<!-- Navigation -->
-<div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800 w-full col-span-2">
-    <button 
-        pButton 
-        label="السابق: العناوين والاتصال" 
-        icon="pi pi-arrow-right" 
-        class="p-button-text p-button-secondary rounded-xl"
-        (click)="onPrev()">
-    </button>
-    
-    <button 
-        pButton 
-        label="التالي: الوثائق والعقود" 
-        icon="pi pi-arrow-left" 
-        iconPos="left"
-        class="p-button-primary rounded-xl px-8 py-3 shadow-lg shadow-blue-100 dark:shadow-none"
-        (click)="onNext()">
-    </button>
+  <!-- Professional Certifications (Full Width) -->
+  <app-dynamic-array-list
+    [items]="data.certifications || []"
+    title="الشهادات المهنية والدورات التدريبية"
+    itemLabel="شهادة"
+    icon="pi pi-verified"
+    [columns]="certColumns"
+    (save)="onSaveCertification($event)"
+    (delete)="onDeleteCertification($event)">
+    <ng-template #formTemplate let-item>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-2">
+        <div class="md:col-span-2 space-y-1.5">
+          <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">اسم الشهادة <span class="text-red-500">*</span></label>
+          <input pInputText [(ngModel)]="item.certificationName" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+        </div>
+        <div class="space-y-1.5">
+            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">جهة الإصدار</label>
+            <input pInputText [(ngModel)]="item.issuingOrganization" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm" />
+        </div>
+      </div>
+    </ng-template>
+  </app-dynamic-array-list>
 </div>

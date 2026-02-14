@@ -1,31 +1,47 @@
-:host {
-    display: block;
+// Custom Animations & PrimeNG Overrides for Employee Wizard
+// Most layout is now handled by Tailwind CSS
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-// Customize PrimeNG Stepper if needed
-::ng-deep .p-stepper .p-stepper-header {
-    @apply font-bold text-lg;
-
-    &.p-highlight {
-        @apply text-blue-600;
-
-        // Custom Scrollbar for compact containers
-        .custom-scrollbar {
-            &::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            &::-webkit-scrollbar-track {
-                background: transparent;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                @apply bg-slate-300 dark:bg-zinc-700 rounded-full;
-
-                &:hover {
-                    @apply bg-slate-400 dark:bg-zinc-600;
-                }
-            }
-        }
+::ng-deep {
+  // PrimeNG Button Overrides for the premium look
+  .p-button {
+    font-family: 'Cairo', sans-serif !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px) !important;
     }
+  }
+
+  // Toast customization
+  .p-toast {
+    .p-toast-message {
+      border-radius: 16px !important;
+      border-width: 0 0 0 6px !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+    }
+  }
+
+  // Hide default stepper headers if PrimeNG Stepper is used anywhere inside
+  .p-stepper-header {
+    display: none !important;
+  }
+}
+
+// Fade-in animation for step transitions
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }

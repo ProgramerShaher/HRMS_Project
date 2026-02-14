@@ -43,7 +43,71 @@ export class SidebarComponent {
       ]
     },
     { label: 'الموظفين', icon: 'pi pi-users', route: '/employees' },
-    { label: 'الرواتب', icon: 'pi pi-wallet', route: '/payroll' },
+    { 
+      label: 'الرواتب', 
+      icon: 'pi pi-wallet', 
+      expanded: false,
+      children: [
+        { label: 'لوحة التحكم', icon: 'pi pi-chart-line', route: '/payroll/dashboard' },
+        { 
+          label: 'رواتب الموظفين', 
+          icon: 'pi pi-money-bill',
+          expanded: false,
+          children: [
+            { label: 'جميع الرواتب', icon: 'pi pi-list', route: '/payroll/salaries/all' },
+            { label: 'تفاصيل راتب', icon: 'pi pi-file', route: '/payroll/salaries/breakdown/0' }
+          ]
+        },
+        { 
+          label: 'إدارة السلف', 
+          icon: 'pi pi-credit-card',
+          expanded: false,
+          children: [
+            { label: 'جميع السلف', icon: 'pi pi-list', route: '/payroll/loans/admin/all' },
+            { label: 'إنشاء سلفة', icon: 'pi pi-plus-circle', route: '/payroll/loans/admin/create' },
+            { label: 'السلف المعلقة', icon: 'pi pi-clock', route: '/payroll/loans/admin/pending' },
+            { label: 'سلفي', icon: 'pi pi-user', route: '/payroll/loans/my-loans' }
+          ]
+        },
+        { 
+          label: 'عناصر الراتب', 
+          icon: 'pi pi-th-large',
+          expanded: false,
+          children: [
+            { label: 'قائمة العناصر', icon: 'pi pi-list', route: '/payroll/elements' },
+            { label: 'إضافة عنصر', icon: 'pi pi-plus', route: '/payroll/elements/form' }
+          ]
+        },
+        { 
+          label: 'هياكل الرواتب', 
+          icon: 'pi pi-sitemap',
+          expanded: false,
+          children: [
+            { label: 'جميع الهياكل', icon: 'pi pi-list', route: '/payroll/structures' },
+            { label: 'هيكل راتبي', icon: 'pi pi-user', route: '/payroll/salary/my-structure' }
+          ]
+        },
+        { 
+          label: 'معالجة الرواتب', 
+          icon: 'pi pi-cog',
+          expanded: false,
+          children: [
+            { label: 'معالجة شهر جديد', icon: 'pi pi-play', route: '/payroll/processing/process' },
+            { label: 'مسيرات الرواتب', icon: 'pi pi-list', route: '/payroll/processing/runs' }
+          ]
+        },
+        { 
+          label: 'التقارير', 
+          icon: 'pi pi-chart-bar',
+          expanded: false,
+          children: [
+            { label: 'ملخص شهري', icon: 'pi pi-calendar', route: '/payroll/reports/monthly' },
+            { label: 'سجل التتبع', icon: 'pi pi-history', route: '/payroll/reports/audit' }
+          ]
+        },
+        { label: 'قسائم رواتبي', icon: 'pi pi-file-pdf', route: '/payroll/payslips' }
+      ]
+    },
     { 
       label: 'الإجازات', 
       icon: 'pi pi-send', 

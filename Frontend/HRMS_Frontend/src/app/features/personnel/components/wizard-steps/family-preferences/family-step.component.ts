@@ -1,101 +1,86 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreateEmployeeDto } from '../../../models/create-employee.dto';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { MessageService } from 'primeng/api';
-import { DatePickerModule } from 'primeng/datepicker';
+import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CreateEmployeeDto } from '../../../models/create-employee.dto';
+import { DynamicArrayListComponent } from '../../shared/dynamic-array-list/dynamic-array-list.component';
 
 @Component({
   selector: 'app-family-step',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     FormsModule,
-    ButtonModule,
-    SelectModule,
+    InputTextModule,
     DatePickerModule,
-    InputTextModule
+    SelectModule,
+    RadioButtonModule,
+    DynamicArrayListComponent
   ],
   templateUrl: './family-step.component.html',
-  styles: []
+  styles: [`:host { display: block; }`]
 })
 export class FamilyStepComponent {
   @Input() data!: CreateEmployeeDto;
   @Output() dataChange = new EventEmitter<Partial<CreateEmployeeDto>>();
-  @Output() prev = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<void>();
 
-  private fb = inject(FormBuilder);
-  showDependentDialog = false;
-  editingIndex: number | null = null;
-  depForm: FormGroup;
-  
-  relations = [
-    { label: 'زوج/زوجة', value: 'Spouse' },
-    { label: 'ابن/ابنة', value: 'Child' },
-    { label: 'والد/والدة', value: 'Parent' }
+  contactColumns = [
+    { field: 'contactNameAr', header: 'الاسم' },
+    { field: 'phonePrimary', header: 'رقم الجوال' },
+    { field: 'relationship', header: 'صلة القرابة' },
+    { field: 'isPrimary', header: 'أساسي' }
+  ];
+
+  dependentColumns = [
+    { field: 'fullNameAr', header: 'الاسم الكامل' },
+    { field: 'relationship', header: 'صلة القرابة' },
+    { field: 'nationalId', header: 'رقم الهوية' }
+  ];
+
+  priorities = [
+    { label: 'نعم', value: true },
+    { label: 'لا', value: false }
   ];
 
   genders = [
-    { label: 'ذكر', value: 'M' },
-    { label: 'أنثى', value: 'F' }
+    { label: 'ذكر', value: 'Male', icon: 'pi pi-mars' },
+    { label: 'أنثى', value: 'Female', icon: 'pi pi-venus' }
   ];
 
-  constructor() {
-      this.depForm = this.fb.group({
-          fullNameAr: ['', Validators.required],
-          relationship: ['', Validators.required],
-          birthDate: [null, Validators.required],
-          nationalId: [''],
-          gender: ['M']
-      });
+  onSaveContact(event: { item: any, index: number }) {
+    if (!this.data.emergencyContacts) this.data.emergencyContacts = [];
+    if (event.index > -1) {
+      this.data.emergencyContacts[event.index] = event.item;
+    } else {
+      this.data.emergencyContacts.push(event.item);
+    }
+    this.dataChange.emit(this.data);
   }
 
-  addDependent() {
-      this.editingIndex = null;
-      this.depForm.reset({ gender: 'M' });
-      this.showDependentDialog = true;
+  onDeleteContact(event: { item: any, index: number }) {
+    this.data.emergencyContacts?.splice(event.index, 1);
+    this.dataChange.emit(this.data);
   }
 
-  saveDependent() {
-      if (this.depForm.invalid) return;
-
-      if (!this.data.dependents) this.data.dependents = [];
-      
-      const val = this.depForm.value;
-      const dto = {
-          dependentId: 0,
-          fullNameAr: val.fullNameAr,
-          fullNameEn: val.fullNameAr, // Default copy
-          relationship: val.relationship,
-          birthDate: val.birthDate,
-          nationalId: val.nationalId,
-          gender: val.gender
-      };
-
-      if (this.editingIndex !== null) {
-          const existing = this.data.dependents[this.editingIndex];
-          this.data.dependents[this.editingIndex] = { ...existing, ...dto };
-      } else {
-          this.data.dependents.push(dto);
-      }
-      this.showDependentDialog = false;
+  onSaveDependent(event: { item: any, index: number }) {
+    if (!this.data.dependents) this.data.dependents = [];
+    if (event.index > -1) {
+      this.data.dependents[event.index] = event.item;
+    } else {
+      this.data.dependents.push(event.item);
+    }
+    this.dataChange.emit(this.data);
   }
 
-  removeDependent(index: number) {
-      this.data.dependents.splice(index, 1);
+  onDataChange() {
+    this.dataChange.emit({ ...this.data });
   }
 
-  onPrev() {
-    this.prev.emit();
-  }
-
-  onSubmit() {
-    // Final Validation if needed
-    this.submitForm.emit();
+  onDeleteDependent(event: { item: any, index: number }) {
+    this.data.dependents.splice(event.index, 1);
+    this.onDataChange();
   }
 }

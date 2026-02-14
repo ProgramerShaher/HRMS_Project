@@ -9,6 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EmployeeService } from '../../services/employee.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-emergency-contacts',
@@ -21,8 +22,9 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     ReactiveFormsModule,
     InputTextModule,
     ToastModule,
-    ConfirmDialogModule
-  ],
+    ConfirmDialogModule,
+    Tag
+],
   templateUrl: './profile-emergency-contacts.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -45,21 +47,16 @@ export class ProfileEmergencyContactsComponent implements OnInit {
 
   constructor() {
     this.contactForm = this.fb.group({
-      contactNameAr: ['', [
+      fullNameAr: ['', [
           Validators.required, 
-          Validators.pattern(/^[\u0600-\u06FF\s]+$/) // Arabic only
+          Validators.pattern(/^[\u0600-\u06FF\s]+$/)
       ]],
       relationship: ['', Validators.required],
-      phonePrimary: ['', [
+      mobile: ['', [
           Validators.required, 
-          Validators.pattern(/^\d+$/), // Digits only
+          Validators.pattern(/^\d+$/),
           Validators.maxLength(20)
-      ]],
-      phoneSecondary: ['', [
-          Validators.pattern(/^\d+$/), // Digits only
-          Validators.maxLength(20)
-      ]],
-      address: ['']
+      ]]
     });
   }
 
@@ -109,12 +106,11 @@ export class ProfileEmergencyContactsComponent implements OnInit {
     const formVal = this.contactForm.value;
     const data = {
         EmployeeId: this.employeeId,
-        EmergencyContactId: this.selectedContactId, // For update
-        ContactNameAr: formVal.contactNameAr,
+        EmergencyContactId: this.selectedContactId,
+        ContactNameAr: formVal.fullNameAr,
         Relationship: formVal.relationship,
-        PhonePrimary: formVal.phonePrimary,
-        PhoneSecondary: formVal.phoneSecondary,
-        Address: formVal.address
+        PhonePrimary: formVal.mobile,
+        PhoneSecondary: ''
     };
 
     if (this.isEditMode && this.selectedContactId) {
@@ -136,8 +132,10 @@ export class ProfileEmergencyContactsComponent implements OnInit {
               this.displayDialog = false;
               this.loadData();
             },
-            error: () => {
-              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+            error: (err) => {
+              console.error('Save Error:', err);
+              const errorMessage = err.error?.message || err.error?.detail || 'حدث خطأ أثناء الحفظ';
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorMessage });
               this.loading.set(false);
             }
         });

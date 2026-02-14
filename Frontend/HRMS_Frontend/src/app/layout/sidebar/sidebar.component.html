@@ -70,13 +70,38 @@
                 <div *ngIf="item.children && item.expanded && !layoutService.isSidebarCollapsed()" 
                      class="flex flex-col mt-1 mr-4 border-r border-slate-100 dark:border-slate-800 pr-2 gap-1 animate-fade-in-down">
                      
-                     <a *ngFor="let child of item.children"
-                        [routerLink]="child.route"
-                        routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
-                        class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
-                        <i [class]="child.icon" class="text-xs"></i>
-                        <span>{{ child.label }}</span>
-                     </a>
+                     <ng-container *ngFor="let child of item.children">
+                        <!-- Child with Sub-children (Level 2) -->
+                        <div *ngIf="child.children" class="flex flex-col">
+                           <a (click)="toggleSubmenu(child)"
+                              class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 cursor-pointer">
+                              <i [class]="child.icon" class="text-xs"></i>
+                              <span class="flex-1">{{ child.label }}</span>
+                              <i class="pi pi-chevron-down text-[10px] transition-transform duration-300"
+                                 [class.rotate-180]="child.expanded"></i>
+                           </a>
+                           
+                           <!-- Sub-children (Level 3) -->
+                           <div *ngIf="child.expanded" class="flex flex-col mr-4 mt-1 gap-1">
+                              <a *ngFor="let subChild of child.children"
+                                 [routerLink]="subChild.route"
+                                 routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
+                                 class="px-3 py-1.5 rounded-lg text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+                                 <i [class]="subChild.icon" class="text-[10px]"></i>
+                                 <span>{{ subChild.label }}</span>
+                              </a>
+                           </div>
+                        </div>
+                        
+                        <!-- Child without Sub-children (Direct Link) -->
+                        <a *ngIf="!child.children"
+                           [routerLink]="child.route"
+                           routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
+                           class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+                           <i [class]="child.icon" class="text-xs"></i>
+                           <span>{{ child.label }}</span>
+                        </a>
+                     </ng-container>
                 </div>
             </div>
 

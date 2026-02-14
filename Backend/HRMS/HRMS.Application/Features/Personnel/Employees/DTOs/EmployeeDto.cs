@@ -102,6 +102,11 @@ namespace HRMS.Application.Features.Personnel.Employees.DTOs
         public int JobId { get; set; }
 
         /// <summary>
+        /// معرف الدرجة الوظيفية
+        /// </summary>
+        public int? JobGradeId { get; set; }
+
+        /// <summary>
         /// المسمى الوظيفي بالعربية (من جدول الوظائف)
         /// </summary>
         public string JobTitle { get; set; }

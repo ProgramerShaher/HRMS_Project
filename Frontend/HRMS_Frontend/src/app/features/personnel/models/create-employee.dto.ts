@@ -19,7 +19,7 @@ export interface CreateEmployeeDto {
     lastNameAr: string;
     fullNameEn: string;
     birthDate: Date | string;
-    gender: 'Male' | 'Female' | string;
+    gender: any;
     mobile: string;
     email?: string;
     nationalityId: number;

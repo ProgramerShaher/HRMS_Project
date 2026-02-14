@@ -1,102 +1,131 @@
-<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
-    <!-- Header -->
-    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
-        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
-            <i class="pi pi-users text-pink-500 text-sm"></i>
-            المعولين
-        </h3>
-        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showAddDialog()"></button>
+<p-toast position="top-center"></p-toast>
+<div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] border border-slate-200/60 shadow-lg p-4 relative group">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center shadow-sm">
+                <i class="pi pi-users text-base font-bold"></i>
+            </div>
+            <h3 class="text-base font-black text-slate-900">أفراد العائلة</h3>
+        </div>
+        <button (click)="showAddDialog()" 
+            class="flex items-center gap-1.5 px-3 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-xl shadow-md transition-all active:scale-95 text-[10px] font-bold">
+            <i class="pi pi-plus"></i>
+            إضافة فرد
+        </button>
     </div>
-
-    <!-- Table -->
-    <p-table [value]="dependents()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
-        <ng-template pTemplate="header">
-            <tr class="text-xs text-slate-500 bg-slate-50/50">
-                <th class="!p-2 font-medium">الاسم</th>
-                <th class="!p-2 font-medium">صلة القرابة</th>
-                <th class="!p-2 font-medium">بيانات الهوية</th>
-                <th class="!p-2 w-16 text-center"></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-dep>
-            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
-                <td class="!p-2 font-bold text-slate-700">{{ dep.fullNameAr }}</td>
-                <td class="!p-2">
-                    <span class="px-1.5 py-0.5 rounded bg-pink-50 text-pink-600 text-[10px] font-bold border border-pink-100">{{ dep.relationship }}</span>
-                </td>
-                <td class="!p-2">
-                    <div class="flex flex-col text-[10px] text-slate-500">
-                        <span class="font-mono">ID: {{ dep.nationalId }}</span>
-                        <span>{{ dep.birthDate | date:'dd/MM/yyyy' }}</span>
-                    </div>
-                </td>
-                <td class="!p-2 text-center">
-                    <div class="flex justify-center gap-1">
-                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-secondary !w-6 !h-6 !p-0 !text-xs text-slate-400 hover:text-blue-600" (click)="showEditDialog(dep)"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-xs opacity-50 hover:opacity-100" (click)="delete(dep.dependentId)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="4" class="text-center py-4 text-slate-400 text-xs">
-                    لا يوجد تابعين
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    
+    <div class="space-y-4">
+        <div *ngIf="dependents().length > 0" class="overflow-x-auto rounded-xl border border-slate-100">
+            <table class="w-full text-right">
+                <thead class="bg-slate-50/80 border-b border-slate-100">
+                    <tr>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الاسم الكامل</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الصلة</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الميلاد</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">رقم الهوية</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    <tr *ngFor="let dep of dependents()" class="hover:bg-slate-50/50 transition-colors group/row">
+                        <td class="px-3 py-2">
+                            <span class="text-xs font-black text-slate-900">{{ dep.fullNameAr }}</span>
+                        </td>
+                        <td class="px-3 py-2">
+                            <span class="text-[10px] font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{{ getRelationshipLabel(dep.relationship) }}</span>
+                        </td>
+                        <td class="px-3 py-2">
+                            <span class="text-[10px] font-bold text-slate-400">{{ dep.birthDate | date:'dd/MM/yyyy' }}</span>
+                        </td>
+                        <td class="px-3 py-2">
+                            <span class="text-[10px] font-mono text-slate-400">{{ dep.nationalId }}</span>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1">
+                                <button (click)="showEditDialog(dep)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="pi pi-pencil text-[10px]"></i>
+                                </button>
+                                <button (click)="delete(dep.dependentId)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-red-600 hover:bg-red-50 transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="pi pi-trash text-[10px]"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<!-- Dialog -->
-<p-dialog [(visible)]="displayDialog" [header]="isEditMode ? 'تعديل بيانات تابع' : 'إضافة تابع'" [modal]="true" [style]="{width: '500px'}" styleClass="p-fluid">
-    <form [formGroup]="dependentForm" class="flex flex-col gap-4 mt-2">
-        
-        <div class="field">
-            <label class="block text-sm font-medium mb-1">الاسم <span class="text-red-500">*</span></label>
-            <input pInputText formControlName="fullNameAr" placeholder="الاسم الكامل" />
-            <small class="text-red-500" *ngIf="submitted && dependentForm.get('fullNameAr')?.invalid">مطلوب</small>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-             <div class="field">
-                <label class="block text-sm font-medium mb-1">صلة القرابة <span class="text-red-500">*</span></label>
-                <input pInputText formControlName="relationship" placeholder="مثال: ابن، ابنة" />
-                <small class="text-red-500" *ngIf="submitted && dependentForm.get('relationship')?.invalid">مطلوب</small>
-            </div>
-             <div class="field">
-                <label class="block text-sm font-medium mb-1">الجنس</label>
-                <div class="flex gap-4 pt-2">
-                    <div class="flex items-center">
-                        <input type="radio" value="M" formControlName="gender" id="gM" class="mr-1">
-                        <label for="gM">ذكر</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="radio" value="F" formControlName="gender" id="gF" class="mr-1">
-                        <label for="gF">أنثى</label>
-                    </div>
+<!-- Premium Dialog Style -->
+<p-dialog [(visible)]="displayDialog" 
+    [header]="isEditMode ? 'تعديل بيانات فرد من العائلة' : 'إضافة فرد من العائلة'" 
+    [modal]="true" 
+    [style]="{width: '550px', borderRadius: '24px', overflow: 'hidden'}" 
+    [draggable]="false" 
+    [resizable]="false"
+    styleClass="premium-dialog">
+    
+    <div class="pt-6 px-1 text-right">
+        <form [formGroup]="dependentForm" class="space-y-6">
+            
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">الاسم الكامل (كما في الهوية)</label>
+                <div class="relative">
+                    <i class="pi pi-user absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText formControlName="fullNameAr" placeholder="اسم الفرد رباعياً..." 
+                        class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-pink-500/20 text-right" />
                 </div>
             </div>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4">
-             <div class="field">
-                <label class="block text-sm font-medium mb-1">رقم الهوية <span class="text-red-500">*</span></label>
-                <input pInputText formControlName="nationalId" />
-                <small class="text-red-500" *ngIf="submitted && dependentForm.get('nationalId')?.invalid">مطلوب</small>
-            </div>
-             <div class="field">
-                <label class="block text-sm font-medium mb-1">تاريخ الميلاد <span class="text-red-500">*</span></label>
-                <p-datePicker formControlName="birthDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
-            </div>
-        </div>
 
-    </form>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="group text-right">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">صلة القرابة</label>
+                    <p-select [options]="relationships" formControlName="relationship" placeholder="اختر الصلة" 
+                        appendTo="body" styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1 text-right"></p-select>
+                </div>
+
+                <div class="group text-right">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">تاريخ الميلاد</label>
+                    <p-datePicker formControlName="birthDate" appendTo="body" dateFormat="dd/mm/yy" 
+                        styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-datePicker>
+                </div>
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">رقم الهوية / الجواز</label>
+                <div class="relative">
+                    <i class="pi pi-id-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText formControlName="nationalId" placeholder="الرقم الوطني المكون من 11 رقم" 
+                        class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-pink-500/20 font-mono" />
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-4 bg-pink-50/50 border border-pink-100/50 rounded-2xl transition-all hover:bg-pink-50">
+                <p-checkbox formControlName="hasHealthInsurance" [binary]="true" inputId="hasIns"></p-checkbox>
+                <label for="hasIns" class="text-sm font-semibold text-pink-900 cursor-pointer select-none">
+                    إدراج هذا الفرد في مظلة التأمين الطبي الخاص بالشركة
+                </label>
+            </div>
+
+        </form>
+    </div>
+
     <ng-template pTemplate="footer">
-        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
-        <button pButton label="حفظ" icon="pi pi-check" (click)="save()" [loading]="loading()"></button>
+        <div class="flex items-center justify-between w-full pt-4 border-t border-slate-100 mt-4">
+            <button (click)="displayDialog = false" 
+                class="px-6 py-2 text-slate-400 hover:text-slate-600 font-semibold transition-colors">
+                إلغاء
+            </button>
+            <button (click)="save()" [disabled]="loading()"
+                class="flex items-center gap-2 px-8 py-2.5 bg-pink-600 hover:bg-pink-700 disabled:opacity-50 text-white rounded-2xl shadow-lg shadow-pink-200 transition-all font-bold">
+                <i class="pi pi-check" *ngIf="!loading()"></i>
+                <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+                <span>حفظ فرد العائلة</span>
+            </button>
+        </div>
     </ng-template>
 </p-dialog>
 
-<p-confirmDialog [style]="{width: '450px'}" [rtl]="true"></p-confirmDialog>
-<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '400px'}" [rtl]="true"></p-confirmDialog>
+

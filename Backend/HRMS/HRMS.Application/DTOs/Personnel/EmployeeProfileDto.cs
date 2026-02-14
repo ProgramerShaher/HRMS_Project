@@ -12,6 +12,7 @@ public class EmployeeProfileDto
     
     public EmployeeCompensationDto? Compensation { get; set; }
     public List<EmployeeDocumentDto> Documents { get; set; } = new();
+    public string? ProfilePicturePath { get; set; }
 }
 
 public class EmployeeCompensationDto
@@ -30,7 +31,13 @@ public class EmployeeCompensationDto
     /// <summary>
     /// البدلات الأخرى (تُضاف إلى إجمالي الراتب)
     /// </summary>
+    /// <summary>
+    /// البدلات الأخرى (تُضاف إلى إجمالي الراتب)
+    /// </summary>
     public decimal OtherAllowances { get; set; }
+
+    public int? BankId { get; set; }
+    public string? IbanNumber { get; set; }
 }
 
 

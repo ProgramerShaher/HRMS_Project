@@ -1,0 +1,45 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <div class="glass-panel p-6 rounded-2xl flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">قسائم رواتبي</h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1">عرض وتحميل قسائم الرواتب الشهرية</p>
+    </div>
+    <button pButton icon="pi pi-refresh" class="p-button-text p-button-rounded" 
+            [loading]="loading()" (click)="loadPayslips()"></button>
+  </div>
+
+  <div class="glass-panel rounded-2xl overflow-hidden">
+    <p-table [value]="payslips()" [loading]="loading()" [paginator]="true" [rows]="12" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>الشهر</th>
+          <th>السنة</th>
+          <th>الراتب الأساسي</th>
+          <th>البدلات</th>
+          <th>الاستقطاعات</th>
+          <th>صافي الراتب</th>
+          <th>الإجراءات</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-payslip>
+        <tr>
+          <td>{{ getMonthName(payslip.month) }}</td>
+          <td>{{ payslip.year }}</td>
+          <td>{{ formatCurrency(payslip.basicSalary) }}</td>
+          <td class="text-emerald-600 font-semibold">{{ formatCurrency(payslip.totalAllowances) }}</td>
+          <td class="text-red-600 font-semibold">{{ formatCurrency(payslip.totalDeductions) }}</td>
+          <td class="text-blue-600 font-bold">{{ formatCurrency(payslip.netSalary) }}</td>
+          <td>
+            <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" pTooltip="عرض"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="7" class="text-center py-8">
+          <i class="pi pi-inbox text-5xl text-slate-300 mb-3"></i>
+          <p class="text-slate-500">لا توجد قسائم رواتب</p>
+        </td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

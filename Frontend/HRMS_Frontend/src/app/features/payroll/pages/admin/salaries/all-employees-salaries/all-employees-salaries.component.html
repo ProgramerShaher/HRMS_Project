@@ -1,0 +1,195 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <!-- Action Buttons -->
+  <app-action-buttons
+    [showBack]="true"
+    [showRefresh]="true"
+    [showExport]="true"
+    backRoute="/payroll/dashboard"
+    (refresh)="loadSalaries()"
+    (export)="exportToExcel()"
+  ></app-action-buttons>
+
+  <!-- Header -->
+  <div class="glass-panel p-6 rounded-2xl">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          جميع رواتب الموظفين
+        </h1>
+        <p class="text-slate-500 dark:text-zinc-400 mt-1">
+          عرض شامل لرواتب جميع الموظفين مع التفاصيل الكاملة
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-panel p-6 rounded-2xl">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Search -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">
+          بحث
+        </label>
+        <span class="p-input-icon-left w-full">
+          <i class="pi pi-search"></i>
+          <input 
+            type="text" 
+            pInputText 
+            placeholder="اسم الموظف أو الكود..."
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()"
+            class="w-full" />
+        </span>
+      </div>
+
+      <!-- Department Filter -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">
+          القسم
+        </label>
+        <p-select
+          [options]="departments()"
+          [(ngModel)]="selectedDepartment"
+          optionLabel="label"
+          placeholder="اختر القسم"
+          (onChange)="applyFilters()"
+          styleClass="w-full"
+        ></p-select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">
+          الحالة
+        </label>
+        <p-select
+          [options]="statusOptions"
+          [(ngModel)]="selectedStatus"
+          optionLabel="label"
+          placeholder="اختر الحالة"
+          (onChange)="applyFilters()"
+          styleClass="w-full"
+        ></p-select>
+      </div>
+
+      <!-- Clear Filters -->
+      <div class="flex items-end">
+        <p-button
+          label="مسح الفلاتر"
+          icon="pi pi-filter-slash"
+          (onClick)="clearFilters()"
+          styleClass="p-button-outlined w-full"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="glass-panel rounded-2xl overflow-hidden">
+    <p-table
+      [value]="filteredSalaries()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} موظف"
+      styleClass="p-datatable-sm"
+      [globalFilterFields]="['employeeNameAr', 'employeeCode', 'departmentName']"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="employeeCode">
+            كود الموظف
+            <p-sortIcon field="employeeCode"></p-sortIcon>
+          </th>
+          <th pSortableColumn="employeeNameAr">
+            اسم الموظف
+            <p-sortIcon field="employeeNameAr"></p-sortIcon>
+          </th>
+          <th pSortableColumn="departmentName">القسم</th>
+          <th pSortableColumn="jobTitle">الوظيفة</th>
+          <th pSortableColumn="basicSalary" class="text-center">
+            الراتب الأساسي
+            <p-sortIcon field="basicSalary"></p-sortIcon>
+          </th>
+          <th pSortableColumn="totalAllowances" class="text-center">البدلات</th>
+          <th pSortableColumn="totalDeductions" class="text-center">الخصومات</th>
+          <th pSortableColumn="netSalary" class="text-center">
+            صافي الراتب
+            <p-sortIcon field="netSalary"></p-sortIcon>
+          </th>
+          <th class="text-center">الحالة</th>
+          <th class="text-center">الإجراءات</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-salary>
+        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            (click)="viewDetails(salary)">
+          <td>
+            <span class="font-mono text-sm">{{ salary.employeeCode }}</span>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                {{ salary.employeeNameAr?.charAt(0) }}
+              </div>
+              <span class="font-semibold">{{ salary.employeeNameAr }}</span>
+            </div>
+          </td>
+          <td>{{ salary.departmentName || '-' }}</td>
+          <td>{{ salary.jobTitle || '-' }}</td>
+          <td class="text-center">
+            <span class="font-bold text-blue-600 dark:text-blue-400">
+              {{ formatCurrency(salary.basicSalary) }}
+            </span>
+          </td>
+          <td class="text-center">
+            <span class="text-emerald-600 dark:text-emerald-400">
+              +{{ formatCurrency(salary.totalAllowances) }}
+            </span>
+          </td>
+          <td class="text-center">
+            <span class="text-red-600 dark:text-red-400">
+              -{{ formatCurrency(salary.totalDeductions) }}
+            </span>
+          </td>
+          <td class="text-center">
+            <span class="font-bold text-lg text-slate-900 dark:text-white">
+              {{ formatCurrency(salary.netSalary) }}
+            </span>
+          </td>
+          <td class="text-center">
+            <p-tag
+              [value]="getStatusLabel(salary.isActive)"
+              [severity]="getStatusSeverity(salary.isActive)"
+            ></p-tag>
+          </td>
+          <td class="text-center">
+            <p-button
+              icon="pi pi-eye"
+              [rounded]="true"
+              [text]="true"
+              severity="info"
+              (onClick)="viewDetails(salary); $event.stopPropagation()"
+              pTooltip="عرض التفاصيل"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center py-8">
+            <div class="flex flex-col items-center gap-3">
+              <i class="pi pi-inbox text-4xl text-slate-400"></i>
+              <p class="text-slate-500 dark:text-zinc-400">لا توجد بيانات</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

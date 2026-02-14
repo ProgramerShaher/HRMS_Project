@@ -1,161 +1,197 @@
-<div class="flex flex-col gap-3 max-w-full mx-auto px-4 pt-4 pb-2 h-[calc(100vh-80px)]" dir="rtl">
-    <p-toast position="bottom-left"></p-toast>
-    
-    <!-- Condensed Header -->
-    <div class="flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-3">
-             <div class="bg-blue-600 rounded-lg p-2 text-white">
-                <i class="pi pi-user-plus text-lg"></i>
-            </div>
-            <div>
-                <h1 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">ملف موظف جديد</h1>
-                <p class="text-slate-500 text-xs">إدخال بيانات الموظف (6 خطوات)</p>
-            </div>
+<div class="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] font-['Cairo'] py-8 px-4 sm:px-6 lg:px-8" dir="rtl">
+  <p-toast position="top-center"></p-toast>
+
+  <div class="max-w-7xl mx-auto space-y-6">
+    <!-- Premium Header -->
+    <header class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-300 hover:shadow-md">
+      <div class="flex items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <i class="pi text-white text-3xl" [ngClass]="isEditMode() ? 'pi-user-edit' : 'pi-user-plus'"></i>
         </div>
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800 dark:text-white">{{ isEditMode() ? 'تعديل بيانات الموظف' : 'إضافة موظف جديد' }}</h1>
+          <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">الخطوة {{ currentStep() + 1 }} من {{ steps.length }} • {{ steps[currentStep()].label }}</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
         <button 
-            pButton 
-            label="خروج" 
-            icon="pi pi-times" 
-            class="p-button-text p-button-secondary p-button-sm text-slate-500" 
-            routerLink="/employees">
+          pButton 
+          icon="pi pi-times" 
+          label="إلغاء العمل"
+          class="p-button-text p-button-secondary !text-slate-500 hover:!bg-slate-100 dark:hover:!bg-slate-700 rounded-xl"
+          (click)="cancel()">
         </button>
+      </div>
+    </header>
+
+    <!-- Navigation Stepper -->
+    <nav class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-4 scroll-smooth overflow-x-auto no-scrollbar">
+      <div class="flex justify-between items-center min-w-[800px] gap-4">
+        @for (step of steps; track $index) {
+          <button 
+            class="flex-1 flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group"
+            [class.bg-blue-50]="currentStep() === $index"
+            [class.dark:bg-blue-900/20]="currentStep() === $index"
+            (click)="goToStep($index)">
+            <div 
+              class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
+              [ngClass]="{
+                'bg-blue-600 text-white shadow-lg shadow-blue-500/30': currentStep() === $index,
+                'bg-emerald-100 text-emerald-600': currentStep() > $index,
+                'bg-slate-100 text-slate-400 group-hover:bg-slate-200': currentStep() < $index
+              }">
+              <i [class]="step.icon" class="text-lg"></i>
+            </div>
+            <div class="text-right">
+              <span 
+                class="text-xs font-semibold block uppercase tracking-wider transition-colors duration-300"
+                [ngClass]="currentStep() === $index ? 'text-blue-600' : 'text-slate-400'">
+                الخطوة {{ $index + 1 }}
+              </span>
+              <span 
+                class="text-sm font-bold block transition-colors duration-300"
+                [ngClass]="currentStep() === $index ? 'text-slate-800 dark:text-white' : 'text-slate-500'">
+                {{ step.label }}
+              </span>
+            </div>
+          </button>
+        }
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="relative bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden min-h-[600px]">
+      <!-- Step Transition Progress -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-slate-100 dark:bg-slate-700">
+        <div 
+          class="h-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-out" 
+          [style.width.%]="((currentStep() + 1) / steps.length) * 100">
+        </div>
+      </div>
+
+      <div class="p-8 md:p-10">
+        <!-- Steps Component Container -->
+        <div class="animate-in fade-in slide-in-from-bottom-5 duration-500">
+          
+          <!-- Step 1: Personal Info -->
+          @if (currentStep() === 0) {
+            <app-personal-info-step
+              [data]="employeeData()"
+              (dataChange)="updateData($event)"
+              (profilePictureChange)="updateProfilePicture($event)">
+            </app-personal-info-step>
+          }
+
+          <!-- Step 2: Job & Financial -->
+          @if (currentStep() === 1) {
+            <app-job-financial-step
+              [data]="employeeData()"
+              (dataChange)="updateData($event)">
+            </app-job-financial-step>
+          }
+
+          <!-- Step 3: Addresses & Contact -->
+          @if (currentStep() === 2) {
+            <app-addresses-step
+              [data]="employeeData()"
+              (dataChange)="updateData($event)">
+            </app-addresses-step>
+          }
+
+          <!-- Step 4: Qualifications & Experience -->
+          @if (currentStep() === 3) {
+            <app-qualifications-step
+              [data]="employeeData()"
+              (dataChange)="updateData($event)"
+              (filesChange)="updateQualificationFiles($event)"
+              (certificationFilesChange)="updateCertificationFiles($event)">
+            </app-qualifications-step>
+          }
+
+          <!-- Step 5: Documents & Contracts -->
+          @if (currentStep() === 4) {
+            <app-documents-step
+              [data]="employeeData()"
+              (dataChange)="updateData($event)"
+              (filesChange)="updateDocumentFiles($event)">
+            </app-documents-step>
+          }
+
+          <!-- Step 6: Family & Emergency Contacts -->
+          @if (currentStep() === 5) {
+            <app-family-step
+              [data]="employeeData()"
+              (dataChange)="updateData($event)">
+            </app-family-step>
+          }
+        </div>
+      </div>
+    </main>
+
+    <!-- Action Footer -->
+    <footer class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 flex flex-col sm:flex-row justify-between items-center gap-6">
+      <div class="order-3 sm:order-1 flex gap-3 w-full sm:w-auto">
+        <button 
+          pButton 
+          icon="pi pi-arrow-right" 
+          label="السابق"
+          class="p-button-outlined !border-slate-200 !text-slate-600 hover:!bg-slate-50 dark:!border-slate-700 dark:!text-slate-400 w-full sm:w-auto rounded-xl h-12"
+          [disabled]="currentStep() === 0 || loading()"
+          (click)="prevStep()">
+        </button>
+      </div>
+
+      <div class="order-1 sm:order-2 flex flex-col items-center">
+        @if (!canSave()) {
+          <div class="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-full text-sm font-medium border border-amber-200 dark:border-amber-800 animate-pulse">
+            <i class="pi pi-info-circle text-amber-500"></i>
+            <span>يرجى إكمال الحقول المطلوبة للمتابعة</span>
+          </div>
+        }
+      </div>
+
+      <div class="order-2 sm:order-3 flex gap-3 w-full sm:w-auto">
+        @if (currentStep() < steps.length - 1) {
+          <button 
+            pButton 
+            icon="pi pi-arrow-left" 
+            iconPos="left"
+            label="الخطوة التالية"
+            class="p-button-primary !bg-blue-600 hover:!bg-blue-700 !border-none w-full sm:w-80 rounded-xl h-12 shadow-lg shadow-blue-500/20"
+            [disabled]="loading()"
+            (click)="nextStep()">
+          </button>
+        } @else {
+          <button 
+            pButton 
+            icon="pi pi-check" 
+            iconPos="left"
+            [label]="isEditMode() ? 'تحديث البيانات' : 'إتمام الحفظ'"
+            class="p-button-success !bg-emerald-600 hover:!bg-emerald-700 !border-none w-full sm:w-80 rounded-xl h-12 shadow-lg shadow-emerald-500/20"
+            [disabled]="!canSave() || loading()"
+            [loading]="loading()"
+            (click)="submit()">
+          </button>
+        }
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modern Loading State -->
+  @if (loading()) {
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-6">
+      <div class="bg-white dark:bg-slate-800 rounded-3xl p-10 max-w-sm w-full shadow-2xl text-center space-y-6 animate-in zoom-in duration-300">
+        <div class="relative w-20 h-20 mx-auto">
+          <div class="absolute inset-0 border-4 border-slate-100 dark:border-slate-700 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-slate-800 dark:text-white">{{ isEditMode() ? 'جاري التحديث' : 'جاري الحفظ' }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 mt-2">يرجى الانتظار، لا تغلق الصفحة حتى تكتمل العملية...</p>
+        </div>
+        <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'border-radius': '4px'}"></p-progressBar>
+      </div>
     </div>
-
-    <!-- Wizard Container -->
-    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-slate-200 dark:border-zinc-800 overflow-hidden flex flex-col flex-1 min-h-0">
-        <p-stepper [(value)]="currentStep" [linear]="true" class="w-full flex flex-col h-full">
-            <p-step-list class="bg-slate-50 dark:bg-zinc-950/50 border-b border-slate-200 dark:border-zinc-800 shrink-0 h-14">
-                
-                <p-step [value]="0" class="flex-1">
-                    <div class="flex items-center justify-center gap-2 h-full">
-                        <i class="pi pi-user text-lg"></i>
-                        <span class="font-medium text-xs hidden md:inline">البيانات الشخصية</span>
-                    </div>
-                </p-step>
-
-                <p-step [value]="1" class="flex-1">
-                    <div class="flex items-center justify-center gap-2 h-full">
-                        <i class="pi pi-briefcase text-lg"></i>
-                        <span class="font-medium text-xs hidden md:inline">الوظيفة والمالية</span>
-                    </div>
-                </p-step>
-
-                <p-step [value]="2" class="flex-1">
-                    <div class="flex items-center justify-center gap-2 h-full">
-                        <i class="pi pi-map-marker text-lg"></i>
-                        <span class="font-medium text-xs hidden md:inline">العناوين والاتصال</span>
-                    </div>
-                </p-step>
-
-                <p-step [value]="3" class="flex-1">
-                    <div class="flex items-center justify-center gap-2 h-full">
-                        <i class="pi pi-verified text-lg"></i>
-                        <span class="font-medium text-xs hidden md:inline">المؤهلات</span>
-                    </div>
-                </p-step>
-
-                <p-step [value]="4" class="flex-1">
-                    <div class="flex items-center justify-center gap-2 h-full">
-                        <i class="pi pi-file text-lg"></i>
-                        <span class="font-medium text-xs hidden md:inline">الوثائق</span>
-                    </div>
-                </p-step>
-
-                <p-step [value]="5" class="flex-1">
-                    <div class="flex items-center justify-center gap-2 h-full">
-                        <i class="pi pi-users text-lg"></i>
-                        <span class="font-medium text-xs hidden md:inline">الأسرة</span>
-                    </div>
-                </p-step>
-
-            </p-step-list>
-            
-            <p-step-panels class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-zinc-900/30">
-                <!-- Step 1: Personal -->
-                <p-step-panel [value]="0" class="h-full">
-                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                         <div class="p-4 h-full">
-                            <app-personal-info-step 
-                                [data]="employeeData()" 
-                                (dataChange)="updateData($event)"
-                                (next)="nextStep()">
-                            </app-personal-info-step>
-                         </div>
-                    </ng-template>
-                </p-step-panel>
-
-                <!-- Step 2: Job & Financial -->
-                <p-step-panel [value]="1" class="h-full">
-                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                         <div class="p-4 h-full">
-                            <app-job-financial-step
-                                [data]="employeeData()"
-                                (dataChange)="updateData($event)"
-                                (prev)="prevStep()"
-                                (next)="nextStep()">
-                            </app-job-financial-step>
-                         </div>
-                    </ng-template>
-                </p-step-panel>
-
-                <!-- Step 3: Addresses -->
-                <p-step-panel [value]="2" class="h-full">
-                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                         <div class="p-4 h-full">
-                            <app-addresses-step
-                                [data]="employeeData()"
-                                (dataChange)="updateData($event)"
-                                (prev)="prevStep()"
-                                (next)="nextStep()">
-                            </app-addresses-step>
-                         </div>
-                    </ng-template>
-                </p-step-panel>
-
-                <!-- Step 4: Qualifications -->
-                <p-step-panel [value]="3" class="h-full">
-                     <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                         <div class="p-4 h-full">
-                            <app-qualifications-step
-                                [data]="employeeData()"
-                                (dataChange)="updateData($event)"
-                                (prev)="prevStep()"
-                                (next)="nextStep()">
-                            </app-qualifications-step>
-                         </div>
-                     </ng-template>
-                </p-step-panel>
-
-                <!-- Step 5: Documents -->
-                <p-step-panel [value]="4" class="h-full">
-                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                         <div class="p-4 h-full">
-                            <app-documents-step
-                                [data]="employeeData()"
-                                (dataChange)="updateData($event)"
-                                (docFileSelect)="updateDocFiles($event)"
-                                (prev)="prevStep()"
-                                (next)="nextStep()">
-                            </app-documents-step>
-                         </div>
-                    </ng-template>
-                </p-step-panel>
-
-                <!-- Step 6: Family -->
-                <p-step-panel [value]="5" class="h-full">
-                    <ng-template pTemplate="content" let-activateCallback="activateCallback">
-                         <div class="p-4 h-full">
-                            <app-family-step
-                                [data]="employeeData()"
-                                (dataChange)="updateData($event)"
-                                (prev)="prevStep()"
-                                (submitForm)="submit()">
-                            </app-family-step>
-                         </div>
-                    </ng-template>
-                </p-step-panel>
-
-            </p-step-panels>
-        </p-stepper>
-    </div>
+  }
 </div>

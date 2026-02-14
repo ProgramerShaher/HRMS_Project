@@ -1,0 +1,36 @@
+.employee-structure-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+@variant dark {
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+:host ::v-deep {
+  .p-datatable.no-border {
+    .p-datatable-thead > tr > th {
+      border: none;
+      @apply py-4 bg-transparent;
+    }
+    .p-datatable-tbody > tr > td {
+      border: none;
+      @apply py-4 bg-transparent;
+    }
+  }
+
+  /* Custom table transitions */
+  .p-datatable-tbody > tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

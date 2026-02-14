@@ -5,7 +5,7 @@ namespace HRMS.Application.DTOs.Payroll;
 /// </summary>
 public class LoanInstallmentDto
 {
-    public int InstallmentId { get; set; }
+    public long InstallmentId { get; set; }
     public int LoanId { get; set; }
     public int EmployeeId { get; set; }
     public string? EmployeeName { get; set; }

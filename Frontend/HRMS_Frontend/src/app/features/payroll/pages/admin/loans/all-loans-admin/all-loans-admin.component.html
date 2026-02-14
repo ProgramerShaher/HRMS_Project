@@ -1,0 +1,199 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <!-- Action Buttons -->
+  <app-action-buttons
+    [showBack]="true"
+    [showRefresh]="true"
+    [showCreate]="true"
+    backRoute="/payroll/dashboard"
+    createLabel="سلفة جديدة"
+    (refresh)="loadAllLoans()"
+    (create)="createNewLoan()"
+  ></app-action-buttons>
+
+  <!-- Header -->
+  <div class="glass-panel p-6 rounded-2xl">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">إدارة السلف</h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1">عرض وإدارة جميع سلف الموظفين</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-panel p-6 rounded-2xl space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white">الفلاتر</h3>
+      <button pButton icon="pi pi-filter-slash" label="مسح الفلاتر" 
+              class="p-button-text p-button-sm" (click)="clearFilters()"></button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Status Filter -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">الحالة</label>
+        <p-select [(ngModel)]="selectedStatus" [options]="statusOptions" 
+                  optionLabel="label" optionValue="value"
+                  placeholder="اختر الحالة" styleClass="w-full"
+                  (onChange)="applyFilters()"></p-select>
+      </div>
+
+      <!-- Employee Filter -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">الموظف</label>
+        <app-employee-selector 
+          [(ngModel)]="selectedEmployeeId"
+          [showDetails]="false"
+          (employeeSelected)="applyFilters()">
+        </app-employee-selector>
+      </div>
+
+      <!-- Date From -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">من تاريخ</label>
+        <p-datePicker [(ngModel)]="dateFrom" dateFormat="yy-mm-dd" 
+                      placeholder="اختر التاريخ" styleClass="w-full"
+                      (onSelect)="applyFilters()"></p-datePicker>
+      </div>
+
+      <!-- Date To -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">إلى تاريخ</label>
+        <p-datePicker [(ngModel)]="dateTo" dateFormat="yy-mm-dd" 
+                      placeholder="اختر التاريخ" styleClass="w-full"
+                      (onSelect)="applyFilters()"></p-datePicker>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loans Table -->
+  <div class="glass-panel rounded-2xl overflow-hidden">
+    <p-table [value]="filteredLoans()" [loading]="loading()" 
+             [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+             styleClass="p-datatable-sm" [globalFilterFields]="['loanId']">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th>رقم السلفة</th>
+          <th>الموظف</th>
+          <th>المبلغ</th>
+          <th>المدفوع</th>
+          <th>المتبقي</th>
+          <th>التقدم</th>
+          <th>الحالة</th>
+          <th>تاريخ الطلب</th>
+          <th>الإجراءات</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-loan>
+        <tr>
+          <td class="font-bold text-blue-600">#{{ loan.loanId }}</td>
+          <td>
+            <div>
+              <p class="font-semibold">{{ loan.employeeName || 'موظف #' + loan.employeeId }}</p>
+              <p class="text-xs text-slate-500">ID: {{ loan.employeeId }}</p>
+            </div>
+          </td>
+          <td class="font-bold">{{ formatCurrency(loan.loanAmount) }} ريال</td>
+          <td class="text-emerald-600 font-semibold">{{ formatCurrency(loan.paidAmount) }}</td>
+          <td class="text-amber-600 font-semibold">{{ formatCurrency(loan.remainingAmount) }}</td>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 h-2 bg-slate-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-emerald-500 to-blue-500 transition-all duration-300"
+                     [style.width.%]="calculateProgress(loan)"></div>
+              </div>
+              <span class="text-xs font-medium">{{ calculateProgress(loan) }}%</span>
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="getStatusLabel(loan.status)" 
+                   [severity]="getStatusSeverity(loan.status)"></p-tag>
+          </td>
+          <td>{{ formatDate(loan.requestDate) }}</td>
+          <td>
+            <div class="flex items-center gap-1">
+              <button pButton icon="pi pi-eye" 
+                      class="p-button-text p-button-sm p-button-rounded"
+                      pTooltip="عرض التفاصيل"
+                      (click)="viewDetails(loan)"></button>
+              
+              @if (loan.status === 'PENDING') {
+                <button pButton icon="pi pi-check" 
+                        class="p-button-text p-button-sm p-button-rounded p-button-success"
+                        pTooltip="موافقة"
+                        (click)="openApprovalDialog(loan)"></button>
+              }
+              
+              @if (loan.status === 'ACTIVE') {
+                <button pButton icon="pi pi-check-circle" 
+                        class="p-button-text p-button-sm p-button-rounded p-button-info"
+                        pTooltip="تسوية مبكرة"
+                        (click)="settleLoan(loan)"></button>
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="text-center py-8">
+            <i class="pi pi-inbox text-5xl text-slate-300 mb-3"></i>
+            <p class="text-slate-500">لا توجد سلف</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Approval Dialog -->
+<p-dialog [(visible)]="showApprovalDialog" [modal]="true" [style]="{width: '500px'}"
+          header="الموافقة على السلفة" styleClass="rounded-2xl">
+  @if (selectedLoan) {
+    <div class="space-y-4">
+      <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p class="text-slate-600 dark:text-zinc-400">رقم السلفة</p>
+            <p class="font-bold text-slate-900 dark:text-white">#{{ selectedLoan.loanId }}</p>
+          </div>
+          <div>
+            <p class="text-slate-600 dark:text-zinc-400">المبلغ</p>
+            <p class="font-bold text-blue-600">{{ formatCurrency(selectedLoan.loanAmount) }} ريال</p>
+          </div>
+          <div>
+            <p class="text-slate-600 dark:text-zinc-400">عدد الأقساط</p>
+            <p class="font-bold text-slate-900 dark:text-white">{{ selectedLoan.installmentCount }}</p>
+          </div>
+          <div>
+            <p class="text-slate-600 dark:text-zinc-400">القسط الشهري</p>
+            <p class="font-bold text-emerald-600">{{ formatCurrency(selectedLoan.loanAmount / selectedLoan.installmentCount) }} ريال</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">ملاحظات (اختياري)</label>
+        <textarea [(ngModel)]="approvalNotes" rows="3" 
+                  class="w-full p-3 border border-slate-300 dark:border-zinc-600 rounded-xl"
+                  placeholder="أضف ملاحظات..."></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-4">
+        <button pButton label="إلغاء" icon="pi pi-times" 
+                class="p-button-text p-button-secondary"
+                (click)="showApprovalDialog.set(false)"></button>
+        <button pButton label="رفض" icon="pi pi-ban" 
+                class="p-button-outlined p-button-danger"
+                (click)="rejectLoan()"></button>
+        <button pButton label="موافقة" icon="pi pi-check" 
+                class="p-button-raised p-button-success"
+                (click)="approveLoan()"></button>
+      </div>
+    </div>
+  }
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

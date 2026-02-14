@@ -1,315 +1,243 @@
-<div *ngIf="loading()" class="p-6">
-    <p-skeleton width="100%" height="200px" styleClass="mb-4 rounded-3xl"></p-skeleton>
-    <div class="flex gap-4">
-        <p-skeleton width="300px" height="600px" styleClass="rounded-xl"></p-skeleton>
-        <p-skeleton width="100%" height="600px" styleClass="rounded-xl"></p-skeleton>
+<div *ngIf="loading()" class="p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <p-skeleton width="100%" height="200px" styleClass="rounded-3xl"></p-skeleton>
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 lg:col-span-4">
+                <p-skeleton width="100%" height="400px" styleClass="rounded-3xl"></p-skeleton>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+                <p-skeleton width="100%" height="400px" styleClass="rounded-3xl"></p-skeleton>
+            </div>
+        </div>
     </div>
 </div>
 
-<div *ngIf="!loading() && employee()" class="animate-fade-in max-w-[1600px] mx-auto" dir="rtl">
-
-    <!-- Main Grid Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-        <!-- SIDEBAR: Identity & Contact (Sticky) -->
-        <div class="lg:col-span-3 lg:sticky lg:top-4 space-y-4">
-
-            <!-- Identity Card -->
-            <div
-                class="bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-slate-100 dark:border-zinc-800 overflow-hidden relative group">
-                <!-- Cover Decoration -->
-                <div class="h-24 bg-gradient-to-r from-blue-600 to-indigo-600 relative">
-                    <div class="absolute inset-0 bg-[url('/assets/pattern.svg')] opacity-20"></div>
-                </div>
-
-                <!-- Avatar & Status -->
-                <div class="px-6 relative text-center -mt-10">
-                    <div class="relative inline-block">
-                        <!-- Profile Picture (Real Only) -->
-                        <div class="w-24 h-24 rounded-full shadow-xl overflow-hidden bg-gray-100">
-                            <img 
-                                *ngIf="employee()!.coreProfile.profilePicturePath"
-                                [src]="getProfilePictureUrl(employee()!.coreProfile.profilePicturePath)!" 
-                                [alt]="employee()!.coreProfile.fullNameAr"
-                                class="w-full h-full object-cover"
-                                (error)="onImageLoadError($event)">
-                            <div *ngIf="!employee()!.coreProfile.profilePicturePath" 
-                                class="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 text-xs">
-                                لا توجد صورة
-                            </div>
-                        </div>
-                        <span
-                            class="absolute bottom-2 right-2 w-5 h-5 rounded-full border-4 border-white dark:border-zinc-900"
-                            [ngClass]="(employee()!.coreProfile.isActive !== undefined ? employee()!.coreProfile.isActive : employee()!.coreProfile.status === 'ACTIVE') ? 'bg-green-500' : 'bg-red-500'"
-                            [pTooltip]="(employee()!.coreProfile.isActive !== undefined ? employee()!.coreProfile.isActive : employee()!.coreProfile.status === 'ACTIVE') ? 'نشط' : 'غير نشط'" 
-                            tooltipPosition="top">
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Basic Info -->
-                <div class="p-6 pt-2 text-center">
-                    <h1 class="text-lg font-bold text-slate-900 dark:text-white mb-1">{{
-                        employee()!.coreProfile.fullNameAr }}</h1>
-                    <p class="text-xs text-slate-500 font-mono mb-3 uppercase tracking-wider">{{
-                        employee()!.coreProfile.fullNameEn }}</p>
-
-                    <div class="flex flex-wrap justify-center gap-2 mb-6">
-                        <span
-                            class="px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-[10px] font-bold border border-blue-100 dark:border-blue-900/30">
-                            {{ employee()!.coreProfile.jobTitle }}
-                        </span>
-                        <span
-                            class="px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold border border-slate-100 dark:border-zinc-700">
-                            {{ employee()!.coreProfile.departmentName }}
-                        </span>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="grid grid-cols-2 gap-2 mb-6">
-                        <button pButton icon="pi pi-pencil" label="تعديل" (click)="editProfile()"
-                            class="p-button-outlined p-button-sm w-full justification-center !text-xs !py-2 !rounded-xl"></button>
-                        <button pButton icon="pi pi-print" label="طباعة"
-                            class="p-button-outlined p-button-secondary p-button-sm w-full justification-center !text-xs !py-2 !rounded-xl"></button>
-                    </div>
-
-                    <div class="border-t border-slate-100 dark:border-zinc-800 pt-4">
-                        <div class="flex justify-between items-center text-xs text-slate-500 mb-2">
-                            <span>رقم الموظف</span>
-                            <span class="font-mono font-bold text-slate-900 dark:text-white">#{{
-                                employee()!.coreProfile.employeeNumber }}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xs text-slate-500">
-                            <span>تاريخ التعيين</span>
-                            <span class="font-bold text-slate-900 dark:text-white">{{
-                                (employee()!.coreProfile.hireDate || employee()!.coreProfile.joiningDate) | date:'dd/MM/yyyy' }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Compact Contact Card -->
-            <div
-                class="bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-slate-100 dark:border-zinc-800 p-5">
-                <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                    <i class="pi pi-address-book text-slate-400"></i> التواصل
-                </h3>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-8 h-8 rounded-full bg-slate-50 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-zinc-700 shrink-0">
-                            <i class="pi pi-phone text-xs"></i>
-                        </div>
-                        <div class="overflow-hidden">
-                            <span class="block text-[10px] text-slate-400 mb-0.5">الجوال</span>
-                            <span class="font-bold text-xs text-slate-800 dark:text-white dir-ltr block truncate">{{
-                                employee()!.coreProfile.mobile }}</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3" *ngIf="employee()!.coreProfile.email">
-                        <div
-                            class="w-8 h-8 rounded-full bg-slate-50 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-zinc-700 shrink-0">
-                            <i class="pi pi-envelope text-xs"></i>
-                        </div>
-                        <div class="overflow-hidden">
-                            <span class="block text-[10px] text-slate-400 mb-0.5">البريد الإلكتروني</span>
-                            <span class="font-bold text-xs text-slate-800 dark:text-white truncate block">{{
-                                employee()!.coreProfile.email }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div *ngIf="!loading() && employee()" class="h-screen overflow-hidden font-sans bg-slate-50" dir="rtl">
+    <!-- Main Container: Full viewport height, no scroll on body -->
+    <div class="flex flex-col h-full max-w-[1600px] mx-auto p-2 gap-2 overflow-hidden">
+    
+    <!-- Header Section (Fixed/Non-scrollable) -->
+    <div class="shrink-0 flex flex-col md:flex-row justify-between items-center bg-white/60 backdrop-blur-md border border-white/40 shadow-sm rounded-[2rem] p-6 relative overflow-visible z-20">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-64 h-full bg-gradient-to-l from-blue-50/50 to-transparent rounded-r-[2rem] -z-10"></div>
+        
+        <!-- Actions & Breadcrumb -->
+        <div class="flex items-center gap-4 order-2 md:order-1 self-stretch md:self-auto justify-between md:justify-start">
+            <button class="w-12 h-12 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-100 hover:shadow-md hover:-translate-y-1 transition-all group">
+                <i class="pi pi-print text-xl group-hover:scale-110 transition-transform"></i>
+            </button>
+            
+            <button (click)="editProfile()" class="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-1 transition-all active:scale-95 group relative overflow-hidden">
+                <div class="absolute inset-0 bg-white/20 translate-x-32 skew-x-12 group-hover:-translate-x-32 transition-transform duration-700 ease-out"></div>
+                <span class="font-bold relative z-10">تعديل بيانات الموظف</span>
+                <i class="pi pi-file-edit relative z-10 group-hover:rotate-12 transition-transform"></i>
+            </button>
         </div>
-        <!-- MAIN CONTENT: Tabs -->
-        <div class="lg:col-span-9">
-            <div
-                class="bg-white rounded-3xl shadow-sm border border-slate-100 min-h-[600px]"
-                style="background-color: white !important;">
-                <p-tabs value="0" styleClass="!bg-transparent h-full flex flex-col">
 
-                    <p-tablist
-                        styleClass="!bg-white dark:!bg-zinc-900 border-b border-slate-100 dark:border-zinc-800 px-2 rounded-t-3xl">
-                        <p-tab value="0"
-                            styleClass="!bg-transparent !border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white aria-selected:!text-blue-600 aria-selected:!border-blue-600 !font-bold transition-all !py-4 !px-6 text-sm">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-home"></i> نظرة عامة
-                            </div>
-                        </p-tab>
-                        <p-tab value="1"
-                            styleClass="!bg-transparent !border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white aria-selected:!text-blue-600 aria-selected:!border-blue-600 !font-bold transition-all !py-4 !px-6 text-sm">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-user"></i> البيانات الشخصية
-                            </div>
-                        </p-tab>
-                        <p-tab value="2"
-                            styleClass="!bg-transparent !border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white aria-selected:!text-blue-600 aria-selected:!border-blue-600 !font-bold transition-all !py-4 !px-6 text-sm">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-briefcase"></i> التوظيف
-                            </div>
-                        </p-tab>
+        <!-- Employee Quick Info -->
+        <div class="text-right order-1 md:order-2">
+            <h1 class="text-3xl font-black text-slate-900 mb-2 leading-tight flex items-center justify-end gap-3">
+                {{ employee()?.coreProfile?.fullNameAr }}
+                <div *ngIf="employee()?.coreProfile?.isActive" class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.4)] animate-pulse"></div>
+            </h1>
+            <p class="text-slate-400 font-bold text-xs tracking-widest uppercase flex items-center justify-end gap-2">
+                MARWAN SAEED ABDULLAH AL-AWLAQI
+                <span class="inline-block w-px h-3 bg-slate-300"></span>
+                {{ employee()?.coreProfile?.employeeNumber }}
+            </p>
+        </div>
+    </div>
 
-                        <!-- Back Button (Top Right in LTR, Left in RTL) -->
-                        <div class="mr-auto self-center ml-2">
-                            <button pButton label="الرجوع" icon="pi pi-arrow-left" routerLink="/employees"
-                                class="p-button-text p-button-sm text-slate-500 hover:text-slate-800 !text-xs"></button>
+    <!-- Main Grid Content (Fills remaining space) -->
+    <div class="flex-1 min-h-0 grid grid-cols-12 gap-3 overflow-hidden">
+            <!-- Sidebar: Personal Summary (Sticky & Compact) -->
+            <div class="col-span-12 lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
+                <!-- Info Card -->
+                <div class="bg-white rounded-[2rem] border border-slate-200/60 shadow-xl shadow-slate-200/40 overflow-hidden relative shrink-0">
+                    <!-- Mesh Gradient Cover - Ultra Short -->
+                    <div class="h-16 bg-gradient-to-br from-indigo-600 via-blue-700 to-indigo-900 relative">
+                        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                        
+                        <!-- Profile Pic - Pull up & Smaller -->
+                        <!-- Profile Pic - Pull up & Larger -->
+                        <div class="absolute -bottom-16 left-1/2 -translate-x-1/2">
+                            <div class="w-32 h-32 rounded-3xl p-1 bg-white/30 backdrop-blur-xl shadow-lg relative group">
+                                <div class="w-full h-full rounded-[1.3rem] overflow-hidden bg-slate-100 border-4 border-white relative z-10 shadow-sm">
+                                    <img *ngIf="employee()!.coreProfile.profilePicturePath"
+                                        [src]="getProfilePictureUrl(employee()!.coreProfile.profilePicturePath)!" 
+                                        class="w-full h-full object-cover shadow-inner">
+                                    <div *ngIf="!employee()!.coreProfile.profilePicturePath" 
+                                        class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50">
+                                        <i class="pi pi-user text-5xl"></i>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </p-tablist>
-
-                    <p-tabpanels styleClass="!bg-transparent !p-0 flex-1">
-
-                        <!-- OVERVIEW TAB -->
-                        <p-tabpanel value="0">
-                            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <!-- Salary Widget -->
-                                <div
-                                    class="bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30 flex flex-col justify-between h-40 group hover:shadow-md transition-shadow">
-                                    <div class="flex justify-between items-start">
-                                        <div
-                                            class="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-indigo-600 shadow-sm">
-                                            <i class="pi pi-wallet text-xl"></i>
-                                        </div>
-                                        <span
-                                            class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 bg-white/50 px-2 py-1 rounded-md">شهرياً</span>
-                                    </div>
-                                    <div>
-                                        <h3
-                                            class="text-3xl font-bold text-indigo-900 dark:text-white font-mono tracking-tight mb-1">
-                                            {{ currentCompensation()?.totalSalary | number }}
-                                        </h3>
-                                        <p class="text-xs text-indigo-600 dark:text-indigo-300 font-medium">إجمالي
-                                            الراتب</p>
-                                    </div>
+                    </div>
+                    
+                    <div class="relative px-3 pt-20 pb-4 text-center">
+                        <div class="space-y-1">
+                            <h2 class="text-base font-black text-slate-900 leading-tight">
+                                {{ employee()!.coreProfile.fullNameAr }}
+                            </h2>
+                            <p class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full inline-block text-[9px]">
+                                {{ employee()!.coreProfile.jobTitle }}
+                            </p>
+                            
+                            <div class="flex justify-center gap-1 pt-1">
+                                <div [class]="'px-1.5 py-0.5 rounded-md text-[8px] font-black tracking-wider uppercase border ' + 
+                                    (employee()!.coreProfile.isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-red-50 text-red-600 border-red-100')">
+                                    <span class="inline-block w-1 h-1 rounded-full mr-0.5 bg-current"></span>
+                                    {{ employee()!.coreProfile.isActive ? 'نشط' : 'غير نشط' }}
                                 </div>
-
-                                <!-- Documents Widget -->
-                                <div
-                                    class="bg-orange-50 dark:bg-orange-900/10 rounded-2xl p-5 border border-orange-100 dark:border-orange-900/30 flex flex-col justify-between h-40 group hover:shadow-md transition-shadow">
-                                    <div class="flex justify-between items-start">
-                                        <div
-                                            class="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-orange-600 shadow-sm">
-                                            <i class="pi pi-file text-xl"></i>
-                                        </div>
-                                        <span class="text-xs font-bold text-orange-900 dark:text-white">{{
-                                            employee()?.documents?.length || 0 }}</span>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-lg font-bold text-orange-900 dark:text-white mb-1">المستندات
-                                        </h3>
-                                        <p class="text-[10px] text-orange-600 dark:text-orange-300 leading-relaxed">
-                                            مستندات رسمية وعقود مسجلة في النظام
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Leave Balance Widget (Placeholder) -->
-                                <div
-                                    class="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl p-5 border border-emerald-100 dark:border-emerald-900/30 flex flex-col justify-between h-40 group hover:shadow-md transition-shadow">
-                                    <div class="flex justify-between items-start">
-                                        <div
-                                            class="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-emerald-600 shadow-sm">
-                                            <i class="pi pi-calendar-plus text-xl"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3
-                                            class="text-3xl font-bold text-emerald-900 dark:text-white font-mono tracking-tight mb-1">
-                                            30</h3>
-                                        <p class="text-xs text-emerald-600 dark:text-emerald-300 font-medium">رصيد
-                                            الإجازات (يوم)</p>
-                                    </div>
+                                <div class="px-1.5 py-0.5 rounded-md text-[8px] font-black tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
+                                    {{ employee()!.coreProfile.employeeNumber }}
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Detailed Compensation Breakdown -->
-                            <div
-                                class="mt-6 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl p-6 border border-slate-100 dark:border-zinc-800">
-                                <h4
-                                    class="font-bold text-sm text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                    <i class="pi pi-chart-pie text-indigo-500"></i> تفاصيل الراتب
-                                </h4>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <div
-                                        class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-100 dark:border-zinc-800 shadow-sm">
-                                        <p class="text-[10px] text-slate-500 mb-1">الراتب الأساسي</p>
-                                        <p class="font-bold text-slate-800 dark:text-white font-mono">{{
-                                            currentCompensation()?.basicSalary | number }}</p>
+                        <div class="grid grid-cols-2 gap-px bg-slate-100 mt-4 rounded-xl border border-slate-100 overflow-hidden shadow-inner">
+                            <div class="bg-white p-2 group transition-colors hover:bg-slate-50">
+                                <p class="text-[8px] font-bold text-slate-400 mb-0.5 uppercase tracking-widest text-right">القسم</p>
+                                <p class="text-[9px] font-black text-slate-900 text-right truncate">{{ employee()!.coreProfile.departmentName }}</p>
+                            </div>
+                            <div class="bg-white p-2 group transition-colors hover:bg-slate-50 border-r border-slate-100">
+                                <p class="text-[8px] font-bold text-slate-400 mb-0.5 uppercase tracking-widest text-right">تاريخ التعيين</p>
+                                <p class="text-[9px] font-black text-slate-900 text-right">{{ employee()!.coreProfile.hireDate || employee()!.coreProfile.joiningDate | date:'dd/MM/yyyy' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info Card - Ultra Compact -->
+                <div class="bg-white/80 backdrop-blur-md rounded-[2rem] border border-slate-200/60 shadow-lg p-4 space-y-2 shrink-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm">
+                            <i class="pi pi-phone text-[10px] font-bold"></i>
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900">معلومات التواصل</h3>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="group">
+                            <span class="text-[8px] font-bold text-slate-400 mb-0.5 block uppercase tracking-widest">رقم الجوال</span>
+                            <span class="text-[10px] font-black text-slate-800 flex items-center gap-1.5">
+                                <i class="pi pi-mobile text-slate-300 text-[9px]"></i>
+                                {{ employee()!.coreProfile.mobile }}
+                            </span>
+                        </div>
+                        <div *ngIf="employee()!.coreProfile.email" class="group">
+                            <span class="text-[8px] font-bold text-slate-400 mb-0.5 block uppercase tracking-widest">البريد الإلكتروني</span>
+                            <span class="text-[10px] font-black text-slate-800 flex items-center gap-1.5 overflow-hidden truncate">
+                                <i class="pi pi-envelope text-slate-300 text-[9px]"></i>
+                                {{ employee()!.coreProfile.email }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content: Tabs (Independently Scrollable with Sticky Header) -->
+            <div class="col-span-12 lg:col-span-9 h-full overflow-hidden">
+                <div class="bg-white rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/30 h-full flex flex-col overflow-hidden">
+                    <p-tabs [value]="0" class="custom-premium-tabs h-full flex flex-col">
+                        <p-tablist class="px-2 bg-slate-50/50 border-b border-slate-100 shrink-0">
+                            <p-tab value="0" class="!px-4 !py-3 font-black text-xs">
+                                <i class="pi pi-th-large ml-2 text-[10px]"></i> نظرة عامة
+                            </p-tab>
+                            <p-tab value="1" class="!px-4 !py-3 font-black text-xs">
+                                <i class="pi pi-user ml-2 text-[10px]"></i> البيانات الشخصية
+                            </p-tab>
+                            <p-tab value="2" class="!px-4 !py-3 font-black text-xs">
+                                <i class="pi pi-briefcase ml-2 text-[10px]"></i> البيانات الوظيفية
+                            </p-tab>
+                        </p-tablist>
+                        
+                        <p-tabpanels>
+                            <!-- Overview Tab -->
+                            <p-tabpanel value="0">
+                                <div class="p-4 space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white p-4 rounded-3xl border border-indigo-100/50 shadow-sm group hover:scale-[1.01] transition-transform duration-300">
+                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-indigo-50 rounded-full blur-xl group-hover:bg-indigo-100 transition-colors"></div>
+                                            <span class="text-indigo-600 text-[9px] font-black uppercase mb-1 block tracking-widest">إجمالي الراتب</span>
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-xl font-black text-slate-900">{{ currentCompensation()?.totalSalary | number }}</span>
+                                                <span class="text-[10px] font-bold text-slate-400">ريال</span>
+                                            </div>
+                                        </div>
+                                        <div class="relative overflow-hidden bg-gradient-to-br from-purple-50 to-white p-4 rounded-3xl border border-purple-100/50 shadow-sm group hover:scale-[1.01] transition-transform duration-300">
+                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-purple-50 rounded-full blur-xl group-hover:bg-purple-100 transition-colors"></div>
+                                            <span class="text-purple-600 text-[9px] font-black uppercase mb-1 block tracking-widest">المستندات</span>
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-xl font-black text-slate-900">{{ employee()?.documents?.length || 0 }}</span>
+                                                <span class="text-[10px] font-bold text-slate-400">مستندات</span>
+                                            </div>
+                                        </div>
+                                        <div class="relative overflow-hidden bg-gradient-to-br from-teal-50 to-white p-4 rounded-3xl border border-teal-100/50 shadow-sm group hover:scale-[1.01] transition-transform duration-300">
+                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-teal-50 rounded-full blur-xl group-hover:bg-teal-100 transition-colors"></div>
+                                            <span class="text-teal-600 text-[9px] font-black uppercase mb-1 block tracking-widest">رصيد الإجازات</span>
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-xl font-black text-slate-900">30</span>
+                                                <span class="text-[10px] font-bold text-slate-400">يوماً</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div
-                                        class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-100 dark:border-zinc-800 shadow-sm">
-                                        <p class="text-[10px] text-slate-500 mb-1">بدل السكن</p>
-                                        <p class="font-bold text-slate-800 dark:text-white font-mono">{{
-                                            currentCompensation()?.housingAllowance | number }}</p>
-                                    </div>
-                                    <div
-                                        class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-100 dark:border-zinc-800 shadow-sm">
-                                        <p class="text-[10px] text-slate-500 mb-1">بدل النقل</p>
-                                        <p class="font-bold text-slate-800 dark:text-white font-mono">{{
-                                            currentCompensation()?.transportAllowance | number }}</p>
-                                    </div>
-                                    <div
-                                        class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-100 dark:border-zinc-800 shadow-sm">
-                                        <p class="text-[10px] text-slate-500 mb-1">بدل طبي</p>
-                                        <p class="font-bold text-slate-800 dark:text-white font-mono">{{
-                                            currentCompensation()?.medicalAllowance | number }}</p>
+
+                                    <div class="space-y-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-1 h-4 bg-indigo-600 rounded-full"></div>
+                                            <h3 class="text-sm font-black text-slate-900">بدلات الراتب</h3>
+                                        </div>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                            <div class="p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                                <span class="text-[9px] font-black text-slate-400 mb-1 block uppercase tracking-widest">الأساسي</span>
+                                                <span class="text-base font-black text-slate-800">{{ currentCompensation()?.basicSalary | number }}</span>
+                                            </div>
+                                            <div class="p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                                <span class="text-[9px] font-black text-slate-400 mb-1 block uppercase tracking-widest">بدل السكن</span>
+                                                <span class="text-base font-black text-slate-800">{{ currentCompensation()?.housingAllowance | number }}</span>
+                                            </div>
+                                            <div class="p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                                <span class="text-[9px] font-black text-slate-400 mb-1 block uppercase tracking-widest">بدل الانتقال</span>
+                                                <span class="text-base font-black text-slate-800">{{ currentCompensation()?.transportAllowance | number }}</span>
+                                            </div>
+                                            <div class="p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                                <span class="text-[9px] font-black text-slate-400 mb-1 block uppercase tracking-widest">بدل طبيعة</span>
+                                                <span class="text-base font-black text-slate-800">{{ currentCompensation()?.medicalAllowance | number }}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-
-
                             </p-tabpanel>
 
-                            <!-- PERSONAL TAB -->
+                            <!-- Personal Details Tab -->
                             <p-tabpanel value="1">
-                                <div class="p-5">
-                                    <h4
-                                        class="font-bold text-base text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
-                                        <i class="pi pi-user text-blue-500"></i> البيانات الأساسية
-                                    </h4>
-                                    <div class="bg-slate-50 dark:bg-zinc-900/50 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 border border-slate-100 dark:border-zinc-800">
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الاسم
-                                                بالعربي</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                employee()?.coreProfile?.fullNameAr }}</p>
+                                <div class="p-4 space-y-8">
+                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 bg-slate-50/50 rounded-3xl border border-slate-100 text-right">
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">الاسم (عربي)</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ employee()?.coreProfile?.fullNameAr }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الاسم
-                                                بالإنجليزي</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white font-mono">{{
-                                                employee()?.coreProfile?.fullNameEn }}</p>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">الاسم (English)</span>
+                                            <p class="text-xs font-bold text-slate-900 tracking-tight">{{ employee()?.coreProfile?.fullNameEn }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">تاريخ
-                                                الميلاد</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white font-mono">{{
-                                                employee()?.coreProfile?.birthDate | date:'dd/MM/yyyy' }}</p>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">تاريخ الميلاد</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ employee()?.coreProfile?.birthDate | date:'dd/MM/yyyy' }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الهوية
-                                                الوطنية</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white font-mono">{{
-                                                employee()?.coreProfile?.nationalityId }}</p>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">الجنس</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ employee()?.coreProfile?.gender === 'M' ? 'ذكر' : 'أنثى' }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الجنس</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                employee()?.coreProfile?.gender === 'M' ? 'ذكر' : 'أنثى' }}</p>
-                                        </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الجنسية</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                employee()?.coreProfile?.nationalityName }}</p>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">الجنسية</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ employee()?.coreProfile?.nationalityName }}</p>
                                         </div>
                                     </div>
-
-                                    <div class="flex flex-col gap-4">
+                                    
+                                    <div class="space-y-10">
                                         <app-profile-addresses [employeeId]="employeeId()"></app-profile-addresses>
                                         <app-profile-dependents [employeeId]="employeeId()"></app-profile-dependents>
                                         <app-profile-emergency-contacts [employeeId]="employeeId()"></app-profile-emergency-contacts>
@@ -318,49 +246,29 @@
                                 </div>
                             </p-tabpanel>
 
-                            <!-- EMPLOYMENT TAB -->
+                            <!-- Job/Career Tab -->
                             <p-tabpanel value="2">
-                                <div class="p-5">
-                                    <h4
-                                        class="font-bold text-base text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
-                                        <i class="pi pi-briefcase text-teal-500"></i> تفاصيل الوظيفة
-                                    </h4>
-                                    <div class="bg-slate-50 dark:bg-zinc-900/50 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 border border-slate-100 dark:border-zinc-800">
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">المسمى
-                                                الوظيفي</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                employee()?.coreProfile?.jobTitle }}</p>
+                                <div class="p-4 space-y-8">
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 bg-slate-50/50 rounded-3xl border border-slate-100 text-right">
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">المسمى الوظيفي</span>
+                                            <p class="text-xs font-bold text-slate-900 leading-tight">{{ employee()?.coreProfile?.jobTitle }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">القسم</label>
-                                            <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                employee()?.coreProfile?.departmentName }}</p>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">القسم</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ employee()?.coreProfile?.departmentName }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">المدير
-                                                المباشر</label>
-                                            <div class="flex items-center gap-2">
-                                                <p-avatar icon="pi pi-user" shape="circle" size="small"
-                                                    styleClass="!w-5 !h-5 !text-[10px] bg-white"></p-avatar>
-                                                <p class="font-bold text-sm text-slate-800 dark:text-white">{{
-                                                    employee()?.coreProfile?.managerName || '-' }}</p>
-                                            </div>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">المدير</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ employee()?.coreProfile?.managerName || '---' }}</p>
                                         </div>
-                                        <div class="group">
-                                            <label
-                                                class="block text-slate-400 text-[10px] mb-1 group-hover:text-blue-600 transition-colors">الحالة</label>
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold"
-                                                [ngClass]="employee()?.coreProfile?.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
-                                                {{ employee()?.coreProfile?.status === 'ACTIVE' ? 'نشط' : 'غير نشط' }}
-                                            </span>
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">المباشرة</span>
+                                            <p class="text-xs font-bold text-slate-900">{{ (employee()!.coreProfile.hireDate || employee()!.coreProfile.joiningDate) | date:'MMMM yyyy' }}</p>
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col gap-4">
+                                    <div class="space-y-10">
                                         <app-profile-experience [employeeId]="employeeId()"></app-profile-experience>
                                         <app-profile-qualifications [employeeId]="employeeId()"></app-profile-qualifications>
                                         <app-profile-contracts [employeeId]="employeeId()"></app-profile-contracts>
@@ -368,13 +276,27 @@
                                     </div>
                                 </div>
                             </p-tabpanel>
-                    </p-tabpanels>
-                </p-tabs>
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <ng-template #noData>
-    <p class="text-slate-400 text-sm text-center py-4">لا توجد بيانات متاحة</p>
+    <div class="min-h-screen flex items-center justify-center bg-slate-50">
+        <div class="max-w-md w-full p-10 text-center space-y-6 bg-white rounded-[2.5rem] shadow-xl border border-slate-100">
+            <div class="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center text-slate-200 mx-auto">
+                <i class="pi pi-exclamation-circle text-5xl"></i>
+            </div>
+            <div class="space-y-2">
+                <h4 class="text-2xl font-black text-slate-900 leading-tight">لا توجد بيانات</h4>
+                <p class="text-slate-400 font-medium">لم يتم العثور على سجلات لهذا الموظف في النظام.</p>
+            </div>
+            <button routerLink="/employees" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200">
+                العودة لقائمة الموظفين
+            </button>
+        </div>
+    </div>
 </ng-template>

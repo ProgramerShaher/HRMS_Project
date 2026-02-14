@@ -1,0 +1,55 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <div class="glass-panel p-6 rounded-2xl flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">تفاصيل السلفة #{{ loan()?.loanId }}</h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1">معلومات كاملة عن السلفة والأقساط</p>
+    </div>
+    <button pButton icon="pi pi-arrow-right" label="رجوع" 
+            class="p-button-outlined rounded-xl" (click)="goBack()"></button>
+  </div>
+
+  @if (loan()) {
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="glass-panel p-4 rounded-xl">
+        <p class="text-sm text-slate-500 dark:text-zinc-400">المبلغ الإجمالي</p>
+        <p class="text-2xl font-bold text-blue-600 mt-1">{{ formatCurrency(loan()!.loanAmount) }}</p>
+      </div>
+      <div class="glass-panel p-4 rounded-xl">
+        <p class="text-sm text-slate-500 dark:text-zinc-400">المدفوع</p>
+        <p class="text-2xl font-bold text-emerald-600 mt-1">{{ formatCurrency(loan()!.paidAmount) }}</p>
+      </div>
+      <div class="glass-panel p-4 rounded-xl">
+        <p class="text-sm text-slate-500 dark:text-zinc-400">المتبقي</p>
+        <p class="text-2xl font-bold text-amber-600 mt-1">{{ formatCurrency(loan()!.remainingAmount) }}</p>
+      </div>
+      <div class="glass-panel p-4 rounded-xl">
+        <p class="text-sm text-slate-500 dark:text-zinc-400">الحالة</p>
+        <p-tag [value]="getStatusLabel(loan()!.status)" [severity]="getStatusSeverity(loan()!.status)" styleClass="mt-2"></p-tag>
+      </div>
+    </div>
+
+    <div class="glass-panel p-6 rounded-2xl">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">جدول الأقساط</h3>
+      <p-table [value]="loan()!.installments || []" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>رقم القسط</th>
+            <th>المبلغ</th>
+            <th>تاريخ الاستحقاق</th>
+            <th>الحالة</th>
+            <th>تاريخ الدفع</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-inst>
+          <tr>
+            <td>{{ inst.installmentNumber }}</td>
+            <td class="font-bold">{{ formatCurrency(inst.amount) }}</td>
+            <td>{{ formatDate(inst.dueDate) }}</td>
+            <td><p-tag [value]="inst.isPaid ? 'مدفوع' : 'غير مدفوع'" [severity]="inst.isPaid ? 'success' : 'warn'"></p-tag></td>
+            <td>{{ formatDate(inst.paidDate) }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  }
+</div>

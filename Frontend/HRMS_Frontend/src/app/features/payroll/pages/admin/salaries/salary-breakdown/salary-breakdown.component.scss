@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+@media print {
+  app-action-buttons {
+    display: none !important;
+  }
+}

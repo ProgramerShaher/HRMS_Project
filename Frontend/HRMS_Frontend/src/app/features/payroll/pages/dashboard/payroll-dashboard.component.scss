@@ -1,0 +1,99 @@
+:host {
+  display: block;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
+    background: rgba(255, 255, 255, 0.85);
+  }
+}
+
+.luxury-gradient-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.luxury-gradient-emerald {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.luxury-gradient-amber {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.luxury-gradient-rose {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.glow-blue { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+.glow-emerald { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+.glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+.glow-rose { box-shadow: 0 0 20px rgba(244, 63, 94, 0.3); }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+:host-context(.dark) {
+  .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      background: rgba(30, 41, 59, 0.85);
+    }
+  }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-bottom {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+.slide-in-from-bottom {
+  animation: slide-in-bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}

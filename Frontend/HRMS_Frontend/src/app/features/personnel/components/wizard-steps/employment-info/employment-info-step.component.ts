@@ -102,9 +102,8 @@ export class EmploymentInfoStepComponent implements OnInit {
         documentTypeId: 0,
         documentNumber: '',
         expiryDate: '',
-        fileName: '',
         filePath: '',
-        documentTypeName: '' // Optional for UI display
+        // documentTypeName: '' // Optional for UI display
     });
     this.onChange();
   }
@@ -123,9 +122,7 @@ export class EmploymentInfoStepComponent implements OnInit {
       this.docFileSelect.emit(this.fileMap);
       
       // Update fileName for UI feedback (optional)
-      if (this.data.documents[index]) {
-        this.data.documents[index].fileName = file.name;
-      }
+
     }
   }
 

@@ -1,156 +1,120 @@
-<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
-    <!-- Header -->
-    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
-        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
-            <i class="pi pi-phone text-red-500 text-sm"></i>
-            جهات الطوارئ
-        </h3>
-        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showAddDialog()"></button>
+<p-toast position="top-center"></p-toast>
+<div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] border border-slate-200/60 shadow-lg p-4 relative group">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shadow-sm">
+                <i class="pi pi-phone text-base font-bold"></i>
+            </div>
+            <h3 class="text-base font-black text-slate-900">جهات اتصال الطوارئ</h3>
+        </div>
+        <button (click)="showAddDialog()" 
+            class="flex items-center gap-1.5 px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-md transition-all active:scale-95 text-[10px] font-bold">
+            <i class="pi pi-plus"></i>
+            إضافة جهة اتصال
+        </button>
     </div>
-
-    <!-- Table -->
-    <p-table [value]="contacts()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
-        <ng-template pTemplate="header">
-            <tr class="text-xs text-slate-500 bg-slate-50/50">
-                <th class="!p-2 font-medium">الاسم</th>
-                <th class="!p-2 font-medium">القرابة</th>
-                <th class="!p-2 font-medium">أرقام التواصل</th>
-                <th class="!p-2 w-16 text-center"></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-contact>
-            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
-                <td class="!p-2 font-bold text-slate-700">{{ contact.contactNameAr }}</td>
-                <td class="!p-2">
-                    <span class="px-1.5 py-0.5 rounded bg-red-50 text-red-600 text-[10px] font-bold border border-red-100">{{ contact.relationship }}</span>
-                </td>
-                <td class="!p-2">
-                    <div class="flex flex-col text-[10px] text-slate-500 font-mono dir-ltr">
-                        <span class="flex items-center gap-1 justify-end"><i class="pi pi-phone text-[8px]"></i> {{ contact.phonePrimary }}</span>
-                        <span *ngIf="contact.phoneSecondary" class="flex items-center gap-1 justify-end"><i class="pi pi-mobile text-[8px]"></i> {{ contact.phoneSecondary }}</span>
-                    </div>
-                </td>
-                <td class="!p-2 text-center">
-                    <div class="flex justify-center gap-1">
-                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-secondary !w-6 !h-6 !p-0 !text-xs text-slate-400 hover:text-blue-600" (click)="showEditDialog(contact)"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-xs opacity-50 hover:opacity-100" (click)="delete(contact.emergencyContactId)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="4" class="text-center py-4 text-slate-400 text-xs">
-                    لا توجد جهات اتصال
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    
+    <div class="space-y-4">
+        <div *ngIf="contacts().length > 0" class="overflow-x-auto rounded-xl border border-slate-100">
+            <table class="w-full text-right">
+                <thead class="bg-slate-50/80 border-b border-slate-100">
+                    <tr>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الاسم</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الصلة</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">رقم الهاتف</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    <tr *ngFor="let contact of contacts()" class="hover:bg-slate-50/50 transition-colors group/row">
+                        <td class="px-3 py-2">
+                            <span class="text-xs font-black text-slate-900">{{ contact.contactNameAr }}</span>
+                        </td>
+                        <td class="px-3 py-2">
+                            <span class="text-[10px] font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{{ contact.relationship }}</span>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1 text-orange-600 font-black font-mono text-[10px]">
+                                <i class="pi pi-mobile text-[9px]"></i>
+                                <span>{{ contact.phonePrimary }}</span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1">
+                                <button (click)="showEditDialog(contact)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="pi pi-pencil text-[10px]"></i>
+                                </button>
+                                <button (click)="delete(contact.contactId)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-red-600 hover:bg-red-50 transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="pi pi-trash text-[10px]"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<!-- Premium Dialog -->
-<p-dialog 
-    [(visible)]="displayDialog" 
-    [header]="isEditMode ? 'تحديث بيانات جهة الاتصال' : 'إضافة جهة اتصال جديدة'" 
+<!-- Premium Dialog Style -->
+<p-dialog [(visible)]="displayDialog" 
+    [header]="isEditMode ? 'تعديل جهة اتصال طوارئ' : 'إضافة جهة اتصال طوارئ'" 
     [modal]="true" 
-    [style]="{width: '500px'}" 
-    styleClass="p-fluid rounded-2xl overflow-hidden"
-    [draggable]="false"
+    [style]="{width: '500px', borderRadius: '24px', overflow: 'hidden'}" 
+    [draggable]="false" 
     [resizable]="false"
-    [closable]="true">
+    styleClass="premium-dialog">
     
-    <ng-template pTemplate="closeicon">
-        <i class="pi pi-times text-slate-400 hover:text-slate-600"></i>
-    </ng-template>
-
-    <div class="mt-1">
-        <form [formGroup]="contactForm" class="flex flex-col gap-5">
+    <div class="pt-6 px-1 text-right">
+        <form [formGroup]="contactForm" class="space-y-6">
             
-            <!-- Name & Relationship -->
-            <div class="grid grid-cols-1 gap-5">
-                <span class="p-float-label w-full">
-                    <input 
-                        pInputText 
-                        id="contactNameAr" 
-                        formControlName="contactNameAr" 
-                        class="w-full text-lg font-bold p-3 rounded-xl border-slate-200 dark:border-zinc-700 focus:border-red-500 dark:focus:border-red-400"
-                        [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('contactNameAr')?.invalid}" />
-                    <label for="contactNameAr" class="text-slate-500">اسم جهة الاتصال (عربي فقط) <span class="text-red-500">*</span></label>
-                </span>
-                <small class="text-red-500 -mt-4 text-xs" *ngIf="submitted && contactForm.get('contactNameAr')?.errors?.['pattern']">يجب استخدام الأحرف العربية فقط</small>
-                
-                <span class="p-float-label w-full">
-                    <input 
-                        pInputText 
-                        id="relationship" 
-                        formControlName="relationship" 
-                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700"
-                        [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('relationship')?.invalid}" />
-                    <label for="relationship" class="text-slate-500">صلة القرابة (مثال: أب، أخ) <span class="text-red-500">*</span></label>
-                </span>
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">الاسم الكامل لجهة الاتصال</label>
+                <div class="relative">
+                    <i class="pi pi-user absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText formControlName="fullNameAr" placeholder="اسم الشخص المسؤول..." 
+                        class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-orange-500/20 text-right" />
+                </div>
             </div>
 
-            <!-- Phone Numbers -->
-            <div class="bg-slate-50 dark:bg-zinc-900 p-4 rounded-xl border border-slate-100 dark:border-zinc-800 grid grid-cols-2 gap-4">
-                <div class="col-span-2 text-xs font-bold text-slate-500 dark:text-zinc-400 mb-1">أرقام التواصل (أرقام فقط)</div>
-                
-                <span class="p-float-label w-full">
-                    <input 
-                        pInputText 
-                        id="phonePrimary" 
-                        formControlName="phonePrimary" 
-                        class="w-full font-mono text-left p-3 rounded-xl border-slate-200 dark:border-zinc-700"
-                        dir="ltr"
-                        [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('phonePrimary')?.invalid}" />
-                    <label for="phonePrimary" class="text-slate-500">الجوال الأساسي <span class="text-red-500">*</span></label>
-                </span>
-                
-                <span class="p-float-label w-full">
-                    <input 
-                        pInputText 
-                        id="phoneSecondary" 
-                        formControlName="phoneSecondary" 
-                        class="w-full font-mono text-left p-3 rounded-xl border-slate-200 dark:border-zinc-700"
-                        dir="ltr" />
-                    <label for="phoneSecondary" class="text-slate-500">رقم بديل (اختياري)</label>
-                </span>
-                
-                <small class="col-span-2 text-red-500 text-xs" *ngIf="submitted && (contactForm.get('phonePrimary')?.errors?.['pattern'] || contactForm.get('phoneSecondary')?.errors?.['pattern'])">الأرقام يجب أن تحتوي على خانات رقمية فقط</small>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-right">
+                <div class="group text-right">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">صلة القرابة</label>
+                    <div class="relative text-right">
+                        <i class="pi pi-heart absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input pInputText formControlName="relationship" placeholder="مثلاً: أخ، والد، صديق" 
+                            class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-orange-500/20 text-right" />
+                    </div>
+                </div>
+
+                <div class="group text-right">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">رقم الهاتف</label>
+                    <div class="relative text-right">
+                        <i class="pi pi-mobile absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input pInputText formControlName="mobile" placeholder="7XXXXXXXX" 
+                            class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-orange-500/20 font-mono" />
+                    </div>
+                </div>
             </div>
-            
-            <!-- Address -->
-            <span class="p-float-label w-full">
-                <input 
-                    pInputText 
-                    id="address" 
-                    formControlName="address" 
-                    class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                <label for="address" class="text-slate-500">العنوان (اختياري)</label>
-            </span>
 
         </form>
     </div>
 
     <ng-template pTemplate="footer">
-        <div class="flex justify-between items-center w-full pt-4 border-t border-slate-100 dark:border-zinc-800">
-            <button 
-                pButton 
-                label="إلغاء" 
-                icon="pi pi-times" 
-                class="p-button-text p-button-secondary rounded-xl" 
-                (click)="displayDialog = false">
+        <div class="flex items-center justify-between w-full pt-4 border-t border-slate-100 mt-4 text-right">
+            <button (click)="displayDialog = false" 
+                class="px-6 py-2 text-slate-400 hover:text-slate-600 font-semibold transition-colors">
+                إلغاء
             </button>
-            <button 
-                pButton 
-                label="حفظ البيانات" 
-                icon="pi pi-check" 
-                class="p-button-primary rounded-xl px-6" 
-                (click)="save()" 
-                [loading]="loading()">
+            <button (click)="save()" [disabled]="loading()"
+                class="flex items-center gap-2 px-8 py-2.5 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white rounded-2xl shadow-lg shadow-orange-200 transition-all font-bold">
+                <i class="pi pi-check" *ngIf="!loading()"></i>
+                <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+                <span>حفظ جهة الاتصال</span>
             </button>
         </div>
     </ng-template>
 </p-dialog>
 
-<p-confirmDialog [style]="{width: '400px'}" [rtl]="true" styleClass="premium-confirm-dialog"></p-confirmDialog>
-<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '400px'}" [rtl]="true"></p-confirmDialog>
+

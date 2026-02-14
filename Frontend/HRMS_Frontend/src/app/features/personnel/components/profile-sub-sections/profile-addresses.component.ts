@@ -9,7 +9,9 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SelectModule } from 'primeng/select';
 import { EmployeeService } from '../../services/employee.service';
+import { LookupService, Country, City } from '../../../../core/services/lookup.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-addresses',
@@ -23,8 +25,9 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     InputTextModule,
     ToastModule,
     ConfirmDialogModule,
-    SelectModule
-  ],
+    SelectModule,
+    Tag
+],
   templateUrl: './profile-addresses.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -33,6 +36,8 @@ export class ProfileAddressesComponent implements OnInit {
   
   addresses = signal<any[]>([]);
   loading = signal<boolean>(false);
+  countries = signal<Country[]>([]);
+  cities = signal<City[]>([]);
   
   displayDialog = false;
   submitted = false;
@@ -45,6 +50,7 @@ export class ProfileAddressesComponent implements OnInit {
                                          // Addresses usually have an ID.
                                          
   private employeeService = inject(EmployeeService);
+  private lookupService = inject(LookupService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
@@ -76,8 +82,21 @@ export class ProfileAddressesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadLookups();
     if (this.employeeId) {
       this.loadData();
+    }
+  }
+
+  loadLookups() {
+    this.lookupService.getCountries().subscribe(c => this.countries.set(c));
+  }
+
+  onCountryChange(countryId: number) {
+    if (countryId) {
+      this.lookupService.getCities(countryId).subscribe(c => this.cities.set(c));
+    } else {
+      this.cities.set([]);
     }
   }
 
@@ -103,8 +122,10 @@ export class ProfileAddressesComponent implements OnInit {
   showEditDialog(addr: any) {
     this.isEditMode = true;
     this.selectedAddressId = addr.addressId;
+    this.onCountryChange(addr.countryId || 1);
     this.addressForm.patchValue({
         addressType: addr.addressType,
+        countryId: addr.countryId,
         cityId: addr.cityId,
         street: addr.street,
         buildingNumber: addr.buildingNumber,
@@ -155,8 +176,10 @@ export class ProfileAddressesComponent implements OnInit {
               this.displayDialog = false;
               this.loadData();
             },
-            error: () => {
-              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+            error: (err) => {
+              console.error('Save Error:', err);
+              const errorMessage = err.error?.message || err.error?.detail || 'حدث خطأ أثناء الحفظ';
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorMessage });
               this.loading.set(false);
             }
         });

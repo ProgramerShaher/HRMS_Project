@@ -18,4 +18,5 @@ export const routes: Routes = [
     { path: 'employees', canActivate: [authGuard], loadChildren: () => import('./features/personnel/personnel.routes').then(m => m.PERSONNEL_ROUTES) },
     { path: 'leaves', canActivate: [authGuard], loadChildren: () => import('./features/leaves/leaves.routes').then(m => m.leavesRoutes) },
     { path: 'attendance', canActivate: [authGuard], loadChildren: () => import('./features/attendance/attendance.routes').then(m => m.ATTENDANCE_ROUTES) },
+    { path: 'payroll', canActivate: [authGuard], loadChildren: () => import('./features/payroll/payroll.routes').then(m => m.PAYROLL_ROUTES) },
 ];
