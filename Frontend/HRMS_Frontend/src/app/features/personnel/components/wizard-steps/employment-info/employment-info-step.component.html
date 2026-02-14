@@ -1,159 +1,188 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
 
-    <!-- Department -->
-    <span class="p-float-label w-full">
-        <p-select 
-            inputId="dept"
-            [options]="departments" 
-            [(ngModel)]="data.departmentId" 
-            (onChange)="onChange()" 
-            optionLabel="label" 
-            optionValue="value" 
-            styleClass="w-full" 
-            class="w-full">
-        </p-select>
-        <label for="dept">القسم / الإدارة <span class="text-red-500">*</span></label>
-    </span>
+    <!-- Clean Header Section -->
+    <div
+        class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-5">
+            <div
+                class="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center text-violet-600 dark:text-violet-400">
+                <i class="pi pi-briefcase text-2xl"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">البيانات الوظيفية</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                    Employment & Position Architecture
+                </p>
+            </div>
+        </div>
 
-    <!-- Job -->
-    <span class="p-float-label w-full">
-        <p-select 
-            inputId="job"
-            [options]="jobs" 
-            [(ngModel)]="data.jobId" 
-            (onChange)="onChange()" 
-            optionLabel="label" 
-            optionValue="value" 
-            styleClass="w-full" 
-            class="w-full">
-        </p-select>
-        <label for="job">الوظيفة <span class="text-red-500">*</span></label>
-    </span>
-
-    <!-- Manager (Optional) -->
-    <span class="p-float-label w-full">
-        <input 
-            pInputText 
-            type="number" 
-            id="manager"
-            [(ngModel)]="data.managerId" 
-            (blur)="onChange()" 
-            class="w-full" />
-        <label for="manager">المدير المباشر (رقم الموظف)</label>
-    </span>
-
-    <!-- Hire Date -->
-    <span class="p-float-label w-full">
-        <p-datePicker 
-            inputId="hireDate"
-            [(ngModel)]="data.hireDate" 
-            (onSelect)="onChange()" 
-            dateFormat="dd/mm/yy" 
-            [showIcon]="true" 
-            styleClass="w-full" 
-            class="w-full">
-        </p-datePicker>
-        <label for="hireDate">تاريخ التعيين <span class="text-red-500">*</span></label>
-    </span>
-
-    <!-- Professional License -->
-    <span class="p-float-label w-full">
-        <input 
-            pInputText 
-            id="license"
-            [(ngModel)]="data.licenseNumber" 
-            (blur)="onChange()" 
-            class="w-full" />
-        <label for="license">رقم الرخصة المهنية</label>
-    </span>
-
-    <!-- License Expiry -->
-    <span class="p-float-label w-full">
-        <p-datePicker 
-            inputId="licenseDate"
-            [(ngModel)]="data.licenseExpiryDate" 
-            (onSelect)="onChange()" 
-            dateFormat="dd/mm/yy" 
-            [showIcon]="true" 
-            styleClass="w-full" 
-            class="w-full">
-        </p-datePicker>
-        <label for="licenseDate">تاريخ انتهاء الرخصة</label>
-    </span>
-
-    <!-- Specialty -->
-    <span class="p-float-label w-full lg:col-span-3">
-        <input 
-            pInputText 
-            id="specialty"
-            [(ngModel)]="data.specialty" 
-            (blur)="onChange()" 
-            class="w-full" />
-        <label for="specialty">التخصص الدقيق</label>
-    </span>
-
-</div>
-
-<!-- Documents Section -->
-<div class="mt-8 border-t border-slate-100 dark:border-zinc-800 pt-6">
-    <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
-            <i class="pi pi-file text-blue-600"></i>
-            المستندات والمرفقات
-        </h3>
-        <button pButton label="إضافة مستند" icon="pi pi-plus" (click)="addDocument()" class="p-button-sm p-button-outlined"></button>
+        <div class="flex items-center gap-3">
+            <span
+                class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg border border-slate-100 dark:border-slate-700">
+                Contract & Assignment
+            </span>
+        </div>
     </div>
 
-    <div *ngIf="data.documents && data.documents.length > 0; else noDocs">
-        <div *ngFor="let doc of data.documents; let i = index" class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4 items-end bg-slate-50 dark:bg-zinc-900/50 p-4 rounded-lg border border-slate-200 dark:border-zinc-700">
-            
-            <div class="md:col-span-3 flex flex-col gap-2">
-                <label class="text-xs">نوع المستند</label>
-                <p-select [options]="documentTypes" [(ngModel)]="doc.documentTypeId" (ngModelChange)="onChange()" optionLabel="label" optionValue="value" placeholder="اختر النوع" styleClass="w-full p-inputtext-sm"></p-select>
+    <div
+        class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+
+        <!-- Main Form Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Department -->
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">القسم / الإدارة <span
+                        class="text-red-500">*</span></label>
+                <p-select inputId="dept" [options]="departments" [(ngModel)]="data.departmentId" (onChange)="onChange()"
+                    optionLabel="label" optionValue="value" placeholder="اختر القسم"
+                    styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all">
+                </p-select>
             </div>
 
-            <div class="md:col-span-3 flex flex-col gap-2">
-                <label class="text-xs">رقم المستند</label>
-                <input pInputText [(ngModel)]="doc.documentNumber" (ngModelChange)="onChange()" class="p-inputtext-sm" />
+            <!-- Job -->
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الوظيفة <span
+                        class="text-red-500">*</span></label>
+                <p-select inputId="job" [options]="jobs" [(ngModel)]="data.jobId" (onChange)="onChange()"
+                    optionLabel="label" optionValue="value" placeholder="اختر الوظيفة"
+                    styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all">
+                </p-select>
             </div>
 
-            <div class="md:col-span-3 flex flex-col gap-2">
-                <label class="text-xs">تاريخ الانتهاء</label>
-                <p-datePicker [(ngModel)]="doc.expiryDate" (ngModelChange)="onChange()" styleClass="w-full p-inputtext-sm" appendTo="body"></p-datePicker>
+            <!-- Manager -->
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">المدير المباشر (رقم
+                    الموظف)</label>
+                <input pInputText type="number" id="manager" [(ngModel)]="data.managerId" (blur)="onChange()"
+                    placeholder="Ex. 1002"
+                    class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
 
-            <div class="md:col-span-2 flex flex-col gap-2">
-                <label class="text-xs">الملف (PDF/IMG)</label>
-                <div class="flex items-center gap-2">
-                    <p-fileUpload 
-                        mode="basic" 
-                        chooseLabel="ملف"
-                        chooseIcon="pi pi-upload"
-                        maxFileSize="2000000" 
-                        (onSelect)="onDocFileSelect($event, i)" 
-                        styleClass="p-button-outlined p-button-sm !text-xs !w-full">
-                    </p-fileUpload>
+            <!-- Hire Date -->
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ التعيين <span
+                        class="text-red-500">*</span></label>
+                <p-datePicker inputId="hireDate" [(ngModel)]="data.hireDate" (onSelect)="onChange()"
+                    dateFormat="dd/mm/yy" [showIcon]="true" styleClass="w-full"
+                    inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all">
+                </p-datePicker>
+            </div>
 
+            <!-- Professional License -->
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">رقم الرخصة المهنية</label>
+                <input pInputText id="license" [(ngModel)]="data.licenseNumber" (blur)="onChange()"
+                    placeholder="رقم الترخيص"
+                    class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
+            </div>
+
+            <!-- License Expiry -->
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ انتهاء
+                    الرخصة</label>
+                <p-datePicker inputId="licenseDate" [(ngModel)]="data.licenseExpiryDate" (onSelect)="onChange()"
+                    dateFormat="dd/mm/yy" [showIcon]="true" styleClass="w-full"
+                    inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all">
+                </p-datePicker>
+            </div>
+
+            <!-- Specialty -->
+            <div class="space-y-2 lg:col-span-3">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">التخصص الدقيق</label>
+                <input pInputText id="specialty" [(ngModel)]="data.specialty" (blur)="onChange()"
+                    placeholder="التخصص الفرعي..."
+                    class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <i class="pi pi-file text-sm"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-white">المستندات والمرفقات المتعلقة بالوظيفة
+                    </h3>
                 </div>
+                <button pButton label="إضافة مستند" icon="pi pi-plus" (click)="addDocument()"
+                    class="p-button-outlined p-button-secondary !text-xs !font-bold !rounded-lg !px-4 !py-2 hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-300 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"></button>
             </div>
 
-            <div class="md:col-span-1 flex justify-end">
-                <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="removeDocument(i)"></button>
+            <div class="space-y-4">
+                <ng-container *ngIf="data.documents && data.documents.length > 0; else noDocs">
+                    <div *ngFor="let doc of data.documents; let i = index"
+                        class="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-slate-700 flex flex-col gap-4 relative group">
+
+                        <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button pButton icon="pi pi-trash"
+                                class="p-button-rounded p-button-text p-button-danger !w-8 !h-8"
+                                (click)="removeDocument(i)"></button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                            <div class="md:col-span-3 space-y-1.5">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">نوع
+                                    المستند</label>
+                                <p-select [options]="documentTypes" [(ngModel)]="doc.documentTypeId"
+                                    (ngModelChange)="onChange()" optionLabel="label" optionValue="value"
+                                    placeholder="اختر النوع"
+                                    styleClass="w-full !rounded-lg !h-10 !text-xs shadow-none !border-slate-300 dark:!border-slate-700"></p-select>
+                            </div>
+
+                            <div class="md:col-span-3 space-y-1.5">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">رقم
+                                    المستند</label>
+                                <input pInputText [(ngModel)]="doc.documentNumber" (ngModelChange)="onChange()"
+                                    class="w-full !h-10 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-xs" />
+                            </div>
+
+                            <div class="md:col-span-3 space-y-1.5">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ
+                                    الانتهاء</label>
+                                <p-datePicker [(ngModel)]="doc.expiryDate" (ngModelChange)="onChange()" appendTo="body"
+                                    styleClass="w-full"
+                                    inputStyleClass="!h-10 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-xs"></p-datePicker>
+                            </div>
+
+                            <div class="md:col-span-3 space-y-1.5">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الملف
+                                    (PDF/IMG)</label>
+                                <div class="flex items-center gap-2">
+                                    <p-fileUpload mode="basic" chooseLabel="رفع ملف" chooseIcon="pi pi-upload"
+                                        maxFileSize="2000000" (onSelect)="onDocFileSelect($event, i)"
+                                        styleClass="p-button-outlined p-button-secondary !text-xs !w-full !h-10 !rounded-lg">
+                                    </p-fileUpload>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-template #noDocs>
+                    <div
+                        class="flex flex-col items-center justify-center py-10 px-4 bg-slate-50 dark:bg-slate-800/20 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 text-center">
+                        <div
+                            class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
+                            <i class="pi pi-folder-open text-xl"></i>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-4">لا توجد مستندات وظيفية
+                            مضافة حالياً</p>
+                        <button pButton label="إضافة مستند جديد" icon="pi pi-plus"
+                            class="p-button-sm p-button-outlined !rounded-lg !text-xs" (click)="addDocument()"></button>
+                    </div>
+                </ng-template>
             </div>
         </div>
     </div>
-    
-    <ng-template #noDocs>
-        <div class="text-center py-8 text-slate-400 bg-slate-50 dark:bg-zinc-900 rounded-lg border border-dashed border-slate-300 dark:border-zinc-700">
-            <i class="pi pi-folder-open text-3xl mb-2"></i>
-            <p>لا توجد مستندات مضافة حالياً</p>
-            <button pButton label="إضافة مستند جديد" class="p-button-link p-button-sm" (click)="addDocument()"></button>
-        </div>
-    </ng-template>
-</div>
 
-<!-- Navigation Buttons -->
-<div class="flex justify-between mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
-    <button pButton label="السابق" icon="pi pi-arrow-right" class="p-button-outlined" (click)="onPrev()"></button>
-    <button pButton label="التالي: البيانات المالية" icon="pi pi-arrow-left" iconPos="left" (click)="onNext()"></button>
+    <!-- Navigation Buttons -->
+    <div class="flex justify-between mt-8 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <button pButton label="السابق" icon="pi pi-arrow-right"
+            class="p-button-outlined p-button-secondary !rounded-lg !px-6" (click)="onPrev()"></button>
+        <button pButton label="التالي: البيانات المالية" icon="pi pi-arrow-left" iconPos="left"
+            class="!bg-blue-600 !border-blue-600 !rounded-lg !px-6" (click)="onNext()"></button>
+    </div>
 </div>

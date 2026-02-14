@@ -50,12 +50,16 @@ import { FamilyStepComponent } from '../../components/wizard-steps/family-prefer
     DocumentsStepComponent,
     FamilyStepComponent,
 
-],
+  ],
   providers: [MessageService],
   templateUrl: './employee-wizard.component.html',
   styleUrls: ['./employee-wizard.component.scss']
 })
 export class EmployeeWizardComponent implements OnInit {
+  // Helpers for templates
+  Math = Math;
+  mathRound = Math.round;
+
   // Services
   private employeeService = inject(EmployeeService);
   private validationService = inject(EmployeeValidationService);
@@ -86,7 +90,7 @@ export class EmployeeWizardComponent implements OnInit {
     nationalityId: 0,
     nationalId: '',
     maritalStatus: '',
-    
+
     // Employment Info
     departmentId: 0,
     jobId: 0,
@@ -96,17 +100,17 @@ export class EmployeeWizardComponent implements OnInit {
     licenseNumber: '',
     licenseExpiryDate: undefined,
     specialty: '',
-    
+
     // Financial Info
     basicSalary: 0,
     housingAllowance: 0,
     transportAllowance: 0,
     medicalAllowance: 0,
-    
+
     // Bank Info
     bankId: undefined,
     ibanNumber: '',
-    
+
     // Arrays
     qualifications: [],
     experiences: [],
@@ -128,16 +132,16 @@ export class EmployeeWizardComponent implements OnInit {
   // Computed Properties
   totalSalary = computed(() => {
     const data = this.employeeData();
-    return (data.basicSalary || 0) + 
-           (data.housingAllowance || 0) + 
-           (data.transportAllowance || 0) + 
-           (data.medicalAllowance || 0);
+    return (data.basicSalary || 0) +
+      (data.housingAllowance || 0) +
+      (data.transportAllowance || 0) +
+      (data.medicalAllowance || 0);
   });
 
   canSave = computed(() => {
     const data = this.employeeData();
     const required = this.validationService.getRequiredFields();
-    
+
     // Check if all required fields are filled
     return required.every(field => {
       const value = (data as any)[field];
@@ -172,7 +176,7 @@ export class EmployeeWizardComponent implements OnInit {
    */
   loadEmployeeData(id: number): void {
     this.loading.set(true);
-    
+
     this.employeeService.getFullProfile(id).subscribe({
       next: (profile: any) => {
         // Helper to get property regardless of casing
@@ -205,7 +209,7 @@ export class EmployeeWizardComponent implements OnInit {
           nationalityId: get(core, 'nationalityId') || 0,
           nationalId: get(core, 'nationalId') || '',
           maritalStatus: get(core, 'maritalStatus') || '',
-          
+
           // Employment Info
           departmentId: get(core, 'deptId') || get(core, 'departmentId') || 0,
           jobId: get(core, 'jobId') || 0,
@@ -215,7 +219,7 @@ export class EmployeeWizardComponent implements OnInit {
           licenseNumber: get(core, 'licenseNumber') || '',
           licenseExpiryDate: get(core, 'licenseExpiryDate') ? new Date(get(core, 'licenseExpiryDate')) : undefined,
           specialty: get(core, 'specialty') || '',
-          
+
           // Financial Info
           basicSalary: get(comp, 'basicSalary') || 0,
           housingAllowance: get(comp, 'housingAllowance') || 0,
@@ -225,7 +229,7 @@ export class EmployeeWizardComponent implements OnInit {
           // Bank (from compensation or separate if available)
           bankId: get(comp, 'bankId'),
           ibanNumber: get(comp, 'ibanNumber') || '',
-          
+
           // Collections - CRITICAL: Map to new property names
           qualifications: mapCollection(get(profile, 'qualifications'), q => ({
             qualificationId: get(q, 'qualificationId'),
@@ -454,22 +458,22 @@ export class EmployeeWizardComponent implements OnInit {
         // Extract ID from Result<T> wrapper
         // The backend returns Result<int> for create and Result<bool> for update
         const id = this.isEditMode() ? this.employeeId()! : (response.data || response);
-        
+
         if (typeof id !== 'number' && !this.isEditMode()) {
-            console.warn('ID from backend is not a number:', id);
+          console.warn('ID from backend is not a number:', id);
         }
 
         const employeeId = Number(id);
-        
+
         // Handle file uploads
         this.handleFileUploads(employeeId);
       },
       error: (err: any) => {
         this.loading.set(false);
         this.messageService.clear();
-        
+
         let errorMessage = 'حدث خطأ أثناء حفظ البيانات';
-        
+
         // Parse validation errors from backend
         if (err.status === 400 && err.error?.errors) {
           const errors = Object.entries(err.error.errors)
@@ -507,14 +511,14 @@ export class EmployeeWizardComponent implements OnInit {
     // 2. Documents
     const documents = this.employeeData().documents || [];
     const docFiles = this.documentFiles();
-    
+
     documents.forEach((doc, index) => {
       const file = docFiles.get(index);
       if (file && doc.documentTypeId) {
-        const expiryDate = doc.expiryDate 
-          ? new Date(doc.expiryDate).toISOString() 
+        const expiryDate = doc.expiryDate
+          ? new Date(doc.expiryDate).toISOString()
           : undefined;
-        
+
         uploadTasks.push(
           this.employeeService.uploadDocument(
             employeeId,
@@ -530,7 +534,7 @@ export class EmployeeWizardComponent implements OnInit {
     // 3. Qualification Files
     const qualifications = this.employeeData().qualifications || [];
     const qualFiles = this.qualificationFiles();
-    
+
     qualifications.forEach((qual, index) => {
       const file = qualFiles.get(index);
       if (file) {
@@ -543,7 +547,7 @@ export class EmployeeWizardComponent implements OnInit {
     // 4. Certification Files
     const certifications = this.employeeData().certifications || [];
     const certFiles = this.certificationFiles();
-    
+
     certifications.forEach((cert, index) => {
       const file = certFiles.get(index);
       if (file) {
@@ -557,7 +561,7 @@ export class EmployeeWizardComponent implements OnInit {
     if (uploadTasks.length > 0) {
       Promise.allSettled(uploadTasks).then((results) => {
         const failed = results.filter(r => r.status === 'rejected').length;
-        
+
         this.loading.set(false);
         this.messageService.clear();
 

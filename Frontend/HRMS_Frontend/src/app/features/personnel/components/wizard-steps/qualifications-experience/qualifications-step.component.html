@@ -1,53 +1,80 @@
-<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
-  
-  <!-- Section Header Card -->
-  <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-[2.5rem] p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden group">
-    <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-    <div class="relative z-10 flex items-center gap-6">
-      <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-        <i class="pi pi-graduation-cap text-3xl"></i>
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+
+  <!-- Clean Header Section -->
+  <div
+    class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="flex items-center gap-5">
+      <div
+        class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
+        <i class="pi pi-graduation-cap text-2xl"></i>
       </div>
       <div>
-        <h2 class="text-2xl font-black tracking-tight">المؤهلات والخبرات</h2>
-        <p class="text-sm text-blue-100/80 font-medium">سجل السيرة الذاتية والمؤهلات العلمية والشهادات المهنية</p>
+        <h2 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">السجل الأكاديمي والمهني</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+          توثيق المسار العلمي والخبرات العملية والشهادات الدولية
+        </p>
       </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <span
+        class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg border border-slate-100 dark:border-slate-700">
+        Professional Portfolio
+      </span>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
     <!-- Qualifications Section -->
-    <section class="space-y-4">
-      <app-dynamic-array-list
-        [items]="data.qualifications || []"
-        title="المؤهلات العلمية"
-        itemLabel="مؤهل"
-        icon="pi pi-book"
-        [columns]="qualColumns"
-        (save)="onSaveQualification($event)"
+    <section>
+      <app-dynamic-array-list [items]="data.qualifications || []" title="المؤهلات العلمية" itemLabel="مؤهل"
+        icon="pi pi-book" [columns]="qualColumns" (save)="onSaveQualification($event)"
         (delete)="onDeleteQualification($event)">
-        
+
         <ng-template #formTemplate let-item>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الدرجة العلمية <span class="text-red-500">*</span></label>
-              <input pInputText [(ngModel)]="item.degreeType" placeholder="بكالوريوس، ماجستير..." class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-1">
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الدرجة العلمية <span
+                  class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.degreeType" placeholder="بكالوريوس، ماجستير..."
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">التخصص <span class="text-red-500">*</span></label>
-              <input pInputText [(ngModel)]="item.majorAr" placeholder="مجال الدراسة" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">التخصص الدراسي <span
+                  class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.majorAr" placeholder="نظم معلومات، محاسبة..."
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">المؤسسة التعليمية</label>
-              <input pInputText [(ngModel)]="item.universityAr" placeholder="اسم الجامعة" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm" />
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">المؤسسة التعليمية</label>
+              <input pInputText [(ngModel)]="item.universityAr" placeholder="اسم الجامعة أو المعهد"
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">سنة التخرج</label>
-              <p-inputNumber [(ngModel)]="item.graduationYear" [useGrouping]="false" placeholder="YYYY" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold"></p-inputNumber>
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 font-sans">Graduation
+                Year</label>
+              <p-inputNumber [(ngModel)]="item.graduationYear" [useGrouping]="false" placeholder="YYYY"
+                styleClass="w-full"
+                inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm !font-bold focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-inputNumber>
             </div>
+
+            <!-- File Upload for Qual -->
             <div class="md:col-span-2 pt-2">
-              <div class="flex items-center gap-4 p-4 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-dashed border-blue-200 dark:border-blue-900/40">
-                <p-fileUpload mode="basic" [auto]="true" chooseLabel="إرفاق الشهادة" styleClass="p-button-sm !rounded-xl !bg-blue-600 !border-none text-[10px]" (onSelect)="onQualFileSelect($event, item)"></p-fileUpload>
-                <span class="text-[10px] text-slate-400 font-bold truncate max-w-[150px]">{{ item.file ? item.file.name : 'PDF/JPG' }}</span>
+              <div
+                class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-400 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                    <i class="pi pi-file text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-semibold text-slate-700 dark:text-slate-200">صورة المؤهل</p>
+                    <p class="text-[10px] text-slate-500">{{ item.file ? item.file.name : 'لم يتم اختيار ملف' }}</p>
+                  </div>
+                </div>
+                <p-fileUpload mode="basic" [auto]="true" chooseLabel="تصفح"
+                  styleClass="p-button-outlined p-button-sm !rounded-lg !text-xs !px-3 !h-8"
+                  (onSelect)="onQualFileSelect($event, item)"></p-fileUpload>
               </div>
             </div>
           </div>
@@ -56,60 +83,112 @@
     </section>
 
     <!-- Experience Section -->
-    <section class="space-y-4">
-      <app-dynamic-array-list
-        [items]="data.experiences || []"
-        title="الخبرات السابقة"
-        itemLabel="خبرة"
-        icon="pi pi-history"
-        [columns]="expColumns"
-        (save)="onSaveExperience($event)"
+    <section>
+      <app-dynamic-array-list [items]="data.experiences || []" title="الخبرات العملية" itemLabel="خبرة"
+        icon="pi pi-briefcase" [columns]="expColumns" (save)="onSaveExperience($event)"
         (delete)="onDeleteExperience($event)">
-        
+
         <ng-template #formTemplate let-item>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">المسمى السابق <span class="text-red-500">*</span></label>
-              <input pInputText [(ngModel)]="item.jobTitleAr" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-1">
+            <div class="md:col-span-2 space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">المسمى الوظيفي <span
+                  class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.jobTitleAr" placeholder="مثال: مدير تسويق"
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الشركة <span class="text-red-500">*</span></label>
-              <input pInputText [(ngModel)]="item.companyNameAr" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
+            <div class="md:col-span-2 space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">جهة العمل <span
+                  class="text-red-500">*</span></label>
+              <input pInputText [(ngModel)]="item.companyNameAr" placeholder="اسم الشركة"
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">تاريخ البدء</label>
-              <p-datePicker [(ngModel)]="item.startDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm"></p-datePicker>
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">من تاريخ</label>
+              <p-datePicker [(ngModel)]="item.startDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+                styleClass="w-full"
+                inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
             </div>
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">تاريخ الانتهاء</label>
-              <p-datePicker [(ngModel)]="item.endDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd" styleClass="w-full" inputStyleClass="!h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm"></p-datePicker>
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">إلى تاريخ</label>
+              <p-datePicker [(ngModel)]="item.endDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+                styleClass="w-full"
+                inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
+            </div>
+
+            <!-- Current Job Toggle -->
+            <div class="md:col-span-2 pt-2">
+              <div class="flex items-center gap-3">
+                <p-checkbox [(ngModel)]="item.isCurrent" binary="true" inputId="isCurrentJob"></p-checkbox>
+                <label for="isCurrentJob"
+                  class="text-sm text-slate-700 dark:text-slate-300 cursor-pointer user-select-none">لا أزال أعمل هنا
+                  حالياً</label>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </app-dynamic-array-list>
+    </section>
+
+    <!-- Professional Certifications (Full Width) -->
+    <section class="xl:col-span-2">
+      <app-dynamic-array-list [items]="data.certifications || []" title="الشهادات المهنية والدورات" itemLabel="شهادة"
+        icon="pi pi-verified" [columns]="certColumns" (save)="onSaveCertification($event)"
+        (delete)="onDeleteCertification($event)">
+
+        <ng-template #formTemplate let-item>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
+            <!-- Left: Basic Info -->
+            <div class="space-y-5">
+              <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">اسم الشهادة / الدورة <span
+                    class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="item.certificationName" placeholder="PMP, CCNA..."
+                  class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-bold focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
+              </div>
+
+              <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">جهة الإصدار</label>
+                <input pInputText [(ngModel)]="item.issuingOrganization" placeholder="PMI, Microsoft..."
+                  class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
+              </div>
+
+              <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ الإصدار</label>
+                <p-datePicker [(ngModel)]="item.issueDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+                  styleClass="w-full"
+                  inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
+              </div>
+            </div>
+
+            <!-- Right: Verification & Upload -->
+            <div class="space-y-5">
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-500 font-sans">Credential URL</label>
+                <div class="relative">
+                  <i class="pi pi-link absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input pInputText [(ngModel)]="item.credentialUrl" placeholder="https://..."
+                    class="w-full !h-11 !pl-10 !rounded-lg !bg-slate-50 dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-mono text-blue-600 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500" />
+                </div>
+              </div>
+
+              <div
+                class="p-5 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 flex flex-col items-center justify-center text-center gap-3 hover:border-blue-400 transition-colors">
+                <div
+                  class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center">
+                  <i class="pi pi-file-pdf text-lg"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">نسخة الشهادة</p>
+                  <p class="text-xs text-slate-500 mt-1">{{ item.file ? item.file.name : 'لم يتم الرفع بعد' }}</p>
+                </div>
+                <p-fileUpload mode="basic" [auto]="true" chooseLabel="رفع الملف"
+                  styleClass="p-button-sm p-button-outlined !rounded-lg !text-xs !h-9 !px-4"
+                  (onSelect)="onCertFileSelect($event, item)"></p-fileUpload>
+              </div>
             </div>
           </div>
         </ng-template>
       </app-dynamic-array-list>
     </section>
   </div>
-
-  <!-- Professional Certifications (Full Width) -->
-  <app-dynamic-array-list
-    [items]="data.certifications || []"
-    title="الشهادات المهنية والدورات التدريبية"
-    itemLabel="شهادة"
-    icon="pi pi-verified"
-    [columns]="certColumns"
-    (save)="onSaveCertification($event)"
-    (delete)="onDeleteCertification($event)">
-    <ng-template #formTemplate let-item>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-2">
-        <div class="md:col-span-2 space-y-1.5">
-          <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">اسم الشهادة <span class="text-red-500">*</span></label>
-          <input pInputText [(ngModel)]="item.certificationName" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm !font-bold" />
-        </div>
-        <div class="space-y-1.5">
-            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">جهة الإصدار</label>
-            <input pInputText [(ngModel)]="item.issuingOrganization" class="w-full !h-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 !text-sm" />
-        </div>
-      </div>
-    </ng-template>
-  </app-dynamic-array-list>
 </div>
