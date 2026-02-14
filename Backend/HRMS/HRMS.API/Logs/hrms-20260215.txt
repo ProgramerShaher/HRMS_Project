@@ -4912,3 +4912,949 @@ WHERE [c].[EMPLOYEE_ID] = @__request_EmployeeId_0
 2026-02-15 01:13:06.800 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetContracts (HRMS.API)'
 2026-02-15 01:13:06.809 +03:00 [INF] HTTP GET /api/employee-profile/2/contracts responded 200 in 1009.6934 ms
 2026-02-15 01:13:07.016 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/contracts - 200 null application/json; charset=utf-8 1746.6462ms
+2026-02-15 01:18:30.132 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees - null null
+2026-02-15 01:18:30.141 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:18:30.143 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 2.4656 ms
+2026-02-15 01:18:30.147 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees - 204 null null 16.28ms
+2026-02-15 01:18:30.164 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees - null null
+2026-02-15 01:18:30.174 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:18:30.178 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:18:30.180 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:18:30.270 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:18:30.295 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:18:30.310 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:18:30.329 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:18:30.334 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 61.7616ms.
+2026-02-15 01:18:30.337 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:18:30.341 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 156.77ms
+2026-02-15 01:18:30.342 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:18:30.344 +03:00 [INF] HTTP GET /api/Employees responded 200 in 170.4593 ms
+2026-02-15 01:18:30.347 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees - 200 null application/json; charset=utf-8 184.4441ms
+2026-02-15 01:23:05.979 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/shifts - null null
+2026-02-15 01:23:05.985 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:05.987 +03:00 [INF] HTTP OPTIONS /api/AttendanceSettings/shifts responded 204 in 2.0034 ms
+2026-02-15 01:23:05.989 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/shifts - 204 null null 36.4616ms
+2026-02-15 01:23:05.993 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - null null
+2026-02-15 01:23:06.002 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:06.004 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:23:06.021 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Attendance.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:23:06.067 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:06.220 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-02-15 01:23:06.228 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 158.0433ms.
+2026-02-15 01:23:06.231 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.DTOs.Attendance.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:06.244 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 219.4877ms
+2026-02-15 01:23:06.247 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:23:06.249 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 247.3974 ms
+2026-02-15 01:23:06.252 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 258.9675ms
+2026-02-15 01:23:07.608 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - null null
+2026-02-15 01:23:07.610 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - null null
+2026-02-15 01:23:07.611 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:07.616 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:07.617 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:23:07.618 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 2.5319 ms
+2026-02-15 01:23:07.620 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Attendance.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:23:07.623 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - 204 null null 13.5199ms
+2026-02-15 01:23:07.672 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - null null
+2026-02-15 01:23:07.711 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:07.717 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:07.720 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:23:07.721 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:23:07.724 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-02-15 01:23:07.764 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:07.767 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 48.9639ms.
+2026-02-15 01:23:07.772 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.DTOs.Attendance.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:07.774 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:23:07.774 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 99.3585ms
+2026-02-15 01:23:07.781 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:23:07.782 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 171.0225 ms
+2026-02-15 01:23:07.785 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 177.3009ms
+2026-02-15 01:23:07.796 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:23:07.812 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:23:07.816 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 46.9451ms.
+2026-02-15 01:23:07.819 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:07.821 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 96.3558ms
+2026-02-15 01:23:07.824 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:23:07.826 +03:00 [INF] HTTP GET /api/Employees responded 200 in 109.1862 ms
+2026-02-15 01:23:07.831 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - 200 null application/json; charset=utf-8 158.3203ms
+2026-02-15 01:23:18.538 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/roster/1 - null null
+2026-02-15 01:23:18.541 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:18.543 +03:00 [INF] HTTP OPTIONS /api/AttendanceSettings/roster/1 responded 204 in 1.6139 ms
+2026-02-15 01:23:18.546 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/roster/1 - 204 null null 7.9491ms
+2026-02-15 01:23:18.548 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/AttendanceSettings/roster/1 - null null
+2026-02-15 01:23:18.555 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:18.557 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API)'
+2026-02-15 01:23:18.565 +03:00 [INF] Route matched with {action = "GetEmployeeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster.MyRosterDto]]]] GetEmployeeRoster(Int32) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:23:18.610 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:18.675 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__startOfMonth_1='?' (DbType = DateTime2), @__endOfNextMonth_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[STATUS], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__startOfMonth_1 AND [e].[ROSTER_DATE] <= @__endOfNextMonth_2
+ORDER BY [e].[ROSTER_DATE]
+2026-02-15 01:23:18.712 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__startOfMonth_1='?' (DbType = DateTime2), @__endOfNextMonth_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [d].[ATTENDANCE_DATE] >= @__startOfMonth_1 AND [d].[ATTENDANCE_DATE] <= @__endOfNextMonth_2
+2026-02-15 01:23:18.733 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 121.7746ms.
+2026-02-15 01:23:18.736 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster.MyRosterDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:18.752 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API) in 183.8173ms
+2026-02-15 01:23:18.754 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API)'
+2026-02-15 01:23:18.756 +03:00 [INF] HTTP GET /api/AttendanceSettings/roster/1 responded 200 in 200.6320 ms
+2026-02-15 01:23:18.758 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/AttendanceSettings/roster/1 - 200 null application/json; charset=utf-8 209.8995ms
+2026-02-15 01:23:42.309 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Attendance/pending-approvals - null null
+2026-02-15 01:23:42.325 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:42.326 +03:00 [INF] HTTP OPTIONS /api/Attendance/pending-approvals responded 204 in 1.4385 ms
+2026-02-15 01:23:42.329 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Attendance/pending-approvals - 204 null null 20.2713ms
+2026-02-15 01:23:42.332 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Attendance/pending-approvals - null null
+2026-02-15 01:23:42.346 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:42.347 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetPendingApprovalsUnified (HRMS.API)'
+2026-02-15 01:23:42.353 +03:00 [INF] Route matched with {action = "GetPendingApprovalsUnified", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Queries.PendingApprovals.PendingApprovalDto]]]] GetPendingApprovalsUnified() on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-15 01:23:42.380 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceController.GetPendingApprovalsUnified (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:42.465 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [o].[OT_REQUEST_ID], [o].[EMPLOYEE_ID], [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [o].[REQUEST_DATE], [o].[WORK_DATE], [o].[HOURS_REQUESTED], [o].[REASON], [o].[STATUS]
+FROM [HR_ATTENDANCE].[OVERTIME_REQUESTS] AS [o]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e] ON [o].[EMPLOYEE_ID] = [e].[EMPLOYEE_ID]
+WHERE [o].[STATUS] = N'PENDING'
+2026-02-15 01:23:42.495 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[REQUEST_ID], [s].[REQUESTER_ID], [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [s].[CREATED_AT], [s].[ROSTER_DATE], [s].[STATUS]
+FROM [HR_ATTENDANCE].[SHIFT_SWAP_REQUESTS] AS [s]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e] ON [s].[REQUESTER_ID] = [e].[EMPLOYEE_ID]
+WHERE [s].[STATUS] = N'PENDING'
+2026-02-15 01:23:42.524 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PERMISSION_REQUEST_ID], [p].[EMPLOYEE_ID], [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [p].[CREATED_AT], [p].[PERMISSION_DATE], [p].[PERMISSION_TYPE], [p].[HOURS], [p].[REASON], [p].[STATUS]
+FROM [HR_ATTENDANCE].[PERMISSION_REQUESTS] AS [p]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e] ON [p].[EMPLOYEE_ID] = [e].[EMPLOYEE_ID]
+WHERE [p].[STATUS] = N'Pending'
+2026-02-15 01:23:42.529 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceController.GetPendingApprovalsUnified (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 147.2899ms.
+2026-02-15 01:23:42.531 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Queries.PendingApprovals.PendingApprovalDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:42.535 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.GetPendingApprovalsUnified (HRMS.API) in 178.3953ms
+2026-02-15 01:23:42.538 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetPendingApprovalsUnified (HRMS.API)'
+2026-02-15 01:23:42.540 +03:00 [INF] HTTP GET /api/Attendance/pending-approvals responded 200 in 194.8100 ms
+2026-02-15 01:23:42.545 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Attendance/pending-approvals - 200 null application/json; charset=utf-8 213.3514ms
+2026-02-15 01:23:46.592 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - null null
+2026-02-15 01:23:46.593 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - null null
+2026-02-15 01:23:46.595 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:46.598 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:46.599 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 4.0534 ms
+2026-02-15 01:23:46.601 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 2.2381 ms
+2026-02-15 01:23:46.603 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - 204 null null 11.0315ms
+2026-02-15 01:23:46.649 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - 204 null null 55.8026ms
+2026-02-15 01:23:46.647 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - null null
+2026-02-15 01:23:46.673 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:46.676 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:23:46.678 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:23:46.709 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:46.715 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:23:46.728 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:23:46.743 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:23:46.748 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 36.8997ms.
+2026-02-15 01:23:46.751 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:46.754 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 72.6003ms
+2026-02-15 01:23:46.757 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:23:46.757 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - null null
+2026-02-15 01:23:46.758 +03:00 [INF] HTTP GET /api/Employees responded 200 in 85.6732 ms
+2026-02-15 01:23:46.762 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:46.764 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - 200 null application/json; charset=utf-8 116.5122ms
+2026-02-15 01:23:46.765 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:23:46.772 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:23:46.796 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:46.800 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:23:46.804 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:23:46.812 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:23:46.816 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 17.7802ms.
+2026-02-15 01:23:46.818 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:46.820 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 45.4314ms
+2026-02-15 01:23:46.821 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:23:46.823 +03:00 [INF] HTTP GET /api/Employees responded 200 in 61.1184 ms
+2026-02-15 01:23:46.825 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=10 - 200 null application/json; charset=utf-8 68.21ms
+2026-02-15 01:23:53.047 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/full-profile - null null
+2026-02-15 01:23:53.052 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.053 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/full-profile responded 204 in 1.5521 ms
+2026-02-15 01:23:53.056 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/full-profile - 204 null null 9.0759ms
+2026-02-15 01:23:53.058 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/full-profile - null null
+2026-02-15 01:23:53.063 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.065 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetFullProfile (HRMS.API)'
+2026-02-15 01:23:53.067 +03:00 [INF] Route matched with {action = "GetFullProfile", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[HRMS.Application.Features.Personnel.Employees.DTOs.DetailedEmployeeProfileDto]]] GetFullProfile(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:53.101 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetFullProfile (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:53.158 +03:00 [INF] Executed DbCommand (48ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[EMPLOYEE_ID], [s].[BIRTH_DATE], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DEPARTMENT_ID], [s].[EMAIL], [s].[EMPLOYEE_NUMBER], [s].[FIRST_NAME_AR], [s].[FULL_NAME_EN], [s].[GENDER], [s].[HIRE_DATE], [s].[IS_ACTIVE], [s].[IS_DELETED], [s].[JOB_GRADE_ID], [s].[JOB_ID], [s].[LAST_NAME_AR], [s].[LICENSE_EXPIRY_DATE], [s].[LICENSE_NUMBER], [s].[MANAGER_ID], [s].[MARITAL_STATUS], [s].[MOBILE], [s].[NATIONAL_ID], [s].[NATIONALITY_ID], [s].[PROFILE_PICTURE_PATH], [s].[SECOND_NAME_AR], [s].[SPECIALTY], [s].[TERMINATION_DATE], [s].[THIRD_NAME_AR], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[USER_ID], [s].[VERSION_NO], [s].[DEPT_ID], [s].[BranchId], [s].[COST_CENTER_CODE], [s].[CREATED_AT0], [s].[CREATED_BY0], [s].[DEPT_NAME_AR], [s].[DEPT_NAME_EN], [s].[IS_ACTIVE0], [s].[IS_DELETED0], [s].[MANAGER_ID0], [s].[PARENT_DEPT_ID], [s].[UPDATED_AT0], [s].[UPDATED_BY0], [s].[VERSION_NO0], [s].[JOB_ID0], [s].[CREATED_AT1], [s].[CREATED_BY1], [s].[DEFAULT_GRADE_ID], [s].[DepartmentDeptId], [s].[IS_DELETED1], [s].[IS_MEDICAL], [s].[JOB_TITLE_AR], [s].[JOB_TITLE_EN], [s].[UPDATED_AT1], [s].[UPDATED_BY1], [s].[VERSION_NO1], [s].[COUNTRY_ID], [s].[CITIZENSHIP_NAME_AR], [s].[CITIZENSHIP_NAME_EN], [s].[COUNTRY_NAME_AR], [s].[COUNTRY_NAME_EN], [s].[CREATED_AT2], [s].[CREATED_BY2], [s].[IS_DELETED2], [s].[ISO_CODE], [s].[UPDATED_AT2], [s].[UPDATED_BY2], [s].[VERSION_NO2], [s].[COMPENSATION_ID], [s].[BANK_ID], [s].[BASIC_SALARY], [s].[CREATED_AT3], [s].[CREATED_BY3], [s].[EMPLOYEE_ID0], [s].[HOUSING_ALLOWANCE], [s].[IBAN_NUMBER], [s].[IS_DELETED3], [s].[MEDICAL_ALLOWANCE], [s].[OTHER_ALLOWANCES], [s].[TRANSPORT_ALLOWANCE], [s].[UPDATED_AT3], [s].[UPDATED_BY3], [s].[VERSION_NO3], [s0].[DOCUMENT_ID], [s0].[CONTENT_TYPE], [s0].[CREATED_AT], [s0].[CREATED_BY], [s0].[DOCUMENT_NUMBER], [s0].[DOCUMENT_TYPE_ID], [s0].[EMPLOYEE_ID], [s0].[EXPIRY_DATE], [s0].[FILE_NAME], [s0].[FILE_PATH], [s0].[FILE_SIZE], [s0].[IS_DELETED], [s0].[ISSUE_DATE], [s0].[UPDATED_AT], [s0].[UPDATED_BY], [s0].[VERSION_NO], [s0].[DOCUMENT_TYPE_ID0], [s0].[ALLOWED_EXTENSIONS], [s0].[CREATED_AT0], [s0].[CREATED_BY0], [s0].[DEFAULT_EXPIRY_DAYS], [s0].[DESCRIPTION], [s0].[DOCUMENT_TYPE_NAME_AR], [s0].[DOCUMENT_TYPE_NAME_EN], [s0].[HAS_EXPIRY], [s0].[IS_DELETED0], [s0].[IS_REQUIRED], [s0].[MAX_FILE_SIZE_MB], [s0].[UPDATED_AT0], [s0].[UPDATED_BY0], [s0].[VERSION_NO0], [s1].[QUALIFICATION_ID], [s1].[ATTACHMENT_PATH], [s1].[COUNTRY_ID], [s1].[CREATED_AT], [s1].[CREATED_BY], [s1].[DEGREE_TYPE], [s1].[EMPLOYEE_ID], [s1].[GRADE], [s1].[GRADUATION_YEAR], [s1].[IS_DELETED], [s1].[MAJOR_AR], [s1].[UNIVERSITY_AR], [s1].[UPDATED_AT], [s1].[UPDATED_BY], [s1].[VERSION_NO], [s1].[COUNTRY_ID0], [s1].[CITIZENSHIP_NAME_AR], [s1].[CITIZENSHIP_NAME_EN], [s1].[COUNTRY_NAME_AR], [s1].[COUNTRY_NAME_EN], [s1].[CREATED_AT0], [s1].[CREATED_BY0], [s1].[IS_DELETED0], [s1].[ISO_CODE], [s1].[UPDATED_AT0], [s1].[UPDATED_BY0], [s1].[VERSION_NO0], [e3].[EXPERIENCE_ID], [e3].[COMPANY_NAME_AR], [e3].[CREATED_AT], [e3].[CREATED_BY], [e3].[EMPLOYEE_ID], [e3].[END_DATE], [e3].[IS_CURRENT], [e3].[IS_DELETED], [e3].[JOB_TITLE_AR], [e3].[REASON_FOR_LEAVING], [e3].[RESPONSIBILITIES], [e3].[START_DATE], [e3].[UPDATED_AT], [e3].[UPDATED_BY], [e3].[VERSION_NO], [e4].[CONTACT_ID], [e4].[CONTACT_NAME_AR], [e4].[CREATED_AT], [e4].[CREATED_BY], [e4].[EMPLOYEE_ID], [e4].[IS_DELETED], [e4].[IS_PRIMARY], [e4].[PHONE_PRIMARY], [e4].[PHONE_SECONDARY], [e4].[RELATIONSHIP], [e4].[UPDATED_AT], [e4].[UPDATED_BY], [e4].[VERSION_NO], [c1].[CONTRACT_ID], [c1].[BASIC_SALARY], [c1].[CONTRACT_STATUS], [c1].[CONTRACT_TYPE], [c1].[CREATED_AT], [c1].[CREATED_BY], [c1].[EMPLOYEE_ID], [c1].[END_DATE], [c1].[HOUSING_ALLOWANCE], [c1].[IS_DELETED], [c1].[IS_RENEWABLE], [c1].[OTHER_ALLOWANCES], [c1].[START_DATE], [c1].[TRANSPORT_ALLOWANCE], [c1].[UPDATED_AT], [c1].[UPDATED_BY], [c1].[VACATION_DAYS], [c1].[VERSION_NO], [c1].[WORKING_HOURS_DAILY], [e5].[CERT_ID], [e5].[ATTACHMENT_PATH], [e5].[CERT_NAME_AR], [e5].[CERT_NUMBER], [e5].[CREATED_AT], [e5].[CREATED_BY], [e5].[EMPLOYEE_ID], [e5].[EXPIRY_DATE], [e5].[IS_DELETED], [e5].[IS_MANDATORY], [e5].[ISSUE_DATE], [e5].[ISSUING_AUTHORITY], [e5].[UPDATED_AT], [e5].[UPDATED_BY], [e5].[VERSION_NO], [e6].[ACCOUNT_ID], [e6].[ACCOUNT_NUMBER], [e6].[BANK_ID], [e6].[CREATED_AT], [e6].[CREATED_BY], [e6].[EMPLOYEE_ID], [e6].[IBAN], [e6].[IS_ACTIVE], [e6].[IS_DELETED], [e6].[IS_PRIMARY], [e6].[UPDATED_AT], [e6].[UPDATED_BY], [e6].[VERSION_NO], [d1].[DEPENDENT_ID], [d1].[BIRTH_DATE], [d1].[CREATED_AT], [d1].[CREATED_BY], [d1].[EMPLOYEE_ID], [d1].[IS_DELETED], [d1].[IS_ELIGIBLE_FOR_INSURANCE], [d1].[IS_ELIGIBLE_FOR_TICKET], [d1].[NAME_AR], [d1].[NATIONAL_ID], [d1].[RELATIONSHIP], [d1].[UPDATED_AT], [d1].[UPDATED_BY], [d1].[VERSION_NO], [e7].[ADDRESS_ID], [e7].[ADDRESS_TYPE], [e7].[BUILDING_NO], [e7].[CITY_ID], [e7].[CREATED_AT], [e7].[CREATED_BY], [e7].[DISTRICT], [e7].[EMPLOYEE_ID], [e7].[IS_DELETED], [e7].[POSTAL_CODE], [e7].[STREET], [e7].[UPDATED_AT], [e7].[UPDATED_BY], [e7].[VERSION_NO]
+FROM (
+    SELECT TOP(1) [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT] AS [CREATED_AT0], [d].[CREATED_BY] AS [CREATED_BY0], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE] AS [IS_ACTIVE0], [d].[IS_DELETED] AS [IS_DELETED0], [d].[MANAGER_ID] AS [MANAGER_ID0], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT] AS [UPDATED_AT0], [d].[UPDATED_BY] AS [UPDATED_BY0], [d].[VERSION_NO] AS [VERSION_NO0], [j].[JOB_ID] AS [JOB_ID0], [j].[CREATED_AT] AS [CREATED_AT1], [j].[CREATED_BY] AS [CREATED_BY1], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED] AS [IS_DELETED1], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT] AS [UPDATED_AT1], [j].[UPDATED_BY] AS [UPDATED_BY1], [j].[VERSION_NO] AS [VERSION_NO1], [c].[COUNTRY_ID], [c].[CITIZENSHIP_NAME_AR], [c].[CITIZENSHIP_NAME_EN], [c].[COUNTRY_NAME_AR], [c].[COUNTRY_NAME_EN], [c].[CREATED_AT] AS [CREATED_AT2], [c].[CREATED_BY] AS [CREATED_BY2], [c].[IS_DELETED] AS [IS_DELETED2], [c].[ISO_CODE], [c].[UPDATED_AT] AS [UPDATED_AT2], [c].[UPDATED_BY] AS [UPDATED_BY2], [c].[VERSION_NO] AS [VERSION_NO2], [e0].[COMPENSATION_ID], [e0].[BANK_ID], [e0].[BASIC_SALARY], [e0].[CREATED_AT] AS [CREATED_AT3], [e0].[CREATED_BY] AS [CREATED_BY3], [e0].[EMPLOYEE_ID] AS [EMPLOYEE_ID0], [e0].[HOUSING_ALLOWANCE], [e0].[IBAN_NUMBER], [e0].[IS_DELETED] AS [IS_DELETED3], [e0].[MEDICAL_ALLOWANCE], [e0].[OTHER_ALLOWANCES], [e0].[TRANSPORT_ALLOWANCE], [e0].[UPDATED_AT] AS [UPDATED_AT3], [e0].[UPDATED_BY] AS [UPDATED_BY3], [e0].[VERSION_NO] AS [VERSION_NO3]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+    INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e].[JOB_ID] = [j].[JOB_ID]
+    LEFT JOIN [HR_CORE].[COUNTRIES] AS [c] ON [e].[NATIONALITY_ID] = [c].[COUNTRY_ID]
+    LEFT JOIN [HR_PERSONNEL].[EMPLOYEE_COMPENSATIONS] AS [e0] ON [e].[EMPLOYEE_ID] = [e0].[EMPLOYEE_ID]
+    WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+) AS [s]
+LEFT JOIN (
+    SELECT [e1].[DOCUMENT_ID], [e1].[CONTENT_TYPE], [e1].[CREATED_AT], [e1].[CREATED_BY], [e1].[DOCUMENT_NUMBER], [e1].[DOCUMENT_TYPE_ID], [e1].[EMPLOYEE_ID], [e1].[EXPIRY_DATE], [e1].[FILE_NAME], [e1].[FILE_PATH], [e1].[FILE_SIZE], [e1].[IS_DELETED], [e1].[ISSUE_DATE], [e1].[UPDATED_AT], [e1].[UPDATED_BY], [e1].[VERSION_NO], [d0].[DOCUMENT_TYPE_ID] AS [DOCUMENT_TYPE_ID0], [d0].[ALLOWED_EXTENSIONS], [d0].[CREATED_AT] AS [CREATED_AT0], [d0].[CREATED_BY] AS [CREATED_BY0], [d0].[DEFAULT_EXPIRY_DAYS], [d0].[DESCRIPTION], [d0].[DOCUMENT_TYPE_NAME_AR], [d0].[DOCUMENT_TYPE_NAME_EN], [d0].[HAS_EXPIRY], [d0].[IS_DELETED] AS [IS_DELETED0], [d0].[IS_REQUIRED], [d0].[MAX_FILE_SIZE_MB], [d0].[UPDATED_AT] AS [UPDATED_AT0], [d0].[UPDATED_BY] AS [UPDATED_BY0], [d0].[VERSION_NO] AS [VERSION_NO0]
+    FROM [HR_PERSONNEL].[EMPLOYEE_DOCUMENTS] AS [e1]
+    INNER JOIN [HR_CORE].[DOCUMENT_TYPES] AS [d0] ON [e1].[DOCUMENT_TYPE_ID] = [d0].[DOCUMENT_TYPE_ID]
+) AS [s0] ON [s].[EMPLOYEE_ID] = [s0].[EMPLOYEE_ID]
+LEFT JOIN (
+    SELECT [e2].[QUALIFICATION_ID], [e2].[ATTACHMENT_PATH], [e2].[COUNTRY_ID], [e2].[CREATED_AT], [e2].[CREATED_BY], [e2].[DEGREE_TYPE], [e2].[EMPLOYEE_ID], [e2].[GRADE], [e2].[GRADUATION_YEAR], [e2].[IS_DELETED], [e2].[MAJOR_AR], [e2].[UNIVERSITY_AR], [e2].[UPDATED_AT], [e2].[UPDATED_BY], [e2].[VERSION_NO], [c0].[COUNTRY_ID] AS [COUNTRY_ID0], [c0].[CITIZENSHIP_NAME_AR], [c0].[CITIZENSHIP_NAME_EN], [c0].[COUNTRY_NAME_AR], [c0].[COUNTRY_NAME_EN], [c0].[CREATED_AT] AS [CREATED_AT0], [c0].[CREATED_BY] AS [CREATED_BY0], [c0].[IS_DELETED] AS [IS_DELETED0], [c0].[ISO_CODE], [c0].[UPDATED_AT] AS [UPDATED_AT0], [c0].[UPDATED_BY] AS [UPDATED_BY0], [c0].[VERSION_NO] AS [VERSION_NO0]
+    FROM [HR_PERSONNEL].[EMPLOYEE_QUALIFICATIONS] AS [e2]
+    LEFT JOIN [HR_CORE].[COUNTRIES] AS [c0] ON [e2].[COUNTRY_ID] = [c0].[COUNTRY_ID]
+) AS [s1] ON [s].[EMPLOYEE_ID] = [s1].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[EMPLOYEE_EXPERIENCES] AS [e3] ON [s].[EMPLOYEE_ID] = [e3].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[EMERGENCY_CONTACTS] AS [e4] ON [s].[EMPLOYEE_ID] = [e4].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[CONTRACTS] AS [c1] ON [s].[EMPLOYEE_ID] = [c1].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[EMPLOYEE_CERTIFICATIONS] AS [e5] ON [s].[EMPLOYEE_ID] = [e5].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[EMPLOYEE_BANK_ACCOUNTS] AS [e6] ON [s].[EMPLOYEE_ID] = [e6].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[DEPENDENTS] AS [d1] ON [s].[EMPLOYEE_ID] = [d1].[EMPLOYEE_ID]
+LEFT JOIN [HR_PERSONNEL].[EMPLOYEE_ADDRESSES] AS [e7] ON [s].[EMPLOYEE_ID] = [e7].[EMPLOYEE_ID]
+ORDER BY [s].[EMPLOYEE_ID], [s].[DEPT_ID], [s].[JOB_ID0], [s].[COUNTRY_ID], [s].[COMPENSATION_ID], [s0].[DOCUMENT_ID], [s0].[DOCUMENT_TYPE_ID0], [s1].[QUALIFICATION_ID], [s1].[COUNTRY_ID0], [e3].[EXPERIENCE_ID], [e4].[CONTACT_ID], [c1].[CONTRACT_ID], [e5].[CERT_ID], [e6].[ACCOUNT_ID], [d1].[DEPENDENT_ID]
+2026-02-15 01:23:53.180 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetFullProfile (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 76.6836ms.
+2026-02-15 01:23:53.183 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[HRMS.Application.Features.Personnel.Employees.DTOs.DetailedEmployeeProfileDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:53.188 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetFullProfile (HRMS.API) in 118.4475ms
+2026-02-15 01:23:53.191 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetFullProfile (HRMS.API)'
+2026-02-15 01:23:53.193 +03:00 [INF] HTTP GET /api/employee-profile/2/full-profile responded 200 in 129.7559 ms
+2026-02-15 01:23:53.195 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/full-profile - 200 null application/json; charset=utf-8 137.409ms
+2026-02-15 01:23:53.304 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Countries - null null
+2026-02-15 01:23:53.305 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/addresses - null null
+2026-02-15 01:23:53.352 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.306 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/dependents - null null
+2026-02-15 01:23:53.309 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.307 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/emergency-contacts - null null
+2026-02-15 01:23:53.323 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Banks - null null
+2026-02-15 01:23:53.365 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.351 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/qualifications - null null
+2026-02-15 01:23:53.309 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/bank-accounts - null null
+2026-02-15 01:23:53.353 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/addresses responded 204 in 1.3593 ms
+2026-02-15 01:23:53.376 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/addresses - 204 null null 71.3338ms
+2026-02-15 01:23:53.358 +03:00 [INF] HTTP OPTIONS /api/Countries responded 204 in 48.8042 ms
+2026-02-15 01:23:53.362 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.339 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/experiences - null null
+2026-02-15 01:23:53.367 +03:00 [INF] HTTP OPTIONS /api/Banks responded 204 in 1.3108 ms
+2026-02-15 01:23:53.390 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Banks - 204 null null 67.3742ms
+2026-02-15 01:23:53.374 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.357 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.381 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/contracts - null null
+2026-02-15 01:23:53.403 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.404 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/contracts responded 204 in 1.1411 ms
+2026-02-15 01:23:53.388 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.371 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.397 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/JobGrades - null null
+2026-02-15 01:23:53.398 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/bank-accounts responded 204 in 24.1132 ms
+2026-02-15 01:23:53.399 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/dependents responded 204 in 42.3989 ms
+2026-02-15 01:23:53.383 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Countries - 204 null null 78.8914ms
+2026-02-15 01:23:53.384 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/emergency-contacts responded 204 in 22.2201 ms
+2026-02-15 01:23:53.407 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/contracts - 204 null null 25.3541ms
+2026-02-15 01:23:53.409 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/experiences responded 204 in 21.1051 ms
+2026-02-15 01:23:53.410 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/qualifications responded 204 in 39.6195 ms
+2026-02-15 01:23:53.413 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.415 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/bank-accounts - 204 null null 105.5341ms
+2026-02-15 01:23:53.417 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/dependents - 204 null null 110.9822ms
+2026-02-15 01:23:53.420 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/certifications - null null
+2026-02-15 01:23:53.422 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/emergency-contacts - 204 null null 114.5786ms
+2026-02-15 01:23:53.429 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/experiences - 204 null null 91.0061ms
+2026-02-15 01:23:53.432 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/qualifications - 204 null null 81.0091ms
+2026-02-15 01:23:53.433 +03:00 [INF] HTTP OPTIONS /api/JobGrades responded 204 in 20.1957 ms
+2026-02-15 01:23:53.435 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/addresses - null null
+2026-02-15 01:23:53.438 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Countries - null null
+2026-02-15 01:23:53.442 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Banks - null null
+2026-02-15 01:23:53.470 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.449 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/contracts - null null
+2026-02-15 01:23:53.478 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.456 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/dependents - null null
+2026-02-15 01:23:53.458 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/JobGrades - 204 null null 61.6337ms
+2026-02-15 01:23:53.463 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.466 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.445 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.474 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Core.BanksController.GetAll (HRMS.API)'
+2026-02-15 01:23:53.453 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/bank-accounts - null null
+2026-02-15 01:23:53.480 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetContracts (HRMS.API)'
+2026-02-15 01:23:53.484 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.488 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/emergency-contacts - null null
+2026-02-15 01:23:53.490 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetAddresses (HRMS.API)'
+2026-02-15 01:23:53.491 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Core.CountriesController.GetAll (HRMS.API)'
+2026-02-15 01:23:53.492 +03:00 [INF] HTTP OPTIONS /api/employee-profile/2/certifications responded 204 in 46.8222 ms
+2026-02-15 01:23:53.496 +03:00 [INF] Route matched with {action = "GetAll", controller = "Banks"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll(HRMS.Application.Features.Core.Banks.Queries.GetAllBanks.GetAllBanksQuery) on controller HRMS.API.Controllers.Core.BanksController (HRMS.API).
+2026-02-15 01:23:53.498 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.499 +03:00 [INF] Route matched with {action = "GetContracts", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.ContractDto]]]] GetContracts(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:53.508 +03:00 [INF] Route matched with {action = "GetAll", controller = "Countries"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll(HRMS.Application.Features.Core.Countries.Queries.GetAllCountries.GetAllCountriesQuery) on controller HRMS.API.Controllers.Core.CountriesController (HRMS.API).
+2026-02-15 01:23:53.508 +03:00 [INF] Route matched with {action = "GetAddresses", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeAddressDto]]]] GetAddresses(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:53.573 +03:00 [INF] Executing action method HRMS.API.Controllers.Core.BanksController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:53.632 +03:00 [INF] Executing action method HRMS.API.Controllers.Core.CountriesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:53.510 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/employee-profile/2/certifications - 204 null null 90.4321ms
+2026-02-15 01:23:53.660 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetAddresses (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:53.665 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/experiences - null null
+2026-02-15 01:23:53.675 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/qualifications - null null
+2026-02-15 01:23:53.690 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.704 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.718 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/JobGrades - null null
+2026-02-15 01:23:53.720 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetQualifications (HRMS.API)'
+2026-02-15 01:23:53.719 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetExperiences (HRMS.API)'
+2026-02-15 01:23:53.679 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_CORE].[BANKS] AS [b]
+2026-02-15 01:23:53.600 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetContracts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:53.508 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.786 +03:00 [INF] Route matched with {action = "GetQualifications", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeQualificationDto]]]] GetQualifications(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:53.784 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:53.788 +03:00 [INF] Route matched with {action = "GetExperiences", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeExperienceDto]]]] GetExperiences(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:53.959 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetQualifications (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:53.961 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Core.JobGradesController.GetAll (HRMS.API)'
+2026-02-15 01:23:53.850 +03:00 [INF] Executed DbCommand (54ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [b].[BANK_ID], [b].[BANK_NAME_AR], [b].[BANK_NAME_EN], [b].[SWIFT_CODE], [b].[BANK_CODE], [b].[ADDRESS], [b].[CREATED_AT], [b].[CREATED_BY], [b].[EMAIL], [b].[IS_DELETED], [b].[PHONE], [b].[UPDATED_AT], [b].[UPDATED_BY], [b].[VERSION_NO]
+FROM [HR_CORE].[BANKS] AS [b]
+ORDER BY [b].[BANK_NAME_AR]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2026-02-15 01:23:53.893 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetEmergencyContacts (HRMS.API)'
+2026-02-15 01:23:53.574 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetBankAccounts (HRMS.API)'
+2026-02-15 01:23:53.502 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetDependents (HRMS.API)'
+2026-02-15 01:23:53.753 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/employee-profile/2/certifications - null null
+2026-02-15 01:23:53.767 +03:00 [INF] Executed DbCommand (54ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_CORE].[COUNTRIES] AS [c]
+2026-02-15 01:23:53.771 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ADDRESS_ID], [e].[ADDRESS_TYPE], [e].[BUILDING_NO], [e].[CITY_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DISTRICT], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[POSTAL_CODE], [e].[STREET], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEE_ADDRESSES] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.023 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetExperiences (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:54.023 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[CONTRACT_ID] AS [ContractId], [c].[EMPLOYEE_ID] AS [EmployeeId], [c].[CONTRACT_TYPE] AS [ContractType], [c].[START_DATE] AS [StartDate], [c].[END_DATE] AS [EndDate], [c].[IS_RENEWABLE] AS [IsRenewable], [c].[BASIC_SALARY] AS [BasicSalary], [c].[HOUSING_ALLOWANCE] AS [HousingAllowance], [c].[TRANSPORT_ALLOWANCE] AS [TransportAllowance], [c].[OTHER_ALLOWANCES] AS [OtherAllowances], [c].[VACATION_DAYS] AS [VacationDays], [c].[WORKING_HOURS_DAILY] AS [WorkingHoursDaily], [c].[CONTRACT_STATUS] AS [ContractStatus], [j0].[GRADE_NAME_AR] AS [JobGradeAr], CASE
+    WHEN [c].[CONTRACT_STATUS] = N'ACTIVE' AND [c].[CONTRACT_STATUS] IS NOT NULL AND ([c].[END_DATE] IS NULL OR [c].[END_DATE] >= GETDATE()) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END AS [IsActive]
+FROM [HR_PERSONNEL].[CONTRACTS] AS [c]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e] ON [c].[EMPLOYEE_ID] = [e].[EMPLOYEE_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e].[JOB_ID] = [j].[JOB_ID]
+LEFT JOIN [HR_CORE].[JOB_GRADES] AS [j0] ON [j].[DEFAULT_GRADE_ID] = [j0].[JOB_GRADE_ID]
+WHERE [c].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.027 +03:00 [INF] Route matched with {action = "GetAll", controller = "JobGrades"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAll(HRMS.Application.Features.Core.JobGrades.Queries.GetAllJobGrades.GetAllJobGradesQuery) on controller HRMS.API.Controllers.Core.JobGradesController (HRMS.API).
+2026-02-15 01:23:54.031 +03:00 [INF] Executed action method HRMS.API.Controllers.Core.BanksController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 369.3738ms.
+2026-02-15 01:23:54.038 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[QUALIFICATION_ID] AS [QualificationId], [e].[DEGREE_TYPE] AS [DegreeType], [e].[MAJOR_AR] AS [MajorAr], [e].[UNIVERSITY_AR] AS [UniversityAr], [e].[COUNTRY_ID] AS [CountryId], [e].[GRADUATION_YEAR] AS [GraduationYear], [e].[GRADE] AS [Grade]
+FROM [HR_PERSONNEL].[EMPLOYEE_QUALIFICATIONS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.055 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[COUNTRY_ID], [c].[CITIZENSHIP_NAME_AR], [c].[CITIZENSHIP_NAME_EN], [c].[COUNTRY_NAME_AR], [c].[COUNTRY_NAME_EN], [c].[ISO_CODE], [c].[CREATED_AT], [c].[CREATED_BY], [c].[IS_DELETED], [c].[UPDATED_AT], [c].[UPDATED_BY], [c].[VERSION_NO], (
+    SELECT COUNT(*)
+    FROM [HR_CORE].[CITIES] AS [c0]
+    WHERE [c].[COUNTRY_ID] = [c0].[COUNTRY_ID])
+FROM [HR_CORE].[COUNTRIES] AS [c]
+ORDER BY [c].[COUNTRY_NAME_AR]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2026-02-15 01:23:54.056 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EXPERIENCE_ID] AS [ExperienceId], [e].[COMPANY_NAME_AR] AS [CompanyNameAr], [e].[JOB_TITLE_AR] AS [JobTitleAr], [e].[START_DATE] AS [StartDate], [e].[END_DATE] AS [EndDate], [e].[IS_CURRENT] AS [IsCurrent], [e].[RESPONSIBILITIES] AS [Responsibilities], [e].[REASON_FOR_LEAVING] AS [ReasonForLeaving]
+FROM [HR_PERSONNEL].[EMPLOYEE_EXPERIENCES] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.033 +03:00 [INF] Route matched with {action = "GetEmergencyContacts", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmergencyContactDto]]]] GetEmergencyContacts(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:54.034 +03:00 [INF] Route matched with {action = "GetBankAccounts", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeBankAccountDto]]]] GetBankAccounts(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:54.095 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetQualifications (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 70.2104ms.
+2026-02-15 01:23:54.090 +03:00 [INF] Executing action method HRMS.API.Controllers.Core.JobGradesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:54.101 +03:00 [INF] Executed action method HRMS.API.Controllers.Core.CountriesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 437.0585ms.
+2026-02-15 01:23:54.091 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Core.BankListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:54.103 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetExperiences (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 52.5732ms.
+2026-02-15 01:23:54.132 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetEmergencyContacts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:54.035 +03:00 [INF] Route matched with {action = "GetDependents", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.DependentDto]]]] GetDependents(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:54.039 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:23:54.157 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.EmployeeQualificationDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.160 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Core.CountryListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:54.162 +03:00 [INF] Executed action HRMS.API.Controllers.Core.BanksController.GetAll (HRMS.API) in 648.4972ms
+2026-02-15 01:23:54.164 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.EmployeeExperienceDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.155 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetBankAccounts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:54.163 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_CORE].[JOB_GRADES] AS [j]
+WHERE [j].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:23:54.049 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetAddresses (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 368.536ms.
+2026-02-15 01:23:54.056 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetContracts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 261.3227ms.
+2026-02-15 01:23:54.190 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetDependents (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:54.190 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[CONTACT_ID] AS [ContactId], [e].[CONTACT_NAME_AR] AS [ContactNameAr], [e].[RELATIONSHIP] AS [Relationship], [e].[PHONE_PRIMARY] AS [PhonePrimary], [e].[PHONE_SECONDARY] AS [PhoneSecondary], [e].[IS_PRIMARY] AS [IsPrimary]
+FROM [HR_PERSONNEL].[EMERGENCY_CONTACTS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.191 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetCertifications (HRMS.API)'
+2026-02-15 01:23:54.193 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetQualifications (HRMS.API) in 264.2484ms
+2026-02-15 01:23:54.195 +03:00 [INF] Executed action HRMS.API.Controllers.Core.CountriesController.GetAll (HRMS.API) in 592.0078ms
+2026-02-15 01:23:54.197 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Core.BanksController.GetAll (HRMS.API)'
+2026-02-15 01:23:54.199 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetExperiences (HRMS.API) in 204.1637ms
+2026-02-15 01:23:54.208 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.EmployeeAddressDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.210 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [j].[JOB_GRADE_ID] AS [JobGradeId], [j].[GRADE_CODE] AS [GradeCode], [j].[GRADE_NAME_AR] AS [GradeNameAr], [j].[GRADE_NAME_EN] AS [GradeNameEn], [j].[GRADE_LEVEL] AS [GradeLevel], [j].[MIN_SALARY] AS [MinSalary], [j].[MAX_SALARY] AS [MaxSalary]
+FROM [HR_CORE].[JOB_GRADES] AS [j]
+WHERE [j].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [j].[GRADE_LEVEL]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2026-02-15 01:23:54.211 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ACCOUNT_ID], [e].[ACCOUNT_NUMBER], [e].[BANK_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IBAN], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[IS_PRIMARY], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [b].[BANK_ID], [b].[ADDRESS], [b].[BANK_CODE], [b].[BANK_NAME_AR], [b].[BANK_NAME_EN], [b].[CREATED_AT], [b].[CREATED_BY], [b].[EMAIL], [b].[IS_DELETED], [b].[PHONE], [b].[SWIFT_CODE], [b].[UPDATED_AT], [b].[UPDATED_BY], [b].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEE_BANK_ACCOUNTS] AS [e]
+INNER JOIN [HR_CORE].[BANKS] AS [b] ON [e].[BANK_ID] = [b].[BANK_ID]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.211 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.ContractDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.217 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetEmergencyContacts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 51.1769ms.
+2026-02-15 01:23:54.219 +03:00 [INF] Route matched with {action = "GetCertifications", controller = "EmployeeProfile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeCertificationDto]]]] GetCertifications(Int32) on controller HRMS.API.Controllers.Personnel.EmployeeProfileController (HRMS.API).
+2026-02-15 01:23:54.219 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[DEPENDENT_ID], [d].[BIRTH_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[IS_ELIGIBLE_FOR_INSURANCE], [d].[IS_ELIGIBLE_FOR_TICKET], [d].[NAME_AR], [d].[NATIONAL_ID], [d].[RELATIONSHIP], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_PERSONNEL].[DEPENDENTS] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.221 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetQualifications (HRMS.API)'
+2026-02-15 01:23:54.276 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetDependents (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 63.6982ms.
+2026-02-15 01:23:54.222 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Core.CountriesController.GetAll (HRMS.API)'
+2026-02-15 01:23:54.224 +03:00 [INF] HTTP GET /api/Banks responded 200 in 754.0216 ms
+2026-02-15 01:23:54.226 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetExperiences (HRMS.API)'
+2026-02-15 01:23:54.241 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.EmergencyContactDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.232 +03:00 [INF] Executed action method HRMS.API.Controllers.Core.JobGradesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 74.1045ms.
+2026-02-15 01:23:54.228 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetAddresses (HRMS.API) in 592.9005ms
+2026-02-15 01:23:54.239 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetContracts (HRMS.API) in 662.295ms
+2026-02-15 01:23:54.271 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetCertifications (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:23:54.236 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetBankAccounts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 34.6795ms.
+2026-02-15 01:23:54.276 +03:00 [INF] HTTP GET /api/employee-profile/2/qualifications responded 200 in 572.3785 ms
+2026-02-15 01:23:54.279 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.DependentDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.309 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetDependents (HRMS.API) in 140.1491ms
+2026-02-15 01:23:54.311 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetDependents (HRMS.API)'
+2026-02-15 01:23:54.313 +03:00 [INF] HTTP GET /api/employee-profile/2/dependents responded 200 in 829.0551 ms
+2026-02-15 01:23:54.288 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetEmergencyContacts (HRMS.API) in 181.774ms
+2026-02-15 01:23:54.290 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Core.JobGradeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:23:54.293 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetAddresses (HRMS.API)'
+2026-02-15 01:23:54.295 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetContracts (HRMS.API)'
+2026-02-15 01:23:54.301 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.EmployeeBankAccountDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.304 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/qualifications - 200 null application/json; charset=utf-8 629.085ms
+2026-02-15 01:23:54.281 +03:00 [INF] HTTP GET /api/Countries responded 200 in 814.3430 ms
+2026-02-15 01:23:54.341 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Countries - 200 null application/json; charset=utf-8 902.6038ms
+2026-02-15 01:23:54.285 +03:00 [INF] HTTP GET /api/employee-profile/2/experiences responded 200 in 595.2501 ms
+2026-02-15 01:23:54.355 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/experiences - 200 null application/json; charset=utf-8 690.6374ms
+2026-02-15 01:23:54.317 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/dependents - 200 null application/json; charset=utf-8 860.309ms
+2026-02-15 01:23:54.320 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetEmergencyContacts (HRMS.API)'
+2026-02-15 01:23:54.323 +03:00 [INF] Executed action HRMS.API.Controllers.Core.JobGradesController.GetAll (HRMS.API) in 263.1043ms
+2026-02-15 01:23:54.324 +03:00 [INF] HTTP GET /api/employee-profile/2/addresses responded 200 in 861.3901 ms
+2026-02-15 01:23:54.326 +03:00 [INF] HTTP GET /api/employee-profile/2/contracts responded 200 in 847.6320 ms
+2026-02-15 01:23:54.329 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetBankAccounts (HRMS.API) in 195.2722ms
+2026-02-15 01:23:54.283 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Banks - 200 null application/json; charset=utf-8 841.0416ms
+2026-02-15 01:23:54.314 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[CERT_ID], [e].[ATTACHMENT_PATH], [e].[CERT_NAME_AR], [e].[CERT_NUMBER], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[EXPIRY_DATE], [e].[IS_DELETED], [e].[IS_MANDATORY], [e].[ISSUE_DATE], [e].[ISSUING_AUTHORITY], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEE_CERTIFICATIONS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0
+2026-02-15 01:23:54.370 +03:00 [INF] HTTP GET /api/employee-profile/2/emergency-contacts responded 200 in 862.5821 ms
+2026-02-15 01:23:54.372 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Core.JobGradesController.GetAll (HRMS.API)'
+2026-02-15 01:23:54.375 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/addresses - 200 null application/json; charset=utf-8 939.7795ms
+2026-02-15 01:23:54.379 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/contracts - 200 null application/json; charset=utf-8 930.128ms
+2026-02-15 01:23:54.381 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetBankAccounts (HRMS.API)'
+2026-02-15 01:23:54.390 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeeProfileController.GetCertifications (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 92.7945ms.
+2026-02-15 01:23:54.393 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/emergency-contacts - 200 null application/json; charset=utf-8 904.9352ms
+2026-02-15 01:23:54.395 +03:00 [INF] HTTP GET /api/JobGrades responded 200 in 610.4887 ms
+2026-02-15 01:23:54.405 +03:00 [INF] HTTP GET /api/employee-profile/2/bank-accounts responded 200 in 907.1044 ms
+2026-02-15 01:23:54.408 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Personnel.EmployeeCertificationDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:23:54.414 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/JobGrades - 200 null application/json; charset=utf-8 696.0916ms
+2026-02-15 01:23:54.416 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/bank-accounts - 200 null application/json; charset=utf-8 963.4941ms
+2026-02-15 01:23:54.418 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeeProfileController.GetCertifications (HRMS.API) in 172.8158ms
+2026-02-15 01:23:54.429 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeeProfileController.GetCertifications (HRMS.API)'
+2026-02-15 01:23:54.431 +03:00 [INF] HTTP GET /api/employee-profile/2/certifications responded 200 in 391.7183 ms
+2026-02-15 01:23:54.434 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/employee-profile/2/certifications - 200 null application/json; charset=utf-8 681.0226ms
+2026-02-15 01:24:16.077 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/shifts - null null
+2026-02-15 01:24:16.081 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:16.084 +03:00 [INF] HTTP OPTIONS /api/AttendanceSettings/shifts responded 204 in 2.0998 ms
+2026-02-15 01:24:16.088 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/shifts - 204 null null 10.6719ms
+2026-02-15 01:24:16.091 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - null null
+2026-02-15 01:24:16.099 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:16.101 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:24:16.103 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Attendance.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:24:16.132 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:16.141 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-02-15 01:24:16.145 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 10.0961ms.
+2026-02-15 01:24:16.148 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.DTOs.Attendance.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:24:16.152 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 45.0631ms
+2026-02-15 01:24:16.155 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:24:16.156 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 57.2265 ms
+2026-02-15 01:24:16.159 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 68.2318ms
+2026-02-15 01:24:18.144 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - null null
+2026-02-15 01:24:18.145 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - null null
+2026-02-15 01:24:18.149 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:18.155 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:18.157 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:24:18.159 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 3.9166 ms
+2026-02-15 01:24:18.161 +03:00 [INF] Route matched with {action = "GetAllShifts", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Attendance.ShiftTypeDto]]] GetAllShifts() on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:24:18.164 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - 204 null null 19.7145ms
+2026-02-15 01:24:18.211 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - null null
+2026-02-15 01:24:18.249 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:18.258 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:18.262 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:24:18.264 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:24:18.267 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[SHIFT_ID] AS [ShiftId], [s].[SHIFT_NAME_AR] AS [ShiftNameAr], [s].[START_TIME] AS [StartTime], [s].[END_TIME] AS [EndTime], [s].[HOURS_COUNT] AS [HoursCount], [s].[IS_CROSS_DAY] AS [IsCrossDay], [s].[GRACE_PERIOD_MINS] AS [GracePeriodMins]
+FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+WHERE [s].[IS_DELETED] = CAST(0 AS tinyint)
+ORDER BY [s].[SHIFT_ID]
+2026-02-15 01:24:18.298 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:18.302 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 41.5467ms.
+2026-02-15 01:24:18.306 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[HRMS.Application.DTOs.Attendance.ShiftTypeDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:24:18.309 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:24:18.309 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API) in 91.2186ms
+2026-02-15 01:24:18.316 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetAllShifts (HRMS.API)'
+2026-02-15 01:24:18.319 +03:00 [INF] HTTP GET /api/AttendanceSettings/shifts responded 200 in 169.1392 ms
+2026-02-15 01:24:18.322 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/AttendanceSettings/shifts - 200 null application/json; charset=utf-8 177.8511ms
+2026-02-15 01:24:18.325 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:24:18.375 +03:00 [INF] Executed DbCommand (37ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:24:18.381 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 77.6535ms.
+2026-02-15 01:24:18.387 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:24:18.391 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 119.8777ms
+2026-02-15 01:24:18.395 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:24:18.401 +03:00 [INF] HTTP GET /api/Employees responded 200 in 143.3980 ms
+2026-02-15 01:24:18.405 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - 200 null application/json; charset=utf-8 194.0867ms
+2026-02-15 01:24:33.881 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/initialize-roster - null null
+2026-02-15 01:24:33.888 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:33.891 +03:00 [INF] HTTP OPTIONS /api/AttendanceSettings/initialize-roster responded 204 in 2.9343 ms
+2026-02-15 01:24:33.896 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/initialize-roster - 204 null null 15.0784ms
+2026-02-15 01:24:33.898 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5201/api/AttendanceSettings/initialize-roster - application/json 104
+2026-02-15 01:24:33.909 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:33.910 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-02-15 01:24:33.919 +03:00 [INF] Route matched with {action = "InitializeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Boolean]] InitializeRoster(HRMS.Application.Features.Attendance.Roster.Commands.InitializeRoster.InitializeRosterCommand) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:24:33.955 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:34.009 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+        WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-02-15 01:24:34.034 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__request_ShiftId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [HR_ATTENDANCE].[SHIFT_TYPES] AS [s]
+        WHERE [s].[SHIFT_ID] = @__request_ShiftId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-02-15 01:24:34.059 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__request_StartDate_1='?' (DbType = DateTime2), @__request_EndDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_DATE]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__request_StartDate_1 AND [e].[ROSTER_DATE] <= @__request_EndDate_2
+2026-02-15 01:24:34.174 +03:00 [INF] Executed DbCommand (19ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (Size = 1) (DbType = Byte), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (DbType = DateTime2), @p6='?' (DbType = Int32), @p7='?' (Size = 20), @p8='?' (DbType = DateTime2), @p9='?' (Size = 50), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime2), @p12='?' (Size = 50), @p13='?' (DbType = Int32), @p14='?' (Size = 1) (DbType = Byte), @p15='?' (Size = 1) (DbType = Byte), @p16='?' (DbType = DateTime2), @p17='?' (DbType = Int32), @p18='?' (Size = 20), @p19='?' (DbType = DateTime2), @p20='?' (Size = 50), @p21='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, 0),
+(@p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, 1)) AS i ([CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [IS_DELETED], [IS_OFF_DAY], [ROSTER_DATE], [SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([CREATED_AT], [CREATED_BY], [EMPLOYEE_ID], [IS_DELETED], [IS_OFF_DAY], [ROSTER_DATE], [SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[CREATED_AT], i.[CREATED_BY], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[IS_OFF_DAY], i.[ROSTER_DATE], i.[SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[ROSTER_ID], i._Position;
+2026-02-15 01:24:34.198 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (Size = 50), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 50), @p6='?' (DbType = Int64), @p7='?' (Size = 100), @p8='?' (Size = 200), @p9='?' (Size = 20), @p10='?' (Size = 50), @p11='?' (Size = 4000), @p12='?' (Size = 4000), @p13='?' (DbType = DateTime2), @p14='?' (Size = 50), @p15='?' (DbType = Int64), @p16='?' (Size = 100), @p17='?' (Size = 200)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [HR_CORE].[AUDIT_LOGS] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, 0),
+(@p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, 1)) AS i ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT])
+VALUES (i.[ACTION_TYPE], i.[IP_ADDRESS], i.[NEW_VALUE], i.[OLD_VALUE], i.[PERFORMED_AT], i.[PERFORMED_BY], i.[RECORD_ID], i.[TABLE_NAME], i.[USER_AGENT])
+OUTPUT INSERTED.[LOG_ID], i._Position;
+2026-02-15 01:24:34.208 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 250.4697ms.
+2026-02-15 01:24:34.213 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Boolean'.
+2026-02-15 01:24:34.219 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API) in 296.0704ms
+2026-02-15 01:24:34.222 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.InitializeRoster (HRMS.API)'
+2026-02-15 01:24:34.225 +03:00 [INF] HTTP POST /api/AttendanceSettings/initialize-roster responded 200 in 316.0771 ms
+2026-02-15 01:24:34.227 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5201/api/AttendanceSettings/initialize-roster - 200 null application/json; charset=utf-8 328.9438ms
+2026-02-15 01:24:40.966 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/roster/2 - null null
+2026-02-15 01:24:40.970 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:40.972 +03:00 [INF] HTTP OPTIONS /api/AttendanceSettings/roster/2 responded 204 in 1.6774 ms
+2026-02-15 01:24:40.975 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/AttendanceSettings/roster/2 - 204 null null 9.3874ms
+2026-02-15 01:24:40.977 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/AttendanceSettings/roster/2 - null null
+2026-02-15 01:24:40.986 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:40.988 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API)'
+2026-02-15 01:24:41.007 +03:00 [INF] Route matched with {action = "GetEmployeeRoster", controller = "AttendanceSettings"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster.MyRosterDto]]]] GetEmployeeRoster(Int32) on controller HRMS.API.Controllers.Attendance.AttendanceSettingsController (HRMS.API).
+2026-02-15 01:24:41.050 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:41.061 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__startOfMonth_1='?' (DbType = DateTime2), @__endOfNextMonth_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[STATUS], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [e].[ROSTER_DATE] >= @__startOfMonth_1 AND [e].[ROSTER_DATE] <= @__endOfNextMonth_2
+ORDER BY [e].[ROSTER_DATE]
+2026-02-15 01:24:41.120 +03:00 [INF] Executed DbCommand (53ms) [Parameters=[@__request_EmployeeId_0='?' (DbType = Int32), @__startOfMonth_1='?' (DbType = DateTime2), @__endOfNextMonth_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__request_EmployeeId_0 AND [d].[ATTENDANCE_DATE] >= @__startOfMonth_1 AND [d].[ATTENDANCE_DATE] <= @__endOfNextMonth_2
+2026-02-15 01:24:41.234 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 182.245ms.
+2026-02-15 01:24:41.240 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster.MyRosterDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:24:41.246 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API) in 234.7785ms
+2026-02-15 01:24:41.251 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceSettingsController.GetEmployeeRoster (HRMS.API)'
+2026-02-15 01:24:41.259 +03:00 [INF] HTTP GET /api/AttendanceSettings/roster/2 responded 200 in 272.6018 ms
+2026-02-15 01:24:41.262 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/AttendanceSettings/roster/2 - 200 null application/json; charset=utf-8 284.9591ms
+2026-02-15 01:24:54.956 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - null null
+2026-02-15 01:24:54.960 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:54.961 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 1.0716 ms
+2026-02-15 01:24:54.964 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - 204 null null 7.602ms
+2026-02-15 01:24:54.966 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - null null
+2026-02-15 01:24:54.972 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:54.973 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:24:54.975 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:24:54.999 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:55.004 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:24:55.016 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:24:55.028 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:24:55.036 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 34.9514ms.
+2026-02-15 01:24:55.039 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:24:55.042 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 63.5199ms
+2026-02-15 01:24:55.043 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:24:55.045 +03:00 [INF] HTTP GET /api/Employees responded 200 in 72.6095 ms
+2026-02-15 01:24:55.047 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=1000 - 200 null application/json; charset=utf-8 81.093ms
+2026-02-15 01:24:57.926 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Attendance/punch - null null
+2026-02-15 01:24:57.929 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:57.930 +03:00 [INF] HTTP OPTIONS /api/Attendance/punch responded 204 in 0.9622 ms
+2026-02-15 01:24:57.932 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Attendance/punch - 204 null null 6.1944ms
+2026-02-15 01:24:57.934 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5201/api/Attendance/punch - application/json 95
+2026-02-15 01:24:57.939 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:24:57.940 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API)'
+2026-02-15 01:24:57.949 +03:00 [INF] Route matched with {action = "RegisterPunch", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int64]] RegisterPunch(HRMS.Application.Features.Attendance.Punch.RegisterPunch.RegisterPunchCommand) on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-15 01:24:57.979 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:24:58.040 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (Size = 1) (DbType = Byte), @p6='?' (DbType = DateTime2), @p7='?' (Size = 10), @p8='?' (DbType = DateTime2), @p9='?' (Size = 50), @p10='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[RAW_PUNCH_LOGS] ([CREATED_AT], [CREATED_BY], [DEVICE_ID], [EMPLOYEE_ID], [IS_DELETED], [IS_PROCESSED], [PUNCH_TIME], [PUNCH_TYPE], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[LOG_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);
+2026-02-15 01:24:58.052 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (Size = 50), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 50), @p6='?' (DbType = Int64), @p7='?' (Size = 100), @p8='?' (Size = 200)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_CORE].[AUDIT_LOGS] ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT])
+OUTPUT INSERTED.[LOG_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+2026-02-15 01:24:58.089 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[STATUS], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0 AND [e].[IS_OFF_DAY] = CAST(0 AS tinyint) AND [e].[SHIFT_ID] IS NOT NULL
+2026-02-15 01:24:58.138 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE CONVERT(date, [r].[PUNCH_TIME]) = @__targetDate_0
+ORDER BY [r].[PUNCH_TIME]
+2026-02-15 01:24:58.154 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PERMISSION_REQUEST_ID], [p].[APPROVED_AT], [p].[APPROVED_BY], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[HOURS], [p].[IS_DELETED], [p].[PERMISSION_DATE], [p].[PERMISSION_TYPE], [p].[REASON], [p].[REJECTION_REASON], [p].[STATUS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO]
+FROM [HR_ATTENDANCE].[PERMISSION_REQUESTS] AS [p]
+WHERE [p].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [p].[PERMISSION_DATE] = @__8__locals1_targetDate_1 AND [p].[STATUS] = N'Approved'
+2026-02-15 01:24:58.176 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [d].[ATTENDANCE_DATE] = @__8__locals1_targetDate_1
+2026-02-15 01:24:58.219 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PERMISSION_REQUEST_ID], [p].[APPROVED_AT], [p].[APPROVED_BY], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[HOURS], [p].[IS_DELETED], [p].[PERMISSION_DATE], [p].[PERMISSION_TYPE], [p].[REASON], [p].[REJECTION_REASON], [p].[STATUS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO]
+FROM [HR_ATTENDANCE].[PERMISSION_REQUESTS] AS [p]
+WHERE [p].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [p].[PERMISSION_DATE] = @__8__locals1_targetDate_1 AND [p].[STATUS] = N'Approved'
+2026-02-15 01:24:58.224 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [d].[ATTENDANCE_DATE] = @__8__locals1_targetDate_1
+2026-02-15 01:24:58.284 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 50), @p5='?' (DbType = Int16), @p6='?' (DbType = Int32), @p7='?' (Size = 1) (DbType = Byte), @p8='?' (DbType = Int16), @p9='?' (DbType = Int16), @p10='?' (DbType = Int32), @p11='?' (Size = 20), @p12='?' (DbType = DateTime2), @p13='?' (Size = 50), @p14='?' (DbType = Int32), @p15='?' (DbType = DateTime2), @p16='?' (DbType = DateTime2), @p17='?' (DbType = DateTime2), @p18='?' (DbType = DateTime2), @p19='?' (Size = 50), @p20='?' (DbType = Int16), @p21='?' (DbType = Int32), @p22='?' (Size = 1) (DbType = Byte), @p23='?' (DbType = Int16), @p24='?' (DbType = Int16), @p25='?' (DbType = Int32), @p26='?' (Size = 20), @p27='?' (DbType = DateTime2), @p28='?' (Size = 50), @p29='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [HR_ATTENDANCE].[DAILY_ATTENDANCE] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, 0),
+(@p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, 1)) AS i ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTUAL_IN_TIME], [ACTUAL_OUT_TIME], [ATTENDANCE_DATE], [CREATED_AT], [CREATED_BY], [EARLY_LEAVE_MINUTES], [EMPLOYEE_ID], [IS_DELETED], [LATE_MINUTES], [OVERTIME_MINUTES], [PLANNED_SHIFT_ID], [STATUS], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+VALUES (i.[ACTUAL_IN_TIME], i.[ACTUAL_OUT_TIME], i.[ATTENDANCE_DATE], i.[CREATED_AT], i.[CREATED_BY], i.[EARLY_LEAVE_MINUTES], i.[EMPLOYEE_ID], i.[IS_DELETED], i.[LATE_MINUTES], i.[OVERTIME_MINUTES], i.[PLANNED_SHIFT_ID], i.[STATUS], i.[UPDATED_AT], i.[UPDATED_BY], i.[VERSION_NO])
+OUTPUT INSERTED.[RECORD_ID], i._Position;
+2026-02-15 01:24:58.305 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (Size = 50), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 50), @p6='?' (DbType = Int64), @p7='?' (Size = 100), @p8='?' (Size = 200), @p9='?' (Size = 20), @p10='?' (Size = 50), @p11='?' (Size = 4000), @p12='?' (Size = 4000), @p13='?' (DbType = DateTime2), @p14='?' (Size = 50), @p15='?' (DbType = Int64), @p16='?' (Size = 100), @p17='?' (Size = 200)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [HR_CORE].[AUDIT_LOGS] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, 0),
+(@p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, 1)) AS i ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT])
+VALUES (i.[ACTION_TYPE], i.[IP_ADDRESS], i.[NEW_VALUE], i.[OLD_VALUE], i.[PERFORMED_AT], i.[PERFORMED_BY], i.[RECORD_ID], i.[TABLE_NAME], i.[USER_AGENT])
+OUTPUT INSERTED.[LOG_ID], i._Position;
+2026-02-15 01:24:58.312 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 330.8889ms.
+2026-02-15 01:24:58.314 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int64'.
+2026-02-15 01:24:58.318 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API) in 363.1624ms
+2026-02-15 01:24:58.321 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API)'
+2026-02-15 01:24:58.322 +03:00 [INF] HTTP POST /api/Attendance/punch responded 200 in 383.6787 ms
+2026-02-15 01:24:58.325 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5201/api/Attendance/punch - 200 null application/json; charset=utf-8 390.7919ms
+2026-02-15 01:25:40.465 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Attendance/punch - null null
+2026-02-15 01:25:40.473 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:25:40.474 +03:00 [INF] HTTP OPTIONS /api/Attendance/punch responded 204 in 1.3871 ms
+2026-02-15 01:25:40.477 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Attendance/punch - 204 null null 23.3287ms
+2026-02-15 01:25:40.491 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5201/api/Attendance/punch - application/json 95
+2026-02-15 01:25:40.502 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:25:40.504 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API)'
+2026-02-15 01:25:40.505 +03:00 [INF] Route matched with {action = "RegisterPunch", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Int64]] RegisterPunch(HRMS.Application.Features.Attendance.Punch.RegisterPunch.RegisterPunchCommand) on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-15 01:25:40.526 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:25:40.535 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 50), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (Size = 1) (DbType = Byte), @p5='?' (Size = 1) (DbType = Byte), @p6='?' (DbType = DateTime2), @p7='?' (Size = 10), @p8='?' (DbType = DateTime2), @p9='?' (Size = 50), @p10='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_ATTENDANCE].[RAW_PUNCH_LOGS] ([CREATED_AT], [CREATED_BY], [DEVICE_ID], [EMPLOYEE_ID], [IS_DELETED], [IS_PROCESSED], [PUNCH_TIME], [PUNCH_TYPE], [UPDATED_AT], [UPDATED_BY], [VERSION_NO])
+OUTPUT INSERTED.[LOG_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);
+2026-02-15 01:25:40.542 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (Size = 50), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 50), @p6='?' (DbType = Int64), @p7='?' (Size = 100), @p8='?' (Size = 200)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [HR_CORE].[AUDIT_LOGS] ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT])
+OUTPUT INSERTED.[LOG_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+2026-02-15 01:25:40.551 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[ROSTER_ID], [e].[CREATED_AT], [e].[CREATED_BY], [e].[EMPLOYEE_ID], [e].[IS_DELETED], [e].[IS_OFF_DAY], [e].[ROSTER_DATE], [e].[SHIFT_ID], [e].[STATUS], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[SHIFT_ID], [s].[CREATED_AT], [s].[CREATED_BY], [s].[END_TIME], [s].[GRACE_PERIOD_MINS], [s].[HOURS_COUNT], [s].[IS_CROSS_DAY], [s].[IS_DELETED], [s].[SHIFT_NAME_AR], [s].[START_TIME], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_ATTENDANCE].[EMPLOYEE_ROSTERS] AS [e]
+LEFT JOIN [HR_ATTENDANCE].[SHIFT_TYPES] AS [s] ON [e].[SHIFT_ID] = [s].[SHIFT_ID]
+WHERE [e].[ROSTER_DATE] = @__targetDate_0 AND [e].[IS_OFF_DAY] = CAST(0 AS tinyint) AND [e].[SHIFT_ID] IS NOT NULL
+2026-02-15 01:25:40.558 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__targetDate_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LOG_ID], [r].[CREATED_AT], [r].[CREATED_BY], [r].[DEVICE_ID], [r].[EMPLOYEE_ID], [r].[IS_DELETED], [r].[IS_PROCESSED], [r].[PUNCH_TIME], [r].[PUNCH_TYPE], [r].[UPDATED_AT], [r].[UPDATED_BY], [r].[VERSION_NO]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE CONVERT(date, [r].[PUNCH_TIME]) = @__targetDate_0
+ORDER BY [r].[PUNCH_TIME]
+2026-02-15 01:25:40.566 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PERMISSION_REQUEST_ID], [p].[APPROVED_AT], [p].[APPROVED_BY], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[HOURS], [p].[IS_DELETED], [p].[PERMISSION_DATE], [p].[PERMISSION_TYPE], [p].[REASON], [p].[REJECTION_REASON], [p].[STATUS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO]
+FROM [HR_ATTENDANCE].[PERMISSION_REQUESTS] AS [p]
+WHERE [p].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [p].[PERMISSION_DATE] = @__8__locals1_targetDate_1 AND [p].[STATUS] = N'Approved'
+2026-02-15 01:25:40.578 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [d].[ATTENDANCE_DATE] = @__8__locals1_targetDate_1
+2026-02-15 01:25:40.583 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[PERMISSION_REQUEST_ID], [p].[APPROVED_AT], [p].[APPROVED_BY], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[HOURS], [p].[IS_DELETED], [p].[PERMISSION_DATE], [p].[PERMISSION_TYPE], [p].[REASON], [p].[REJECTION_REASON], [p].[STATUS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO]
+FROM [HR_ATTENDANCE].[PERMISSION_REQUESTS] AS [p]
+WHERE [p].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [p].[PERMISSION_DATE] = @__8__locals1_targetDate_1 AND [p].[STATUS] = N'Approved'
+2026-02-15 01:25:40.588 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__roster_EmployeeId_0='?' (DbType = Int32), @__8__locals1_targetDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[EMPLOYEE_ID] = @__roster_EmployeeId_0 AND [d].[ATTENDANCE_DATE] = @__8__locals1_targetDate_1
+2026-02-15 01:25:40.609 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (Size = 50), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 50), @p6='?' (DbType = Int64), @p7='?' (Size = 100), @p8='?' (Size = 200), @p10='?' (DbType = Int64), @p9='?' (DbType = DateTime2), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [HR_CORE].[AUDIT_LOGS] ([ACTION_TYPE], [IP_ADDRESS], [NEW_VALUE], [OLD_VALUE], [PERFORMED_AT], [PERFORMED_BY], [RECORD_ID], [TABLE_NAME], [USER_AGENT])
+OUTPUT INSERTED.[LOG_ID]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+UPDATE [HR_ATTENDANCE].[DAILY_ATTENDANCE] SET [ACTUAL_OUT_TIME] = @p9
+OUTPUT 1
+WHERE [RECORD_ID] = @p10 AND [VERSION_NO] = @p11;
+2026-02-15 01:25:40.952 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 423.5801ms.
+2026-02-15 01:25:40.955 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Int64'.
+2026-02-15 01:25:40.956 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API) in 448.6396ms
+2026-02-15 01:25:40.959 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.RegisterPunch (HRMS.API)'
+2026-02-15 01:25:40.960 +03:00 [INF] HTTP POST /api/Attendance/punch responded 200 in 457.9971 ms
+2026-02-15 01:25:40.962 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5201/api/Attendance/punch - 200 null application/json; charset=utf-8 470.5369ms
+2026-02-15 01:25:47.316 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Attendance/reports/payroll-summary?month=2&year=2026 - null null
+2026-02-15 01:25:47.320 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:25:47.321 +03:00 [INF] HTTP OPTIONS /api/Attendance/reports/payroll-summary responded 204 in 1.1724 ms
+2026-02-15 01:25:47.324 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Attendance/reports/payroll-summary?month=2&year=2026 - 204 null null 7.1845ms
+2026-02-15 01:25:47.326 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Attendance/reports/payroll-summary?month=2&year=2026 - null null
+2026-02-15 01:25:47.332 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:25:47.333 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetPayrollSummary (HRMS.API)'
+2026-02-15 01:25:47.339 +03:00 [INF] Route matched with {action = "GetPayrollSummary", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.Features.Attendance.Reports.Queries.GetMonthlyPayrollSummary.PayrollAttendanceSummaryDto]]]] GetPayrollSummary(Int32, Int32) on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-15 01:25:47.365 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceController.GetPayrollSummary (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:25:47.429 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__startDate_0='?' (DbType = DateTime2), @__endDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [d0].[DEPT_ID], [d0].[BranchId], [d0].[COST_CENTER_CODE], [d0].[CREATED_AT], [d0].[CREATED_BY], [d0].[DEPT_NAME_AR], [d0].[DEPT_NAME_EN], [d0].[IS_ACTIVE], [d0].[IS_DELETED], [d0].[MANAGER_ID], [d0].[PARENT_DEPT_ID], [d0].[UPDATED_AT], [d0].[UPDATED_BY], [d0].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e] ON [d].[EMPLOYEE_ID] = [e].[EMPLOYEE_ID]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d0] ON [e].[DEPARTMENT_ID] = [d0].[DEPT_ID]
+WHERE [d].[ATTENDANCE_DATE] >= @__startDate_0 AND [d].[ATTENDANCE_DATE] <= @__endDate_1 AND [d].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:25:47.466 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__endDate_0='?' (DbType = DateTime2), @__startDate_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[REQUEST_ID], [l].[ATTACHMENT_PATH], [l].[CREATED_AT], [l].[CREATED_BY], [l].[DAYS_COUNT], [l].[EMPLOYEE_ID], [l].[END_DATE], [l].[IS_DELETED], [l].[IS_POSTED_TO_BALANCE], [l].[LEAVE_TYPE_ID], [l].[REASON], [l].[REJECTION_REASON], [l].[START_DATE], [l].[STATUS], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO], [l0].[LEAVE_TYPE_ID], [l0].[CREATED_AT], [l0].[CREATED_BY], [l0].[DEFAULT_DAYS], [l0].[IS_CARRY_FORWARD], [l0].[IS_DEDUCTIBLE], [l0].[IS_DELETED], [l0].[IS_PAID], [l0].[LEAVE_NAME_AR], [l0].[LEAVE_NAME_EN], [l0].[MAX_DAYS_PER_YEAR], [l0].[REQUIRES_ATTACHMENT], [l0].[UPDATED_AT], [l0].[UPDATED_BY], [l0].[VERSION_NO]
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+INNER JOIN [HR_LEAVES].[LEAVE_TYPES] AS [l0] ON [l].[LEAVE_TYPE_ID] = [l0].[LEAVE_TYPE_ID]
+WHERE [l].[STATUS] = N'APPROVED' AND [l].[IS_DELETED] = CAST(0 AS tinyint) AND [l].[START_DATE] <= @__endDate_0 AND [l].[END_DATE] >= @__startDate_1
+2026-02-15 01:25:47.483 +03:00 [INF] Executed action method HRMS.API.Controllers.Attendance.AttendanceController.GetPayrollSummary (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 116.3245ms.
+2026-02-15 01:25:47.486 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.Features.Attendance.Reports.Queries.GetMonthlyPayrollSummary.PayrollAttendanceSummaryDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-02-15 01:25:47.492 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.GetPayrollSummary (HRMS.API) in 150.4603ms
+2026-02-15 01:25:47.494 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.GetPayrollSummary (HRMS.API)'
+2026-02-15 01:25:47.496 +03:00 [INF] HTTP GET /api/Attendance/reports/payroll-summary responded 200 in 163.4291 ms
+2026-02-15 01:25:47.498 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Attendance/reports/payroll-summary?month=2&year=2026 - 200 null application/json; charset=utf-8 171.8696ms
+2026-02-15 01:26:08.827 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=100 - null null
+2026-02-15 01:26:08.831 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:26:08.831 +03:00 [INF] HTTP OPTIONS /api/Employees responded 204 in 0.8733 ms
+2026-02-15 01:26:08.833 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Employees?pageNumber=1&pageSize=100 - 204 null null 37.4606ms
+2026-02-15 01:26:08.845 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=100 - null null
+2026-02-15 01:26:08.851 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:26:08.852 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:26:08.853 +03:00 [INF] Route matched with {action = "GetAll", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Personnel.EmployeeListDto]]]] GetAll(HRMS.Application.Features.Personnel.Employees.Queries.GetAllEmployees.GetAllEmployeesQuery) on controller HRMS.API.Controllers.Personnel.EmployeesController (HRMS.API).
+2026-02-15 01:26:08.881 +03:00 [INF] Executing action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:26:08.888 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-02-15 01:26:08.898 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e0].[EMPLOYEE_ID], [e0].[BIRTH_DATE], [e0].[CREATED_AT], [e0].[CREATED_BY], [e0].[DEPARTMENT_ID], [e0].[EMAIL], [e0].[EMPLOYEE_NUMBER], [e0].[FIRST_NAME_AR], [e0].[FULL_NAME_EN], [e0].[GENDER], [e0].[HIRE_DATE], [e0].[IS_ACTIVE], [e0].[IS_DELETED], [e0].[JOB_GRADE_ID], [e0].[JOB_ID], [e0].[LAST_NAME_AR], [e0].[LICENSE_EXPIRY_DATE], [e0].[LICENSE_NUMBER], [e0].[MANAGER_ID], [e0].[MARITAL_STATUS], [e0].[MOBILE], [e0].[NATIONAL_ID], [e0].[NATIONALITY_ID], [e0].[PROFILE_PICTURE_PATH], [e0].[SECOND_NAME_AR], [e0].[SPECIALTY], [e0].[TERMINATION_DATE], [e0].[THIRD_NAME_AR], [e0].[UPDATED_AT], [e0].[UPDATED_BY], [e0].[USER_ID], [e0].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM (
+    SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+    ORDER BY [e].[CREATED_AT] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [e0]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e0].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e0].[JOB_ID] = [j].[JOB_ID]
+ORDER BY [e0].[CREATED_AT] DESC
+2026-02-15 01:26:08.910 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__employeeIds_0='?' (Size = 4000), @__today_1='?' (DbType = DateTime2), @__tomorrow_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType], [r].[PUNCH_TIME] AS [PunchTime]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[EMPLOYEE_ID] IN (
+    SELECT [e].[value]
+    FROM OPENJSON(@__employeeIds_0) WITH ([value] int '$') AS [e]
+) AND [r].[PUNCH_TIME] >= @__today_1 AND [r].[PUNCH_TIME] < @__tomorrow_2
+2026-02-15 01:26:08.913 +03:00 [INF] Executed action method HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 29.7348ms.
+2026-02-15 01:26:08.915 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Application.DTOs.Core.PagedResult`1[[HRMS.Application.DTOs.Personnel.EmployeeListDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-02-15 01:26:08.917 +03:00 [INF] Executed action HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API) in 60.566ms
+2026-02-15 01:26:08.919 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Personnel.EmployeesController.GetAll (HRMS.API)'
+2026-02-15 01:26:08.920 +03:00 [INF] HTTP GET /api/Employees responded 200 in 69.0407 ms
+2026-02-15 01:26:08.922 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Employees?pageNumber=1&pageSize=100 - 200 null application/json; charset=utf-8 77.0245ms
+2026-02-15 01:31:32.171 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Attendance/permissions - null null
+2026-02-15 01:31:32.177 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:31:32.178 +03:00 [INF] HTTP OPTIONS /api/Attendance/permissions responded 204 in 0.9112 ms
+2026-02-15 01:31:32.180 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Attendance/permissions - 204 null null 37.2736ms
+2026-02-15 01:31:32.182 +03:00 [INF] Request starting HTTP/2 POST https://localhost:5201/api/Attendance/permissions - application/json 125
+2026-02-15 01:31:32.188 +03:00 [INF] CORS policy execution successful.
+2026-02-15 01:31:32.189 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.ApplyPermission (HRMS.API)'
+2026-02-15 01:31:32.193 +03:00 [INF] Route matched with {action = "ApplyPermission", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Int32]]] ApplyPermission(HRMS.Application.Features.Attendance.Requests.Permissions.Commands.CreatePermissionRequest.CreatePermissionRequestCommand) on controller HRMS.API.Controllers.Attendance.AttendanceController (HRMS.API).
+2026-02-15 01:31:32.564 +03:00 [INF] Executing action method HRMS.API.Controllers.Attendance.AttendanceController.ApplyPermission (HRMS.API) - Validation state: "Valid"
+2026-02-15 01:31:59.034 +03:00 [INF] Executed action HRMS.API.Controllers.Attendance.AttendanceController.ApplyPermission (HRMS.API) in 26836.9815ms
+2026-02-15 01:31:59.037 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Attendance.AttendanceController.ApplyPermission (HRMS.API)'
+2026-02-15 01:31:59.164 +03:00 [ERR] CRITICAL ERROR CAUGHT: Validation failed: 
+ -- PermissionType: Type must be 'LateEntry' or 'EarlyExit' Severity: Error
+FluentValidation.ValidationException: Validation failed: 
+ -- PermissionType: Type must be 'LateEntry' or 'EarlyExit' Severity: Error
+   at HRMS.Application.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in H:\Final\New folder\Backend\HRMS\HRMS.Application\Behaviors\ValidationBehavior.cs:line 32
+   at HRMS.API.Controllers.Attendance.AttendanceController.ApplyPermission(CreatePermissionRequestCommand command) in H:\Final\New folder\Backend\HRMS\HRMS.API\Controllers\Attendance\AttendanceController.cs:line 205
+   at lambda_method3456(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at HRMS.API.Middleware.GlobalExceptionMiddleware.InvokeAsync(HttpContext context) in H:\Final\New folder\Backend\HRMS\HRMS.API\Middleware\GlobalExceptionMiddleware.cs:line 31
+2026-02-15 01:31:59.384 +03:00 [INF] HTTP POST /api/Attendance/permissions responded 400 in 27196.0984 ms
+2026-02-15 01:31:59.387 +03:00 [INF] Request finished HTTP/2 POST https://localhost:5201/api/Attendance/permissions - 400 null application/json 27205.4704ms
