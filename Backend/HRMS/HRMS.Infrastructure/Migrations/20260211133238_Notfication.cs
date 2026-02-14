@@ -130,12 +130,7 @@ namespace HRMS.Infrastructure.Migrations
                 oldClrType: typeof(int),
                 oldType: "int");
 
-            migrationBuilder.AddColumn<int>(
-                name: "JOB_GRADE_ID",
-                schema: "HR_PERSONNEL",
-                table: "EMPLOYEES",
-                type: "int",
-                nullable: true);
+
 
             migrationBuilder.AlterColumn<string>(
                 name: "REFERENCE_ID",
@@ -157,15 +152,29 @@ namespace HRMS.Infrastructure.Migrations
                 oldClrType: typeof(byte),
                 oldType: "tinyint");
 
-            migrationBuilder.AlterColumn<Guid>(
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_NOTIFICATIONS",
+                schema: "HR_COMMON",
+                table: "NOTIFICATIONS");
+
+            migrationBuilder.DropColumn(
+                name: "NOTIFICATION_ID",
+                schema: "HR_COMMON",
+                table: "NOTIFICATIONS");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "NOTIFICATION_ID",
                 schema: "HR_COMMON",
                 table: "NOTIFICATIONS",
                 type: "uniqueidentifier",
                 nullable: false,
-                oldClrType: typeof(long),
-                oldType: "bigint")
-                .OldAnnotation("SqlServer:Identity", "1, 1");
+                defaultValueSql: "NEWID()");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_NOTIFICATIONS",
+                schema: "HR_COMMON",
+                table: "NOTIFICATIONS",
+                column: "NOTIFICATION_ID");
 
             migrationBuilder.AddColumn<string>(
                 name: "MESSAGE",
@@ -208,10 +217,7 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PAYROLL",
                 table: "PAYSLIPS");
 
-            migrationBuilder.DropColumn(
-                name: "JOB_GRADE_ID",
-                schema: "HR_PERSONNEL",
-                table: "EMPLOYEES");
+
 
             migrationBuilder.DropColumn(
                 name: "MESSAGE",
@@ -325,15 +331,29 @@ namespace HRMS.Infrastructure.Migrations
                 oldClrType: typeof(bool),
                 oldType: "bit");
 
-            migrationBuilder.AlterColumn<long>(
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_NOTIFICATIONS",
+                schema: "HR_CORE",
+                table: "NOTIFICATIONS");
+
+            migrationBuilder.DropColumn(
+                name: "NOTIFICATION_ID",
+                schema: "HR_CORE",
+                table: "NOTIFICATIONS");
+
+            migrationBuilder.AddColumn<long>(
                 name: "NOTIFICATION_ID",
                 schema: "HR_CORE",
                 table: "NOTIFICATIONS",
                 type: "bigint",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier")
+                nullable: false)
                 .Annotation("SqlServer:Identity", "1, 1");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_NOTIFICATIONS",
+                schema: "HR_CORE",
+                table: "NOTIFICATIONS",
+                column: "NOTIFICATION_ID");
 
             migrationBuilder.AddColumn<string>(
                 name: "MESSAGE_AR",
