@@ -11,6 +11,8 @@ export const routes: Routes = [
             { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
     },
+    // Unauthorized Page
+    { path: 'unauthorized', loadComponent: () => import('./features/auth/pages/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent) },
     // Protected Dashboard Routes
     { path: 'dashboard', canActivate: [authGuard], loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

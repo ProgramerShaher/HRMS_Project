@@ -24,5 +24,6 @@ export interface AuthResponse {
   refreshToken?: string | null;
   tokenExpiration: string; // DateTime ISO string
   roles: string[];
+  permissions: string[]; // Added for permission-based authorization
   employeeId?: number | null;
 }

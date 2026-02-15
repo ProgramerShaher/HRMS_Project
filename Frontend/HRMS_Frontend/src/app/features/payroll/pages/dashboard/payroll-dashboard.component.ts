@@ -10,7 +10,6 @@ import { PayrollDashboardStats } from '../../models/payroll-processing.models';
 import { LoanSummary } from '../../models/loan.models';
 import { SalaryBreakdown } from '../../models/salary-structure.models';
 import { AuthService } from '../../../../core/auth/services/auth.service';
-import { ActionButtonsComponent } from '../../../../shared/components/action-buttons/action-buttons.component';
 
 Chart.register(...registerables);
 
@@ -21,7 +20,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-payroll-dashboard',
   standalone: true,
-  imports: [CommonModule, ButtonModule, ActionButtonsComponent],
+  imports: [CommonModule, ButtonModule],
   templateUrl: './payroll-dashboard.component.html',
   styles: [`
     :host { display: block; }
@@ -39,7 +38,7 @@ export class PayrollDashboardComponent implements OnInit, OnDestroy {
   loanSummary = signal<LoanSummary | null>(null);
   salaryBreakdown = signal<SalaryBreakdown | null>(null);
   loading = signal(false);
-  
+
   // Luxury enhancements
   greeting = signal<string>('');
   currentTime = signal<string>(new Date().toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' }));
@@ -50,7 +49,7 @@ export class PayrollDashboardComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.updateGreeting();
-    
+
     // Re-render charts when data updates
     effect(() => {
       const breakdown = this.salaryBreakdown();
@@ -67,9 +66,9 @@ export class PayrollDashboardComponent implements OnInit, OnDestroy {
     });
 
     effect(() => {
-       if (this.stats()) {
-         setTimeout(() => this.renderTrendChart(), 0);
-       }
+      if (this.stats()) {
+        setTimeout(() => this.renderTrendChart(), 0);
+      }
     });
   }
 
@@ -145,7 +144,7 @@ export class PayrollDashboardComponent implements OnInit, OnDestroy {
 
     const labels = ['الأساسي', ...breakdown.allowances.map(a => a.elementNameAr)];
     const data = [breakdown.basicSalary, ...breakdown.allowances.map(a => a.amount)];
-    
+
     const gradient = ctx.getContext('2d')?.createLinearGradient(0, 0, 0, 400);
     gradient?.addColorStop(0, '#3b82f6');
     gradient?.addColorStop(1, '#1d4ed8');
@@ -187,7 +186,7 @@ export class PayrollDashboardComponent implements OnInit, OnDestroy {
     if (this.loanChart) this.loanChart.destroy();
 
     const paidAmount = summary.totalAmount - summary.totalRemaining;
-    
+
     this.loanChart = new Chart(ctx, {
       type: 'doughnut',
       data: {

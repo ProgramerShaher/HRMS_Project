@@ -60,14 +60,23 @@ public static class MiddlewareExtensions
         {
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+            var context = services.GetRequiredService<HRMS.Infrastructure.Data.HRMSDbContext>();
 
+            // 1. Seed Roles and Admin User
             await IdentitySeeder.SeedAsync(userManager, roleManager);
-
             Log.Information("✅ Default roles and admin user seeded successfully");
+
+            // 2. Seed Permissions
+            await PermissionSeeder.SeedPermissionsAsync(context);
+            Log.Information("✅ Permissions seeded successfully");
+
+            // 3. Seed Role-Permission Mappings
+            await PermissionSeeder.SeedRolePermissionsAsync(context);
+            Log.Information("✅ Role-Permission mappings seeded successfully");
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "❌ An error occurred while seeding roles");
+            Log.Error(ex, "❌ An error occurred while seeding database");
         }
     }
 }

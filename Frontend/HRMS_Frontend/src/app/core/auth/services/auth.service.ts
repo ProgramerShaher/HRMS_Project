@@ -18,7 +18,7 @@ export class AuthService {
 
   // State Signals
   private currentUserSignal = signal<AuthResponse | null>(this.getUserFromStorage());
-  
+
   // Computed Signals
   public currentUser = computed(() => this.currentUserSignal());
   public isAuthenticated = computed(() => !!this.currentUserSignal());
@@ -27,7 +27,7 @@ export class AuthService {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/login`, request).pipe(
       map(response => {
         if (!response.succeeded || !response.data) {
-            throw new Error(response.message || 'Login failed');
+          throw new Error(response.message || 'Login failed');
         }
         return this.mapToAuthResponse(response.data);
       }),
@@ -39,7 +39,7 @@ export class AuthService {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/register`, request).pipe(
       map(response => {
         if (!response.succeeded || !response.data) {
-            throw new Error(response.message || 'Registration failed');
+          throw new Error(response.message || 'Registration failed');
         }
         return this.mapToAuthResponse(response.data);
       }),
@@ -60,8 +60,8 @@ export class AuthService {
 
   private handleAuthSuccess(response: AuthResponse) {
     if (!response.token) {
-        console.error('Login successful but no token received!', response);
-        return;
+      console.error('Login successful but no token received!', response);
+      return;
     }
     localStorage.setItem(this.TOKEN_KEY, response.token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(response));
@@ -76,15 +76,16 @@ export class AuthService {
   // Helper to handle PascalCase from .NET
   private mapToAuthResponse(data: any): AuthResponse {
     return {
-        userId: data.userId || data.UserId,
-        userName: data.userName || data.UserName,
-        email: data.email || data.Email,
-        fullName: data.fullName || data.FullName || data.FullNameAr, // Fallback
-        token: data.token || data.Token,
-        refreshToken: data.refreshToken || data.RefreshToken,
-        tokenExpiration: data.tokenExpiration || data.TokenExpiration,
-        roles: data.roles || data.Roles || [],
-        employeeId: data.employeeId || data.EmployeeId
+      userId: data.userId || data.UserId,
+      userName: data.userName || data.UserName,
+      email: data.email || data.Email,
+      fullName: data.fullName || data.FullName || data.FullNameAr, // Fallback
+      token: data.token || data.Token,
+      refreshToken: data.refreshToken || data.RefreshToken,
+      tokenExpiration: data.tokenExpiration || data.TokenExpiration,
+      roles: data.roles || data.Roles || [],
+      permissions: data.permissions || data.Permissions || [],
+      employeeId: data.employeeId || data.EmployeeId
     };
   }
 }

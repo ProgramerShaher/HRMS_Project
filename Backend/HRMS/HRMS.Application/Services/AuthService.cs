@@ -10,6 +10,7 @@ using HRMS.Application.Interfaces;
 using HRMS.Application.Settings;
 using HRMS.Core.Entities.Identity;
 using HRMS.Core.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.Application.Services
 {
@@ -22,17 +23,20 @@ namespace HRMS.Application.Services
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly IPermissionService _permissionService;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
-            IOptions<JwtSettings> jwtSettings)
+            IOptions<JwtSettings> jwtSettings,
+            IPermissionService permissionService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _jwtSettings = jwtSettings.Value;
+            _permissionService = permissionService;
         }
 
         #region Register - التسجيل
@@ -213,6 +217,17 @@ namespace HRMS.Application.Services
             return result.Succeeded;
         }
 
+        public async Task<List<ApplicationUser>> GetAllUsersAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            foreach (var user in users)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+                user.Roles = userRoles.ToList();
+            }
+            return users;
+        }
+
         /// <summary>
         /// الحصول على أدوار المستخدم
         /// </summary>
@@ -235,7 +250,8 @@ namespace HRMS.Application.Services
         private async Task<AuthResponse> GenerateAuthResponseAsync(ApplicationUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-            var token = await GenerateJwtTokenAsync(user, roles.ToList());
+            var permissions = await _permissionService.GetUserPermissionsAsync(user.Id);
+            var token = await GenerateJwtTokenAsync(user, roles.ToList(), permissions);
             var refreshToken = GenerateRefreshToken();
 
             // حفظ Refresh Token
@@ -253,6 +269,7 @@ namespace HRMS.Application.Services
                 RefreshToken = refreshToken,
                 TokenExpiration = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes),
                 Roles = roles.ToList(),
+                Permissions = permissions,
                 EmployeeId = user.EmployeeId
             };
         }
@@ -260,7 +277,7 @@ namespace HRMS.Application.Services
         /// <summary>
         /// إنشاء JWT Token
         /// </summary>
-        private async Task<string> GenerateJwtTokenAsync(ApplicationUser user, List<string> roles)
+        private async Task<string> GenerateJwtTokenAsync(ApplicationUser user, List<string> roles, List<string> permissions)
         {
             var claims = new List<Claim>
             {
@@ -274,7 +291,13 @@ namespace HRMS.Application.Services
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
-            };
+            }
+
+            // إضافة الصلاحيات
+            foreach (var permission in permissions)
+            {
+                claims.Add(new Claim("permission", permission));
+            }
 
             // إضافة EmployeeId إذا كان موجوداً
             if (user.EmployeeId.HasValue)

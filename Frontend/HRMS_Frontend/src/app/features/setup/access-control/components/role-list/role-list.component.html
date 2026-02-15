@@ -1,0 +1,75 @@
+<div class="card p-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-white">إدارة الأدوار والصلاحيات</h2>
+            <p class="text-sm text-slate-500">إدارة الأدوار الوظيفية وصلاحيات الوصول للنظام</p>
+        </div>
+        <button pButton label="دور جديد" icon="pi pi-plus" (click)="openNew()" class="p-button-primary"></button>
+    </div>
+
+    <p-table [value]="roles()" [loading]="loading()" responsiveLayout="scroll" [rowHover]="true"
+        styleClass="p-datatable-gridlines">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 20%">اسم الدور</th>
+                <th>الوصف</th>
+                <th style="width: 250px">الإجراءات</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-role>
+            <tr>
+                <td class="font-bold">{{ role.name }}</td>
+                <td>{{ role.description }}</td>
+                <td>
+                    <div class="flex gap-2">
+                        <button pButton icon="pi pi-lock" label="الصلاحيات" class="p-button-help p-button-sm"
+                            (click)="managePermissions(role)" pTooltip="إدارة الصلاحيات"></button>
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-warning"
+                            (click)="editRole(role)" pTooltip="تعديل"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                            (click)="deleteRole(role)" pTooltip="حذف"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="3" class="text-center p-4">لا توجد أدوار مضافة</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Role Dialog -->
+<p-dialog [visible]="roleDialog()" (visibleChange)="roleDialog.set($event)" [style]="{width: '450px'}"
+    [header]="currentRole() ? 'تعديل الدور' : 'دور جديد'" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="roleForm" class="flex flex-col gap-4 mt-2">
+            <div class="field">
+                <label for="name" class="block font-medium mb-1">اسم الدور <span class="text-red-500">*</span></label>
+                <input type="text" pInputText id="name" formControlName="name" required autofocus />
+                <small class="text-red-500" *ngIf="submitted() && roleForm.get('name')?.invalid">اسم الدور مطلوب</small>
+            </div>
+            <div class="field">
+                <label for="description" class="block font-medium mb-1">الوصف</label>
+                <textarea pInputTextarea id="description" formControlName="description" rows="3"
+                    class="w-full p-2 border rounded"></textarea>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton label="حفظ" icon="pi pi-check" class="p-button-text" (click)="saveRole()"></button>
+    </ng-template>
+</p-dialog>
+
+<!-- Permissions Dialog -->
+<p-dialog [visible]="permissionsDialog()" (visibleChange)="permissionsDialog.set($event)"
+    [style]="{width: '900px', height: '90%'}" [header]="'صلاحيات: ' + currentRole()?.name" [modal]="true"
+    [maximizable]="true">
+    <app-role-permissions *ngIf="permissionsDialog() && currentRole()" [roleId]="currentRole()!.id"
+        (onClose)="hideDialog()"></app-role-permissions>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

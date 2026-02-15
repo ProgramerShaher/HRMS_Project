@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from '../../core/auth/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DrawerModule } from 'primeng/drawer';
@@ -7,17 +8,39 @@ import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
 import { LayoutService } from '../../core/services/layout.service';
 
+import { PermissionService } from '../../core/auth/services/permission.service';
+import { HasPermissionDirective } from '../../shared/directives/permission.directives';
+
+interface MenuItem {
+  label: string;
+  icon?: string;
+  route?: string;
+  permission?: string;
+  expanded?: boolean;
+  children?: MenuItem[];
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, DrawerModule, ButtonModule, RippleModule, TooltipModule],
+  imports: [CommonModule, RouterModule, DrawerModule, ButtonModule, RippleModule, TooltipModule, HasPermissionDirective],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   layoutService = inject(LayoutService);
+  permissionService = inject(PermissionService);
+  private authService = inject(AuthService); // Inject AuthService for debugging
 
-  menuItems = [
+  ngOnInit() {
+    const user = this.authService.currentUser();
+    console.log('Sidebar Init - Current User:', user);
+    console.log('Roles:', user?.roles);
+    console.log('Permissions:', user?.permissions);
+    console.log('Is System Admin:', this.permissionService.isSystemAdmin());
+  }
+
+  menuItems: MenuItem[] = [
     { label: 'لوحة التحكم', icon: 'pi pi-objects-column', route: '/dashboard' },
     {
       label: 'الحـضـور',
@@ -136,6 +159,7 @@ export class SidebarComponent {
       icon: 'pi pi-cog',
       expanded: false,
       children: [
+        { label: 'الصلاحيات والمستخدمين', icon: 'pi pi-key', route: '/setup/access-control' },
         { label: 'تهيئة الدول', icon: 'pi pi-flag', route: '/setup/countries' },
         { label: 'تهيئة المدن', icon: 'pi pi-map-marker', route: '/setup/cities' },
         { label: 'تهيئة البنوك', icon: 'pi pi-building', route: '/setup/banks' },

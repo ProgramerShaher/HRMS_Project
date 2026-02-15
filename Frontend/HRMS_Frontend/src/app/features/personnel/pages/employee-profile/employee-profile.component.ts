@@ -10,7 +10,6 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { CardModule } from 'primeng/card';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeProfile } from '../../models/employee-profile.model';
-import { Tooltip } from "primeng/tooltip";
 import { MessageService } from 'primeng/api';
 import { ProfileQualificationsComponent } from '../../components/profile-sub-sections/profile-qualifications.component';
 import { ProfileCertificationsComponent } from '../../components/profile-sub-sections/profile-certifications.component';
@@ -34,7 +33,6 @@ import { ProfileContractsComponent } from '../../components/profile-sub-sections
     TagModule,
     SkeletonModule,
     CardModule,
-    Tooltip,
     ProfileQualificationsComponent,
     ProfileCertificationsComponent,
     ProfileExperienceComponent,
@@ -43,7 +41,7 @@ import { ProfileContractsComponent } from '../../components/profile-sub-sections
     ProfileBankAccountsComponent,
     ProfileAddressesComponent,
     ProfileContractsComponent
-],
+  ],
   templateUrl: './employee-profile.component.html',
   styleUrls: ['./employee-profile.component.scss'],
   providers: [MessageService]
@@ -75,53 +73,53 @@ export class EmployeeProfileComponent implements OnInit {
       next: (data) => {
         console.log('API Response for Employee:', data);
         if (!data) {
-            console.error('API returned null/undefined data');
+          console.error('API returned null/undefined data');
         } else if (!data.coreProfile) {
-            console.error('API returned data but missing coreProfile:', data);
+          console.error('API returned data but missing coreProfile:', data);
         }
         this.employee.set(data);
         this.loading.set(false);
       },
       error: (err) => {
         console.error('API Error loading profile:', err);
-        this.messageService.add({severity:'error', summary:'خطأ', detail:'تعذر تحميل بيانات الموظف'});
+        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'تعذر تحميل بيانات الموظف' });
         this.loading.set(false);
       }
     });
   }
 
-    // getProfilePictureUrl(path: string | null): string | null {
-    //     if (!path) return null;
-    //     if (path.startsWith('http')) return path;
-    //     return `https://localhost:5201/${path}`; 
-    // }
+  // getProfilePictureUrl(path: string | null): string | null {
+  //     if (!path) return null;
+  //     if (path.startsWith('http')) return path;
+  //     return `https://localhost:5201/${path}`; 
+  // }
 
   editProfile() {
     const id = this.employeeId();
     if (id) {
-        // Navigate to the wizard in edit mode
-        // Assuming the route for editing is /employees/edit/:id
-        // We need to inject Router first if not already public or accessible
-        this.router.navigate(['/employees/edit', id]);
+      // Navigate to the wizard in edit mode
+      // Assuming the route for editing is /employees/edit/:id
+      // We need to inject Router first if not already public or accessible
+      this.router.navigate(['/employees/edit', id]);
     }
   }
 
   currentCompensation = computed(() => {
     const emp = this.employee();
     if (emp?.compensation && (emp.compensation.totalSalary > 0 || emp.compensation.basicSalary > 0)) {
-        return emp.compensation;
+      return emp.compensation;
     }
-    
+
     // Fallback to active contract or first contract
     const activeContract = emp?.contracts?.find(c => c.contractStatus === 'ACTIVE') || emp?.contracts?.[0];
     if (activeContract) {
-        return {
-            basicSalary: activeContract.basicSalary || 0,
-            housingAllowance: activeContract.housingAllowance || 0,
-            transportAllowance: activeContract.transportAllowance || 0,
-            medicalAllowance: 0, 
-            totalSalary: (activeContract.basicSalary || 0) + (activeContract.housingAllowance || 0) + (activeContract.transportAllowance || 0) + (activeContract.otherAllowances || 0)
-        };
+      return {
+        basicSalary: activeContract.basicSalary || 0,
+        housingAllowance: activeContract.housingAllowance || 0,
+        transportAllowance: activeContract.transportAllowance || 0,
+        medicalAllowance: 0,
+        totalSalary: (activeContract.basicSalary || 0) + (activeContract.housingAllowance || 0) + (activeContract.transportAllowance || 0) + (activeContract.otherAllowances || 0)
+      };
     }
     return null;
   });
@@ -137,13 +135,13 @@ export class EmployeeProfileComponent implements OnInit {
     if (!path) return null;
     // If path starts with http, return as is
     if (path.startsWith('http')) return path;
-    
+
     // Build full URL from backend base
     const baseUrl = 'https://localhost:5201';
     // Remove leading slash if exists to avoid double slashes
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
     const fullUrl = `${baseUrl}/${cleanPath}`;
-    
+
     console.log('Profile Picture Path:', path);
     console.log('Profile Picture URL:', fullUrl);
     return fullUrl;
@@ -173,7 +171,7 @@ export class EmployeeProfileComponent implements OnInit {
     console.error('2. UseStaticFiles() is configured');
     console.error('3. File exists at the path');
     console.error('4. CORS is properly configured');
-    
+
     // Hide broken image
     img.style.display = 'none';
   }

@@ -19,7 +19,8 @@ export const SETUP_ROUTES: Routes = [
             { path: 'disciplinary-actions', loadComponent: () => import('./pages/disciplinary-actions/disciplinary-actions.component').then(m => m.DisciplinaryActionsComponent) },
             { path: 'kpi-library', loadComponent: () => import('./pages/kpi-library/kpi-library.component').then(m => m.KpiLibraryComponent) },
             { path: 'appraisal-cycles', loadComponent: () => import('./pages/appraisal-cycles/appraisal-cycles.component').then(m => m.AppraisalCyclesComponent) },
-            
+            { path: 'access-control', loadComponent: () => import('./access-control/pages/access-control.component').then(m => m.AccessControlComponent) },
+
             // Add placeholders for other possible setup pages here or redirect to default
             { path: '', redirectTo: 'departments', pathMatch: 'full' }
         ]

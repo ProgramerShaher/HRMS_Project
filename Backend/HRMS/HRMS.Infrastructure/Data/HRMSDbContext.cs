@@ -211,6 +211,11 @@ namespace HRMS.Infrastructure.Data
         // لكن يمكن إضافتها بشكل صريح للوضوح:
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
+        
+        // Permission System Tables
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+
 
         // ===================================
         // HR_CORE Schema
@@ -444,6 +449,34 @@ namespace HRMS.Infrastructure.Data
                 .HasOne(e => e.Compensation)
                 .WithOne(c => c.Employee)
                 .HasForeignKey<EmployeeCompensation>(c => c.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            #endregion
+
+            #region Permission System Configuration - تكوين نظام الصلاحيات
+
+            // Permission: Configure primary key and unique constraint
+            modelBuilder.Entity<Permission>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<Permission>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+
+            // RolePermission: Many-to-Many relationship configuration
+            modelBuilder.Entity<RolePermission>()
+                .HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(rp => rp.Role)
+                .WithMany(r => r.RolePermissions)
+                .HasForeignKey(rp => rp.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(rp => rp.Permission)
+                .WithMany(p => p.RolePermissions)
+                .HasForeignKey(rp => rp.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             #endregion
