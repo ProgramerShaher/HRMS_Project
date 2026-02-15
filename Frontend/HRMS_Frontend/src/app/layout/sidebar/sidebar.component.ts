@@ -41,16 +41,28 @@ export class SidebarComponent implements OnInit {
   }
 
   menuItems: MenuItem[] = [
-    { label: 'لوحة التحكم', icon: 'pi pi-objects-column', route: '/dashboard' },
+    { label: 'الرئيسية', icon: 'pi pi-home', route: '/dashboard' },
+    {
+      label: 'الموظفين',
+      icon: 'pi pi-users',
+      expanded: false,
+      permission: 'Employees.View',
+      children: [
+        { label: 'قائمة الموظفين', icon: 'pi pi-list', route: '/personnel/employees', permission: 'Employees.View' },
+        { label: 'إضافة موظف جديد', icon: 'pi pi-user-plus', route: '/personnel/employees/wizard', permission: 'Employees.Create' },
+        { label: 'إدارة السلف', icon: 'pi pi-money-bill', route: '/payroll/loans', permission: 'Loans.View' },
+      ]
+    },
     {
       label: 'الحـضـور',
       icon: 'pi pi-id-card',
       expanded: false,
+      permission: 'Attendance.View',
       children: [
-        { label: 'لوحة الحضور', icon: 'pi pi-chart-line', route: '/attendance/dashboard' },
-        { label: 'تسجيل الحضور', icon: 'pi pi-check-circle', route: '/attendance/punch' },
-        { label: 'جهاز البصمة (محاكاة)', icon: 'pi pi-desktop', route: '/attendance/device' },
-        { label: 'تقرير التحضير', icon: 'pi pi-list', route: '/attendance/reports' },
+        { label: 'لوحة الحضور', icon: 'pi pi-chart-line', route: '/attendance/dashboard', permission: 'Attendance.View' },
+        { label: 'تسجيل الحضور', icon: 'pi pi-check-circle', route: '/attendance/punch', permission: 'Attendance.Punch' },
+        { label: 'جهاز البصمة (محاكاة)', icon: 'pi pi-desktop', route: '/attendance/device', permission: 'Attendance.Device' },
+        { label: 'تقرير التحضير', icon: 'pi pi-list', route: '/attendance/reports', permission: 'Attendance.Reports' },
         { label: 'جدول دوامي', icon: 'pi pi-calendar', route: '/attendance/my-roster' },
         { label: 'الطلبات', icon: 'pi pi-file-edit', route: '/attendance/requests' }
       ]
@@ -59,54 +71,37 @@ export class SidebarComponent implements OnInit {
       label: 'إدارة الحضور',
       icon: 'pi pi-calendar-plus',
       expanded: false,
+      permission: 'Attendance.Manage',
       children: [
-        { label: 'المناوبات', icon: 'pi pi-clock', route: '/attendance/settings/shifts' },
-        { label: 'توزيع الجداول', icon: 'pi pi-th-large', route: '/attendance/settings/roster' },
-        { label: 'الموافقات', icon: 'pi pi-check-square', route: '/attendance/settings/approvals' }
+        { label: 'المناوبات', icon: 'pi pi-clock', route: '/attendance/settings/shifts', permission: 'Attendance.Manage' },
+        { label: 'توزيع الجداول', icon: 'pi pi-th-large', route: '/attendance/settings/roster', permission: 'Attendance.Manage' },
+        { label: 'الموافقات', icon: 'pi pi-check-square', route: '/attendance/settings/approvals', permission: 'Attendance.Approve' }
       ]
     },
-    { label: 'الموظفين', icon: 'pi pi-users', route: '/employees' },
     {
-      label: 'الرواتب',
-      icon: 'pi pi-wallet',
+      label: 'الرواتب المحاسبية',
+      icon: 'pi pi-calculator',
       expanded: false,
+      permission: 'Payroll.View',
       children: [
-        { label: 'لوحة التحكم', icon: 'pi pi-chart-line', route: '/payroll/dashboard' },
+        { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/payroll/dashboard', permission: 'Payroll.View' },
         {
-          label: 'رواتب الموظفين',
-          icon: 'pi pi-money-bill',
+          label: 'إدارة العناصر',
+          icon: 'pi pi-list',
           expanded: false,
+          permission: 'Payroll.Edit',
           children: [
-            { label: 'جميع الرواتب', icon: 'pi pi-list', route: '/payroll/salaries/all' },
-            { label: 'تفاصيل راتب', icon: 'pi pi-file', route: '/payroll/salaries/breakdown/0' }
-          ]
-        },
-        {
-          label: 'إدارة السلف',
-          icon: 'pi pi-credit-card',
-          expanded: false,
-          children: [
-            { label: 'جميع السلف', icon: 'pi pi-list', route: '/payroll/loans/admin/all' },
-            { label: 'إنشاء سلفة', icon: 'pi pi-plus-circle', route: '/payroll/loans/admin/create' },
-            { label: 'السلف المعلقة', icon: 'pi pi-clock', route: '/payroll/loans/admin/pending' },
-            { label: 'سلفي', icon: 'pi pi-user', route: '/payroll/loans/my-loans' }
-          ]
-        },
-        {
-          label: 'عناصر الراتب',
-          icon: 'pi pi-th-large',
-          expanded: false,
-          children: [
-            { label: 'قائمة العناصر', icon: 'pi pi-list', route: '/payroll/elements' },
-            { label: 'إضافة عنصر', icon: 'pi pi-plus', route: '/payroll/elements/form' }
+            { label: 'قائمة العناصر', icon: 'pi pi-list', route: '/payroll/elements', permission: 'Payroll.Edit' },
+            { label: 'إضافة عنصر', icon: 'pi pi-plus', route: '/payroll/elements/form', permission: 'Payroll.Edit' }
           ]
         },
         {
           label: 'هياكل الرواتب',
           icon: 'pi pi-sitemap',
           expanded: false,
+          permission: 'Payroll.View',
           children: [
-            { label: 'جميع الهياكل', icon: 'pi pi-list', route: '/payroll/structures' },
+            { label: 'جميع الهياكل', icon: 'pi pi-list', route: '/payroll/structures', permission: 'Payroll.View' },
             { label: 'هيكل راتبي', icon: 'pi pi-user', route: '/payroll/salary/my-structure' }
           ]
         },
@@ -114,18 +109,20 @@ export class SidebarComponent implements OnInit {
           label: 'معالجة الرواتب',
           icon: 'pi pi-cog',
           expanded: false,
+          permission: 'Payroll.Process',
           children: [
-            { label: 'معالجة شهر جديد', icon: 'pi pi-play', route: '/payroll/processing/process' },
-            { label: 'مسيرات الرواتب', icon: 'pi pi-list', route: '/payroll/processing/runs' }
+            { label: 'معالجة شهر جديد', icon: 'pi pi-play', route: '/payroll/processing/process', permission: 'Payroll.Process' },
+            { label: 'مسيرات الرواتب', icon: 'pi pi-list', route: '/payroll/processing/runs', permission: 'Payroll.View' }
           ]
         },
         {
           label: 'التقارير',
           icon: 'pi pi-chart-bar',
           expanded: false,
+          permission: 'Reports.View',
           children: [
-            { label: 'ملخص شهري', icon: 'pi pi-calendar', route: '/payroll/reports/monthly' },
-            { label: 'سجل التتبع', icon: 'pi pi-history', route: '/payroll/reports/audit' }
+            { label: 'ملخص شهري', icon: 'pi pi-calendar', route: '/payroll/reports/monthly', permission: 'Reports.View' },
+            { label: 'سجل التتبع', icon: 'pi pi-history', route: '/payroll/reports/audit', permission: 'Reports.Advanced' }
           ]
         },
         { label: 'قسائم رواتبي', icon: 'pi pi-file-pdf', route: '/payroll/payslips' }
@@ -135,46 +132,49 @@ export class SidebarComponent implements OnInit {
       label: 'الإجازات',
       icon: 'pi pi-send',
       expanded: false,
+      permission: 'Leaves.View',
       children: [
-        { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/leaves/dashboard' },
+        { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/leaves/dashboard', permission: 'Leaves.View' },
         { label: 'إجازاتي', icon: 'pi pi-calendar', route: '/leaves/my-leaves' },
-        { label: 'الاعتمادات', icon: 'pi pi-check-square', route: '/leaves/approvals' },
-        { label: 'سجل الحركات', icon: 'pi pi-history', route: '/leaves/history' },
-        { label: 'إعدادات الإجازات', icon: 'pi pi-cog', route: '/leaves/setup' }
+        { label: 'الاعتمادات', icon: 'pi pi-check-square', route: '/leaves/approvals', permission: 'Leaves.Approve' },
+        { label: 'سجل الحركات', icon: 'pi pi-history', route: '/leaves/history', permission: 'Leaves.View' },
+        { label: 'إعدادات الإجازات', icon: 'pi pi-cog', route: '/leaves/setup', permission: 'Leaves.Manage' }
       ]
     },
     {
       label: 'الأداء والتقييم',
       icon: 'pi pi-chart-line',
       expanded: false,
+      permission: 'Performance.View',
       children: [
-        { label: 'لوحة التحكم', icon: 'pi pi-home', route: '/performance' },
-        { label: 'المخالفات والجزاءات', icon: 'pi pi-exclamation-triangle', route: '/performance/violations' },
-        { label: 'تقييم الأداء', icon: 'pi pi-star', route: '/performance/appraisals' }
+        { label: 'لوحة التحكم', icon: 'pi pi-home', route: '/performance', permission: 'Performance.View' },
+        { label: 'المخالفات والجزاءات', icon: 'pi pi-exclamation-triangle', route: '/performance/violations', permission: 'Violations.View' },
+        { label: 'تقييم الأداء', icon: 'pi pi-star', route: '/performance/appraisals', permission: 'Performance.Evaluate' }
       ]
     },
-    { label: 'التقارير', icon: 'pi pi-chart-pie', route: '/reports' },
+    { label: 'التقارير', icon: 'pi pi-chart-pie', route: '/reports', permission: 'Reports.View' },
     {
       label: 'تهيئة النظام',
       icon: 'pi pi-cog',
       expanded: false,
+      permission: 'System_Admin',
       children: [
-        { label: 'الصلاحيات والمستخدمين', icon: 'pi pi-key', route: '/setup/access-control' },
-        { label: 'تهيئة الدول', icon: 'pi pi-flag', route: '/setup/countries' },
-        { label: 'تهيئة المدن', icon: 'pi pi-map-marker', route: '/setup/cities' },
-        { label: 'تهيئة البنوك', icon: 'pi pi-building', route: '/setup/banks' },
-        { label: 'تهيئة الأقسام', icon: 'pi pi-sitemap', route: '/setup/departments' },
-        { label: 'الدرجات الوظيفية', icon: 'pi pi-list', route: '/setup/job-grades' },
-        { label: 'الوظائف', icon: 'pi pi-briefcase', route: '/setup/jobs' },
-        { label: 'أنواع الوثائق', icon: 'pi pi-file', route: '/setup/document-types' },
-        { label: 'أنواع الإجازات', icon: 'pi pi-calendar-times', route: '/setup/leave-types' },
-        { label: 'سياسات الحضور', icon: 'pi pi-clock', route: '/setup/attendance-policies' },
-        { label: 'أنواع الورديات', icon: 'pi pi-moon', route: '/setup/shift-types' },
-        { label: 'بنود الراتب', icon: 'pi pi-dollar', route: '/setup/payroll-elements' },
-        { label: 'أنواع المخالفات', icon: 'pi pi-exclamation-triangle', route: '/setup/violation-types' },
-        { label: 'الإجراءات التأديبية', icon: 'pi pi-shield', route: '/setup/disciplinary-actions' },
-        { label: 'مكتبة المؤشرات', icon: 'pi pi-chart-bar', route: '/setup/kpi-library' },
-        { label: 'فترات التقييم', icon: 'pi pi-calendar-clock', route: '/setup/appraisal-cycles' }
+        { label: 'الصلاحيات والمستخدمين', icon: 'pi pi-key', route: '/setup/access-control', permission: 'System_Admin' },
+        { label: 'تهيئة الدول', icon: 'pi pi-flag', route: '/setup/countries', permission: 'Setup.Countries' },
+        { label: 'تهيئة المدن', icon: 'pi pi-map-marker', route: '/setup/cities', permission: 'Setup.Manage' },
+        { label: 'تهيئة البنوك', icon: 'pi pi-building', route: '/setup/banks', permission: 'Setup.Manage' },
+        { label: 'تهيئة الأقسام', icon: 'pi pi-sitemap', route: '/setup/departments', permission: 'Setup.Departments' },
+        { label: 'الدرجات الوظيفية', icon: 'pi pi-list', route: '/setup/job-grades', permission: 'Setup.Manage' },
+        { label: 'الوظائف', icon: 'pi pi-briefcase', route: '/setup/jobs', permission: 'Setup.Jobs' },
+        { label: 'أنواع الوثائق', icon: 'pi pi-file', route: '/setup/document-types', permission: 'Setup.Manage' },
+        { label: 'أنواع الإجازات', icon: 'pi pi-calendar-times', route: '/setup/leave-types', permission: 'Setup.Manage' },
+        { label: 'سياسات الحضور', icon: 'pi pi-clock', route: '/setup/attendance-policies', permission: 'Setup.Manage' },
+        { label: 'أنواع الورديات', icon: 'pi pi-moon', route: '/setup/shift-types', permission: 'Setup.Manage' },
+        { label: 'بنود الراتب', icon: 'pi pi-dollar', route: '/setup/payroll-elements', permission: 'Setup.Manage' },
+        { label: 'أنواع المخالفات', icon: 'pi pi-exclamation-triangle', route: '/setup/violation-types', permission: 'Setup.Manage' },
+        { label: 'الإجراءات التأديبية', icon: 'pi pi-shield', route: '/setup/disciplinary-actions', permission: 'Setup.Manage' },
+        { label: 'مكتبة المؤشرات', icon: 'pi pi-chart-bar', route: '/setup/kpi-library', permission: 'Setup.Manage' },
+        { label: 'فترات التقييم', icon: 'pi pi-calendar-clock', route: '/setup/appraisal-cycles', permission: 'Setup.Manage' }
       ]
     },
   ];

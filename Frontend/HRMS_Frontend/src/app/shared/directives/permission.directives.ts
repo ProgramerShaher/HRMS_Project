@@ -74,7 +74,7 @@ export class HasRoleDirective {
     private permissionService = inject(PermissionService);
     private templateRef = inject(TemplateRef<any>);
     private viewContainer = inject(ViewContainerRef);
-
+    
     constructor() {
         effect(() => {
             this.updateView();

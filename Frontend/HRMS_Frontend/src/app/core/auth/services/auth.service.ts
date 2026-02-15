@@ -31,7 +31,7 @@ export class AuthService {
         }
         return this.mapToAuthResponse(response.data);
       }),
-      tap(response => this.handleAuthSuccess(response))
+      tap(response => this.handleAuthSuccess(response, !!request.rememberMe))
     );
   }
 
@@ -43,34 +43,49 @@ export class AuthService {
         }
         return this.mapToAuthResponse(response.data);
       }),
-      tap(response => this.handleAuthSuccess(response))
+      tap(response => this.handleAuthSuccess(response, false))
     );
   }
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+    sessionStorage.removeItem(this.TOKEN_KEY);
+    sessionStorage.removeItem(this.USER_KEY);
     this.currentUserSignal.set(null);
     this.router.navigate(['/auth/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return localStorage.getItem(this.TOKEN_KEY) || sessionStorage.getItem(this.TOKEN_KEY);
   }
 
-  private handleAuthSuccess(response: AuthResponse) {
+  private handleAuthSuccess(response: AuthResponse, rememberMe: boolean) {
     if (!response.token) {
       console.error('Login successful but no token received!', response);
       return;
     }
-    localStorage.setItem(this.TOKEN_KEY, response.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(response));
+
+    const storage = rememberMe ? localStorage : sessionStorage;
+
+    // Clear other storage to avoid conflicts
+    const otherStorage = rememberMe ? sessionStorage : localStorage;
+    otherStorage.removeItem(this.TOKEN_KEY);
+    otherStorage.removeItem(this.USER_KEY);
+
+    storage.setItem(this.TOKEN_KEY, response.token);
+    storage.setItem(this.USER_KEY, JSON.stringify(response));
     this.currentUserSignal.set(response);
   }
 
   private getUserFromStorage(): AuthResponse | null {
-    const userStr = localStorage.getItem(this.USER_KEY);
-    return userStr ? JSON.parse(userStr) : null;
+    const userStr = localStorage.getItem(this.USER_KEY) || sessionStorage.getItem(this.USER_KEY);
+    try {
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (e) {
+      this.logout();
+      return null;
+    }
   }
 
   // Helper to handle PascalCase from .NET
