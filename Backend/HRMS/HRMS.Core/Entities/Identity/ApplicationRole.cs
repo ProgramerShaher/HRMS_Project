@@ -21,5 +21,11 @@ namespace HRMS.Core.Entities.Identity
         /// تاريخ الإنشاء
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// الصلاحيات المرتبطة بهذا الدور
+        /// </summary>
+        public virtual ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
+
     }
 }

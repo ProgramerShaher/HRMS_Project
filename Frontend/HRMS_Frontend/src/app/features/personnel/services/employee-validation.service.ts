@@ -10,14 +10,13 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 })
 export class EmployeeValidationService {
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Get required fields for quick save (minimal employee creation)
    */
   getRequiredFields(): string[] {
     return [
-      'employeeNumber',
       'firstNameAr',
       'secondNameAr',
       'thirdNameAr',

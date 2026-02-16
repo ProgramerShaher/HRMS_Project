@@ -12,10 +12,6 @@ public class CreateEmployeeCommandValidator : AbstractValidator<CreateEmployeeCo
     {
         _context = context;
 
-        RuleFor(x => x.Data.EmployeeNumber)
-            .NotEmpty().WithMessage("الرقم الوظيفي مطلوب")
-            .MustAsync(BeUniqueEmployeeNumber).WithMessage("الرقم الوظيفي مستخدم بالفعل");
-
         RuleFor(x => x.Data.FirstNameAr).NotEmpty().WithMessage("الاسم الأول مطلوب");
         RuleFor(x => x.Data.LastNameAr).NotEmpty().WithMessage("اسم العائلة مطلوب");
         RuleFor(x => x.Data.Email).EmailAddress().WithMessage("البريد الإلكتروني غير صحيح");
@@ -50,8 +46,5 @@ public class CreateEmployeeCommandValidator : AbstractValidator<CreateEmployeeCo
         RuleForEach(x => x.Data.EmergencyContacts).SetValidator(new EmergencyContactValidator());
     }
 
-    private async Task<bool> BeUniqueEmployeeNumber(string employeeNumber, CancellationToken token)
-    {
-        return !await _context.Employees.AnyAsync(e => e.EmployeeNumber == employeeNumber, token);
     }
-}
+

@@ -54,7 +54,7 @@ public static class IdentitySeeder
         {
             adminUser = new ApplicationUser
             {
-                UserName = adminEmail, // Using Email as Username for simplicity or strict requirement? Usually Username can be "admin" or same as email.
+                UserName = "admin", 
                 Email = adminEmail,
                 FullNameAr = "المدير العام",
                 FullNameEn = "Super Admin",
@@ -71,6 +71,12 @@ public static class IdentitySeeder
             {
                 await userManager.AddToRoleAsync(adminUser, "System_Admin");
             }
+        }
+        else if (adminUser.UserName != "admin")
+        {
+            adminUser.UserName = "admin";
+            adminUser.NormalizedUserName = "ADMIN";
+            await userManager.UpdateAsync(adminUser);
         }
     }
 }

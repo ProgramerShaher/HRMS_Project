@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { permissionGuard } from '../../core/auth/guards/permission.guard';
 
 export const ATTENDANCE_ROUTES: Routes = [
     {
@@ -8,6 +9,7 @@ export const ATTENDANCE_ROUTES: Routes = [
     },
     {
         path: 'dashboard',
+        canActivate: [permissionGuard(['Attendance.View'])],
         loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
     },
     {
@@ -16,14 +18,17 @@ export const ATTENDANCE_ROUTES: Routes = [
     },
     {
         path: 'reports',
+        canActivate: [permissionGuard(['Attendance.Reports', 'Attendance.ViewReports'])],
         loadComponent: () => import('./reports/attendance-reports.component').then(m => m.AttendanceReportsComponent)
     },
     {
         path: 'punch',
+        canActivate: [permissionGuard(['Attendance.Punch'])],
         loadComponent: () => import('./punch/punch.component').then(m => m.PunchComponent)
     },
     {
         path: 'device',
+        canActivate: [permissionGuard(['Attendance.Device'])],
         loadComponent: () => import('./punch/device-punch/device-punch.component').then(m => m.DevicePunchComponent)
     },
     {
@@ -32,10 +37,11 @@ export const ATTENDANCE_ROUTES: Routes = [
     },
     {
         path: 'settings',
+        canActivate: [permissionGuard(['Attendance.Manage', 'Setup.Manage'])],
         children: [
             { path: 'shifts', loadComponent: () => import('./settings/shift-management/shift-management.component').then(m => m.ShiftManagementComponent) },
             { path: 'roster', loadComponent: () => import('./settings/roster-management/roster-management.component').then(m => m.RosterManagementComponent) },
-            { path: 'approvals', loadComponent: () => import('./settings/approvals/approvals.component').then(m => m.ApprovalsComponent) }
+            { path: 'approvals', canActivate: [permissionGuard(['Attendance.Approve'])], loadComponent: () => import('./settings/approvals/approvals.component').then(m => m.ApprovalsComponent) }
         ]
     }
 ];

@@ -1,131 +1,129 @@
-<div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
-  
-  <!-- Premium Header -->
-  <div class="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
-    <div class="flex items-center gap-4">
-      <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
-        <i [class]="icon" class="text-lg"></i>
+<div
+  class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-full">
+
+  <!-- Header Section -->
+  <div
+    class="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+    <div class="flex items-center gap-3">
+      <div
+        class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <i [class]="icon" class="text-xl"></i>
       </div>
       <div>
-        <h3 class="font-bold text-slate-800 dark:text-white leading-tight">{{ title }}</h3>
-        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wider mt-0.5">إجمالي العناصر: {{ items.length }}</p>
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight">{{ title }}</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+          {{ items.length }} {{ items.length === 1 ? 'سجل' : 'سجلات' }} مسجلة
+        </p>
       </div>
     </div>
-    
-    <button 
-      pButton 
-      icon="pi pi-plus" 
-      [label]="'إضافة ' + itemLabel" 
-      class="p-button-sm !rounded-xl !bg-blue-600 hover:!bg-blue-700 !border-none !px-4 shadow-lg shadow-blue-500/20"
+
+    <button pButton icon="pi pi-plus" [label]="'إضافة ' + itemLabel"
+      class="p-button-outlined p-button-secondary !text-sm !font-bold !rounded-xl !px-4 !py-2.5 hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
       (click)="showDialogToAdd()">
     </button>
   </div>
 
   <!-- Content Area -->
-  <div class="p-0 min-h-[120px]">
+  <div class="flex-grow bg-slate-50/30 dark:bg-slate-900/30 relative min-h-[160px]">
     @if (items.length > 0) {
-      <p-table [value]="items" [columns]="columns" styleClass="p-datatable-minimal" responsiveLayout="scroll">
-        <ng-template pTemplate="header" let-cols>
-          <tr class="!bg-slate-50/30 dark:!bg-slate-900/20">
-            @for (col of cols; track col.field) {
-              <th class="!text-[11px] !font-black !text-slate-400 !bg-transparent !border-b !border-slate-100 dark:!border-slate-700 !px-5 !py-4 uppercase tracking-[0.1em]">{{ col.header }}</th>
-            }
-            <th class="!bg-transparent !border-b !border-slate-100 dark:!border-slate-700 !w-24"></th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-item let-columns="columns" let-rowIndex="rowIndex">
-          <tr class="group hover:!bg-blue-50/30 dark:hover:!bg-blue-900/10 transition-colors !border-b !border-slate-50 dark:!border-slate-700/50 last:!border-0">
+    <div class="overflow-x-auto">
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
             @for (col of columns; track col.field) {
-              <td class="!px-5 !py-4 !text-sm !text-slate-700 dark:!text-slate-300 !font-medium">{{ item[col.field] }}</td>
+            <th class="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{
+              col.header }}</th>
             }
-            <td class="!px-4 !py-4 text-center">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button 
-                  pButton 
-                  icon="pi pi-pencil" 
-                  class="p-button-text p-button-rounded !w-9 !h-9 !bg-blue-50 dark:!bg-blue-900/20 !text-blue-600 dark:!text-blue-400 hover:!bg-blue-100" 
-                  (click)="showDialogToEdit(item, rowIndex)">
+            <th class="px-6 py-4 w-24"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+          @for (item of items; track item; let i = $index) {
+          <tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors duration-200">
+            @for (col of columns; track col.field) {
+            <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 font-medium">
+              {{ item[col.field] }}
+            </td>
+            }
+            <td class="px-6 py-4">
+              <div
+                class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button pButton icon="pi pi-pencil"
+                  class="p-button-text p-button-rounded !w-8 !h-8 !text-slate-500 dark:!text-slate-400 hover:!text-blue-600 dark:hover:!text-blue-400 hover:!bg-blue-50 dark:hover:!bg-blue-900/20"
+                  (click)="showDialogToEdit(item, i)" pTooltip="تعديل" tooltipPosition="top">
                 </button>
-                <button 
-                  pButton 
-                  icon="pi pi-trash" 
-                  class="p-button-text p-button-rounded !w-9 !h-9 !bg-red-50 dark:!bg-red-900/20 !text-red-500 dark:!text-red-400 hover:!bg-red-100" 
-                  (click)="onDelete(item, rowIndex)">
+                <button pButton icon="pi pi-trash"
+                  class="p-button-text p-button-rounded !w-8 !h-8 !text-slate-500 dark:!text-slate-400 hover:!text-red-600 dark:hover:!text-red-400 hover:!bg-red-50 dark:hover:!bg-red-900/20"
+                  (click)="onDelete(item, i)" pTooltip="حذف" tooltipPosition="top">
                 </button>
               </div>
             </td>
           </tr>
-        </ng-template>
-      </p-table>
+          }
+        </tbody>
+      </table>
+    </div>
     } @else {
-      <div class="flex flex-col items-center justify-center p-12 text-center">
-        <div class="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center mb-4">
-          <i [class]="icon" class="text-3xl text-slate-200 dark:text-slate-700"></i>
-        </div>
-        <p class="text-sm font-bold text-slate-400 dark:text-slate-500">لا توجد بيانات مسجلة حالياً</p>
-        <button 
-          pButton 
-          icon="pi pi-plus" 
-          [label]="'ابدأ بإضافة ' + itemLabel" 
-          class="p-button-link !text-blue-600 !text-xs !font-bold mt-2"
-          (click)="showDialogToAdd()">
-        </button>
+    <div class="flex flex-col items-center justify-center p-12 text-center h-full min-h-[200px]">
+      <div
+        class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 text-slate-400 dark:text-slate-500">
+        <i [class]="icon" class="text-3xl"></i>
       </div>
+      <h4 class="text-base font-semibold text-slate-900 dark:text-white mb-1">لا توجد بيانات</h4>
+      <p class="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto mb-6">
+        لم يتم إضافة أي سجلات حتى الآن. اضغط على الزر أدناه لإضافة سجل جديد.
+      </p>
+      <button pButton icon="pi pi-plus" [label]="'إضافة ' + itemLabel"
+        class="p-button-text !text-blue-600 dark:!text-blue-400 !font-semibold hover:!bg-blue-50 dark:hover:!bg-blue-900/20 !rounded-lg"
+        (click)="showDialogToAdd()">
+      </button>
+    </div>
     }
   </div>
 
-  <!-- Glassmorphic Dialog -->
-  <p-dialog 
-    [(visible)]="displayDialog" 
-    [modal]="true" 
-    [style]="{width: '600px', 'max-width': '95vw'}"
-    [draggable]="false"
-    [resizable]="false"
-    [showHeader]="false"
-    styleClass="premium-dialog">
-    
-    <div class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-3xl overflow-hidden">
+  <!-- Clean Dialog -->
+  <p-dialog [(visible)]="displayDialog" [modal]="true" [style]="{width: '600px', 'max-width': '95vw'}"
+    [draggable]="false" [resizable]="false" [showHeader]="false" styleClass="clean-dialog">
+
+    <div class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-2xl">
       <!-- Dialog Header -->
-      <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <i [class]="isEdit ? 'pi pi-pencil' : 'pi pi-plus'"></i>
-          </div>
-          <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-none">
-            {{ (isEdit ? 'تعديل ' : 'إضافة ') + itemLabel }}
+      <div
+        class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+            {{ isEdit ? 'تعديل السجل' : 'إضافة سجل جديد' }}
           </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {{ isEdit ? 'تحديث بيانات ' + itemLabel : 'إدخال بيانات ' + itemLabel + ' جيدة للسيستم' }}
+          </p>
         </div>
-        <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-400" (click)="hideDialog()">
-          <i class="pi pi-times"></i>
+        <button
+          class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          (click)="hideDialog()">
+          <i class="pi pi-times text-sm"></i>
         </button>
       </div>
 
       <!-- Scrollable Form Content -->
-      <div class="p-8 max-h-[70vh] overflow-y-auto overflow-x-hidden">
-        <ng-container 
-          [ngTemplateOutlet]="formTemplate" 
-          [ngTemplateOutletContext]="{$implicit: currentItem}">
+      <div class="p-6 max-h-[70vh] overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50">
+        <ng-container [ngTemplateOutlet]="formTemplate" [ngTemplateOutletContext]="{$implicit: currentItem}">
         </ng-container>
       </div>
 
-      <!-- Action Footer -->
-      <div class="p-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-800/50">
-        <button 
-          pButton 
-          label="إلغاء العمل" 
-          class="p-button-text !text-slate-500 !font-bold hover:!bg-slate-100 dark:hover:!bg-slate-700 !px-6 !rounded-xl" 
+      <!-- Footer Actions -->
+      <div
+        class="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-white dark:bg-slate-900">
+        <button pButton label="إلغاء"
+          class="p-button-text !text-slate-600 dark:!text-slate-400 !font-medium hover:!bg-slate-50 dark:hover:!bg-slate-800 !px-5 !rounded-lg"
           (click)="hideDialog()">
         </button>
-        <button 
-          pButton 
-          [label]="isEdit ? 'حفظ التغييرات' : 'إضافة الآن'" 
-          [icon]="isEdit ? 'pi pi-check' : 'pi pi-plus'" 
-          class="p-button-primary !bg-blue-600 hover:!bg-blue-700 !border-none !px-8 !rounded-xl shadow-lg shadow-blue-500/20" 
+        <button pButton [label]="isEdit ? 'حفظ التغييرات' : 'حفظ البيانات'" icon="pi pi-check"
+          class="p-button-primary !bg-blue-600 hover:!bg-blue-700 !border-none !px-6 !rounded-lg shadow-sm font-semibold"
           (click)="onSave()">
         </button>
       </div>
     </div>
   </p-dialog>
 
-  <p-confirmDialog [style]="{width: '450px'}" styleClass="premium-confirm"></p-confirmDialog>
+  <p-confirmDialog [style]="{width: '400px'}" styleClass="clean-confirm"></p-confirmDialog>
 </div>

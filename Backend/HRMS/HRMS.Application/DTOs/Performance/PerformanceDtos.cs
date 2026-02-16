@@ -61,6 +61,11 @@ public class EmployeeViolationDto
     public string? Description { get; set; }
 
     /// <summary>
+    /// الحالة (PENDING, APPROVED, REJECTED)
+    /// </summary>
+    public string Status { get; set; } = string.Empty;
+
+    /// <summary>
     /// هل تم ترحيلها للرواتب
     /// </summary>
     public bool IsExecuted { get; set; }

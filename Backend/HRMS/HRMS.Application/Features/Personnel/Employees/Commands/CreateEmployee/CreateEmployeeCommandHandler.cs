@@ -24,26 +24,27 @@ public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeComman
 
         try
         {
-            // 1. Generate Auto-Number (Year + Sequence)
-            var year = DateTime.Now.Year;
-            // Get last number for this year to increment
-            var lastEmployee = await _context.Employees
-                .Where(e => e.EmployeeNumber.StartsWith(year.ToString()))
-                .OrderByDescending(e => e.EmployeeNumber)
-                .FirstOrDefaultAsync(cancellationToken);
-
-            int nextSequence = 1;
-            if (lastEmployee != null && lastEmployee.EmployeeNumber.Length > 4)
-            {
-                if (int.TryParse(lastEmployee.EmployeeNumber.Substring(4), out int lastSeq))
-                    nextSequence = lastSeq + 1;
-            }
-
-            var employeeNumber = $"{year}{nextSequence:D4}"; // e.g., 20260001 (4 digits year + 4 digits sequence)
-
             // 2. Map Employee Core Data
             var employee = _mapper.Map<Employee>(request.Data);
-            employee.EmployeeNumber = employeeNumber;
+
+            // Generate Auto-Number ONLY if not provided by frontend
+            if (string.IsNullOrEmpty(request.Data.EmployeeNumber))
+            {
+                var year = DateTime.Now.Year;
+                var lastEmployee = await _context.Employees
+                    .Where(e => e.EmployeeNumber.StartsWith(year.ToString()))
+                    .OrderByDescending(e => e.EmployeeNumber)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                int nextSequence = 1;
+                if (lastEmployee != null && lastEmployee.EmployeeNumber.Length > 4)
+                {
+                    if (int.TryParse(lastEmployee.EmployeeNumber.Substring(4), out int lastSeq))
+                        nextSequence = lastSeq + 1;
+                }
+                employee.EmployeeNumber = $"{year}{nextSequence:D4}";
+            }
+            
             employee.CreatedAt = DateTime.UtcNow;
             
             // 3. Map Financial Data (Sub-Entity)

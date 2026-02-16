@@ -116,6 +116,28 @@ public class PerformanceController : ControllerBase
     }
 
     /// <summary>
+    /// عرض جميع المخالفات (مع فلترة)
+    /// </summary>
+    [HttpGet("violations")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetViolations([FromQuery] int? employeeId, [FromQuery] string? status, [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
+    {
+        var query = new HRMS.Application.Features.Performance.Violations.Queries.GetAll.GetViolationsQuery 
+        { 
+            EmployeeId = employeeId, 
+            Status = status,
+            FromDate = fromDate,
+            ToDate = toDate
+        };
+        var result = await _mediator.Send(query);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    // REMOVED: GetEmployeeViolations is redundant now, but kept for backward compatibility if needed, OR replace it.
+    // I'll keep the old one as an alias or just let the new one handle it.
+    // Since the path was `violations/employee/{id}` I will leave it to avoid breaking existing clients (if any).
+    
+    /// <summary>
     /// عرض مخالفات موظف معين
     /// </summary>
     [HttpGet("violations/employee/{employeeId}")]

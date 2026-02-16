@@ -19,6 +19,9 @@ public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand,
     public async Task<int> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
     {
         var country = _mapper.Map<Country>(request);
+        if (!string.IsNullOrEmpty(country.IsoCode))
+            country.IsoCode = country.IsoCode.ToUpper();
+            
         country.CreatedAt = DateTime.UtcNow;
 
         _context.Countries.Add(country);

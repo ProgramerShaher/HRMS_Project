@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { permissionGuard } from '../../core/auth/guards/permission.guard';
 
 export const PAYROLL_ROUTES: Routes = [
   {
@@ -8,15 +9,17 @@ export const PAYROLL_ROUTES: Routes = [
   },
   {
     path: 'dashboard',
+    canActivate: [permissionGuard(['Payroll.View'])],
     loadComponent: () => import('./pages/dashboard/payroll-dashboard.component').then(m => m.PayrollDashboardComponent),
     title: 'لوحة تحكم الرواتب'
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Salaries - رواتب الموظفين
   // ═══════════════════════════════════════════════════════════
   {
     path: 'salaries',
+    canActivate: [permissionGuard(['Payroll.View'])],
     children: [
       {
         path: 'all',
@@ -30,7 +33,7 @@ export const PAYROLL_ROUTES: Routes = [
       }
     ]
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Loans - السلف
   // ═══════════════════════════════════════════════════════════
@@ -50,6 +53,7 @@ export const PAYROLL_ROUTES: Routes = [
       },
       {
         path: 'new',
+        canActivate: [permissionGuard(['Loans.Create'])],
         loadComponent: () => import('./pages/loans/loan-form/loan-form.component').then(m => m.LoanFormComponent),
         title: 'طلب سلفة جديدة'
       },
@@ -58,31 +62,35 @@ export const PAYROLL_ROUTES: Routes = [
         loadComponent: () => import('./pages/loans/loan-details/loan-details.component').then(m => m.LoanDetailsComponent),
         title: 'تفاصيل السلفة'
       },
-      
+
       // Admin routes
       {
         path: 'admin/all',
+        canActivate: [permissionGuard(['Loans.View'])],
         loadComponent: () => import('./pages/admin/loans/all-loans-admin/all-loans-admin.component').then(m => m.AllLoansAdminComponent),
         title: 'جميع السلف'
       },
       {
         path: 'admin/create',
+        canActivate: [permissionGuard(['Loans.Create'])],
         loadComponent: () => import('./pages/admin/loans/create-loan-admin/create-loan-admin.component').then(m => m.CreateLoanAdminComponent),
         title: 'إنشاء سلفة'
       },
       {
         path: 'admin/pending',
+        canActivate: [permissionGuard(['Loans.Approve'])],
         loadComponent: () => import('./pages/admin/loans/pending-loans/pending-loans.component').then(m => m.PendingLoansComponent),
         title: 'السلف المعلقة'
       }
     ]
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Salary Elements - عناصر الراتب
   // ═══════════════════════════════════════════════════════════
   {
     path: 'elements',
+    canActivate: [permissionGuard(['Payroll.Edit'])],
     children: [
       {
         path: '',
@@ -101,12 +109,13 @@ export const PAYROLL_ROUTES: Routes = [
       }
     ]
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Salary Structures - هياكل الرواتب
   // ═══════════════════════════════════════════════════════════
   {
     path: 'structures',
+    canActivate: [permissionGuard(['Payroll.View'])],
     children: [
       {
         path: '',
@@ -120,12 +129,13 @@ export const PAYROLL_ROUTES: Routes = [
       }
     ]
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Payroll Processing - معالجة الرواتب
   // ═══════════════════════════════════════════════════════════
   {
     path: 'processing',
+    canActivate: [permissionGuard(['Payroll.Process'])],
     children: [
       {
         path: 'process',
@@ -144,12 +154,13 @@ export const PAYROLL_ROUTES: Routes = [
       }
     ]
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Reports - التقارير
   // ═══════════════════════════════════════════════════════════
   {
     path: 'reports',
+    canActivate: [permissionGuard(['Reports.View'])],
     children: [
       {
         path: 'monthly',
@@ -158,12 +169,13 @@ export const PAYROLL_ROUTES: Routes = [
       },
       {
         path: 'audit',
+        canActivate: [permissionGuard(['Reports.Advanced'])],
         loadComponent: () => import('./pages/admin/reports/audit-trail/audit-trail.component').then(m => m.AuditTrailComponent),
         title: 'سجل التتبع'
       }
     ]
   },
-  
+
   // ═══════════════════════════════════════════════════════════
   // Employee routes - مسارات الموظف
   // ═══════════════════════════════════════════════════════════

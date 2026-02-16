@@ -4,30 +4,32 @@
   Theme: Adapts to Light/Dark Mode
   Features: Hierarchical Navigation (Accordion)
 -->
-<aside class="h-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex flex-col border-e border-slate-200 dark:border-slate-700/50 relative shadow-2xl overflow-hidden transition-[width,colors] duration-300"
-       [ngClass]="{
+<aside
+    class="h-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex flex-col border-e border-slate-200 dark:border-slate-700/50 relative shadow-2xl overflow-hidden transition-[width,colors] duration-300"
+    [ngClass]="{
            'w-72': !layoutService.isSidebarCollapsed(),
            'w-20': layoutService.isSidebarCollapsed()
        }">
-    
+
     <!-- Decorative Glow (Dark Mode Only) -->
-    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300"></div>
+    <div
+        class="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-300">
+    </div>
 
     <!-- 1. Branding Section -->
     <div class="h-20 flex items-center px-6 border-b border-slate-100 dark:border-slate-800/50 shrink-0 relative z-10 overflow-hidden transition-all duration-300"
-         [class.justify-start]="!layoutService.isSidebarCollapsed()"
-         [class.justify-center]="layoutService.isSidebarCollapsed()"
-         [class.gap-4]="!layoutService.isSidebarCollapsed()">
-         
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 dark:shadow-blue-900/50 ring-1 ring-blue-500/50 shrink-0">
+        [class.justify-start]="!layoutService.isSidebarCollapsed()"
+        [class.justify-center]="layoutService.isSidebarCollapsed()" [class.gap-4]="!layoutService.isSidebarCollapsed()">
+
+        <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 dark:shadow-blue-900/50 ring-1 ring-blue-500/50 shrink-0">
             <i class="pi pi-heart-fill text-lg"></i>
         </div>
-        
+
         <div class="flex flex-col whitespace-nowrap transition-opacity duration-300"
-             [class.opacity-100]="!layoutService.isSidebarCollapsed()"
-             [class.opacity-0]="layoutService.isSidebarCollapsed()"
-             [class.w-0]="layoutService.isSidebarCollapsed()"
-             [class.hidden]="layoutService.isSidebarCollapsed()">
+            [class.opacity-100]="!layoutService.isSidebarCollapsed()"
+            [class.opacity-0]="layoutService.isSidebarCollapsed()" [class.w-0]="layoutService.isSidebarCollapsed()"
+            [class.hidden]="layoutService.isSidebarCollapsed()">
             <h1 class="text-lg font-bold text-slate-900 dark:text-white tracking-wide leading-tight">HR Hospital</h1>
             <span class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">ULTRA DASHBOARD</span>
         </div>
@@ -36,72 +38,70 @@
     <!-- 2. Navigation Menu -->
     <nav class="flex-1 overflow-y-auto px-3 py-6 custom-scroll relative z-10 flex flex-col gap-1.5">
         <ng-container *ngFor="let item of menuItems">
-            
+
             <!-- Parent Item -->
-            <div class="flex flex-col">
-                <a [routerLink]="item.children ? null : item.route"
-                   (click)="toggleSubmenu(item)"
-                   [routerLinkActive]="item.children ? '' : 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 dark:border-blue-500'"
-                   [routerLinkActiveOptions]="{exact: false}" 
-                   class="group flex items-center px-3 py-3 rounded-l-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer overflow-hidden border-r-4 border-transparent"
-                   [class.justify-start]="!layoutService.isSidebarCollapsed()"
-                   [class.justify-center]="layoutService.isSidebarCollapsed()"
-                   [class.gap-4]="!layoutService.isSidebarCollapsed()"
-                   [pTooltip]="layoutService.isSidebarCollapsed() ? item.label : undefined" 
-                   tooltipPosition="left">
-                    
-                    <i [class]="item.icon" class="text-xl shrink-0 transition-colors group-[.router-link-active]:text-blue-600 dark:group-[.router-link-active]:text-blue-400"></i>
-                    
-                    <span class="font-medium text-sm tracking-wide whitespace-nowrap flex-1 transition-opacity duration-300 delay-75"
-                          [class.opacity-100]="!layoutService.isSidebarCollapsed()"
-                          [class.opacity-0]="layoutService.isSidebarCollapsed()"
-                          [class.w-0]="layoutService.isSidebarCollapsed()"
-                          [class.hidden]="layoutService.isSidebarCollapsed()">
+            <div class="flex flex-col" [hasPermission]="item.permission">
+                <a [routerLink]="item.children ? null : item.route" (click)="toggleSubmenu(item)"
+                    [routerLinkActive]="item.children ? '' : 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 border-r-4 border-blue-600 dark:border-blue-500'"
+                    [routerLinkActiveOptions]="{exact: false}"
+                    class="group flex items-center px-3 py-3 rounded-l-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer overflow-hidden border-r-4 border-transparent"
+                    [class.justify-start]="!layoutService.isSidebarCollapsed()"
+                    [class.justify-center]="layoutService.isSidebarCollapsed()"
+                    [class.gap-4]="!layoutService.isSidebarCollapsed()"
+                    [pTooltip]="layoutService.isSidebarCollapsed() ? item.label : undefined" tooltipPosition="left">
+
+                    <i [class]="item.icon"
+                        class="text-xl shrink-0 transition-colors group-[.router-link-active]:text-blue-600 dark:group-[.router-link-active]:text-blue-400"></i>
+
+                    <span
+                        class="font-medium text-sm tracking-wide whitespace-nowrap flex-1 transition-opacity duration-300 delay-75"
+                        [class.opacity-100]="!layoutService.isSidebarCollapsed()"
+                        [class.opacity-0]="layoutService.isSidebarCollapsed()"
+                        [class.w-0]="layoutService.isSidebarCollapsed()"
+                        [class.hidden]="layoutService.isSidebarCollapsed()">
                         {{ item.label }}
                     </span>
 
                     <!-- Chevron for Parents -->
-                    <i *ngIf="item.children && !layoutService.isSidebarCollapsed()" 
-                       class="pi pi-chevron-down text-xs transition-transform duration-300"
-                       [class.rotate-180]="item.expanded"></i>
+                    <i *ngIf="item.children && !layoutService.isSidebarCollapsed()"
+                        class="pi pi-chevron-down text-xs transition-transform duration-300"
+                        [class.rotate-180]="item.expanded"></i>
                 </a>
 
                 <!-- Children Container (Expanded) -->
-                <div *ngIf="item.children && item.expanded && !layoutService.isSidebarCollapsed()" 
-                     class="flex flex-col mt-1 mr-4 border-r border-slate-100 dark:border-slate-800 pr-2 gap-1 animate-fade-in-down">
-                     
-                     <ng-container *ngFor="let child of item.children">
+                <div *ngIf="item.children && item.expanded && !layoutService.isSidebarCollapsed()"
+                    class="flex flex-col mt-1 mr-4 border-r border-slate-100 dark:border-slate-800 pr-2 gap-1 animate-fade-in-down">
+
+                    <ng-container *ngFor="let child of item.children">
                         <!-- Child with Sub-children (Level 2) -->
                         <div *ngIf="child.children" class="flex flex-col">
-                           <a (click)="toggleSubmenu(child)"
-                              class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 cursor-pointer">
-                              <i [class]="child.icon" class="text-xs"></i>
-                              <span class="flex-1">{{ child.label }}</span>
-                              <i class="pi pi-chevron-down text-[10px] transition-transform duration-300"
-                                 [class.rotate-180]="child.expanded"></i>
-                           </a>
-                           
-                           <!-- Sub-children (Level 3) -->
-                           <div *ngIf="child.expanded" class="flex flex-col mr-4 mt-1 gap-1">
-                              <a *ngFor="let subChild of child.children"
-                                 [routerLink]="subChild.route"
-                                 routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
-                                 class="px-3 py-1.5 rounded-lg text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
-                                 <i [class]="subChild.icon" class="text-[10px]"></i>
-                                 <span>{{ subChild.label }}</span>
-                              </a>
-                           </div>
+                            <a (click)="toggleSubmenu(child)"
+                                class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 cursor-pointer">
+                                <i [class]="child.icon" class="text-xs"></i>
+                                <span class="flex-1">{{ child.label }}</span>
+                                <i class="pi pi-chevron-down text-[10px] transition-transform duration-300"
+                                    [class.rotate-180]="child.expanded"></i>
+                            </a>
+
+                            <!-- Sub-children (Level 3) -->
+                            <div *ngIf="child.expanded" class="flex flex-col mr-4 mt-1 gap-1">
+                                <a *ngFor="let subChild of child.children" [routerLink]="subChild.route"
+                                    routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
+                                    class="px-3 py-1.5 rounded-lg text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+                                    <i [class]="subChild.icon" class="text-[10px]"></i>
+                                    <span>{{ subChild.label }}</span>
+                                </a>
+                            </div>
                         </div>
-                        
+
                         <!-- Child without Sub-children (Direct Link) -->
-                        <a *ngIf="!child.children"
-                           [routerLink]="child.route"
-                           routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
-                           class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
-                           <i [class]="child.icon" class="text-xs"></i>
-                           <span>{{ child.label }}</span>
+                        <a *ngIf="!child.children" [hasPermission]="child.permission" [routerLink]="child.route"
+                            routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20"
+                            class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+                            <i [class]="child.icon" class="text-xs"></i>
+                            <span>{{ child.label }}</span>
                         </a>
-                     </ng-container>
+                    </ng-container>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
 
     <!-- 3. Footer / Version -->
     <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 text-center shrink-0 overflow-hidden whitespace-nowrap"
-         [class.opacity-0]="layoutService.isSidebarCollapsed()">
+        [class.opacity-0]="layoutService.isSidebarCollapsed()">
         <p class="text-[10px] text-slate-400 dark:text-slate-500">v2.0.0 Enterprise Edition</p>
     </div>
 </aside>

@@ -1,33 +1,41 @@
-<header class="h-16 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between px-6 sticky top-0 transition-colors duration-300">
+<header
+    class="h-16 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between px-6 sticky top-0 transition-colors duration-300">
     <div class="flex items-center gap-4">
-        <button pButton icon="pi pi-bars" class="p-button-text p-button-rounded text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800" (click)="layoutService.toggleSidebar()"></button>
+        <button pButton icon="pi pi-bars"
+            class="p-button-text p-button-rounded text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800"
+            (click)="layoutService.toggleSidebar()"></button>
         <div class="hidden md:flex items-center relative">
             <i class="pi pi-search absolute right-3 text-slate-400 dark:text-zinc-500"></i>
-            <input type="text" pInputText placeholder="بحث سريع..." class="pr-10 pl-4 py-2 w-64 bg-slate-50 dark:bg-zinc-800 border-none rounded-full focus:ring-2 focus:ring-blue-100 dark:text-zinc-100 placeholder-slate-400" />
+            <input type="text" pInputText placeholder="بحث سريع..."
+                class="pr-10 pl-4 py-2 w-64 bg-slate-50 dark:bg-zinc-800 border-none rounded-full focus:ring-2 focus:ring-blue-100 dark:text-zinc-100 placeholder-slate-400" />
         </div>
     </div>
 
     <div class="flex items-center gap-2">
         <!-- Theme Switcher -->
-        <button pButton [icon]="themeService.isDark() ? 'pi pi-moon' : 'pi pi-sun'" 
-                class="p-button-text p-button-rounded text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-transform hover:rotate-12"
-                (click)="themeService.toggleTheme()"
-                pTooltip="تبديل النمط">
+        <button pButton [icon]="themeService.isDark() ? 'pi pi-moon' : 'pi pi-sun'"
+            class="p-button-text p-button-rounded text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-transform hover:rotate-12"
+            (click)="themeService.toggleTheme()" pTooltip="تبديل النمط">
         </button>
 
-        <button pButton icon="pi pi-bell" class="p-button-text p-button-rounded text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 relative">
+        <button pButton icon="pi pi-bell"
+            class="p-button-text p-button-rounded text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 relative">
             <p-badge value="3" severity="danger" styleClass="absolute top-1 left-1 transform scale-75"></p-badge>
         </button>
 
         <div class="h-8 w-px bg-slate-200 dark:bg-zinc-700 mx-2"></div>
 
-        <div class="flex items-center gap-3 cursor-pointer p-1 rounded-full hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors" (click)="menu.toggle($event)">
+        <div class="flex items-center gap-3 cursor-pointer p-1 rounded-full hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+            (click)="menu.toggle($event)">
             @if (user(); as currentUser) {
-                <div class="text-left hidden sm:block">
-                    <p class="text-sm font-semibold text-slate-800 dark:text-zinc-100">{{ currentUser.fullName || currentUser.userName }}</p>
-                    <p class="text-xs text-slate-500 dark:text-zinc-400">{{ currentUser.roles?.[0] || 'User' }}</p>
-                </div>
-                <p-avatar label="{{ (currentUser.fullName?.[0] || currentUser.userName?.[0] || 'U') | uppercase }}" shape="circle" styleClass="w-10 h-10 bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 border-2 border-white dark:border-zinc-700 shadow-sm"></p-avatar>
+            <div class="text-left hidden sm:block">
+                <p class="text-sm font-semibold text-slate-800 dark:text-zinc-100">{{ currentUser.fullName ||
+                    currentUser.userName }}</p>
+                <p class="text-xs text-slate-500 dark:text-zinc-400">{{ currentUser.roles[0] || 'User' }}</p>
+            </div>
+            <p-avatar label="{{ (currentUser.fullName?.[0] || currentUser.userName?.[0] || 'U') | uppercase }}"
+                shape="circle"
+                styleClass="w-10 h-10 bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 border-2 border-white dark:border-zinc-700 shadow-sm"></p-avatar>
             }
         </div>
         <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" styleClass="w-48"></p-menu>

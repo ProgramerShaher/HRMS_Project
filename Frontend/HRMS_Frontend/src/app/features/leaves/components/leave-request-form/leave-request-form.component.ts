@@ -46,7 +46,7 @@ export class LeaveRequestFormComponent implements OnInit {
     private employeeService: EmployeeService,
     private messageService: MessageService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initForm();
@@ -72,9 +72,9 @@ export class LeaveRequestFormComponent implements OnInit {
 
   loadData() {
     const currentUser = this.authService.currentUser();
-    
+
     this.loading.set(true);
-    
+
     // Load Leave Types - Independent of employeeId
     this.leaveConfigService.getLeaveTypes().subscribe({
       next: (res) => {
@@ -107,6 +107,13 @@ export class LeaveRequestFormComponent implements OnInit {
       this.loadBalances(currentUser.employeeId);
     } else if (!this.isAdmin()) {
       this.loading.set(false);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'خطأ في الحساب',
+        detail: 'حسابك غير مرتبط بملف موظف. لا يمكنك تقديم طلبات إجازة.'
+      });
+    } else {
+      this.loading.set(false);
     }
   }
 
@@ -132,7 +139,7 @@ export class LeaveRequestFormComponent implements OnInit {
   calculateDays() {
     const start = this.leaveForm.get('startDate')?.value;
     const end = this.leaveForm.get('endDate')?.value;
-    
+
     if (start && end) {
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
@@ -151,14 +158,15 @@ export class LeaveRequestFormComponent implements OnInit {
       return;
     }
 
-    const employeeId = this.authService.currentUser()?.employeeId;
+    const formValue = this.leaveForm.value;
+    const employeeId = Number(formValue.employeeId);
+
     if (!employeeId) {
       this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'لم يتم العثور على معرف الموظف' });
       return;
     }
 
-    const formValue = this.leaveForm.value;
-    
+
     // Helper to format date without timezone shift
     const formatToLocalDate = (date: Date) => {
       const year = date.getFullYear();
@@ -183,19 +191,19 @@ export class LeaveRequestFormComponent implements OnInit {
           this.leaveForm.reset();
           this.submitted.emit();
         } else {
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'خطأ', 
-            detail: res.message || 'فشل تقديم الطلب' 
+          this.messageService.add({
+            severity: 'error',
+            summary: 'خطأ',
+            detail: res.message || 'فشل تقديم الطلب'
           });
         }
       },
       error: (err) => {
         this.loading.set(false);
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'خطأ', 
-          detail: err.error?.message || 'فشل تقديم الطلب - تأكد من الرصيد والبيانات' 
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطأ',
+          detail: err.error?.message || 'فشل تقديم الطلب - تأكد من الرصيد والبيانات'
         });
       }
     });

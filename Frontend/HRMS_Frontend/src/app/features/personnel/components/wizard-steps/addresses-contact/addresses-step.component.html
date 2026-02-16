@@ -1,68 +1,76 @@
-<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-500">
-  
-  <!-- Address Management Dashboard Header -->
-  <div class="bg-white dark:bg-slate-800/40 backdrop-blur-md rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-700/50 shadow-sm">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-5">
-        <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/20 rotate-3 transition-transform hover:rotate-0">
-          <i class="pi pi-map-marker text-2xl"></i>
-        </div>
-        <div>
-          <h2 class="text-xl font-black text-slate-800 dark:text-white tracking-tight">إدارة العناوين والحسابات البنكية</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">سجل العناوين السكنية وبيانات تحويل الراتب بدقة</p>
-        </div>
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+
+  <!-- Clean Header Section -->
+  <div
+    class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="flex items-center gap-5">
+      <div
+        class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <i class="pi pi-map-marker text-2xl"></i>
       </div>
-      <div class="flex gap-2">
-        <div class="px-4 py-2 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Active System</span>
-        </div>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">إدارة العناوين والبيانات المالية</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+          يرجى تسجيل بيانات الإقامة وحسابات تحويل الرواتب المعتمدة
+        </p>
       </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <span
+        class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg border border-slate-100 dark:border-slate-700">
+        Location & Banking
+      </span>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div class="grid grid-cols-1 xl:grid-cols-1 gap-8">
     <!-- Addresses Section -->
-    <section class="space-y-4">
-      <app-dynamic-array-list
-        [items]="data.addresses || []"
-        title="العناوين المسجلة"
-        itemLabel="عنوان"
-        icon="pi pi-map"
-        [columns]="addressColumns"
-        (save)="onSaveAddress($event)"
+    <section>
+      <app-dynamic-array-list [items]="data.addresses || []" title="سجل العناوين السكنية" itemLabel="عنوان"
+        icon="pi pi-directions" [columns]="addressColumns" (save)="onSaveAddress($event)"
         (delete)="onDeleteAddress($event)">
-        
+
         <ng-template #formTemplate let-item>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-2">
             <!-- Address Type -->
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">نوع العنوان</label>
-              <p-select [options]="addressTypes" [(ngModel)]="item.addressType" appendTo="body" placeholder="المنزل، العمل..." styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">نوع العنوان</label>
+              <p-select [options]="addressTypes" [(ngModel)]="item.addressType" appendTo="body"
+                placeholder="المنزل، العمل..."
+                styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
             </div>
 
             <!-- Country -->
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الدولة</label>
-              <p-select [options]="countries" [(ngModel)]="item.countryId" (ngModelChange)="onCountryChange($event)" optionLabel="countryNameAr" optionValue="countryId" [filter]="true" appendTo="body" placeholder="اختر الدولة" styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الدولة</label>
+              <p-select [options]="countries" [(ngModel)]="item.countryId" (ngModelChange)="onCountryChange($event)"
+                optionLabel="countryNameAr" optionValue="countryId" [filter]="true" appendTo="body"
+                placeholder="اختر الدولة"
+                styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
             </div>
 
             <!-- City -->
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">المدينة</label>
-              <p-select [options]="cities()" [(ngModel)]="item.cityId" optionLabel="cityNameAr" optionValue="cityId" [filter]="true" appendTo="body" [disabled]="!item.countryId" placeholder="اختر المدينة" styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">المدينة</label>
+              <p-select [options]="cities()" [(ngModel)]="item.cityId" optionLabel="cityNameAr" optionValue="cityId"
+                [filter]="true" appendTo="body" [disabled]="!item.countryId" placeholder="اختر المدينة"
+                styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
             </div>
 
             <!-- Postal Code -->
-            <div class="space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1 font-sans">Zip Code</label>
-              <input pInputText [(ngModel)]="item.zipCode" class="w-full !h-11 !rounded-xl !text-sm font-mono" placeholder="12345" />
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 font-sans">Zip Code</label>
+              <input pInputText [(ngModel)]="item.zipCode" placeholder="12345"
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-mono focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
 
             <!-- Street -->
-            <div class="md:col-span-2 space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">الشارع / تفاصيل إضافية</label>
-              <textarea pInputTextarea [(ngModel)]="item.street" class="w-full !p-3 !rounded-xl !border-slate-100 dark:!border-slate-700 !bg-slate-50 dark:!bg-slate-900/50 !text-sm" placeholder="اسم الشارع، رقم المبنى، الحي..."></textarea>
+            <div class="md:col-span-2 space-y-2">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تفاصيل الشارع
+                والمبنى</label>
+              <input pInputText [(ngModel)]="item.street" placeholder="اسم الشارع، رقم المبنى، الحي..."
+                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
             </div>
           </div>
         </ng-template>
@@ -70,45 +78,58 @@
     </section>
 
     <!-- Bank Accounts Section -->
-    <section class="space-y-4">
-      <app-dynamic-array-list
-        [items]="data.bankAccounts || []"
-        title="الحسابات البنكية"
-        itemLabel="حساب"
-        icon="pi pi-credit-card"
-        [columns]="bankAccountColumns"
-        (save)="onSaveBankAccount($event)"
+    <section>
+      <app-dynamic-array-list [items]="data.bankAccounts || []" title="بيانات الحسابات البنكية" itemLabel="حساب بنكي"
+        icon="pi pi-credit-card" [columns]="bankAccountColumns" (save)="onSaveBankAccount($event)"
         (delete)="onDeleteBankAccount($event)">
-        
+
         <ng-template #formTemplate let-item>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-2">
-            <!-- Bank -->
-            <div class="md:col-span-2 space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">البنك <span class="text-red-500">*</span></label>
-              <p-select [options]="banks()" [(ngModel)]="item.bankId" optionLabel="bankNameAr" optionValue="bankId" [filter]="true" appendTo="body" placeholder="اختر البنك" styleClass="w-full !rounded-xl !h-11 !text-sm"></p-select>
-            </div>
+          <div class="grid grid-cols-1 gap-6 p-2">
+            <!-- Bank & Holder -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">البنك المعتمد <span
+                    class="text-red-500">*</span></label>
+                <p-select [options]="banks()" [(ngModel)]="item.bankId" optionLabel="bankNameAr" optionValue="bankId"
+                  [filter]="true" appendTo="body" placeholder="اختر البنك"
+                  styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
+              </div>
 
-            <!-- Account Holder -->
-            <div class="md:col-span-2 space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1">اسم صاحب الحساب <span class="text-red-500">*</span></label>
-              <input pInputText [(ngModel)]="item.accountHolderName" class="w-full !h-11 !rounded-xl !text-sm" placeholder="As in official records" />
-            </div>
-
-            <!-- IBAN -->
-            <div class="md:col-span-2 space-y-1.5">
-              <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest mr-1 font-sans">IBAN Number (YE) <span class="text-red-500">*</span></label>
-              <div class="relative group" dir="ltr">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-xs">YE</span>
-                <input pInputText [(ngModel)]="item.ibanNumber" (onBlur)="onDataChange()" maxlength="22" class="w-full !h-11 !pl-11 !rounded-xl !bg-slate-50 dark:!bg-slate-900/50 font-mono text-sm tracking-wider" placeholder="22-digit account number" />
+              <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">اسم صاحب الحساب <span
+                    class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="item.accountHolderName" placeholder="الاسم كما في البنك"
+                  class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-bold focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
               </div>
             </div>
 
-            <!-- Is Primary -->
-            <div class="md:col-span-2">
-               <div class="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-100 dark:border-emerald-900/40">
-                 <input type="checkbox" [(ngModel)]="item.isPrimary" class="w-4 h-4 accent-emerald-600 rounded" id="isPrimaryBank" />
-                 <label for="isPrimaryBank" class="text-[11px] font-bold text-emerald-800 dark:text-emerald-400 cursor-pointer">تعيين كحساب أساسي للرواتب</label>
-               </div>
+            <!-- IBAN -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 font-sans">IBAN (YE) <span
+                  class="text-red-500">*</span></label>
+              <div class="relative flex items-center" dir="ltr">
+                <div
+                  class="absolute left-0 top-0 bottom-0 px-4 bg-slate-100 dark:bg-slate-800 border-r border-slate-300 dark:border-slate-700 rounded-l-lg flex items-center justify-center">
+                  <span class="text-sm font-bold text-slate-600 dark:text-slate-400">YE</span>
+                </div>
+                <input pInputText [(ngModel)]="item.ibanNumber" maxlength="22" placeholder="00-0000-0000-0000-0000-00"
+                  class="w-full !h-11 !pl-16 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-mono tracking-wider focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
+              </div>
+              <p class="text-[10px] text-slate-400 text-right">يتكون رقم الآيبان من 22 خانة</p>
+            </div>
+
+            <!-- Is Primary Toggle -->
+            <div class="pt-2">
+              <div
+                class="flex items-center gap-3 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10">
+                <p-checkbox [(ngModel)]="item.isPrimary" binary="true" inputId="isPrimary"></p-checkbox>
+                <div>
+                  <label for="isPrimary"
+                    class="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">حساب
+                    أساسي للراتب</label>
+                  <p class="text-xs text-slate-500 mt-0.5">سيتم تحويل الرواتب الشهرية إلى هذا الحساب تلقائياً</p>
+                </div>
+              </div>
             </div>
           </div>
         </ng-template>
