@@ -26,4 +26,7 @@ public interface IReportingService
     Task<List<RecruitmentReportDto>> GetRecruitmentReportAsync(DateTime startDate, DateTime endDate, string? status = null);
     
     Task<List<PerformanceReportDto>> GetPerformanceReportAsync(int cycleId, int? departmentId = null);
+
+    // Comprehensive Dashboard
+    Task<ComprehensiveDashboardDto> GetComprehensiveDashboardAsync();
 }

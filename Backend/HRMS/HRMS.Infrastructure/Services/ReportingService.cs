@@ -83,7 +83,7 @@ public class ReportingService : IReportingService
             .ToListAsync();
 
         var totalDays = (endDate - startDate).Days + 1;
-        
+
         var totalPresent = logs.Count(l => l.Status == "Present" || l.Status == "Late");
         var totalAbsent = logs.Count(l => l.Status == "Absent");
         var totalLate = logs.Count(l => l.Status == "Late");
@@ -346,5 +346,175 @@ public class ReportingService : IReportingService
         })
         .OrderByDescending(a => a.OverallScore)
         .ToListAsync();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // 5. Comprehensive Dashboard
+    // ═══════════════════════════════════════════════════════════
+    public async Task<ComprehensiveDashboardDto> GetComprehensiveDashboardAsync()
+    {
+        var today = DateTime.UtcNow.Date;
+        var startOfMonth = new DateTime(today.Year, today.Month, 1);
+
+        // 1. Attendance Metrics (Today)
+        var attendanceLogs = await _context.DailyAttendances
+            .Include(d => d.PlannedShift)
+            .Where(d => d.AttendanceDate == today)
+            .ToListAsync();
+
+        var attendanceMetrics = new AttendanceMetricsDto
+        {
+            TotalPresent = attendanceLogs.Count(x => x.Status == "Present" || x.Status == "Late"),
+            TotalAbsent = attendanceLogs.Count(x => x.Status == "Absent"),
+            TotalLate = attendanceLogs.Count(x => x.Status == "Late"),
+            // Assuming Leaves are marked in DailyAttendance or need separate query. 
+            // For now, simpler to count from DailyAttendance status if available, or LeaveRequests.
+            // Let's rely on DailyAttendance status being "Leave" or similar if the system is integrated.
+            TotalLeaves = attendanceLogs.Count(x => x.Status == "Leave" || x.Status == "Vacation"),
+            ShiftDistribution = attendanceLogs
+                .GroupBy(x => x.PlannedShift != null ? x.PlannedShift.ShiftNameAr : "Unknown")
+                .ToDictionary(g => g.Key, g => g.Count())
+        };
+
+        // 2. Personnel Metrics
+        var employees = await _context.Employees
+            .Include(e => e.Department)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var personnelMetrics = new PersonnelMetricsDto
+        {
+            TotalEmployees = employees.Count,
+            ActiveEmployees = employees.Count(e => e.IsActive && e.TerminationDate == null),
+            InactiveEmployees = employees.Count(e => !e.IsActive || e.TerminationDate != null),
+            DepartmentStats = employees
+                 .Where(e => e.IsActive && e.TerminationDate == null) // Count active only for dept distribution usually
+                 .GroupBy(e => e.Department)
+                 .Select(g => new DepartmentStatDto
+                 {
+                     DepartmentId = g.Key.DeptId,
+                     DepartmentName = g.Key.DeptNameAr,
+                     EmployeeCount = g.Count()
+                 })
+                 .ToList()
+        };
+
+        // 3. Requests Metrics (Pending)
+        var pendingLeaves = await _context.LeaveRequests.CountAsync(x => x.Status.ToLower() == "pending");
+        var pendingOT = await _context.OvertimeRequests.CountAsync(x => x.Status.ToLower() == "pending"); 
+        var pendingLoans = await _context.Loans.CountAsync(x => x.Status.ToLower() == "pending");
+        var pendingSwaps = await _context.ShiftSwapRequests.CountAsync(x => x.Status.ToLower() == "pending");
+        var pendingPermissions = await _context.PermissionRequests.CountAsync(x => x.Status.ToLower() == "pending");
+
+        var requestsMetrics = new RequestsMetricsDto
+        {
+            PendingLeaveRequests = pendingLeaves,
+            PendingOvertimeRequests = pendingOT,
+            PendingLoanRequests = pendingLoans,
+            PendingShiftSwaps = pendingSwaps,
+            PendingPermissions = pendingPermissions
+        };
+
+        // 4. Financial Metrics
+        var activeLoans = await _context.Loans
+            .Where(l => l.Status.ToLower() == "active" || l.Status.ToLower() == "approved")
+            .ToListAsync();
+
+        var pendingPayslips = await _context.Payslips
+            .Include(p => p.Employee)
+            .ThenInclude(e => e.Department)
+            .Include(p => p.PayrollRun)
+            .Where(p => p.PayrollRun.Status.ToLower() == "draft" || p.PayrollRun.Status.ToLower() == "pending")
+            .ToListAsync();
+
+        var financialMetrics = new FinancialMetricsDto
+        {
+            TotalPendingSalaries = pendingPayslips.Sum(p => p.NetSalary ?? 0),
+            PendingSalariesByDepartment = pendingPayslips
+                .GroupBy(p => p.Employee?.Department != null ? p.Employee.Department.DeptNameAr : "غير معرف")
+                .ToDictionary(g => g.Key, g => g.Sum(p => p.NetSalary ?? 0)),
+            ActiveLoansCount = activeLoans.Count,
+            TotalActiveLoansAmount = activeLoans.Sum(l => l.LoanAmount)
+        };
+
+        // 5. Holiday Metrics (Inferred)
+        var currentYear = (short)today.Year;
+        var holidays = await _context.PublicHolidays
+            .Where(h => h.Year == currentYear)
+            .ToListAsync();
+
+        var holidayMetrics = holidays
+            .GroupBy(h => InferHolidayType(h.HolidayNameAr))
+            .Select(g => new HolidayMetricDto
+            {
+                HolidayType = g.Key,
+                HolidaysCount = g.Count(),
+                DaysCount = g.Sum(h => (h.EndDate - h.StartDate).Days + 1)
+            })
+            .ToList();
+
+        // 6. Weekly Metrics (Last 7 Days)
+        var sevenDaysAgo = today.AddDays(-6);
+        var weeklyLogs = await _context.DailyAttendances
+            .Where(d => d.AttendanceDate >= sevenDaysAgo && d.AttendanceDate <= today)
+            .ToListAsync();
+
+        var weeklyMetrics = new WeeklyAnalyticsDto
+        {
+            AttendanceTrend = weeklyLogs
+                .GroupBy(d => d.AttendanceDate.Date)
+                .Select(g => new AnalyticsDailyAttendanceSummaryDto
+                {
+                    Date = g.Key,
+                    PresentCount = g.Count(x => x.Status == "Present" || x.Status == "Late"),
+                    AbsentCount = g.Count(x => x.Status == "Absent"),
+                    LateCount = g.Count(x => x.Status == "Late")
+                })
+                .OrderBy(x => x.Date)
+                .ToList(),
+            TotalHoursWorked = weeklyLogs.Sum(x => (x.ActualOutTime - x.ActualInTime)?.TotalHours ?? 0),
+            TotalOvertimeMinutes = weeklyLogs.Sum(x => x.OvertimeMinutes)
+        };
+
+        // 7. Monthly Metrics (Current Month)
+        var monthlyLogs = await _context.DailyAttendances
+            .Where(d => d.AttendanceDate >= startOfMonth && d.AttendanceDate <= today)
+            .ToListAsync();
+            
+        var monthlyPresent = monthlyLogs.Count(x => x.Status == "Present" || x.Status == "Late");
+        var monthlyAbsent = monthlyLogs.Count(x => x.Status == "Absent");
+        var monthlyTotal = monthlyPresent + monthlyAbsent;
+
+        var monthlyMetrics = new MonthlyAnalyticsDto
+        {
+            TotalPresent = monthlyPresent,
+            TotalAbsent = monthlyAbsent,
+            TotalLate = monthlyLogs.Count(x => x.Status == "Late"),
+            TotalLeaves = monthlyLogs.Count(x => x.Status == "Leave" || x.Status == "Vacation"),
+            AttendanceRate = monthlyTotal > 0 ? ((double)monthlyPresent / monthlyTotal) * 100 : 0,
+            NewHires = await _context.Employees.CountAsync(e => e.HireDate >= startOfMonth && e.HireDate <= today),
+            Resignations = await _context.Employees.CountAsync(e => e.TerminationDate >= startOfMonth && e.TerminationDate <= today)
+        };
+
+        return new ComprehensiveDashboardDto
+        {
+            ReportDate = today,
+            AttendanceMetrics = attendanceMetrics,
+            PersonnelMetrics = personnelMetrics,
+            RequestsMetrics = requestsMetrics,
+            FinancialMetrics = financialMetrics,
+            HolidayMetrics = holidayMetrics,
+            WeeklyMetrics = weeklyMetrics,
+            MonthlyMetrics = monthlyMetrics
+        };
+    }
+
+    private string InferHolidayType(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "Other";
+        name = name.ToLower();
+        if (name.Contains("عيد") || name.Contains("fitr") || name.Contains("adha") || name.Contains("ramadan")) return "Religious";
+        if (name.Contains("watani") || name.Contains("national") || name.Contains("tahsis") || name.Contains("flag")) return "National";
+        return "Official";
     }
 }

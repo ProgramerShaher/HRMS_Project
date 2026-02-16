@@ -29,6 +29,13 @@ public class ReportsController : ControllerBase
         return Ok(Result<AnalyticsHROverviewDto>.Success(data));
     }
 
+    [HttpGet("dashboard/comprehensive")]
+    public async Task<ActionResult<Result<ComprehensiveDashboardDto>>> GetComprehensiveDashboard()
+    {
+        var data = await _reportingService.GetComprehensiveDashboardAsync();
+        return Ok(Result<ComprehensiveDashboardDto>.Success(data));
+    }
+
     [HttpGet("analytics/attendance")]
     public async Task<ActionResult<Result<AnalyticsAttendanceStatsDto>>> GetAttendanceStats([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
     {
