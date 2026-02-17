@@ -1,251 +1,258 @@
-<!-- Dashboard Content -->
-<div *ngIf="loading" class="flex items-center justify-center min-h-[400px]">
-    <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+<div class="min-h-screen bg-slate-50/50 dark:bg-slate-950/50 p-3 lg:p-4 animate-in fade-in duration-700" *ngIf="dashboardData">
+    
+    <!-- ERP-Scale Ultra-Compact Hero Header -->
+    <header class="mb-3 relative overflow-hidden rounded-[0.75rem] bg-indigo-950 dark:bg-slate-900 p-3 lg:p-4 text-white shadow-md group">
+        <div class="absolute top-0 right-0 -mr-10 -mt-10 w-24 h-24 bg-blue-500/10 rounded-full blur-xl transition-transform duration-1000 group-hover:scale-125"></div>
+        <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-20 h-20 bg-emerald-500/5 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div class="space-y-0.5">
+                <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-[7px] font-bold tracking-wider uppercase">
+                    <span class="relative flex h-1 w-1">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1 w-1 bg-emerald-500"></span>
+                    </span>
+                    مركز القيادة الرقمي
+                </div>
+                <h1 class="text-lg lg:text-xl font-black tracking-tight leading-tight">
+                    أهلاً، <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-emerald-300">القائد الرقمي</span>
+                </h1>
+                <p class="text-slate-400 text-[10px] font-medium opacity-70">
+                    ملخص شامل لكافة موديولات النظام في واجهة واحدة.
+                </p>
+            </div>
+
+            <!-- ERP-Scale Quick Stats -->
+            <div class="grid grid-cols-3 gap-2 lg:min-w-[280px]">
+                <div [routerLink]="['/employees']" class="p-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-xl transition-all hover:bg-white/10 cursor-pointer text-center group/stat">
+                    <span class="block text-slate-400 text-[7px] font-bold mb-0.5 uppercase tracking-widest group-hover/stat:text-blue-300 transition-colors">إجمالي الموظفين</span>
+                    <span class="text-base font-black">{{ dashboardData.personnelMetrics.totalEmployees }}</span>
+                </div>
+                <div [routerLink]="['/attendance/reports']" class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-400/20 backdrop-blur-xl transition-all hover:bg-emerald-500/20 cursor-pointer text-center group/stat">
+                    <span class="block text-emerald-400 text-[7px] font-bold mb-0.5 uppercase tracking-widest group-hover/stat:text-emerald-300 transition-colors">الحضور اليوم</span>
+                    <span class="text-base font-black text-emerald-400">{{ dashboardData.attendanceMetrics.totalPresent }}</span>
+                </div>
+                <div [routerLink]="['/attendance/reports']" class="p-2 rounded-lg bg-amber-500/10 border border-amber-400/20 backdrop-blur-xl transition-all hover:bg-amber-500/20 cursor-pointer text-center group/stat">
+                    <span class="block text-amber-400 text-[7px] font-bold mb-0.5 uppercase tracking-widest group-hover/stat:text-amber-300 transition-colors">متأخرات اليوم</span>
+                    <span class="text-base font-black text-amber-400">{{ dashboardData.attendanceMetrics.totalLate }}</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Interactive Grid -->
+    <div class="grid grid-cols-12 gap-3">
+        
+        <!-- Row 1: Operations & Alerts -->
+        <div class="col-span-12 lg:col-span-8 flex flex-col gap-3">
+            
+            <!-- Statistics & Performance Center -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                
+                <!-- Attendance Card (Operational) -->
+                <div [routerLink]="['/attendance/reports']" class="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="p-1.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                            <i class="pi pi-calendar-plus text-sm"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">حالة الحضور</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <div>
+                            <span class="block text-[10px] text-slate-400">حاضر</span>
+                            <span class="text-lg font-black text-slate-800 dark:text-slate-100">{{ dashboardData.attendanceMetrics.totalPresent }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-400">غائب</span>
+                            <span class="text-lg font-black text-rose-500">{{ dashboardData.attendanceMetrics.totalAbsent }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Card (New) -->
+                <div [routerLink]="['/performance']" class="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="p-1.5 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                            <i class="pi pi-chart-line text-sm"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">تقييم الأداء</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <div>
+                            <span class="block text-[10px] text-slate-400">دورات نشطة</span>
+                            <span class="text-lg font-black text-slate-800 dark:text-slate-100">{{ dashboardData.performanceMetrics.activeAppraisalCycles }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-400">متوسط التقييم</span>
+                            <span class="text-lg font-black text-purple-500">{{ dashboardData.performanceMetrics.averageCompanyRating }} ★</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Health (Setup) -->
+                <div [routerLink]="['/setup']" class="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                            <i class="pi pi-cog text-sm"></i>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">إعدادات النظام</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <div>
+                            <span class="block text-[10px] text-slate-400">الإدارات</span>
+                            <span class="text-lg font-black text-slate-800 dark:text-slate-100">{{ dashboardData.setupMetrics.totalDepartments }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-400">المستخدمين</span>
+                            <span class="text-lg font-black text-cyan-500">{{ dashboardData.setupMetrics.totalActiveUsers }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational Charts -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex-1 flex flex-col min-h-[300px]">
+                <div class="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/20">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1 h-4 bg-indigo-500 rounded-full"></div>
+                        <h3 class="text-xs font-black text-slate-800 dark:text-slate-100">تحليل الانضباط الأسبوعي</h3>
+                    </div>
+                    <button class="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline uppercase tracking-widest">توسيع التقرير</button>
+                </div>
+                <div class="p-3 flex-1 relative">
+                    <p-chart type="line" [data]="weeklyTrendData" [options]="weeklyTrendOptions" height="100%"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Section: Requests & Finances -->
+        <div class="col-span-12 lg:col-span-4 flex flex-col gap-3">
+            
+            <!-- Pending Requests Terminal -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden h-fit">
+                <div class="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 flex items-center justify-between">
+                    <h3 class="text-xs font-black text-slate-800 dark:text-slate-100">طلبات معلقة مجمعة</h3>
+                    <span class="px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] font-bold">
+                        {{ dashboardData.requestsMetrics.pendingLeaveRequests + dashboardData.requestsMetrics.pendingOvertimeRequests + dashboardData.requestsMetrics.pendingLoanRequests }} إجمالي
+                    </span>
+                </div>
+                <div class="p-1">
+                    <!-- Leave Requests -->
+                    <div [routerLink]="['/leaves/approvals']" class="p-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer rounded-lg m-1 group">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 h-7 w-7 flex items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform">
+                                <i class="pi pi-send text-[10px]"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">طلبات الإجازة</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 text-[10px] font-black group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                            {{ dashboardData.requestsMetrics.pendingLeaveRequests }}
+                        </span>
+                    </div>
+                    <!-- Overtime Requests -->
+                    <div [routerLink]="['/attendance/requests']" class="p-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer rounded-lg m-1 group">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 h-7 w-7 flex items-center justify-center rounded-lg bg-orange-500/10 text-orange-600 group-hover:scale-110 transition-transform">
+                                <i class="pi pi-clock text-[10px]"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">ساعات إضافية</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 text-[10px] font-black group-hover:bg-orange-500 group-hover:text-white transition-all">
+                            {{ dashboardData.requestsMetrics.pendingOvertimeRequests }}
+                        </span>
+                    </div>
+                    <!-- Loan Requests -->
+                    <div [routerLink]="['/payroll/loans/admin/pending']" class="p-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer rounded-lg m-1 group">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 h-7 w-7 flex items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 group-hover:scale-110 transition-transform">
+                                <i class="pi pi-dollar text-[10px]"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">سلف مالية</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 text-[10px] font-black group-hover:bg-blue-500 group-hover:text-white transition-all">
+                            {{ dashboardData.requestsMetrics.pendingLoanRequests }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Pulse -->
+            <div [routerLink]="['/payroll/dashboard']" class="bg-indigo-600 rounded-xl p-4 text-white shadow-lg overflow-hidden relative cursor-pointer group">
+                <div class="absolute top-0 right-0 -mr-6 -mt-6 w-24 h-24 bg-white/10 rounded-full blur-xl transition-all group-hover:scale-150"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="pi pi-wallet text-sm opacity-80"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-widest opacity-80">النبض المالي (الشهر الحالي)</span>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] opacity-70">إجمالي الرواتب الصافية</p>
+                        <h2 class="text-2xl font-black">
+                            {{ dashboardData.monthlyMetrics.totalNetSalary | number:'1.0-0' }}
+                            <span class="text-xs font-normal opacity-80">ريال</span>
+                        </h2>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <div class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            <span class="text-[10px] font-bold">عرض تفاصيل المسيرات</span>
+                            <i class="pi pi-arrow-left text-[8px]"></i>
+                        </div>
+                        <span class="text-[8px] px-1.5 py-0.5 rounded bg-white/20 font-bold uppercase tracking-tighter">Budget Live</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Assets & Health (New Compact View) -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div class="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+                    <h3 class="text-xs font-black text-slate-800 dark:text-slate-100">أصول النظام</h3>
+                </div>
+                <div class="grid grid-cols-2 text-center">
+                    <div [routerLink]="['/setup/departments']" class="p-3 border-r border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer">
+                        <span class="block text-[8px] font-bold text-slate-400 uppercase tracking-widest">المناوبات</span>
+                        <span class="text-base font-black text-indigo-500">{{ dashboardData.setupMetrics.totalShiftTypes }}</span>
+                    </div>
+                    <div [routerLink]="['/setup/jobs']" class="p-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer">
+                        <span class="block text-[8px] font-bold text-slate-400 uppercase tracking-widest">الوظائف</span>
+                        <span class="text-base font-black text-indigo-500">{{ dashboardData.setupMetrics.totalJobTitles }}</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Final High-Resolution Analytics Row -->
+    <div class="grid grid-cols-12 gap-3 mt-3">
+        <div class="col-span-12">
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden min-h-[300px]">
+                <div class="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="p-1 px-2 rounded-lg bg-indigo-500 text-white text-[10px] font-black">SAR</div>
+                        <h3 class="text-xs font-black text-slate-800 dark:text-slate-100">توزيع كتلة الأجور حسب الإدارة</h3>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase">ميزانية معتمدة</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 h-[250px] relative">
+                    <p-chart type="bar" [data]="payrollChartData" [options]="payrollChartOptions" height="100%"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<div *ngIf="!loading && dashboardData" class="fade-in">
-    
-    <!-- Top Stats Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        
-        <!-- Employees -->
-        <div class="card-floating p-6 border-r-4 border-blue-500 relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/5 rounded-bl-full transition-transform group-hover:scale-150"></div>
-            <div class="flex items-center justify-between relative z-10">
-                <div>
-                    <span class="block text-slate-500 text-sm font-bold mb-1">إجمالي الموظفين</span>
-                    <h3 class="text-3xl font-bold text-slate-800">{{ dashboardData.personnelMetrics.totalEmployees | number }}</h3>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xl shadow-sm">
-                    <i class="pi pi-users"></i>
-                </div>
-            </div>
-            <div class="mt-4 flex items-center justify-between text-xs font-medium">
-                <span class="text-emerald-500">نشط: {{ dashboardData.personnelMetrics.activeEmployees }}</span>
-                <span class="text-slate-400">|</span>
-                <span class="text-red-400">غير نشط: {{ dashboardData.personnelMetrics.inactiveEmployees }}</span>
-            </div>
-        </div>
-
-        <!-- Attendance -->
-        <div class="card-floating p-6 border-r-4 border-emerald-500 relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full transition-transform group-hover:scale-150"></div>
-            <div class="flex items-center justify-between relative z-10">
-                <div>
-                    <span class="block text-slate-500 text-sm font-bold mb-1">حضور اليوم</span>
-                    <h3 class="text-3xl font-bold text-slate-800">{{ dashboardData.attendanceMetrics.totalPresent | number }}</h3>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 text-xl shadow-sm">
-                    <i class="pi pi-check-circle"></i>
-                </div>
-            </div>
-            <div class="mt-4 flex items-center text-xs font-medium text-slate-400 gap-2">
-                <span>غياب: <span class="text-red-500 font-bold">{{ dashboardData.attendanceMetrics.totalAbsent }}</span></span>
-                <span>•</span>
-                <span>تأخير: <span class="text-amber-500 font-bold">{{ dashboardData.attendanceMetrics.totalLate }}</span></span>
-            </div>
-        </div>
-
-        <!-- Leaves -->
-        <div class="card-floating p-6 border-r-4 border-amber-500 relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-amber-500/5 rounded-bl-full transition-transform group-hover:scale-150"></div>
-            <div class="flex items-center justify-between relative z-10">
-                <div>
-                    <span class="block text-slate-500 text-sm font-bold mb-1">في إجازة</span>
-                    <h3 class="text-3xl font-bold text-slate-800">{{ dashboardData.attendanceMetrics.totalLeaves | number }}</h3>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 text-xl shadow-sm">
-                    <i class="pi pi-send"></i>
-                </div>
-            </div>
-            <div class="mt-4 flex items-center text-xs font-medium text-amber-600">
-                <i class="pi pi-exclamation-circle ml-1"></i>
-                <span>{{ dashboardData.requestsMetrics.pendingLeaveRequests }} طلبات إجازة معلقة</span>
-            </div>
-        </div>
-
-        <!-- Financials -->
-        <div class="card-floating p-6 border-r-4 border-purple-500 relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-purple-500/5 rounded-bl-full transition-transform group-hover:scale-150"></div>
-            <div class="flex items-center justify-between relative z-10">
-                <div>
-                    <span class="block text-slate-500 text-sm font-bold mb-1">رواتب معلقة</span>
-                    <h3 class="text-2xl font-bold text-slate-800">{{ dashboardData.financialMetrics.totalPendingSalaries | number:'1.0-0' }} <span class="text-sm text-slate-500">ريال</span></h3>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 text-xl shadow-sm">
-                    <i class="pi pi-wallet"></i>
-                </div>
-            </div>
-            <div class="mt-4 flex items-center text-xs font-medium text-purple-600">
-                <span>{{ dashboardData.financialMetrics.activeLoansCount }} قروض نشطة ({{ dashboardData.financialMetrics.totalActiveLoansAmount | number:'1.0-0' }} ريال)</span>
-            </div>
-        </div>
-
+<!-- Ultra-Compact Skeleton Loading -->
+<div class="p-4 space-y-4" *ngIf="loading">
+    <div class="h-24 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
+    <div class="grid grid-cols-3 gap-4">
+        <div class="h-24 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
+        <div class="h-24 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
+        <div class="h-24 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
     </div>
-
-    <!-- Charts & Breakdown Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        
-        <!-- Attendance Chart -->
-        <div class="card-floating p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-4">تحليل الحضور اليومي</h3>
-            <div class="h-64 flex items-center justify-center">
-                <p-chart type="pie" [data]="data" [options]="options" class="w-full h-full"></p-chart>
-            </div>
-        </div>
-
-        <!-- Shift Distribution -->
-        <div class="card-floating p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-4">توزيع المناوبات</h3>
-            <div class="space-y-4">
-                <div *ngFor="let item of dashboardData.attendanceMetrics.shiftDistribution | keyvalue" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <div class="flex items-center gap-3">
-                        <div class="w-2 h-8 bg-blue-500 rounded-full"></div>
-                        <span class="font-bold text-slate-700">{{ item.key }}</span>
-                    </div>
-                    <span class="text-lg font-bold text-blue-600">{{ item.value }} موظف</span>
-                </div>
-                <!-- Empty State for Shifts -->
-                <div *ngIf="(dashboardData.attendanceMetrics.shiftDistribution | keyvalue)?.length === 0" class="flex flex-col items-center justify-center py-8 text-slate-400">
-                    <i class="pi pi-calendar-times text-2xl mb-2 opacity-50"></i>
-                    <span class="text-sm">لا يوجد بيانات مناوبات اليوم</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Holiday Stats -->
-        <div class="card-floating p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-4">العطل الرسمية ({{ dashboardData.reportDate | date:'yyyy' }})</h3>
-            <div class="space-y-3">
-                <div *ngFor="let holiday of dashboardData.holidayMetrics" class="group hover:bg-slate-50 p-2 rounded-lg transition-colors">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="text-sm font-bold text-slate-700">
-                            <i *ngIf="holiday.holidayType === 'Religious'" class="pi pi-star text-amber-500 ml-2"></i>
-                            <i *ngIf="holiday.holidayType === 'National'" class="pi pi-flag text-green-500 ml-2"></i>
-                            <i *ngIf="holiday.holidayType === 'Official'" class="pi pi-briefcase text-blue-500 ml-2"></i>
-                            {{ holiday.holidayType === 'Religious' ? 'عطلات دينية' : holiday.holidayType === 'National' ? 'عطلات وطنية' : 'عطلات رسمية' }}
-                        </span>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">{{ holiday.holidaysCount }} عطلات</span>
-                    </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2">
-                        <div class="bg-indigo-500 h-2 rounded-full" [style.width.%]="(holiday.daysCount / 20) * 100"></div> 
-                    </div>
-                    <div class="text-right mt-1">
-                        <span class="text-xs text-indigo-600 font-bold">{{ holiday.daysCount }} يوم</span>
-                    </div>
-                </div>
-                <!-- Empty State for Holidays -->
-                 <div *ngIf="dashboardData.holidayMetrics.length === 0" class="flex flex-col items-center justify-center py-8 text-slate-400">
-                    <i class="pi pi-calendar text-2xl mb-2 opacity-50"></i>
-                    <span class="text-sm">لا يوجد عطلات مسجلة</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Detailed Lists Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-        <!-- Pending Requests Summary -->
-        <div class="card-floating p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-6">الطلبات المعلقة</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 bg-amber-50 rounded-xl border border-amber-100 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                    <span class="block text-amber-600 text-sm font-bold mb-2">إجازات</span>
-                    <span class="text-3xl font-bold text-amber-800">{{ dashboardData.requestsMetrics.pendingLeaveRequests }}</span>
-                </div>
-                <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                    <span class="block text-blue-600 text-sm font-bold mb-2">عمل إضافي</span>
-                    <span class="text-3xl font-bold text-blue-800">{{ dashboardData.requestsMetrics.pendingOvertimeRequests }}</span>
-                </div>
-                <div class="p-4 bg-purple-50 rounded-xl border border-purple-100 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                    <span class="block text-purple-600 text-sm font-bold mb-2">سلف وقروض</span>
-                    <span class="text-3xl font-bold text-purple-800">{{ dashboardData.requestsMetrics.pendingLoanRequests }}</span>
-                </div>
-                <div class="p-4 bg-pink-50 rounded-xl border border-pink-100 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                    <span class="block text-pink-600 text-sm font-bold mb-2">استئذان</span>
-                    <span class="text-3xl font-bold text-pink-800">{{ dashboardData.requestsMetrics.pendingPermissions }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Financial Breakdown by Department -->
-        <div class="card-floating p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-bold text-slate-800">الرواتب المستحقة حسب القسم</h3>
-                <span class="text-xs text-slate-400 font-normal bg-slate-100 px-2 py-1 rounded">المسيرات قيد الإجراء</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-right">
-                    <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
-                        <tr>
-                            <th class="px-4 py-3 rounded-tr-lg">القسم</th>
-                            <th class="px-4 py-3 rounded-tl-lg text-left">المبلغ المستحق</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of dashboardData.financialMetrics.pendingSalariesByDepartment | keyvalue" class="border-b last:border-0 border-slate-100 hover:bg-slate-50/50 transition-colors">
-                            <td class="px-4 py-3 font-medium text-slate-700 flex items-center gap-2">
-                                <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
-                                {{ item.key }}
-                            </td>
-                            <td class="px-4 py-3 font-bold text-emerald-600 text-left">{{ item.value | number:'1.0-0' }} ريال</td>
-                        </tr>
-                        <tr *ngIf="(dashboardData.financialMetrics.pendingSalariesByDepartment | keyvalue)?.length === 0">
-                            <td colspan="2" class="px-4 py-8 text-center text-slate-400">
-                                <div class="flex flex-col items-center">
-                                    <i class="pi pi-check-circle text-2xl mb-2 text-emerald-100"></i>
-                                    <span>لا يوجد رواتب معلقة حالياً</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Weekly & Monthly Analytics Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        
-        <!-- Weekly Trend Chart -->
-        <div class="col-span-1 lg:col-span-2 card-floating p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-4">الأداء الأسبوعي (آخر 7 أيام)</h3>
-            <div class="h-80 w-full">
-                <p-chart type="line" [data]="weeklyTrendData" [options]="weeklyTrendOptions" height="300px"></p-chart>
-            </div>
-        </div>
-
-        <!-- Monthly Overview Stats -->
-        <div class="card-floating p-6 flex flex-col justify-between">
-            <h3 class="text-lg font-bold text-slate-800 mb-4">ملخص الشهر الحالي</h3>
-            
-            <div class="space-y-4 flex-1">
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <span class="text-sm font-bold text-slate-600">نسبة الحضور</span>
-                    <span class="text-lg font-bold text-emerald-600">{{ dashboardData.monthlyMetrics.attendanceRate | number:'1.0-1' }}%</span>
-                </div>
-                
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <span class="text-sm font-bold text-slate-600">إجازات الموظفين</span>
-                    <span class="text-lg font-bold text-amber-600">{{ dashboardData.monthlyMetrics.totalLeaves }} يوم</span>
-                </div>
-
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <span class="text-sm font-bold text-slate-600">تعيينات جديدة</span>
-                    <span class="text-lg font-bold text-blue-600">{{ dashboardData.monthlyMetrics.newHires }} موظف</span>
-                </div>
-
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <span class="text-sm font-bold text-slate-600">استقالات/إنهاء خدمات</span>
-                    <span class="text-lg font-bold text-red-600">{{ dashboardData.monthlyMetrics.resignations }} موظف</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
+    <div class="h-64 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
 </div>

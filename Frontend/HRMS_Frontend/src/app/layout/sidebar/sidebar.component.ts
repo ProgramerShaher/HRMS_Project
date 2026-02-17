@@ -48,8 +48,8 @@ export class SidebarComponent implements OnInit {
       expanded: false,
       permission: 'Employees.View',
       children: [
-        { label: 'قائمة الموظفين', icon: 'pi pi-list', route: '/personnel/employees', permission: 'Employees.View' },
-        { label: 'إضافة موظف جديد', icon: 'pi pi-user-plus', route: '/personnel/employees/wizard', permission: 'Employees.Create' },
+        { label: 'قائمة الموظفين', icon: 'pi pi-list', route: '/employees', permission: 'Employees.View' },
+        { label: 'إضافة موظف جديد', icon: 'pi pi-user-plus', route: '/employees/wizard', permission: 'Employees.Create' },
         { label: 'إدارة السلف', icon: 'pi pi-money-bill', route: '/payroll/loans', permission: 'Loans.View' },
       ]
     },

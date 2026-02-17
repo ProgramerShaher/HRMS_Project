@@ -7,6 +7,8 @@ export interface ComprehensiveDashboardDto {
   holidayMetrics: HolidayMetricDto[];
   weeklyMetrics: WeeklyAnalyticsDto;
   monthlyMetrics: MonthlyAnalyticsDto;
+  performanceMetrics: PerformanceMetricsDto;
+  setupMetrics: SetupMetricsDto;
 }
 
 export interface AttendanceMetricsDto {
@@ -21,6 +23,7 @@ export interface PersonnelMetricsDto {
   totalEmployees: number;
   activeEmployees: number;
   inactiveEmployees: number;
+  expiringDocumentsCount: number;
   departmentStats: DepartmentStatDto[];
 }
 
@@ -72,4 +75,22 @@ export interface MonthlyAnalyticsDto {
   attendanceRate: number;
   newHires: number;
   resignations: number;
+  totalNetSalary: number;
+  totalBasicSalary: number;
+  totalAllowances: number;
+  totalDeductions: number;
+  salaryByDepartment: { [key: string]: number };
+}
+
+export interface PerformanceMetricsDto {
+  activeAppraisalCycles: number;
+  pendingEvaluations: number;
+  averageCompanyRating: number;
+}
+
+export interface SetupMetricsDto {
+  totalDepartments: number;
+  totalJobTitles: number;
+  totalShiftTypes: number;
+  totalActiveUsers: number;
 }

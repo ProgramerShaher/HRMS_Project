@@ -84,9 +84,9 @@ public class ReportingService : IReportingService
 
         var totalDays = (endDate - startDate).Days + 1;
 
-        var totalPresent = logs.Count(l => l.Status == "Present" || l.Status == "Late");
-        var totalAbsent = logs.Count(l => l.Status == "Absent");
-        var totalLate = logs.Count(l => l.Status == "Late");
+        var totalPresent = logs.Count(l => (l.Status ?? "").ToUpper() == "PRESENT" || (l.Status ?? "").ToUpper() == "LATE");
+        var totalAbsent = logs.Count(l => (l.Status ?? "").ToUpper() == "ABSENT");
+        var totalLate = logs.Count(l => (l.Status ?? "").ToUpper() == "LATE");
 
         // 1. Daily Trend
         var trend = logs
@@ -94,16 +94,16 @@ public class ReportingService : IReportingService
             .Select(g => new AnalyticsDailyAttendanceSummaryDto
             {
                 Date = g.Key,
-                PresentCount = g.Count(x => x.Status == "Present" || x.Status == "Late"),
-                AbsentCount = g.Count(x => x.Status == "Absent"),
-                LateCount = g.Count(x => x.Status == "Late")
+                PresentCount = g.Count(x => (x.Status ?? "").ToUpper() == "PRESENT" || (x.Status ?? "").ToUpper() == "LATE"),
+                AbsentCount = g.Count(x => (x.Status ?? "").ToUpper() == "ABSENT"),
+                LateCount = g.Count(x => (x.Status ?? "").ToUpper() == "LATE")
             })
             .OrderBy(x => x.Date)
             .ToList();
 
         // 2. Top Late Employees
         var topLate = logs
-            .Where(l => l.Status == "Late" && l.LateMinutes > 0)
+            .Where(l => (l.Status ?? "").ToUpper() == "LATE" && l.LateMinutes > 0)
             .GroupBy(l => l.Employee)
             .Select(g => new AnalyticsEmployeeAttendanceRankingDto
             {
@@ -168,7 +168,7 @@ public class ReportingService : IReportingService
     }
 
     // ═══════════════════════════════════════════════════════════
-    // 4. Operational Reports (Unchanged DTO names for now)
+    // 4. Operational Reports
     // ═══════════════════════════════════════════════════════════
     public async Task<List<EmployeeCensusDto>> GetEmployeeCensusReportAsync(int? departmentId = null, string? status = null)
     {
@@ -266,6 +266,7 @@ public class ReportingService : IReportingService
         .ToListAsync();
     }
 
+    // ══ RESTORED MISSING METHODS START ══
     public async Task<List<LeaveHistoryDto>> GetLeaveHistoryReportAsync(DateTime startDate, DateTime endDate, int? departmentId = null)
     {
         var query = _context.LeaveRequests
@@ -347,6 +348,7 @@ public class ReportingService : IReportingService
         .OrderByDescending(a => a.OverallScore)
         .ToListAsync();
     }
+    // ══ RESTORED MISSING METHODS END ══
 
     // ═══════════════════════════════════════════════════════════
     // 5. Comprehensive Dashboard
@@ -356,91 +358,203 @@ public class ReportingService : IReportingService
         var today = DateTime.UtcNow.Date;
         var startOfMonth = new DateTime(today.Year, today.Month, 1);
 
-        // 1. Attendance Metrics (Today)
-        var attendanceLogs = await _context.DailyAttendances
-            .Include(d => d.PlannedShift)
-            .Where(d => d.AttendanceDate == today)
+        // 1. Attendance Metrics (Live + Processed)
+        var processedAttendance = await _context.DailyAttendances
+            .AsNoTracking()
+            .Where(d => d.AttendanceDate == today && d.IsDeleted == 0)
             .ToListAsync();
+
+        var todayPunches = await _context.RawPunchLogs
+            .AsNoTracking()
+            .Where(p => p.PunchTime >= today && p.PunchTime < today.AddDays(1))
+            .Select(p => new { p.EmployeeId, p.PunchType })
+            .ToListAsync();
+
+        var punchedInEmployeeIds = todayPunches
+            .GroupBy(p => p.EmployeeId)
+            .Where(g => g.Any(x => x.PunchType == "IN" || x.PunchType == "BREAK_IN"))
+            .Select(g => g.Key)
+            .Distinct()
+            .ToList();
+
+        var processedPresentIds = processedAttendance
+            .Where(a => (a.Status ?? "").ToUpper() == "PRESENT" || (a.Status ?? "").ToUpper() == "LATE")
+            .Select(a => a.EmployeeId)
+            .ToList();
+
+        var livePresentIds = punchedInEmployeeIds.Except(processedPresentIds).ToList();
+        
+        var totalPresent = processedPresentIds.Count + livePresentIds.Count;
+        var totalLate = processedAttendance.Count(a => (a.Status ?? "").ToUpper() == "LATE");
+
+        var totalEmployees = await _context.Employees.CountAsync(e => e.IsDeleted == 0 && e.IsActive);
+
+        var peopleOnLeave = await _context.LeaveRequests
+            .CountAsync(l => l.StartDate <= today && l.EndDate >= today && (l.Status == "APPROVED" || l.Status == "Approved") && l.IsDeleted == 0);
+
+        var derivedAbsent = totalEmployees - (totalPresent + peopleOnLeave);
+        if (derivedAbsent < 0) derivedAbsent = 0;
 
         var attendanceMetrics = new AttendanceMetricsDto
         {
-            TotalPresent = attendanceLogs.Count(x => x.Status == "Present" || x.Status == "Late"),
-            TotalAbsent = attendanceLogs.Count(x => x.Status == "Absent"),
-            TotalLate = attendanceLogs.Count(x => x.Status == "Late"),
-            // Assuming Leaves are marked in DailyAttendance or need separate query. 
-            // For now, simpler to count from DailyAttendance status if available, or LeaveRequests.
-            // Let's rely on DailyAttendance status being "Leave" or similar if the system is integrated.
-            TotalLeaves = attendanceLogs.Count(x => x.Status == "Leave" || x.Status == "Vacation"),
-            ShiftDistribution = attendanceLogs
-                .GroupBy(x => x.PlannedShift != null ? x.PlannedShift.ShiftNameAr : "Unknown")
-                .ToDictionary(g => g.Key, g => g.Count())
+            TotalPresent = totalPresent,
+            TotalAbsent = derivedAbsent,
+            TotalLate = totalLate,
+            TotalLeaves = peopleOnLeave,
+            AttendanceRate = totalEmployees > 0 ? Math.Round(((double)totalPresent / totalEmployees) * 100, 1) : 0,
+            ShiftDistribution = new Dictionary<string, int>() 
         };
 
         // 2. Personnel Metrics
         var employees = await _context.Employees
             .Include(e => e.Department)
+            .Where(e => e.IsDeleted == 0)
             .AsNoTracking()
             .ToListAsync();
+
+        var thirtyDaysFromNow = today.AddDays(30);
+        var expiringDocs = await _context.EmployeeDocuments
+            .CountAsync(d => d.ExpiryDate != null && d.ExpiryDate >= today && d.ExpiryDate <= thirtyDaysFromNow && d.IsDeleted == 0);
 
         var personnelMetrics = new PersonnelMetricsDto
         {
             TotalEmployees = employees.Count,
             ActiveEmployees = employees.Count(e => e.IsActive && e.TerminationDate == null),
             InactiveEmployees = employees.Count(e => !e.IsActive || e.TerminationDate != null),
+            ExpiringDocumentsCount = expiringDocs,
+            NewHires = employees.Count(e => e.HireDate >= startOfMonth),
+            ActiveContracts = await _context.Contracts.CountAsync(c => c.IsActive == true && c.IsDeleted == 1),
             DepartmentStats = employees
-                 .Where(e => e.IsActive && e.TerminationDate == null) // Count active only for dept distribution usually
+                 .Where(e => e.IsActive && e.TerminationDate == null)
                  .GroupBy(e => e.Department)
                  .Select(g => new DepartmentStatDto
                  {
-                     DepartmentId = g.Key.DeptId,
-                     DepartmentName = g.Key.DeptNameAr,
-                     EmployeeCount = g.Count()
+                     DepartmentId = g?.Key?.DeptId ?? 0,
+                     DepartmentName = g?.Key?.DeptNameAr ?? "غير معرف",
+                     EmployeeCount = g?.Count() ?? 0
                  })
                  .ToList()
         };
 
-        // 3. Requests Metrics (Pending)
-        var pendingLeaves = await _context.LeaveRequests.CountAsync(x => x.Status.ToLower() == "pending");
-        var pendingOT = await _context.OvertimeRequests.CountAsync(x => x.Status.ToLower() == "pending"); 
-        var pendingLoans = await _context.Loans.CountAsync(x => x.Status.ToLower() == "pending");
-        var pendingSwaps = await _context.ShiftSwapRequests.CountAsync(x => x.Status.ToLower() == "pending");
-        var pendingPermissions = await _context.PermissionRequests.CountAsync(x => x.Status.ToLower() == "pending");
-
+        // 3. Requests Metrics
         var requestsMetrics = new RequestsMetricsDto
         {
-            PendingLeaveRequests = pendingLeaves,
-            PendingOvertimeRequests = pendingOT,
-            PendingLoanRequests = pendingLoans,
-            PendingShiftSwaps = pendingSwaps,
-            PendingPermissions = pendingPermissions
+            PendingLeaveRequests = await _context.LeaveRequests.CountAsync(x => x.Status.ToLower() == "pending" && x.IsDeleted == 0),
+            PendingOvertimeRequests = await _context.OvertimeRequests.CountAsync(x => x.Status.ToLower() == "pending" && x.IsDeleted == 0),
+            PendingLoanRequests = await _context.Loans.CountAsync(x => x.Status.ToLower() == "pending" && x.IsDeleted == 0),
+            PendingShiftSwaps = await _context.ShiftSwapRequests.CountAsync(x => x.Status.ToLower() == "pending" && x.IsDeleted == 0),
+            PendingPermissions = await _context.PermissionRequests.CountAsync(x => x.Status.ToLower() == "pending" && x.IsDeleted == 0)
+        };
+
+        // 3.5 Performance Metrics
+        var activeCycles = await _context.AppraisalCycles
+            .Where(c => c.StartDate <= today && c.EndDate >= today && c.IsDeleted == 0)
+            .ToListAsync();
+        
+        var pendingAppraisals = await _context.EmployeeAppraisals
+            .CountAsync(a => (a.Status.ToLower() == "pending" || a.Status.ToLower() == "in_progress") && a.IsDeleted == 0);
+
+        var avgRating = await _context.EmployeeAppraisals
+            .Where(a => a.Status.ToLower() == "completed" && a.TotalScore.HasValue && a.IsDeleted == 0)
+            .Select(a => (double)a.TotalScore!.Value)
+            .DefaultIfEmpty(0)
+            .AverageAsync();
+
+        var performanceMetrics = new PerformanceMetricsDto
+        {
+            ActiveAppraisalCycles = activeCycles.Count,
+            PendingEvaluations = pendingAppraisals,
+            AverageCompanyRating = Math.Round(avgRating, 1)
+        };
+
+        // 3.6 Setup Metrics
+        var setupMetrics = new SetupMetricsDto
+        {
+            TotalDepartments = await _context.Departments.CountAsync(d => d.IsDeleted == 0),
+            TotalJobTitles = await _context.Jobs.CountAsync(j => j.IsDeleted == 0),
+            TotalShiftTypes = await _context.ShiftTypes.CountAsync(s => s.IsDeleted == 0),
+            TotalActiveUsers = await _context.Employees.CountAsync(u => u.IsActive && u.UserId != null)
         };
 
         // 4. Financial Metrics
+        var latestRun = await _context.PayrollRuns
+            .AsNoTracking()
+            .OrderByDescending(r => r.Year).ThenByDescending(r => r.Month)
+            .FirstOrDefaultAsync(r => r.IsDeleted == 0);
+
+        decimal totalNet = 0;
+        decimal totalBasic = 0;
+        decimal totalInfoDed = 0;
+
+        if (latestRun != null && latestRun.Month == today.Month && latestRun.Year == today.Year)
+        {
+             var payslips = await _context.Payslips
+                .Where(p => p.RunId == latestRun.RunId)
+                .Select(p => new { p.NetSalary, p.BasicSalary, p.TotalDeductions })
+                .ToListAsync();
+            
+            totalNet = payslips.Sum(p => p.NetSalary ?? 0);
+            totalBasic = payslips.Sum(p => p.BasicSalary ?? 0);
+            totalInfoDed = payslips.Sum(p => p.TotalDeductions ?? 0);
+        }
+        else
+        {
+            // PROJECTION: Sum up active salaries directly from structures
+            // Load Active Employee Structures with their SalaryElements
+            var activeStructures = await _context.EmployeeSalaryStructures
+                .Include(s => s.SalaryElement)
+                .Include(s => s.Employee)
+                .Where(s => s.IsActive == 1 && s.Employee.IsActive && s.Employee.IsDeleted == 0 && s.SalaryElement != null)
+                .Select(s => new 
+                { 
+                    s.Amount, 
+                    s.SalaryElement.ElementType, // "EARNING", "DEDUCTION"
+                    s.SalaryElement.IsBasic     // 1 or 0
+                })
+                .ToListAsync();
+
+            var totalEarnings = activeStructures
+                .Where(s => s.ElementType == "EARNING" || s.ElementType == "Addition") // flexible check
+                .Sum(s => s.Amount);
+
+            var totalDeductions = activeStructures
+                .Where(s => s.ElementType == "DEDUCTION")
+                .Sum(s => s.Amount);
+
+            totalBasic = activeStructures
+                .Where(s => s.IsBasic == 1)
+                .Sum(s => s.Amount);
+            
+            totalNet = totalEarnings - totalDeductions;
+            totalInfoDed = totalDeductions;
+        }
+
         var activeLoans = await _context.Loans
-            .Where(l => l.Status.ToLower() == "active" || l.Status.ToLower() == "approved")
+            .Where(l => (l.Status.ToLower() == "active" || l.Status.ToLower() == "approved") && l.IsDeleted == 0)
             .ToListAsync();
 
         var pendingPayslips = await _context.Payslips
-            .Include(p => p.Employee)
-            .ThenInclude(e => e.Department)
             .Include(p => p.PayrollRun)
-            .Where(p => p.PayrollRun.Status.ToLower() == "draft" || p.PayrollRun.Status.ToLower() == "pending")
+            .Where(p => (p.PayrollRun.Status.ToLower() == "draft" || p.PayrollRun.Status.ToLower() == "pending") && p.PayrollRun.IsDeleted == 0)
             .ToListAsync();
 
         var financialMetrics = new FinancialMetricsDto
         {
+            TotalNetSalary = (double)totalNet,
+            TotalBasicSalary = (double)totalBasic,
+            TotalDeductions = (double)totalInfoDed,
+            PendingPayrollCount = 0,
+            
             TotalPendingSalaries = pendingPayslips.Sum(p => p.NetSalary ?? 0),
-            PendingSalariesByDepartment = pendingPayslips
-                .GroupBy(p => p.Employee?.Department != null ? p.Employee.Department.DeptNameAr : "غير معرف")
-                .ToDictionary(g => g.Key, g => g.Sum(p => p.NetSalary ?? 0)),
+            PendingSalariesByDepartment = new Dictionary<string, decimal>(), 
             ActiveLoansCount = activeLoans.Count,
             TotalActiveLoansAmount = activeLoans.Sum(l => l.LoanAmount)
         };
 
-        // 5. Holiday Metrics (Inferred)
+        // 5. Holiday Metrics
         var currentYear = (short)today.Year;
         var holidays = await _context.PublicHolidays
-            .Where(h => h.Year == currentYear)
+            .Where(h => h.Year == currentYear && h.IsDeleted == 0)
             .ToListAsync();
 
         var holidayMetrics = holidays
@@ -453,47 +567,68 @@ public class ReportingService : IReportingService
             })
             .ToList();
 
-        // 6. Weekly Metrics (Last 7 Days)
+        // 6. Weekly Metrics
         var sevenDaysAgo = today.AddDays(-6);
         var weeklyLogs = await _context.DailyAttendances
-            .Where(d => d.AttendanceDate >= sevenDaysAgo && d.AttendanceDate <= today)
+            .Where(d => d.AttendanceDate >= sevenDaysAgo && d.AttendanceDate <= today && d.IsDeleted == 0)
             .ToListAsync();
+
+        var trendData = new List<AnalyticsDailyAttendanceSummaryDto>();
+        for (int i = 0; i < 7; i++)
+        {
+            var date = sevenDaysAgo.AddDays(i);
+            var dayLogs = weeklyLogs.Where(l => l.AttendanceDate.Date == date.Date).ToList();
+            
+            trendData.Add(new AnalyticsDailyAttendanceSummaryDto
+            {
+                Date = date,
+                PresentCount = dayLogs.Count(x => (x.Status ?? "").ToUpper() == "PRESENT" || (x.Status ?? "").ToUpper() == "LATE"),
+                AbsentCount = dayLogs.Count(x => (x.Status ?? "").ToUpper() == "ABSENT"),
+                LateCount = dayLogs.Count(x => (x.Status ?? "").ToUpper() == "LATE")
+            });
+        }
 
         var weeklyMetrics = new WeeklyAnalyticsDto
         {
-            AttendanceTrend = weeklyLogs
-                .GroupBy(d => d.AttendanceDate.Date)
-                .Select(g => new AnalyticsDailyAttendanceSummaryDto
-                {
-                    Date = g.Key,
-                    PresentCount = g.Count(x => x.Status == "Present" || x.Status == "Late"),
-                    AbsentCount = g.Count(x => x.Status == "Absent"),
-                    LateCount = g.Count(x => x.Status == "Late")
-                })
-                .OrderBy(x => x.Date)
-                .ToList(),
+            AttendanceTrend = trendData,
             TotalHoursWorked = weeklyLogs.Sum(x => (x.ActualOutTime - x.ActualInTime)?.TotalHours ?? 0),
             TotalOvertimeMinutes = weeklyLogs.Sum(x => x.OvertimeMinutes)
         };
 
-        // 7. Monthly Metrics (Current Month)
+        // 7. Monthly Metrics
         var monthlyLogs = await _context.DailyAttendances
-            .Where(d => d.AttendanceDate >= startOfMonth && d.AttendanceDate <= today)
+            .Where(d => d.AttendanceDate >= startOfMonth && d.AttendanceDate <= today && d.IsDeleted == 0)
             .ToListAsync();
             
-        var monthlyPresent = monthlyLogs.Count(x => x.Status == "Present" || x.Status == "Late");
-        var monthlyAbsent = monthlyLogs.Count(x => x.Status == "Absent");
+        var monthlyPresent = monthlyLogs.Count(x => (x.Status ?? "").ToUpper() == "PRESENT" || (x.Status ?? "").ToUpper() == "LATE");
+        var monthlyAbsent = monthlyLogs.Count(x => (x.Status ?? "").ToUpper() == "ABSENT");
         var monthlyTotal = monthlyPresent + monthlyAbsent;
+
+        // Fetch payroll for the current month
+        var monthlySlips = await _context.Payslips
+            .Include(p => p.Employee)
+            .ThenInclude(e => e.Department)
+            .Include(p => p.PayrollRun)
+            .Where(p => p.PayrollRun.Month == today.Month && p.PayrollRun.Year == today.Year)
+            .ToListAsync();
 
         var monthlyMetrics = new MonthlyAnalyticsDto
         {
             TotalPresent = monthlyPresent,
             TotalAbsent = monthlyAbsent,
-            TotalLate = monthlyLogs.Count(x => x.Status == "Late"),
-            TotalLeaves = monthlyLogs.Count(x => x.Status == "Leave" || x.Status == "Vacation"),
+            TotalLate = monthlyLogs.Count(x => (x.Status ?? "").ToUpper() == "LATE"),
+            TotalLeaves = monthlyLogs.Count(x => (x.Status ?? "").ToUpper() == "LEAVE"),
             AttendanceRate = monthlyTotal > 0 ? ((double)monthlyPresent / monthlyTotal) * 100 : 0,
-            NewHires = await _context.Employees.CountAsync(e => e.HireDate >= startOfMonth && e.HireDate <= today),
-            Resignations = await _context.Employees.CountAsync(e => e.TerminationDate >= startOfMonth && e.TerminationDate <= today)
+            NewHires = employees.Count(e => e.HireDate >= startOfMonth && e.HireDate <= today.AddDays(1).AddSeconds(-1)),
+            Resignations = employees.Count(e => e.TerminationDate != null && e.TerminationDate >= startOfMonth && e.TerminationDate <= today.AddDays(1).AddSeconds(-1)),
+            
+            TotalNetSalary = monthlySlips.Sum(p => p.NetSalary ?? 0),
+            TotalBasicSalary = monthlySlips.Sum(p => p.BasicSalary ?? 0),
+            TotalAllowances = monthlySlips.Sum(p => p.TotalAllowances ?? 0),
+            TotalDeductions = monthlySlips.Sum(p => p.TotalDeductions ?? 0),
+            SalaryByDepartment = monthlySlips
+                .GroupBy(p => p.Employee?.Department != null ? p.Employee.Department.DeptNameAr : "غير معرف")
+                .ToDictionary(g => g.Key, g => g.Sum(p => p.NetSalary ?? 0))
         };
 
         return new ComprehensiveDashboardDto
@@ -505,7 +640,9 @@ public class ReportingService : IReportingService
             FinancialMetrics = financialMetrics,
             HolidayMetrics = holidayMetrics,
             WeeklyMetrics = weeklyMetrics,
-            MonthlyMetrics = monthlyMetrics
+            MonthlyMetrics = monthlyMetrics,
+            PerformanceMetrics = performanceMetrics,
+            SetupMetrics = setupMetrics
         };
     }
 

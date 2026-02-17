@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
+import { RouterModule } from '@angular/router';
 import { ReportsService } from '../../core/services/reports.service';
 import { ComprehensiveDashboardDto } from '../../core/models/reports.models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ChartModule],
+  imports: [CommonModule, ChartModule, RouterModule],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-  data: any;
-  options: any;
-
   weeklyTrendData: any;
   weeklyTrendOptions: any;
+  
+  payrollChartData: any;
+  payrollChartOptions: any;
+
   dashboardData: ComprehensiveDashboardDto | null = null;
   loading = true;
 
@@ -23,14 +25,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
       this.loadDashboardData();
-      this.initChartOptions();
   }
 
   loadDashboardData() {
     this.loading = true;
     this.reportsService.getComprehensiveDashboard().subscribe({
       next: (response) => {
-        // Backend returns Result<T> with 'succeeded' property
         if (response.succeeded) {
             this.dashboardData = response.data;
             this.initChartData();
@@ -49,44 +49,16 @@ export class DashboardComponent implements OnInit {
   initChartData() {
       if (!this.dashboardData) return;
       
-      const attendance = this.dashboardData.attendanceMetrics;
-      
       const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-      const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      
+      const textColor = isDarkMode ? '#e2e8f0' : '#475569';
+      const textColorSecondary = isDarkMode ? '#94a3b8' : '#64748b';
+      const surfaceBorder = isDarkMode ? '#334155' : '#e2e8f0';
 
-      this.data = {
-          labels: ['حضور', 'غياب', 'إجازات', 'تأخير'],
-          datasets: [
-              {
-                  label: 'إحصائيات اليوم',
-                  data: [
-                      attendance.totalPresent, 
-                      attendance.totalAbsent, 
-                      attendance.totalLeaves, 
-                      attendance.totalLate
-                  ],
-                  backgroundColor: [
-                      documentStyle.getPropertyValue('--blue-500'), 
-                      documentStyle.getPropertyValue('--red-500'), 
-                      documentStyle.getPropertyValue('--green-500'),
-                      documentStyle.getPropertyValue('--yellow-500')
-                  ],
-                  hoverBackgroundColor: [
-                      documentStyle.getPropertyValue('--blue-400'), 
-                      documentStyle.getPropertyValue('--red-400'), 
-                      documentStyle.getPropertyValue('--green-400'),
-                      documentStyle.getPropertyValue('--yellow-400')
-                  ]
-              }
-          ]
-      };
-
-      // Weekly Trend Chart
+      // Weekly Trend Chart with Gradients
       if (this.dashboardData.weeklyMetrics?.attendanceTrend) {
         const trend = this.dashboardData.weeklyMetrics.attendanceTrend;
-        // Format dates as abbreviated day names (e.g., Sat, Sun)
         const labels = trend.map((t: any) => new Date(t.date).toLocaleDateString('ar-SA', { weekday: 'long' }));
         const presentData = trend.map((t: any) => t.presentCount);
         const lateData = trend.map((t: any) => t.lateCount);
@@ -95,19 +67,32 @@ export class DashboardComponent implements OnInit {
             labels: labels,
             datasets: [
                 {
-                    label: 'حضور',
+                    label: 'الحضور والانضباط',
                     data: presentData,
-                    fill: true,
-                    borderColor: documentStyle.getPropertyValue('--emerald-500'),
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: {
+                        target: 'origin',
+                        above: 'rgba(79, 70, 229, 0.1)' // indigo-600 with opacity
+                    },
+                    borderColor: '#4f46e5',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#4f46e5',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#4f46e5',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
                     tension: 0.4
                 },
                 {
-                    label: 'تأخير',
+                    label: 'حالات التأخير',
                     data: lateData,
-                    fill: true,
-                    borderColor: documentStyle.getPropertyValue('--amber-500'),
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: false,
+                    borderColor: '#f59e0b',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: '#f59e0b',
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
                     tension: 0.4
                 }
             ]
@@ -115,41 +100,103 @@ export class DashboardComponent implements OnInit {
 
         this.weeklyTrendOptions = {
             maintainAspectRatio: false,
-            aspectRatio: 0.8,
             plugins: {
                 legend: {
-                    labels: { color: textColor, font: { family: 'Cairo' } }
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        color: textColor,
+                        font: { family: 'Cairo', size: 12, weight: 'bold' },
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+                    titleColor: isDarkMode ? '#ffffff' : '#0f172a',
+                    bodyColor: isDarkMode ? '#e2e8f0' : '#475569',
+                    borderColor: surfaceBorder,
+                    borderWidth: 1,
+                    padding: 12,
+                    boxPadding: 4,
+                    usePointStyle: true,
+                    titleFont: { family: 'Cairo', size: 14, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13 }
                 }
             },
             scales: {
                 x: {
-                    ticks: { color: textColorSecondary, font: { family: 'Cairo' } },
-                    grid: { color: surfaceBorder, drawBorder: false }
+                    ticks: { color: textColorSecondary, font: { family: 'Cairo', size: 11 } },
+                    grid: { display: false }
                 },
                 y: {
-                    ticks: { color: textColorSecondary },
-                    grid: { color: surfaceBorder, drawBorder: false }
+                    beginAtZero: true,
+                    ticks: { color: textColorSecondary, font: { family: 'Cairo', size: 11 } },
+                    grid: { color: surfaceBorder, drawBorder: false, borderDash: [4, 4] }
                 }
             }
         };
       }
-  }
 
-  initChartOptions() {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-      const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+      // Payroll Distribution Chart (Horizontal Bar)
+      if (this.dashboardData.monthlyMetrics?.salaryByDepartment) {
+        const payroll = this.dashboardData.monthlyMetrics.salaryByDepartment;
+        const labels = Object.keys(payroll);
+        const values = Object.values(payroll);
 
-      this.options = {
-          plugins: {
-              legend: {
-                  labels: {
-                      usePointStyle: true,
-                      color: textColor
-                  }
-              }
-          }
-      };
+        this.payrollChartData = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'كلفة القسم بريال',
+                    data: values,
+                    backgroundColor: (context: any) => {
+                        const chart = context.chart;
+                        const {ctx, chartArea} = chart;
+                        if (!chartArea) return null;
+                        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                        gradient.addColorStop(0, '#4f46e5'); // indigo-600
+                        gradient.addColorStop(1, '#818cf8'); // indigo-400
+                        return gradient;
+                    },
+                    hoverBackgroundColor: '#4338ca',
+                    borderRadius: 12,
+                    barThickness: 24,
+                    maxBarThickness: 32
+                }
+            ]
+        };
+
+        this.payrollChartOptions = {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDarkMode ? '#1e293b' : '#ffffff',
+                    titleColor: isDarkMode ? '#ffffff' : '#0f172a',
+                    bodyColor: isDarkMode ? '#e2e8f0' : '#475569',
+                    borderColor: surfaceBorder,
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                        label: (context: any) => ` ${context.raw.toLocaleString()} ريال`
+                    },
+                    titleFont: { family: 'Cairo', size: 14, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13 }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: textColorSecondary, font: { family: 'Cairo', size: 11 } },
+                    grid: { color: surfaceBorder, drawBorder: false, borderDash: [4, 4] }
+                },
+                y: {
+                    ticks: { color: textColor, font: { family: 'Cairo', size: 12, weight: 'bold' } },
+                    grid: { display: false }
+                }
+            }
+        };
+      }
   }
 }

@@ -105,6 +105,7 @@ namespace HRMS.Infrastructure.Migrations
                 table: "NOTIFICATIONS",
                 newName: "REFERENCE_TYPE");
 
+
             migrationBuilder.AddColumn<decimal>(
                 name: "OTHER_DEDUCTIONS",
                 schema: "HR_PAYROLL",
@@ -120,6 +121,7 @@ namespace HRMS.Infrastructure.Migrations
                 type: "decimal(10,2)",
                 nullable: false,
                 defaultValue: 0m);
+
 
             migrationBuilder.AlterColumn<int>(
                 name: "ELEMENT_ID",
@@ -216,6 +218,7 @@ namespace HRMS.Infrastructure.Migrations
                 name: "TOTAL_VIOLATIONS",
                 schema: "HR_PAYROLL",
                 table: "PAYSLIPS");
+
 
 
 

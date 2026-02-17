@@ -56,7 +56,14 @@ public class ProcessAttendanceHandler : IRequestHandler<ProcessAttendanceCommand
                     .ToListAsync(cancellationToken);
 
                 decimal latePermissionHours = permissions.Where(p => p.PermissionType == "LateEntry").Sum(p => p.Hours);
-                // decimal earlyPermissionHours = permissions.Where(p => p.PermissionType == "EarlyExit").Sum(p => p.Hours);
+
+                // --- Check Leaves ---
+                var leaveRequest = await _context.LeaveRequests
+                    .Where(l => l.EmployeeId == roster.EmployeeId 
+                             && targetDate >= l.StartDate.Date 
+                             && targetDate <= l.EndDate.Date 
+                             && l.Status == "APPROVED")
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 // --- Calculate Late Minutes ---
                 short lateMinutes = 0;
@@ -73,10 +80,25 @@ public class ProcessAttendanceHandler : IRequestHandler<ProcessAttendanceCommand
                     }
                 }
 
-                // --- Determine Status ---
-                string status = "PRESENT";
-                if (!actualIn.HasValue) status = "ABSENT";
-                else if (!actualOut.HasValue) status = "MISSING_PUNCH";
+                // --- Determine Status (Ensuring 100% Accuracy for Reporting) ---
+                string status = "Present";
+                if (leaveRequest != null) 
+                {
+                    status = "Leave";
+                }
+                else if (!actualIn.HasValue) 
+                {
+                    // If it's a scheduled working day and no punch/leave, mark as Absent
+                    status = "Absent";
+                }
+                else if (lateMinutes > 0) 
+                {
+                    status = "Late";
+                }
+                else if (actualIn.HasValue && !actualOut.HasValue) 
+                {
+                    status = "Missing Punch";
+                }
 
                 // --- Save/Update DailyAttendance ---
                 var dailyRecord = await _context.DailyAttendances

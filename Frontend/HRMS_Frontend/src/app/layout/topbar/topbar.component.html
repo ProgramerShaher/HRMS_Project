@@ -26,7 +26,7 @@
         <div class="h-8 w-px bg-slate-200 dark:bg-zinc-700 mx-2"></div>
 
         <div class="flex items-center gap-3 cursor-pointer p-1 rounded-full hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
-            (click)="menu.toggle($event)">
+            (click)="toggleMenu($event)">
             @if (user(); as currentUser) {
             <div class="text-left hidden sm:block">
                 <p class="text-sm font-semibold text-slate-800 dark:text-zinc-100">{{ currentUser.fullName ||

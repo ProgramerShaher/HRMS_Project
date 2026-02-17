@@ -73,6 +73,7 @@ export class RequestsComponent implements OnInit {
   initForms() {
     // Swap Request
     this.swapForm = this.fb.group({
+      requesterId: [null, [Validators.required]],
       targetEmployeeId: [null, [Validators.required]],
       rosterDate: [null, [Validators.required]],
       reason: ['', [Validators.required]]
@@ -111,7 +112,7 @@ export class RequestsComponent implements OnInit {
     if (this.swapForm.invalid) return;
     const val = this.swapForm.value;
     const cmd = {
-      requesterId: 0, // Backend contextual
+      requesterId: val.requesterId,
       targetEmployeeId: val.targetEmployeeId,
       rosterDate: val.rosterDate.toISOString(),
       reason: val.reason

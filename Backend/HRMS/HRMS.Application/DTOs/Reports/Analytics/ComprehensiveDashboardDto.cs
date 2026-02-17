@@ -14,10 +14,27 @@ public class ComprehensiveDashboardDto
     public RequestsMetricsDto RequestsMetrics { get; set; } = new();
     public FinancialMetricsDto FinancialMetrics { get; set; } = new();
     public List<HolidayMetricDto> HolidayMetrics { get; set; } = new();
+    public PerformanceMetricsDto PerformanceMetrics { get; set; } = new();
+    public SetupMetricsDto SetupMetrics { get; set; } = new();
 
     // New Sections
     public WeeklyAnalyticsDto WeeklyMetrics { get; set; } = new();
     public MonthlyAnalyticsDto MonthlyMetrics { get; set; } = new();
+}
+
+public class PerformanceMetricsDto
+{
+    public int ActiveAppraisalCycles { get; set; }
+    public int PendingEvaluations { get; set; }
+    public double AverageCompanyRating { get; set; }
+}
+
+public class SetupMetricsDto
+{
+    public int TotalDepartments { get; set; }
+    public int TotalJobTitles { get; set; }
+    public int TotalShiftTypes { get; set; }
+    public int TotalActiveUsers { get; set; }
 }
 
 public class AttendanceMetricsDto
@@ -26,7 +43,8 @@ public class AttendanceMetricsDto
     public int TotalAbsent { get; set; }
     public int TotalLeaves { get; set; } // Approved leaves for today
     public int TotalLate { get; set; }
-    public Dictionary<string, int> ShiftDistribution { get; set; } = new(); // e.g., "Morning": 50, "Night": 10
+    public double AttendanceRate { get; set; } // Added
+    public Dictionary<string, int> ShiftDistribution { get; set; } = new();
 }
 
 public class PersonnelMetricsDto
@@ -34,6 +52,9 @@ public class PersonnelMetricsDto
     public int TotalEmployees { get; set; }
     public int ActiveEmployees { get; set; }
     public int InactiveEmployees { get; set; }
+    public int ExpiringDocumentsCount { get; set; } // Next 30 days
+    public int NewHires { get; set; } // Added
+    public int ActiveContracts { get; set; } // Added
     public List<DepartmentStatDto> DepartmentStats { get; set; } = new();
 }
 
@@ -55,6 +76,11 @@ public class RequestsMetricsDto
 
 public class FinancialMetricsDto
 {
+    public double TotalNetSalary { get; set; } // Added
+    public double TotalBasicSalary { get; set; } // Added
+    public double TotalDeductions { get; set; } // Added
+    public int PendingPayrollCount { get; set; } // Added
+
     public decimal TotalPendingSalaries { get; set; } // Estimated from pending payroll runs
     public Dictionary<string, decimal> PendingSalariesByDepartment { get; set; } = new();
     public decimal TotalActiveLoansAmount { get; set; }

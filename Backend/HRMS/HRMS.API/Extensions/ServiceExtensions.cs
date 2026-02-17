@@ -7,11 +7,11 @@ using HRMS.Application.Settings;
 using HRMS.Core.Entities.Identity;
 using HRMS.Infrastructure.Data;
 using HRMS.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.API.Extensions;
 
@@ -82,7 +82,7 @@ public static class ServiceExtensions
         })
         .AddJwtBearer(options =>
         {
-            options.TokenValidationParameters = new TokenValidationParameters
+            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,

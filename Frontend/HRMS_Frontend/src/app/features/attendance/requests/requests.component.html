@@ -16,6 +16,10 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">
                     <form [formGroup]="swapForm" (ngSubmit)="submitSwap()" class="space-y-4">
                         <div class="field">
+                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف (طالب التبديل)</label>
+                            <p-select [options]="employees" formControlName="requesterId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+                        </div>
+                        <div class="field">
                             <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف البديل</label>
                             <p-select [options]="employees" formControlName="targetEmployeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف البديل" styleClass="w-full"></p-select>
                         </div>
