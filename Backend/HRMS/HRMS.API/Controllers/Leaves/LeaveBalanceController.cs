@@ -2,6 +2,7 @@ using HRMS.Application.DTOs.Leaves;
 using HRMS.Application.Features.Leaves.LeaveBalances.Commands.AdjustBalance;
 using HRMS.Application.Features.Leaves.LeaveBalances.Commands.InitializeBalances;
 using HRMS.Application.Features.Leaves.LeaveBalances.Queries.GetEmployeeBalance;
+using HRMS.Application.Features.Leaves.LeaveBalances.Queries.GetEmployeesBalances;
 using HRMS.Application.Features.Leaves.Reports.Queries.GetLeaveTransactionReport;
 using HRMS.Core.Utilities;
 using MediatR;
@@ -87,6 +88,32 @@ public class LeaveBalanceController : ControllerBase
         if (result.Succeeded)
             return Ok(result);
         
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get leave balances summary for all employees (per leave type).
+    /// Includes entitlement/consumed/remaining for the selected year.
+    /// </summary>
+    [HttpGet("employees")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    public async Task<ActionResult<Result<List<EmployeeLeaveTypeBalanceDto>>>> GetEmployeesBalances(
+        [FromQuery] short? year = null,
+        [FromQuery] int? departmentId = null,
+        [FromQuery] int? employeeId = null,
+        [FromQuery] string? search = null)
+    {
+        var result = await _mediator.Send(new GetEmployeesBalancesQuery
+        {
+            Year = year,
+            DepartmentId = departmentId,
+            EmployeeId = employeeId,
+            Search = search
+        });
+
+        if (result.Succeeded)
+            return Ok(result);
+
         return StatusCode(result.StatusCode, result);
     }
 

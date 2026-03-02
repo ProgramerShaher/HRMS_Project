@@ -7,8 +7,6 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LeaveConfigurationService } from '../../services/leave-configuration.service';
@@ -18,9 +16,9 @@ import { LeaveType } from '../../models/leave.models';
   selector: 'app-leave-setup',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, FormsModule, TableModule, ButtonModule, 
-    DialogModule, InputTextModule, InputNumberModule, ToggleButtonModule, 
-    ToggleSwitchModule, TagModule, ToastModule
+    CommonModule, ReactiveFormsModule, FormsModule, TableModule, ButtonModule,
+    DialogModule, InputTextModule, InputNumberModule, ToggleButtonModule,
+    ToastModule
   ],
   providers: [MessageService],
   templateUrl: './leave-setup.component.html',
@@ -35,7 +33,7 @@ export class LeaveSetupComponent implements OnInit {
   leaveTypes = signal<LeaveType[]>([]);
   loading = signal(false);
   saving = signal(false);
-  
+
   showModal = false;
   editMode = false;
   typeForm!: FormGroup;
@@ -54,14 +52,10 @@ export class LeaveSetupComponent implements OnInit {
 
   initForm() {
     this.typeForm = this.fb.group({
-      leaveNameAr: ['', Validators.required],
-      leaveNameEn: ['', Validators.required],
+      leaveTypeNameAr: ['', Validators.required],
       defaultDays: [21, [Validators.required, Validators.min(0)]],
-      isPaid: [true],
-      requiresApproval: [true],
-      allowCarryForward: [false],
-      maxCarryForwardDays: [0],
-      isActive: [true]
+      isDeductible: true,
+      requiresAttachment: false
     });
   }
 
@@ -82,12 +76,10 @@ export class LeaveSetupComponent implements OnInit {
     this.editMode = false;
     this.selectedTypeId = null;
     this.typeForm.reset({
+      leaveTypeNameAr: '',
       defaultDays: 21,
-      isPaid: true,
-      requiresApproval: true,
-      allowCarryForward: false,
-      maxCarryForwardDays: 0,
-      isActive: true
+      isDeductible: true,
+      requiresAttachment: false
     });
     this.showModal = true;
   }
@@ -95,7 +87,12 @@ export class LeaveSetupComponent implements OnInit {
   edit(type: LeaveType) {
     this.editMode = true;
     this.selectedTypeId = type.leaveTypeId;
-    this.typeForm.patchValue(type);
+    this.typeForm.patchValue({
+      leaveTypeNameAr: type.leaveTypeNameAr,
+      defaultDays: type.defaultDays,
+      isDeductible: type.isDeductible === 1,
+      requiresAttachment: type.requiresAttachment === 1
+    });
     this.showModal = true;
   }
 
@@ -108,14 +105,24 @@ export class LeaveSetupComponent implements OnInit {
     if (this.editMode && this.selectedTypeId) {
       this.leaveConfigService.updateLeaveType(this.selectedTypeId, payload).subscribe({
         next: (res) => {
-          this.handleSuccess('تم التحديث بنجاح');
+          if (res.succeeded) {
+            this.handleSuccess('تم التحديث بنجاح');
+            return;
+          }
+          this.saving.set(false);
+          this.messageService.add({ severity: 'error', summary: 'خطأ', detail: res.message || 'فشل تحديث نوع الإجازة' });
         },
         error: () => this.saving.set(false)
       });
     } else {
       this.leaveConfigService.createLeaveType(payload).subscribe({
         next: (res) => {
-          this.handleSuccess('تمت الإضافة بنجاح');
+          if (res.succeeded) {
+            this.handleSuccess('تمت الإضافة بنجاح');
+            return;
+          }
+          this.saving.set(false);
+          this.messageService.add({ severity: 'error', summary: 'خطأ', detail: res.message || 'فشل إضافة نوع الإجازة' });
         },
         error: () => this.saving.set(false)
       });

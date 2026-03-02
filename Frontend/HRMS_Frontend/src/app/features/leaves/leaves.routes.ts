@@ -31,6 +31,12 @@ export const leavesRoutes: Routes = [
     data: { title: 'سجل الحركات' }
   },
   {
+    path: 'employee-balances',
+    canActivate: [permissionGuard(['Leaves.Manage'])],
+    loadComponent: () => import('./pages/employee-balances/employee-balances.component').then(m => m.EmployeeBalancesComponent),
+    data: { title: 'أرصدة الموظفين' }
+  },
+  {
     path: 'setup',
     canActivate: [permissionGuard(['Leaves.Manage'])],
     loadComponent: () => import('./pages/setup/leave-setup.component').then(m => m.LeaveSetupComponent),

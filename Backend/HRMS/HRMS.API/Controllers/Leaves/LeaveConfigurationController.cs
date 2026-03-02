@@ -89,7 +89,7 @@ public class LeaveConfigurationController : ControllerBase
     [AllowAnonymous] // 🔓 للتطوير فقط
     public async Task<ActionResult<Result<bool>>> DeleteLeaveType(int id)
     {
-        var result = await _mediator.Send(new DeleteLeaveTypeCommand());
+        var result = await _mediator.Send(new DeleteLeaveTypeCommand { LeaveTypeId = id });
         return Ok(result);
     }
 

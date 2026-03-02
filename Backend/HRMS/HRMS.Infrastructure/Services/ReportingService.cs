@@ -423,7 +423,7 @@ public class ReportingService : IReportingService
             InactiveEmployees = employees.Count(e => !e.IsActive || e.TerminationDate != null),
             ExpiringDocumentsCount = expiringDocs,
             NewHires = employees.Count(e => e.HireDate >= startOfMonth),
-            ActiveContracts = await _context.Contracts.CountAsync(c => c.IsActive == true && c.IsDeleted == 1),
+            ActiveContracts = await _context.Contracts.CountAsync(c => c.IsActive == true),
             DepartmentStats = employees
                  .Where(e => e.IsActive && e.TerminationDate == null)
                  .GroupBy(e => e.Department)

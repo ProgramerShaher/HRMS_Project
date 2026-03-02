@@ -78,14 +78,7 @@ export class LeaveRequestFormComponent implements OnInit {
     // Load Leave Types - Independent of employeeId
     this.leaveConfigService.getLeaveTypes().subscribe({
       next: (res) => {
-        let list = Array.isArray(res) ? res : (res?.data || []);
-        // Normalize names to handle both leaveNameAr and leaveTypeNameAr
-        list = list.map((item: any) => ({
-          ...item,
-          leaveNameAr: item.leaveNameAr || item.leaveTypeNameAr || item.NameAr || item.nameAr,
-          leaveNameEn: item.leaveNameEn || item.leaveTypeNameEn || item.NameEn || item.nameEn
-        }));
-        this.leaveTypes.set(list);
+        this.leaveTypes.set(res?.data || []);
       },
       error: () => this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'فشل تحميل أنواع الإجازات' })
     });

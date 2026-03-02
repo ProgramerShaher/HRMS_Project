@@ -4,6 +4,17 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { LeaveType, PublicHoliday, ApiResponse } from '../models/leave.models';
 
+interface CreateLeaveTypePayload {
+  leaveTypeNameAr: string;
+  defaultDays: number;
+  isDeductible: number;
+  requiresAttachment: number;
+}
+
+interface UpdateLeaveTypePayload extends CreateLeaveTypePayload {
+  leaveTypeId: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,12 +39,25 @@ export class LeaveConfigurationService {
 
   // Create leave type
   createLeaveType(leaveType: Partial<LeaveType>): Observable<ApiResponse<number>> {
-    return this.http.post<ApiResponse<number>>(`${this.apiUrl}/leave-types`, leaveType);
+    const payload: CreateLeaveTypePayload = {
+      leaveTypeNameAr: leaveType.leaveTypeNameAr ?? '',
+      defaultDays: Number(leaveType.defaultDays ?? 0),
+      isDeductible: Number(leaveType.isDeductible ?? 1),
+      requiresAttachment: Number(leaveType.requiresAttachment ?? 0)
+    };
+    return this.http.post<ApiResponse<number>>(`${this.apiUrl}/leave-types`, payload);
   }
 
   // Update leave type
   updateLeaveType(id: number, leaveType: Partial<LeaveType>): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/leave-types/${id}`, leaveType);
+    const payload: UpdateLeaveTypePayload = {
+      leaveTypeId: id,
+      leaveTypeNameAr: leaveType.leaveTypeNameAr ?? '',
+      defaultDays: Number(leaveType.defaultDays ?? 0),
+      isDeductible: Number(leaveType.isDeductible ?? 1),
+      requiresAttachment: Number(leaveType.requiresAttachment ?? 0)
+    };
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/leave-types/${id}`, payload);
   }
 
   // Delete leave type

@@ -1,15 +1,11 @@
 // Leave Type Model
 export interface LeaveType {
   leaveTypeId: number;
-  leaveNameAr: string;
-  leaveNameEn: string;
+  leaveTypeNameAr: string;
+  nameEn?: string;
   defaultDays: number;
-  isPaid: boolean;
-  requiresApproval: boolean;
-  allowCarryForward: boolean;
-  maxCarryForwardDays?: number;
-  requiresDocument: boolean;
-  isActive: boolean;
+  isDeductible: number;
+  requiresAttachment: number;
 }
 
 // Leave Request Model
@@ -51,6 +47,20 @@ export interface LeaveBalance {
   year: number;
 }
 
+export interface EmployeeLeaveTypeBalance {
+  employeeId: number;
+  employeeNumber: string;
+  employeeNameAr: string;
+  departmentId: number;
+  departmentNameAr: string;
+  leaveTypeId: number;
+  leaveTypeNameAr: string;
+  year: number;
+  entitlementDays: number;
+  consumedDays: number;
+  remainingDays: number;
+}
+
 // Leave Transaction Model
 export interface LeaveTransaction {
   transactionId: number;
@@ -75,11 +85,11 @@ export enum TransactionType {
 
 // Public Holiday Model
 export interface PublicHoliday {
-  holidayId: number;
+  holidayId?: number;
   holidayNameAr: string;
-  holidayNameEn: string;
-  holidayDate: string;
-  isRecurring: boolean;
+  startDate: string;
+  endDate: string;
+  year: number;
 }
 
 // API Response Wrapper
