@@ -1,18 +1,22 @@
+using System.Linq;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using HRMS.Application.DTOs.Reports.Analytics;
 using HRMS.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using HRMS.Core.Entities.Attendance;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.Infrastructure.Services;
 
 public class ReportingService : IReportingService
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public ReportingService(IApplicationDbContext context)
+    public ReportingService(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -167,77 +171,47 @@ public class ReportingService : IReportingService
         };
     }
 
-    // ═══════════════════════════════════════════════════════════
-    // 4. Operational Reports
-    // ═══════════════════════════════════════════════════════════
-    public async Task<List<EmployeeCensusDto>> GetEmployeeCensusReportAsync(int? departmentId = null, string? status = null)
-    {
-        var query = _context.Employees
-            .Include(e => e.Department)
-            .Include(e => e.Job)
-            .Include(e => e.Compensation)
-            .AsNoTracking()
-            .AsQueryable();
+	// ═══════════════════════════════════════════════════════════
+	// 4. Operational Reports
+	// ═══════════════════════════════════════════════════════════
+	public async Task<List<EmployeeCensusDto>> GetEmployeeCensusReportAsync(int? departmentId = null, string? status = null)
+	{
+		var query = _context.Employees
+			.AsNoTracking() // مهم جداً للتقارير
+			.AsQueryable();
 
-        if (departmentId.HasValue)
-            query = query.Where(e => e.DepartmentId == departmentId);
+		// تطبيق الفلترة قبل الـ Mapping لضمان سرعة الاستعلام
+		if (departmentId.HasValue)
+			query = query.Where(e => e.DepartmentId == departmentId);
 
-        if (!string.IsNullOrEmpty(status))
-        {
-            if (status == "Active")
-                query = query.Where(e => e.IsActive && e.TerminationDate == null);
-            else if (status == "Terminated")
-                query = query.Where(e => !e.IsActive || e.TerminationDate != null);
-        }
+		if (!string.IsNullOrEmpty(status))
+		{
+			if (status == "Active")
+				query = query.Where(e => e.IsActive && e.TerminationDate == null);
+			else if (status == "Terminated")
+				query = query.Where(e => !e.IsActive || e.TerminationDate != null);
+		}
 
-        return await query.Select(e => new EmployeeCensusDto
-        {
-            EmployeeId = e.EmployeeId,
-            EmployeeNumber = e.EmployeeNumber,
-            FullNameAr = e.FirstNameAr + " " + e.LastNameAr,
-            Department = e.Department != null ? e.Department.DeptNameAr : "-",
-            JobTitle = e.Job != null ? e.Job.JobTitleAr : "-",
-            HireDate = e.HireDate,
-            Status = (e.IsActive && e.TerminationDate == null) ? "نشط" : "منتهي",
-            Nationality = e.NationalityId != null ? e.NationalityId.ToString() : "-",
-            MobileNumber = e.Mobile ?? "-",
-            Email = e.Email ?? "-",
-            BasicSalary = e.Compensation != null ? e.Compensation.BasicSalary : 0
-        }).ToListAsync();
-    }
+		// استخدام ProjectTo بدلاً من Select اليدوي
+		return await query
+			.ProjectTo<EmployeeCensusDto>(_mapper.ConfigurationProvider)
+			.ToListAsync();
+	}
+	public async Task<List<DailyAttendanceDetailsDto>> GetDetailedAttendanceReportAsync(DateTime startDate, DateTime endDate, int? departmentId = null)
+	{
+		var query = _context.DailyAttendances
+			.AsNoTracking()
+			.Where(d => d.AttendanceDate >= startDate && d.AttendanceDate <= endDate);
 
-    public async Task<List<DailyAttendanceDetailsDto>> GetDetailedAttendanceReportAsync(DateTime startDate, DateTime endDate, int? departmentId = null)
-    {
-        var query = _context.DailyAttendances
-            .Include(d => d.Employee)
-            .ThenInclude(e => e.Department)
-            .Include(d => d.PlannedShift)
-            .AsNoTracking()
-            .Where(d => d.AttendanceDate >= startDate && d.AttendanceDate <= endDate);
+		if (departmentId.HasValue)
+			query = query.Where(d => d.Employee.DepartmentId == departmentId);
 
-        if (departmentId.HasValue)
-            query = query.Where(d => d.Employee.DepartmentId == departmentId);
-
-        return await query.Select(d => new DailyAttendanceDetailsDto
-        {
-            RecordId = d.RecordId,
-            Date = d.AttendanceDate,
-            EmployeeId = d.EmployeeId,
-            EmployeeName = d.Employee.FirstNameAr + " " + d.Employee.LastNameAr,
-            Department = d.Employee.Department != null ? d.Employee.Department.DeptNameAr : "-",
-            PlannedShift = d.PlannedShift != null ? d.PlannedShift.ShiftNameAr : "-",
-            InTime = d.ActualInTime.HasValue ? d.ActualInTime.Value.ToString("HH:mm") : "-",
-            OutTime = d.ActualOutTime.HasValue ? d.ActualOutTime.Value.ToString("HH:mm") : "-",
-            Status = d.Status ?? "-",
-            LateMinutes = d.LateMinutes,
-            OvertimeMinutes = d.OvertimeMinutes
-        })
-        .OrderBy(d => d.Date)
-        .ThenBy(d => d.EmployeeName)
-        .ToListAsync();
-    }
-
-    public async Task<List<MonthlyPayslipReportDto>> GetMonthlyPayslipReportAsync(int month, int year, int? departmentId = null)
+		return await query
+			.OrderBy(d => d.AttendanceDate)
+			.ProjectTo<DailyAttendanceDetailsDto>(_mapper.ConfigurationProvider)
+			.ToListAsync();
+	}
+	public async Task<List<MonthlyPayslipReportDto>> GetMonthlyPayslipReportAsync(int month, int year, int? departmentId = null)
     {
         var query = _context.Payslips
             .Include(p => p.Employee)

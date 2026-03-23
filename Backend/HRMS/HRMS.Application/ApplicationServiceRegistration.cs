@@ -1,5 +1,6 @@
 using FluentValidation;
 using HRMS.Application.Behaviors;
+using HRMS.Application.Features.Payroll.Processing.Services;
 using HRMS.Application.Interfaces;
 using HRMS.Application.Services;
 using MediatR;
@@ -31,9 +32,9 @@ namespace HRMS.Application
 
             // تسجيل خدمات السياسات والذاكرة المؤقتة
             services.AddScoped<IAttendancePolicyService, AttendancePolicyService>();
-            services.AddScoped<Features.Payroll.Processing.Services.AttendanceAggregatorService>();
-            services.AddScoped<Features.Payroll.Processing.Services.BankFileExportService>();
-            services.AddScoped<Features.Payroll.Processing.Services.PayrollAccountingService>();
+            services.AddScoped<AttendanceAggregatorService>();
+            services.AddScoped<BankFileExportService>();
+            services.AddScoped<PayrollAccountingService>();
             services.AddMemoryCache();
 
             return services;

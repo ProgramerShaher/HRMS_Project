@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using HRMS.Application.Features.Payroll.Loans.Services;
 
 namespace HRMS.API.Extensions;
 
@@ -82,7 +83,7 @@ public static class ServiceExtensions
         })
         .AddJwtBearer(options =>
         {
-            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
@@ -137,7 +138,7 @@ public static class ServiceExtensions
         services.AddScoped<PayrollAccountingService>();
         
         // Payroll & Loan Services
-        services.AddScoped<HRMS.Application.Features.Payroll.Loans.Services.GenerateInstallmentsService>();
+        services.AddScoped<GenerateInstallmentsService>();
         
         // يمكن إضافة المزيد من الخدمات هنا
 
