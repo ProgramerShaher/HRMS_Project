@@ -20,7 +20,7 @@ public static class MiddlewareExtensions
         app.UseSerilogRequestLogging();
 
         // Exception Handling
-        // Exception Handling
+        // Exception Handlingشاهر خالد احمد
         app.UseMiddleware<GlobalExceptionMiddleware>();
         
         // if (env.IsDevelopment())

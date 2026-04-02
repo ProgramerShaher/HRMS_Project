@@ -22,4 +22,5 @@ export const routes: Routes = [
     { path: 'attendance', canActivate: [authGuard], loadChildren: () => import('./features/attendance/attendance.routes').then(m => m.ATTENDANCE_ROUTES) },
     { path: 'payroll', canActivate: [authGuard], loadChildren: () => import('./features/payroll/payroll.routes').then(m => m.PAYROLL_ROUTES) },
     { path: 'performance', canActivate: [authGuard], loadChildren: () => import('./features/performance/performance.routes').then(m => m.PERFORMANCE_ROUTES) },
+    { path: 'recruitment', canActivate: [authGuard], loadChildren: () => import('./features/recruitment/recruitment.routes').then(m => m.RECRUITMENT_ROUTES) },
 ];

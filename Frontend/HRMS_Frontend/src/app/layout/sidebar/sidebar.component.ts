@@ -142,6 +142,18 @@ export class SidebarComponent implements OnInit {
       ]
     },
     {
+      label: 'التوظيف',
+      icon: 'pi pi-briefcase',
+      expanded: false,
+      children: [
+        { label: 'الوظائف الشاغرة',  icon: 'pi pi-megaphone',       route: '/recruitment/vacancies' },
+        { label: 'بنك المرشحين',      icon: 'pi pi-users',           route: '/recruitment/candidates' },
+        { label: 'طلبات التوظيف',    icon: 'pi pi-file-edit',       route: '/recruitment/applications' },
+        { label: 'المقابلات',         icon: 'pi pi-calendar',        route: '/recruitment/interviews' },
+        { label: 'عروض العمل',        icon: 'pi pi-envelope',        route: '/recruitment/offers' },
+      ]
+    },
+    {
       label: 'الأداء والتقييم',
       icon: 'pi pi-chart-line',
       expanded: false,

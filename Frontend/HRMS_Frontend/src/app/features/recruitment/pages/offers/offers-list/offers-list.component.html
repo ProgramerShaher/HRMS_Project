@@ -1,0 +1,244 @@
+<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+  <!-- Header -->
+  <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-l from-amber-50 to-slate-50 border-b border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+        <i class="pi pi-envelope text-amber-500"></i>
+        عروض العمل
+      </h2>
+      <p class="text-slate-500 text-sm mt-1">إصدار عروض العمل وتفعيل التوظيف التلقائي</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search text-slate-400"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="بحث..." class="p-inputtext-sm border-slate-200 w-56" />
+      </span>
+      <button pButton label="عرض جديد" icon="pi pi-plus" class="p-button-sm shadow-none"
+        style="background:#d97706; border-color:#d97706;" (click)="openCreate()"></button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <p-table #dt [value]="offers()" [loading]="loading()" [rowHover]="true"
+    styleClass="p-datatable-striped" responsiveLayout="scroll"
+    [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+    [globalFilterFields]="['candidateName','vacancyTitle','status']"
+    currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} عرض"
+    [showCurrentPageReport]="true">
+
+    <ng-template pTemplate="header">
+      <tr class="bg-slate-50 text-slate-600 text-sm">
+        <th class="font-semibold p-4">المرشح</th>
+        <th class="font-semibold p-4">الوظيفة</th>
+        <th class="font-semibold p-4">تاريخ العرض</th>
+        <th class="font-semibold p-4">انتهاء الصلاحية</th>
+        <th class="font-semibold p-4 text-center">الحزمة الكلية</th>
+        <th class="font-semibold p-4 text-center">تاريخ الالتحاق</th>
+        <th class="font-semibold p-4 text-center">الحالة</th>
+        <th class="font-semibold p-4 text-center">الإجراءات</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-o>
+      <tr class="border-b border-slate-50 hover:bg-amber-50/30 transition-colors">
+        <td class="p-4">
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-800 text-sm">{{ o.candidateName }}</span>
+            <span class="text-xs text-slate-400">عرض #{{ o.offerId }}</span>
+          </div>
+        </td>
+        <td class="p-4 text-amber-700 font-semibold text-sm">{{ o.vacancyTitle }}</td>
+        <td class="p-4 text-slate-500 text-sm">{{ o.offerDate | date:'yyyy-MM-dd' }}</td>
+        <td class="p-4 text-slate-500 text-sm">{{ o.expiryDate | date:'yyyy-MM-dd' }}</td>
+        <td class="p-4 text-center">
+          <span *ngIf="o.totalPackage" class="font-bold text-emerald-600">{{ o.totalPackage | number }}</span>
+          <span *ngIf="!o.totalPackage" class="text-slate-400">—</span>
+        </td>
+        <td class="p-4 text-slate-500 text-sm text-center">{{ o.joiningDate | date:'yyyy-MM-dd' }}</td>
+        <td class="p-4 text-center">
+          <p-tag [severity]="severity(o.status)" [value]="statusLabel(o.status)"
+            styleClass="text-[11px] font-bold px-2"></p-tag>
+        </td>
+        <td class="p-4 text-center">
+          <div class="flex justify-center gap-1">
+            <!-- Accept → Auto-Hire -->
+            <button *ngIf="o.status === 'PENDING' || o.status === 'SENT'" pButton icon="pi pi-user-plus"
+              class="p-button-rounded p-button-text p-button-success hover:bg-green-50"
+              pTooltip="قبول وتوظيف تلقائي" tooltipPosition="top"
+              (click)="accept(o.offerId, o.candidateName)"></button>
+            <!-- Withdraw -->
+            <button *ngIf="o.status === 'PENDING' || o.status === 'SENT'" pButton icon="pi pi-times-circle"
+              class="p-button-rounded p-button-text p-button-danger hover:bg-red-50"
+              pTooltip="سحب العرض" tooltipPosition="top"
+              (click)="withdraw(o.offerId)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" class="text-center p-10">
+          <div class="flex flex-col items-center text-slate-400">
+            <i class="pi pi-envelope text-5xl mb-3 opacity-30"></i>
+            <p class="font-bold text-slate-500">لا توجد عروض عمل حالياً</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Create Offer Dialog -->
+<p-dialog [(visible)]="showCreateDialog" header="إصدار عرض عمل جديد"
+  [style]="{width: '640px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+  <ng-template pTemplate="content">
+    <!-- Info Banner -->
+    <div class="mb-4 p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-center gap-2">
+      <i class="pi pi-info-circle text-amber-500"></i>
+      <p class="text-xs text-amber-700">يجب أن يكون المرشح قد اجتاز مقابلة قبل إصدار العرض. الراتب يجب أن يكون ضمن نطاق الدرجة الوظيفية.</p>
+    </div>
+
+    <form [formGroup]="createForm" class="flex flex-col gap-4">
+      <!-- Application + Grade -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">طلب التوظيف <span class="text-red-500">*</span></label>
+          <p-select [options]="appOptions" formControlName="appId"
+            placeholder="اختر الطلب..." [filter]="true" appendTo="body" styleClass="w-full"></p-select>
+          <small class="text-red-500" *ngIf="submittedCreate && createForm.controls['appId'].invalid">الطلب مطلوب</small>
+        </div>
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">الدرجة الوظيفية <span class="text-red-500">*</span></label>
+          <p-select [options]="gradeOptions" formControlName="jobGradeId"
+            placeholder="اختر الدرجة..." appendTo="body" styleClass="w-full"></p-select>
+          <small class="text-red-500" *ngIf="submittedCreate && createForm.controls['jobGradeId'].invalid">الدرجة مطلوبة</small>
+        </div>
+      </div>
+
+      <!-- Salary Package -->
+      <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+        <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+          <i class="pi pi-money-bill text-emerald-500"></i>
+          الحزمة المالية
+        </h4>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field">
+            <label class="block text-xs text-slate-600 font-semibold mb-1">الراتب الأساسي <span class="text-red-500">*</span></label>
+            <p-inputNumber formControlName="basicSalary" [min]="0" [minFractionDigits]="0" styleClass="w-full"></p-inputNumber>
+          </div>
+          <div class="field">
+            <label class="block text-xs text-slate-600 font-semibold mb-1">بدل السكن</label>
+            <p-inputNumber formControlName="housingAllowance" [min]="0" styleClass="w-full"></p-inputNumber>
+          </div>
+          <div class="field">
+            <label class="block text-xs text-slate-600 font-semibold mb-1">بدل المواصلات</label>
+            <p-inputNumber formControlName="transportAllowance" [min]="0" styleClass="w-full"></p-inputNumber>
+          </div>
+          <div class="field">
+            <label class="block text-xs text-slate-600 font-semibold mb-1">البدل الطبي</label>
+            <p-inputNumber formControlName="medicalAllowance" [min]="0" styleClass="w-full"></p-inputNumber>
+          </div>
+          <div class="field">
+            <label class="block text-xs text-slate-600 font-semibold mb-1">بدلات أخرى</label>
+            <p-inputNumber formControlName="otherAllowances" [min]="0" styleClass="w-full"></p-inputNumber>
+          </div>
+          <!-- Total -->
+          <div class="flex items-center gap-2 bg-emerald-50 rounded-xl p-3 border border-emerald-100">
+            <i class="pi pi-calculator text-emerald-500"></i>
+            <div>
+              <p class="text-xs text-slate-500">الحزمة الكلية</p>
+              <p class="text-lg font-black text-emerald-700">{{ totalPackage() | number }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="grid grid-cols-3 gap-3">
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">تاريخ العرض <span class="text-red-500">*</span></label>
+          <p-datePicker formControlName="offerDate" [showIcon]="true" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datePicker>
+        </div>
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">انتهاء الصلاحية <span class="text-red-500">*</span></label>
+          <p-datePicker formControlName="expiryDate" [showIcon]="true" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datePicker>
+        </div>
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">تاريخ الالتحاق <span class="text-red-500">*</span></label>
+          <p-datePicker formControlName="joiningDate" [showIcon]="true" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datePicker>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">شروط وتفاصيل إضافية (اختياري)</label>
+        <textarea pTextarea formControlName="terms" rows="2"
+          class="w-full !border-slate-300 !rounded-xl" placeholder="أي شروط أو ملاحظات خاصة بالعرض..."></textarea>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="showCreateDialog=false"></button>
+      <button pButton label="إصدار العرض" icon="pi pi-envelope"
+        style="background:#d97706; border-color:#d97706;" class="font-bold px-6" (click)="saveCreate()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Accept & Hire Dialog -->
+<p-dialog [(visible)]="showAcceptDialog"
+  [header]="'تأكيد التوظيف: ' + acceptingCandidateName"
+  [style]="{width: '500px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+  <ng-template pTemplate="content">
+    <div class="mb-4 p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start gap-2">
+      <i class="pi pi-star-fill text-emerald-500 mt-0.5"></i>
+      <div>
+        <p class="text-sm font-bold text-emerald-800">توظيف تلقائي (Auto-Hire)</p>
+        <p class="text-xs text-emerald-600 mt-1">سيتم إنشاء ملف موظف جديد وهيكل الراتب تلقائياً من بيانات هذا العرض.</p>
+      </div>
+    </div>
+    <form [formGroup]="acceptForm" class="grid grid-cols-2 gap-4">
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">رقم الهوية الوطنية</label>
+        <input pInputText formControlName="nationalId" placeholder="1xxxxxxxxx" class="w-full !border-slate-300" />
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">رقم الجوال</label>
+        <input pInputText formControlName="mobile" placeholder="+966 5x xxx xxxx" class="w-full !border-slate-300" />
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">تاريخ الميلاد</label>
+        <p-datePicker formControlName="birthDate" [showIcon]="true" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datePicker>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">تاريخ الالتحاق الفعلي</label>
+        <p-datePicker formControlName="joiningDate" [showIcon]="true" dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datePicker>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">الجنس</label>
+        <p-select [options]="[{label:'ذكر', value:'M'},{label:'أنثى', value:'F'}]"
+          formControlName="gender" appendTo="body" styleClass="w-full"></p-select>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">الحالة الاجتماعية</label>
+        <p-select [options]="[{label:'أعزب', value:'Single'},{label:'متزوج', value:'Married'},{label:'مطلق', value:'Divorced'},{label:'أرمل', value:'Widowed'}]"
+          formControlName="maritalStatus" appendTo="body" styleClass="w-full"></p-select>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="showAcceptDialog=false"></button>
+      <button pButton label="تأكيد التوظيف الآن 🎉" icon="pi pi-user-plus"
+        class="p-button-success font-bold px-6" (click)="saveAccept()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '450px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>

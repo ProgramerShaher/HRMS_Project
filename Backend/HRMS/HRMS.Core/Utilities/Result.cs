@@ -6,7 +6,7 @@ namespace HRMS.Core.Utilities
     /// غلاف موحد لجميع استجابات النظام
     /// </summary>
     /// <typeparam name="T">نوع البيانات المرجعة</typeparam>
-    public class Result<T>
+    public class Result<T> 
     {
         public T Data { get; set; }
         public bool Succeeded { get; set; }

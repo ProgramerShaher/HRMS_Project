@@ -49,6 +49,14 @@ namespace HRMS.Core.Entities.Recruitment
         [Column("CV_FILE_PATH")]
         public string? CvFilePath { get; set; }
 
+        [MaxLength(20)]
+        [Column("STATUS")]
+        public string? Status { get; set; } = "ACTIVE";
+
+        [MaxLength(50)]
+        [Column("APPLICATION_SOURCE")]
+        public string? ApplicationSource { get; set; } = "DIRECT";
+
         [MaxLength(200)]
         [Column("LINKEDIN_PROFILE")]
         public string? LinkedinProfile { get; set; }

@@ -14,6 +14,7 @@ public class CandidateDto
     public int? NationalityId { get; set; }
     public string? NationalityName { get; set; }
     public string? Resume { get; set; }
+    public string? LinkedinProfile { get; set; }
     public string ApplicationSource { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
 }

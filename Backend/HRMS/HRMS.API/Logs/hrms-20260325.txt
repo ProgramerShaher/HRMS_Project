@@ -1,0 +1,86 @@
+2026-03-25 23:57:35.507 +03:00 [INF] 🚀 Starting HRMS Hospital API...
+2026-03-25 23:57:40.559 +03:00 [INF] User profile is available. Using 'C:\Users\MT\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-03-25 23:57:42.550 +03:00 [WRN] No store type was specified for the decimal property 'Hours' on entity type 'PermissionRequest'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-25 23:57:42.555 +03:00 [WRN] No store type was specified for the decimal property 'HoursCount' on entity type 'ShiftType'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-25 23:57:42.557 +03:00 [WRN] No store type was specified for the decimal property 'MaxSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-25 23:57:42.559 +03:00 [WRN] No store type was specified for the decimal property 'MinSalary' on entity type 'JobGrade'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-03-25 23:57:44.961 +03:00 [INF] Executed DbCommand (166ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-03-25 23:57:45.161 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-03-25 23:57:45.167 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Description], [a].[Name], [a].[NameAr], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2026-03-25 23:57:45.200 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[EmployeeId], [a].[FullNameAr], [a].[FullNameEn], [a].[IsActive], [a].[LastLoginAt], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshToken], [a].[RefreshTokenExpiryTime], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2026-03-25 23:57:45.308 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[EmployeeId], [a].[FullNameAr], [a].[FullNameEn], [a].[IsActive], [a].[LastLoginAt], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshToken], [a].[RefreshTokenExpiryTime], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2026-03-25 23:57:45.325 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[EmployeeId], [a].[FullNameAr], [a].[FullNameEn], [a].[IsActive], [a].[LastLoginAt], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshToken], [a].[RefreshTokenExpiryTime], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2026-03-25 23:57:45.332 +03:00 [INF] ✅ Default roles and admin user seeded successfully
+2026-03-25 23:57:45.380 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Permissions] AS [p]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-03-25 23:57:45.388 +03:00 [INF] ✅ Permissions seeded successfully
+2026-03-25 23:57:45.408 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [RolePermissions] AS [r]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-03-25 23:57:45.412 +03:00 [INF] ✅ Role-Permission mappings seeded successfully
+2026-03-25 23:57:45.422 +03:00 [INF] ✅ HRMS Hospital API started successfully
+2026-03-25 23:57:46.084 +03:00 [INF] Now listening on: https://localhost:5201
+2026-03-25 23:57:46.085 +03:00 [INF] Now listening on: http://localhost:5200
+2026-03-25 23:57:46.242 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-25 23:57:46.247 +03:00 [INF] Hosting environment: Development
+2026-03-25 23:57:46.249 +03:00 [INF] Content root path: D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API
+2026-03-25 23:57:49.892 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/swagger/index.html - null null
+2026-03-25 23:57:53.793 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 3410.8974 ms
+2026-03-25 23:57:54.090 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/swagger/index.html - 200 null text/html;charset=utf-8 4214.837ms
+2026-03-25 23:57:54.797 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/_vs/browserLink - null null
+2026-03-25 23:57:54.797 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/_framework/aspnetcore-browser-refresh.js - null null
+2026-03-25 23:57:54.816 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 19.6472ms
+2026-03-25 23:57:54.933 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/_vs/browserLink - 200 null text/javascript; charset=UTF-8 136.8728ms
+2026-03-25 23:57:55.762 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/swagger/v1/swagger.json - null null
+2026-03-25 23:57:56.597 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 824.1015 ms
+2026-03-25 23:57:56.601 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 839.1403ms
+2026-03-25 23:58:32.663 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Reports/analytics/hr-overview - null null
+2026-03-25 23:58:32.696 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API)'
+2026-03-25 23:58:32.732 +03:00 [INF] Route matched with {action = "GetHROverview", controller = "Reports"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[HRMS.Application.DTOs.Reports.Analytics.AnalyticsHROverviewDto]]] GetHROverview() on controller HRMS.API.Controllers.Reports.ReportsController (HRMS.API).
+2026-03-25 23:58:33.244 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_ACTIVE] = CAST(1 AS bit) AND [e].[TERMINATION_DATE] IS NULL
+2026-03-25 23:58:33.264 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_CORE].[DEPARTMENTS] AS [d]
+2026-03-25 23:58:33.279 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__firstDayOfMonth_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[HIRE_DATE] >= @__firstDayOfMonth_0
+2026-03-25 23:58:33.481 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Key] AS [DepartmentName], COUNT(*) AS [EmployeeCount]
+FROM (
+    SELECT [d].[DEPT_NAME_AR] AS [Key]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+    WHERE [e].[IS_ACTIVE] = CAST(1 AS bit) AND [e].[TERMINATION_DATE] IS NULL
+) AS [s]
+GROUP BY [s].[Key]

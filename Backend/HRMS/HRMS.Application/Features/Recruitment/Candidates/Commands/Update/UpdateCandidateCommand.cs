@@ -9,11 +9,14 @@ namespace HRMS.Application.Features.Recruitment.Candidates.Commands.Update;
 public class UpdateCandidateCommand : IRequest<Result<int>>
 {
     public int CandidateId { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
+    public string FullNameEn { get; set; } = string.Empty;
+    public string? FirstNameAr { get; set; }
+    public string? FamilyNameAr { get; set; }
     public string Email { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
-    public string? ResumeUrl { get; set; }
+    public string? Phone { get; set; }
+    public int? NationalityId { get; set; }
+    public string? CvFilePath { get; set; }
+    public string? LinkedinProfile { get; set; }
 }
 
 public class UpdateCandidateCommandValidator : AbstractValidator<UpdateCandidateCommand>
@@ -21,10 +24,8 @@ public class UpdateCandidateCommandValidator : AbstractValidator<UpdateCandidate
     public UpdateCandidateCommandValidator()
     {
         RuleFor(x => x.CandidateId).GreaterThan(0);
-        RuleFor(x => x.FirstName).NotEmpty().MaximumLength(50);
-        RuleFor(x => x.LastName).NotEmpty().MaximumLength(50);
+        RuleFor(x => x.FullNameEn).NotEmpty().MaximumLength(200);
         RuleFor(x => x.Email).NotEmpty().EmailAddress();
-        RuleFor(x => x.Phone).NotEmpty().MaximumLength(20);
     }
 }
 
@@ -47,10 +48,14 @@ public class UpdateCandidateCommandHandler : IRequestHandler<UpdateCandidateComm
         if (candidate == null)
             return Result<int>.Failure("المرشح غير موجود");
 
-        candidate.FirstNameAr = request.FirstName;
+        candidate.FullNameEn = request.FullNameEn;
+        candidate.FirstNameAr = request.FirstNameAr;
+        candidate.FamilyNameAr = request.FamilyNameAr;
         candidate.Email = request.Email;
         candidate.Phone = request.Phone;
-        if (!string.IsNullOrEmpty(request.ResumeUrl)) candidate.CvFilePath = request.ResumeUrl;
+        candidate.NationalityId = request.NationalityId;
+        candidate.CvFilePath = request.CvFilePath ?? candidate.CvFilePath;
+        candidate.LinkedinProfile = request.LinkedinProfile;
         
         candidate.UpdatedBy = _currentUserService.UserId;
         candidate.UpdatedAt = DateTime.UtcNow;

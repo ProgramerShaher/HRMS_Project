@@ -16,6 +16,7 @@ export interface AttendanceMetricsDto {
   totalAbsent: number;
   totalLeaves: number;
   totalLate: number;
+  attendanceRate: number;
   shiftDistribution: { [key: string]: number };
 }
 
@@ -24,6 +25,8 @@ export interface PersonnelMetricsDto {
   activeEmployees: number;
   inactiveEmployees: number;
   expiringDocumentsCount: number;
+  newHires: number;
+  activeContracts: number;
   departmentStats: DepartmentStatDto[];
 }
 
@@ -42,6 +45,10 @@ export interface RequestsMetricsDto {
 }
 
 export interface FinancialMetricsDto {
+  totalNetSalary: number;
+  totalBasicSalary: number;
+  totalDeductions: number;
+  pendingPayrollCount: number;
   totalPendingSalaries: number;
   pendingSalariesByDepartment: { [key: string]: number };
   totalActiveLoansAmount: number;

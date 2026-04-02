@@ -39,7 +39,9 @@ public class GetOffersQueryHandler : IRequestHandler<GetOffersQuery, Result<List
         var query = _context.JobOffers
             .Include(o => o.Application)
                 .ThenInclude(a => a.Candidate)
-            .Include(o => o.JoiningDate)
+            .Include(o => o.Application)
+                .ThenInclude(a => a.Vacancy)
+                    .ThenInclude(v => v.Job)
             .AsQueryable();
 
         // تطبيق الفلاتر

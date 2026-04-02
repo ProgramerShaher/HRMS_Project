@@ -26,6 +26,8 @@ using HRMS.Application.Features.Recruitment.Offers.Commands.Update;
 using HRMS.Application.Features.Recruitment.Config.Queries.GetInterviewTypes;
 using HRMS.Application.Features.Recruitment.Config.Queries.GetJobGrades;
 using HRMS.Application.Features.Recruitment.Config.Queries.GetRejectionReasons;
+using HRMS.Application.Features.Recruitment.Candidates.Commands.Update;
+using HRMS.Application.Features.Recruitment.Candidates.Commands.Delete;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -172,6 +174,30 @@ public class RecruitmentController : ControllerBase
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<int>>> CreateCandidate([FromForm] CreateCandidateCommand command)
     {
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تحديث بيانات مرشح
+    /// </summary>
+    [HttpPut("candidates/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> UpdateCandidate(int id, [FromBody] UpdateCandidateCommand command)
+    {
+        command.CandidateId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// حذف مرشح (حذف منطقي)
+    /// </summary>
+    [HttpDelete("candidates/{id}")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> DeleteCandidate(int id)
+    {
+        var command = new DeleteCandidateCommand { CandidateId = id };
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }

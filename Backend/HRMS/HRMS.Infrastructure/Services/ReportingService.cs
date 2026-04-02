@@ -49,23 +49,31 @@ public class ReportingService : IReportingService
 
         // 3. Document Expirations (Next 30 Days)
         var thirtyDaysFromNow = today.AddDays(30);
-        var expirations = await _context.EmployeeDocuments
-            .Include(d => d.Employee)
-            .Include(d => d.DocumentType)
-            .Where(d => d.ExpiryDate != null && d.ExpiryDate >= today && d.ExpiryDate <= thirtyDaysFromNow)
-            .Select(d => new AnalyticsDocumentExpiryDto
-            {
-                EmployeeId = d.EmployeeId,
-                EmployeeName = d.Employee.FirstNameAr + " " + d.Employee.LastNameAr,
-                DocumentType = d.DocumentType != null ? d.DocumentType.DocumentTypeNameAr : "مستند",
-                ExpiryDate = d.ExpiryDate!.Value,
-                DaysRemaining = (d.ExpiryDate!.Value - today).Days
-            })
-            .OrderBy(d => d.DaysRemaining)
-            .Take(10)
-            .ToListAsync();
+		var expirations = await _context.EmployeeDocuments
+	.Include(d => d.Employee)
+	.Include(d => d.DocumentType)
+	.Where(d => d.ExpiryDate != null && d.ExpiryDate >= today && d.ExpiryDate <= thirtyDaysFromNow)
+	// 1. نرتب حسب التاريخ مباشرة (هذا يفهمه SQL)
+	.OrderBy(d => d.ExpiryDate)
+	.Take(10)
+	.Select(d => new AnalyticsDocumentExpiryDto
+	{
+		EmployeeId = d.EmployeeId,
+		EmployeeName = d.Employee.FirstNameAr + " " + d.Employee.LastNameAr,
+		DocumentType = d.DocumentType != null ? d.DocumentType.DocumentTypeNameAr : "مستند",
+		ExpiryDate = d.ExpiryDate!.Value,
+		// 2. نجلب التاريخ فقط هنا، وسنحسب الأيام لاحقاً أو نترك الـ DTO يحسبها
+		DaysRemaining = 0 // قيمة مؤقتة
+	})
+	.ToListAsync();
 
-        return new AnalyticsHROverviewDto
+		// 3. الآن في الذاكرة (C#) نحسب الأيام المتبقية لكل عنصر
+		foreach (var item in expirations)
+		{
+			item.DaysRemaining = (item.ExpiryDate - today).Days;
+		}
+
+		return new AnalyticsHROverviewDto
         {
             TotalEmployees = totalEmployees,
             TotalDepartments = totalDepartments,
@@ -200,16 +208,48 @@ public class ReportingService : IReportingService
 	public async Task<List<DailyAttendanceDetailsDto>> GetDetailedAttendanceReportAsync(DateTime startDate, DateTime endDate, int? departmentId = null)
 	{
 		var query = _context.DailyAttendances
+			.Include(d => d.Employee)
+			.ThenInclude(e => e.Department)
+			.Include(d => d.PlannedShift)
 			.AsNoTracking()
 			.Where(d => d.AttendanceDate >= startDate && d.AttendanceDate <= endDate);
 
 		if (departmentId.HasValue)
 			query = query.Where(d => d.Employee.DepartmentId == departmentId);
 
-		return await query
+		var records = await query
 			.OrderBy(d => d.AttendanceDate)
-			.ProjectTo<DailyAttendanceDetailsDto>(_mapper.ConfigurationProvider)
+			.Select(src => new 
+			{
+				src.RecordId,
+				src.AttendanceDate,
+				src.EmployeeId,
+				FirstNameAr = src.Employee.FirstNameAr,
+				LastNameAr = src.Employee.LastNameAr,
+				DeptNameAr = src.Employee.Department != null ? src.Employee.Department.DeptNameAr : "-",
+				ShiftNameAr = src.PlannedShift != null ? src.PlannedShift.ShiftNameAr : "-",
+				src.ActualInTime,
+				src.ActualOutTime,
+				src.Status,
+				src.LateMinutes,
+				src.OvertimeMinutes
+			})
 			.ToListAsync();
+
+		return records.Select(src => new DailyAttendanceDetailsDto
+		{
+			RecordId = src.RecordId,
+			Date = src.AttendanceDate,
+			EmployeeId = src.EmployeeId,
+			EmployeeName = $"{src.FirstNameAr} {src.LastNameAr}",
+			Department = src.DeptNameAr,
+			PlannedShift = src.ShiftNameAr,
+			InTime = src.ActualInTime.HasValue ? src.ActualInTime.Value.ToString("HH:mm") : "-",
+			OutTime = src.ActualOutTime.HasValue ? src.ActualOutTime.Value.ToString("HH:mm") : "-",
+			Status = src.Status ?? "-",
+			LateMinutes = src.LateMinutes,
+			OvertimeMinutes = src.OvertimeMinutes
+		}).ToList();
 	}
 	public async Task<List<MonthlyPayslipReportDto>> GetMonthlyPayslipReportAsync(int month, int year, int? departmentId = null)
     {
@@ -253,20 +293,22 @@ public class ReportingService : IReportingService
         if (departmentId.HasValue)
             query = query.Where(l => l.Employee.DepartmentId == departmentId);
 
-        return await query.Select(l => new LeaveHistoryDto
-        {
-            RequestId = l.RequestId,
-            EmployeeName = l.Employee.FirstNameAr + " " + l.Employee.LastNameAr,
-            Department = l.Employee.Department != null ? l.Employee.Department.DeptNameAr : "-",
-            LeaveType = l.LeaveType.LeaveNameAr,
-            StartDate = l.StartDate,
-            EndDate = l.EndDate,
-            Days = l.DaysCount,
-            Status = l.Status,
-            Reason = l.Reason ?? "-"
-        })
-        .OrderByDescending(l => l.RequestDate)
-        .ToListAsync();
+        return await query
+            .OrderByDescending(l => l.CreatedAt)
+            .Select(l => new LeaveHistoryDto
+            {
+                RequestId = l.RequestId,
+                EmployeeName = l.Employee.FirstNameAr + " " + l.Employee.LastNameAr,
+                Department = l.Employee.Department != null ? l.Employee.Department.DeptNameAr : "-",
+                LeaveType = l.LeaveType.LeaveNameAr,
+                StartDate = l.StartDate,
+                EndDate = l.EndDate,
+                Days = l.DaysCount,
+                Status = l.Status ?? "-",
+                Reason = l.Reason ?? "-",
+                RequestDate = l.CreatedAt
+            })
+            .ToListAsync();
     }
 
     public async Task<List<RecruitmentReportDto>> GetRecruitmentReportAsync(DateTime startDate, DateTime endDate, string? status = null)
@@ -314,7 +356,7 @@ public class ReportingService : IReportingService
             EmployeeName = a.Employee.FirstNameAr + " " + a.Employee.LastNameAr,
             Department = a.Employee.Department != null ? a.Employee.Department.DeptNameAr : "-",
             CycleName = a.Cycle.CycleNameAr,
-            OverallScore = a.TotalScore ?? 0,
+            OverallScore = a.FinalScore ?? 0,
             Rating = a.Grade ?? "-",
             EvaluatorName = a.Evaluator != null ? (a.Evaluator.FirstNameAr + " " + a.Evaluator.LastNameAr) : "-",
             Status = a.Status ?? "-"
@@ -397,7 +439,7 @@ public class ReportingService : IReportingService
             InactiveEmployees = employees.Count(e => !e.IsActive || e.TerminationDate != null),
             ExpiringDocumentsCount = expiringDocs,
             NewHires = employees.Count(e => e.HireDate >= startOfMonth),
-            ActiveContracts = await _context.Contracts.CountAsync(c => c.IsActive == true),
+            ActiveContracts = await _context.Contracts.CountAsync(c => c.IsDeleted == 1),
             DepartmentStats = employees
                  .Where(e => e.IsActive && e.TerminationDate == null)
                  .GroupBy(e => e.Department)
@@ -428,11 +470,12 @@ public class ReportingService : IReportingService
         var pendingAppraisals = await _context.EmployeeAppraisals
             .CountAsync(a => (a.Status.ToLower() == "pending" || a.Status.ToLower() == "in_progress") && a.IsDeleted == 0);
 
-        var avgRating = await _context.EmployeeAppraisals
-            .Where(a => a.Status.ToLower() == "completed" && a.TotalScore.HasValue && a.IsDeleted == 0)
-            .Select(a => (double)a.TotalScore!.Value)
-            .DefaultIfEmpty(0)
-            .AverageAsync();
+        var scores = await _context.EmployeeAppraisals
+            .Where(a => a.Status != null && a.Status.ToUpper() == "DRAFT" && a.FinalScore != null && a.IsDeleted == 0)
+            .Select(a => (double)a.FinalScore!.Value)
+            .ToListAsync();
+
+        var avgRating = scores.Any() ? scores.Average() : 0;
 
         var performanceMetrics = new PerformanceMetricsDto
         {

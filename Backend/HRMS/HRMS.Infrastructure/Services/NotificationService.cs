@@ -43,16 +43,25 @@ public class NotificationService : INotificationService
 
     public async Task MarkAllAsReadAsync(string userId)
     {
-        var notifications = await _context.Notifications
-            .Where(n => n.UserId == userId && !n.IsRead)
-            .ToListAsync();
-
-        if (notifications.Any())
+        try
         {
-            foreach (var n in notifications)
-                n.IsRead = true;
+            var notifactions = await _context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ToListAsync();
+            if (notifactions.Any())
+            {
+                foreach (var notification in notifactions)
+                {
+                    notification.IsRead = true;
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+        catch (Exception ex)
+        {
 
-            await _context.SaveChangesAsync();
+             throw new Exception(
+                 ex.Message, ex.InnerException );
         }
     }
 
