@@ -15,11 +15,11 @@ public class GetMyShiftSwapRequestsQueryHandler(IApplicationDbContext context) :
 {
     public async Task<Result<List<ShiftSwapRequestDto>>> Handle(GetMyShiftSwapRequestsQuery request, CancellationToken cancellationToken)
     {
-        // Get swaps where user is requester OR target
+        // Get swaps where user is requester OR target OR we fetch all if EmployeeId is 0
         var requests = await context.ShiftSwapRequests
             .Include(x => x.Requester)
             .Include(x => x.TargetEmployee)
-            .Where(x => x.RequesterId == request.EmployeeId || x.TargetEmployeeId == request.EmployeeId)
+            .Where(x => request.EmployeeId == 0 || x.RequesterId == request.EmployeeId || x.TargetEmployeeId == request.EmployeeId)
             .OrderByDescending(x => x.RosterDate)
             .Select(x => new ShiftSwapRequestDto
             {

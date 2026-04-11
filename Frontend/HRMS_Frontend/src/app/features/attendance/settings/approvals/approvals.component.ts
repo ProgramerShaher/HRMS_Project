@@ -9,11 +9,12 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-approvals',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, ToastModule, DialogModule, TextareaModule, FormsModule],
+  imports: [CommonModule, TableModule, ButtonModule, ToastModule, DialogModule, TextareaModule, FormsModule, InputNumberModule],
   providers: [MessageService],
   templateUrl: './approvals.component.html'
 })
@@ -29,6 +30,7 @@ export class ApprovalsComponent implements OnInit {
   currentRequest: any = null;
   actionType: 'APPROVE' | 'REJECT' = 'APPROVE';
   comment = '';
+  approvedHours: number = 0;
 
   ngOnInit() {
       this.loadPendingRequests();
@@ -54,6 +56,8 @@ export class ApprovalsComponent implements OnInit {
       this.currentRequest = request;
       this.actionType = action;
       this.comment = '';
+      // Default approvedHours to the requested hours for convenience
+      this.approvedHours = request?.hoursRequested ?? request?.hours ?? 0;
       this.dialogVisible = true;
   }
 
@@ -76,12 +80,16 @@ export class ApprovalsComponent implements OnInit {
               requestId: this.currentRequest.id,
               managerId: 1,
               action: this.actionType,
-              approvedHours: 0, 
+              // When approving, send the approved hours. When rejecting, send 0 (backend ignores it for REJECT)
+              approvedHours: this.actionType === 'APPROVE' ? this.approvedHours : 0,
               comment: this.comment
           };
            this.settingsService.actionOvertime(cmd).subscribe({
               next: () => this.successAndClose(),
-              error: () => this.error()
+              error: (err) => {
+                  const msg = err?.error?.errors?.[0] ?? err?.error?.message ?? 'فشل تنفيذ الإجراء';
+                  this.messageService.add({severity:'error', summary: 'خطأ', detail: msg});
+              }
           });
       } else if (this.currentRequest.requestType === 'Permission') {
           const cmd = {

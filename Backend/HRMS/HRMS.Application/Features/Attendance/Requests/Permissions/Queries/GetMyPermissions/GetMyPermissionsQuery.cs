@@ -17,7 +17,7 @@ public class GetMyPermissionsQueryHandler(IApplicationDbContext context) : IRequ
     {
         var permissions = await context.PermissionRequests
             .Include(x => x.Employee)
-            .Where(x => x.EmployeeId == request.EmployeeId)
+            .Where(x => request.EmployeeId == 0 || x.EmployeeId == request.EmployeeId)
             .OrderByDescending(x => x.PermissionDate)
             .Select(x => new PermissionRequestDto
             {

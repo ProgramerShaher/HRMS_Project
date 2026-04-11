@@ -10,6 +10,7 @@ import {
   JobApplication, SubmitApplicationCommand, ChangeApplicationStatusCommand,
   Interview, ScheduleInterviewCommand, RecordInterviewResultCommand,
   JobOffer, CreateOfferCommand, AcceptOfferCommand,
+  RecruitmentReports
 } from '../models/recruitment.models';
 
 @Injectable({ providedIn: 'root' })
@@ -122,7 +123,7 @@ export class RecruitmentService {
   }
 
   // ── Stats ─────────────────────────────────────────────────
-  getStats(): Observable<any> {
-    return this.http.get<any>(`${this.api}/stats`);
+  getStats(): Observable<ApiResponse<RecruitmentReports>> {
+    return this.http.get<ApiResponse<RecruitmentReports>>(`${this.api}/stats`);
   }
 }

@@ -19,7 +19,8 @@ import {
   MyRosterDto, 
   PermissionRequestDto,
   OvertimeRequestDto,
-  ShiftSwapRequestDto
+  ShiftSwapRequestDto,
+  DeviceEmployeeDto
 } from '../models/attendance.models';
 
 @Injectable({
@@ -89,6 +90,11 @@ export class AttendanceService {
 
   getExceptions(): Observable<Result<AttendanceExceptionDto[]>> {
     return this.http.get<Result<AttendanceExceptionDto[]>>(`${this.apiUrl}/dashboard/exceptions`);
+  }
+
+  // Device Punch
+  getDeviceEmployees(): Observable<Result<DeviceEmployeeDto[]>> {
+    return this.http.get<Result<DeviceEmployeeDto[]>>(`${this.apiUrl}/device/employees`);
   }
 
   // Correction

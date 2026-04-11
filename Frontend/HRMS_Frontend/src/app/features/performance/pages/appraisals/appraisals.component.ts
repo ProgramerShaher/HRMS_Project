@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 // PrimeNG
 import { TableModule } from 'primeng/table';
@@ -19,9 +20,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PerformanceService } from '../../services/performance.service';
 import { PerformanceSetupService } from '../../../setup/services/performance-setup.service';
 import { EmployeeService } from '../../../personnel/services/employee.service';
-import { EmployeeAppraisal, SubmitAppraisalCommand, KpiDetailCommand } from '../../models/performance.model';
-import { Kpi, AppraisalCycle } from '../../../setup/models/performance-setup.model';
-
+import { EmployeeAppraisal, AppraisalDetail, InitiateAppraisalCommand, SubmitManagerAppraisalCommand, FinalizeAppraisalCommand } from '../../models/performance.model';
+import { AppraisalCycle } from '../../../setup/models/performance-setup.model';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 @Component({
     selector: 'app-appraisals',
     standalone: true,
@@ -29,6 +30,7 @@ import { Kpi, AppraisalCycle } from '../../../setup/models/performance-setup.mod
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        RouterModule,
         TableModule,
         ButtonModule,
         DialogModule,
@@ -45,55 +47,67 @@ import { Kpi, AppraisalCycle } from '../../../setup/models/performance-setup.mod
     templateUrl: './appraisals.component.html'
 })
 export class AppraisalsComponent implements OnInit {
-    // Services
     private performanceService = inject(PerformanceService);
     private setupService = inject(PerformanceSetupService);
     private employeeService = inject(EmployeeService);
+    private authService = inject(AuthService);
     private messageService = inject(MessageService);
     private confirmationService = inject(ConfirmationService);
     private fb = inject(FormBuilder);
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
-    // State
     appraisals = signal<EmployeeAppraisal[]>([]);
     cycles = signal<AppraisalCycle[]>([]);
-    kpis = signal<Kpi[]>([]);
     employees = signal<any[]>([]);
     loading = signal<boolean>(false);
 
-    // Form
-    showDialog = false;
-    form!: FormGroup;
-    isEditMode = false;
-    selectedAppraisalId: number | null = null;
-    submitted = false;
+    // Initiation Form
+    showInitDialog = false;
+    initForm!: FormGroup;
+
+    // Review Form (Manager / HR)
+    showReviewDialog = false;
+    reviewForm!: FormGroup;
+    selectedAppraisal: EmployeeAppraisal | null = null;
+    currentPhaseActive = ''; // 'MANAGER_EVALUATION' or 'HR_REVIEW'
+
+    isAdmin = signal<boolean>(false);
 
     ngOnInit() {
-        this.initForm();
-        this.loadLookups();
-        this.loadData();
-    }
+        const roles = this.authService.currentUser()?.roles || [];
+        this.isAdmin.set(roles.includes('System_Admin') || roles.includes('HR_Manager'));
 
-    initForm() {
-        this.form = this.fb.group({
-            employeeId: [null, Validators.required],
-            manualEvaluatorId: [null, Validators.required],
-            cycleId: [null, Validators.required],
-            employeeComment: [''],
-            kpiDetails: this.fb.array([])
+        this.initForms();
+        this.loadLookups();
+
+        // دعم الفلترة بالدورة عبر query params
+        this.route.queryParams.subscribe(params => {
+            const cycleId = params['cycleId'] ? +params['cycleId'] : undefined;
+            this.loadData(cycleId);
         });
     }
 
-    get kpiDetails(): FormArray {
-        return this.form.get('kpiDetails') as FormArray;
+    initForms() {
+        this.initForm = this.fb.group({
+            employeeId: [null, Validators.required],
+            cycleId: [null, Validators.required],
+            evaluatorId: [null]
+        });
+
+        this.reviewForm = this.fb.group({
+            reviewComment: [''],
+            scores: this.fb.array([])
+        });
+    }
+
+    get scoreDetails(): FormArray {
+        return this.reviewForm.get('scores') as FormArray;
     }
 
     loadLookups() {
         this.setupService.getAppraisalCycles().subscribe(res => {
             if (res.succeeded) this.cycles.set(res.data);
-        });
-
-        this.setupService.getKpis().subscribe(res => {
-            if (res.succeeded) this.kpis.set(res.data);
         });
 
         this.employeeService.getAll(1, 1000).subscribe(res => {
@@ -106,89 +120,107 @@ export class AppraisalsComponent implements OnInit {
         });
     }
 
-    loadData() {
+    loadData(cycleId?: number) {
         this.loading.set(true);
-        this.performanceService.getAppraisals().subscribe(res => {
+        this.performanceService.getAppraisals(undefined, cycleId).subscribe(res => {
             this.loading.set(false);
-            if (res.succeeded) {
-                this.appraisals.set(res.data);
-            }
+            if (res.succeeded) this.appraisals.set(res.data);
         });
     }
 
-    // When opening dialog, we must populate KPIs form array
-    openNew() {
-        this.showDialog = true;
-        this.isEditMode = false;
-        this.submitted = false;
+    viewResult(appraisal: EmployeeAppraisal) {
+        this.router.navigate(['/performance/appraisals', appraisal.appraisalId, 'result']);
+    }
 
-        // Reset form but allow keeping KPIs structure?
-        // Better to rebuild it fresh
-        this.form.reset();
-        this.kpiDetails.clear();
+    // Phase: HR Initiates Appraisal
+    openInitiate() {
+        this.showInitDialog = true;
+        this.initForm.reset();
+    }
 
-        // Add all active KPIs to the form so user can score them
-        // Ideally this should be based on Job Role, but for now we load all from Library as per current simple logic
-        this.kpis().forEach((kpi: Kpi) => {
-            this.kpiDetails.push(this.fb.group({
-                kpiId: [kpi.kpiId],
-                kpiName: [kpi.kpiNameAr], // Display only
-                score: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+    submitInitiate() {
+        if (this.initForm.invalid) return;
+
+        const cmd: InitiateAppraisalCommand = this.initForm.value;
+        this.performanceService.initiateAppraisal(cmd).subscribe({
+            next: (res) => {
+                if (res.succeeded) {
+                    this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم تهيئة التقييم وإرساله للموظف' });
+                    this.showInitDialog = false;
+                    this.loadData();
+                } else this.messageService.add({ severity: 'error', summary: 'خطأ', detail: res.message });
+            },
+            error: (err) => this.messageService.add({ severity: 'error', summary: 'خطأ', detail: err.error?.message || 'فشل' })
+        });
+    }
+
+    // Phase: Manager / HR Reviews
+    openReview(appraisal: EmployeeAppraisal) {
+        if (appraisal.status !== 'MANAGER_EVALUATION' && appraisal.status !== 'HR_REVIEW') {
+            this.messageService.add({ severity: 'warn', summary: 'تنبيه', detail: 'التقييم ليس في مرحلة تقييم الإدارة حالياً.' });
+            return;
+        }
+
+        this.selectedAppraisal = appraisal;
+        this.currentPhaseActive = appraisal.status;
+        this.showReviewDialog = true;
+        
+        this.reviewForm.reset();
+        this.scoreDetails.clear();
+        this.reviewForm.patchValue({ reviewComment: appraisal.comments || '' });
+
+        // If it's MANAGER_EVALUATION, they edit managerScore based on employeeScore.
+        // If it's HR_REVIEW, they edit finalScore based on managerScore.
+        appraisal.details.forEach(d => {
+            this.scoreDetails.push(this.fb.group({
+                detailId: [d.detailId],
+                kpiName: [d.kpiName],
+                employeeScore: [{ value: d.employeeScore || 0, disabled: true }],
+                managerScore: [{ value: d.managerScore || d.employeeScore || 0, disabled: appraisal.status === 'HR_REVIEW' }, Validators.required],
+                finalScore: [d.finalScore || d.managerScore || d.employeeScore || 0, Validators.required],
                 comments: ['']
             }));
         });
     }
 
-    save() {
-        this.submitted = true;
-        if (this.form.invalid) return;
+    submitReview() {
+        if (this.reviewForm.invalid || !this.selectedAppraisal) return;
 
-        const val = this.form.value;
+        const val = this.reviewForm.value;
 
-        const detailsCommand: KpiDetailCommand[] = val.kpiDetails.map((d: any) => ({
-            kpiId: d.kpiId,
-            score: d.score,
-            comments: d.comments
-        }));
-
-        const command: SubmitAppraisalCommand = {
-            employeeId: val.employeeId,
-            manualEvaluatorId: val.manualEvaluatorId,
-            cycleId: val.cycleId,
-            employeeComment: val.employeeComment,
-            kpiDetails: detailsCommand
-        };
-
-        if (this.isEditMode && this.selectedAppraisalId) {
-            this.performanceService.updateAppraisal(this.selectedAppraisalId, command).subscribe({
+        if (this.currentPhaseActive === 'MANAGER_EVALUATION') {
+            const cmd: SubmitManagerAppraisalCommand = {
+                scores: val.scores.map((s: any) => ({
+                    detailId: s.detailId,
+                    managerScore: s.managerScore,
+                    comments: s.comments
+                })),
+                managerComment: val.reviewComment
+            };
+            this.performanceService.submitManagerAppraisal(this.selectedAppraisal.appraisalId, cmd).subscribe({
                 next: (res) => {
                     if (res.succeeded) {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Appraisal Updated' });
-                        this.showDialog = false;
+                        this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسليم تقييم المدير للموارد البشرية' });
+                        this.showReviewDialog = false;
                         this.loadData();
-                    } else {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: res.message });
-                    }
-                },
-                error: (err) => {
-                    const msg = err.error?.message || 'Failed to update appraisal';
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+                    } else this.messageService.add({ severity: 'error', summary: 'خطأ', detail: res.message });
                 }
             });
-        } else {
-            this.performanceService.submitAppraisal(command).subscribe({
+        } 
+        else if (this.currentPhaseActive === 'HR_REVIEW') {
+            const cmd: FinalizeAppraisalCommand = {
+                scores: val.scores.map((s: any) => ({
+                    detailId: s.detailId,
+                    finalScore: s.finalScore
+                }))
+            };
+            this.performanceService.finalizeAppraisal(this.selectedAppraisal.appraisalId, cmd).subscribe({
                 next: (res) => {
                     if (res.succeeded) {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Appraisal Submitted' });
-                        this.showDialog = false;
+                        this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم اعتماد التقييم النهائي' });
+                        this.showReviewDialog = false;
                         this.loadData();
-                    } else {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: res.message });
-                    }
-                },
-                error: (err) => {
-                    const msg = err.error?.message || 'Failed to submit appraisal';
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+                    } else this.messageService.add({ severity: 'error', summary: 'خطأ', detail: res.message });
                 }
             });
         }
@@ -196,13 +228,13 @@ export class AppraisalsComponent implements OnInit {
 
     delete(appraisal: EmployeeAppraisal) {
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete this appraisal?',
-            header: 'Confirm Delete',
+            message: 'هل أنت متأكد من حذف التقييم؟',
+            header: 'تأكيد החذف',
             icon: 'pi pi-trash',
             accept: () => {
                 this.performanceService.deleteAppraisal(appraisal.appraisalId).subscribe(res => {
                     if (res.succeeded) {
-                        this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Appraisal deleted' });
+                        this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'تم الحذف' });
                         this.loadData();
                     }
                 });

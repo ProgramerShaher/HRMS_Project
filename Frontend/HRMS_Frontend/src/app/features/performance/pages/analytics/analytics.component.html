@@ -1,0 +1,80 @@
+<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white mb-6">
+    <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-t-xl">
+        <h2 class="text-3xl font-bold tracking-tight">تحليلات الأداء المتقدمة</h2>
+        <p class="text-blue-100 mt-2">رؤية تحليلية شاملة لبيانات تقييم الموظفين وتوزيع الدرجات</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Bar Chart: Score Distribution -->
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="pi pi-chart-bar text-blue-500"></i>
+            توزيع درجات الأداء (Completed Only)
+        </h3>
+        <p-chart type="bar" [data]="barData()" [options]="barOptions()"></p-chart>
+    </div>
+
+    <!-- Pie Chart: Status Breakdown -->
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="pi pi-chart-pie text-emerald-500"></i>
+            تحليل حالات التقييم (Progress)
+        </h3>
+        <p-chart type="pie" [data]="pieData()" [options]="pieOptions()"></p-chart>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Top Performers Table -->
+    <div class="lg:col-span-2 p-6 bg-white rounded-xl shadow-sm border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="pi pi-star-fill text-yellow-500"></i>
+            أفضل 5 موظفين أداءً (Golden Stars)
+        </h3>
+        <p-table [value]="topPerformers()" styleClass="p-datatable-sm" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr class="bg-slate-50 text-slate-600 text-[10px] uppercase tracking-wider">
+                    <th class="p-3 font-semibold">الموظف</th>
+                    <th class="p-3 font-semibold">دورة التقييم</th>
+                    <th class="p-3 font-semibold text-center">الدرجة</th>
+                    <th class="p-3 font-semibold">التقدير</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-a>
+                <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                    <td class="p-3 font-medium text-slate-800 text-sm">{{ a.employeeName }}</td>
+                    <td class="p-3 text-slate-600 text-xs">{{ a.cycleName }}</td>
+                    <td class="p-3 text-center">
+                        <span class="font-bold text-emerald-600">{{ a.finalScore }}%</span>
+                    </td>
+                    <td class="p-3">
+                        <p-tag [value]="a.grade" severity="success" [rounded]="true" styleClass="text-[10px] px-2"></p-tag>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Quick Insights -->
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
+        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="pi pi-info-circle text-blue-500"></i>
+            رؤى سريعة
+        </h3>
+        <div class="space-y-4">
+            <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <p class="text-xs text-blue-600 font-bold mb-1 uppercase tracking-wider">نصيحة إدارية</p>
+                <p class="text-sm text-blue-700 leading-relaxed font-medium">
+                    يلاحظ وجود نسبة كبيرة في النطاق 80-100؛ يرجى مراجعة معايير التقييم لضمان الموضوعية (Avoid Lenience bias).
+                </p>
+            </div>
+            <div class="p-4 bg-amber-50 rounded-lg border border-amber-100">
+                <p class="text-xs text-amber-600 font-bold mb-1 uppercase tracking-wider">تنبيه الموارد البشرية</p>
+                <p class="text-sm text-amber-700 leading-relaxed font-medium">
+                    هناك عدد من التقييمات العالقة في مرحلة (تقييم المدير)، يرجى إرسال التذكيرات الآلية.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

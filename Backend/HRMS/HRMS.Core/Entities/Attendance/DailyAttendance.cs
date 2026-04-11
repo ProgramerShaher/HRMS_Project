@@ -66,11 +66,23 @@ namespace HRMS.Core.Entities.Attendance
         [Column("EARLY_LEAVE_MINUTES")]
         public short EarlyLeaveMinutes { get; set; } = 0;
 
-        /// <summary>
+         /// <summary>
         /// دقائق العمل الإضافي
         /// </summary>
         [Column("OVERTIME_MINUTES")]
         public short OvertimeMinutes { get; set; } = 0;
+
+        /// <summary>
+        /// مبلغ الخصم المالي المترتب على التأخير أو الانصراف المبكر
+        /// </summary>
+        [Column("DEDUCTION_AMOUNT", TypeName = "decimal(18, 2)")]
+        public decimal DeductionAmount { get; set; } = 0;
+
+        /// <summary>
+        /// مبلغ الاستحقاق المالي للعمل الإضافي
+        /// </summary>
+        [Column("OVERTIME_AMOUNT", TypeName = "decimal(18, 2)")]
+        public decimal OvertimeAmount { get; set; } = 0;
 
         /// <summary>
         /// الحالة (PRESENT, ABSENT, LEAVE, HOLIDAY, MISSING_PUNCH)

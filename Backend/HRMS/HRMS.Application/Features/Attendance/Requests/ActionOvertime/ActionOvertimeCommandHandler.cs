@@ -49,11 +49,15 @@ public class ActionOvertimeCommandHandler : IRequestHandler<ActionOvertimeComman
         {
             otRequest.Status = "APPROVED";
             otRequest.ApprovedHours = request.ApprovedHours;
-            otRequest.ApprovedBy = request.ManagerId;
+            // التحقق من وجود المدير قبل ربطه (لتجنب انتهاك قيد المفتاح الخارجي)
+            var managerExists = await _context.Employees
+                .AnyAsync(e => e.EmployeeId == request.ManagerId, cancellationToken);
+            otRequest.ApprovedBy = managerExists ? request.ManagerId : null;
         }
         else
         {
             otRequest.Status = "REJECTED";
+            otRequest.ApprovedBy = null;
         }
 
         await _context.SaveChangesAsync(cancellationToken);

@@ -38,6 +38,11 @@ namespace HRMS.Core.Entities.Performance
         [Column("WEIGHT", TypeName = "decimal(5, 2)")]
         public decimal Weight { get; set; } = 1.0m;
 
+        /// <summary>التصنيف الوظيفي المستهدف (NURSE, ADMIN, DOCTOR, ALL)</summary>
+        [MaxLength(20)]
+        [Column("TARGET_JOB_TYPE")]
+        public string? TargetJobType { get; set; } = "ALL";
+
         // Navigation Properties
         public virtual ICollection<AppraisalDetail> AppraisalDetails { get; set; } = new List<AppraisalDetail>();
     }

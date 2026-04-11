@@ -68,7 +68,27 @@
             </span>
              الطلب؟
         </p>
-        
+
+        <!-- Approved Hours field - shown only when approving Overtime -->
+        <div class="field mb-4" *ngIf="actionType === 'APPROVE' && currentRequest?.requestType === 'Overtime'">
+            <label class="block text-sm font-medium mb-1 text-green-700">
+                الساعات المعتمدة
+                <span class="text-slate-400 font-normal text-xs">(مطلوب عند الموافقة)</span>
+            </label>
+            <p-inputNumber 
+                [(ngModel)]="approvedHours" 
+                [min]="0.5" 
+                [max]="24" 
+                [step]="0.5"
+                suffix=" ساعة" 
+                styleClass="w-full"
+                [showButtons]="true">
+            </p-inputNumber>
+            <small class="text-slate-400 mt-1 block">
+                الساعات المطلوبة: {{ currentRequest?.hoursRequested ?? '—' }} ساعة
+            </small>
+        </div>
+
         <div class="field">
             <label class="block text-sm font-medium mb-1">ملاحظات الإدارة</label>
             <textarea pTextarea [(ngModel)]="comment" rows="3" class="w-full"></textarea>

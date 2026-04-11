@@ -11,29 +11,10 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ActionButtonsComponent } from '../../../../../../shared/components/action-buttons/action-buttons.component';
 import { PayrollProcessingService } from '../../../../services/payroll-processing.service';
 import { DepartmentService } from '../../../../../setup/services/department.service';
+import { MonthlySummary, DepartmentSummary } from '../../../../models/payroll-processing.models';
 import { forkJoin } from 'rxjs';
 
-interface DepartmentSummary {
-  departmentId: number;
-  departmentName: string;
-  employeeCount: number;
-  totalBasicSalaries: number;
-  totalAllowances: number;
-  totalDeductions: number;
-  totalNetSalaries: number;
-}
 
-interface MonthlySummary {
-  month: number;
-  year: number;
-  totalEmployees: number;
-  totalBasicSalaries: number;
-  totalAllowances: number;
-  totalDeductions: number;
-  totalOvertimePayments: number;
-  totalNetSalaries: number;
-  departmentBreakdown: DepartmentSummary[];
-}
 
 @Component({
   selector: 'app-monthly-summary-report',

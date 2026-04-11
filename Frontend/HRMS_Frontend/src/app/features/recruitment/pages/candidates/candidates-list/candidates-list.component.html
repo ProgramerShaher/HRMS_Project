@@ -278,7 +278,7 @@
           <span class="text-sm font-bold text-slate-600">السيرة الذاتية (CV)</span>
         </div>
         <div>
-          <a *ngIf="selectedCandidate.resume" [href]="selectedCandidate.resume" target="_blank"
+          <a *ngIf="selectedCandidate.resume" [href]="getFileUrl(selectedCandidate.resume)" target="_blank"
             class="text-xs font-black text-indigo-600 hover:underline flex items-center gap-1">
             تحميل الملف <i class="pi pi-download"></i>
           </a>

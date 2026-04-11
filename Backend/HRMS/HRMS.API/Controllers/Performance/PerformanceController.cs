@@ -154,12 +154,51 @@ public class PerformanceController : ControllerBase
     // ═══════════════════════════════════════════════════════════
 
     /// <summary>
-    /// تسجيل تقييم أداء موظف
+    /// بدء التقييم (HR) - إنشاء ملف فارغ للموظف
     /// </summary>
-    [HttpPost("appraisals")]
+    [HttpPost("appraisals/initiate")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
     [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<Result<int>>> SubmitAppraisal([FromBody] SubmitAppraisalCommand command)
+    public async Task<ActionResult<Result<int>>> InitiateAppraisal([FromBody] HRMS.Application.Features.Performance.Appraisals.Commands.InitiateAppraisal.InitiateAppraisalCommand command)
     {
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تسليم التقييم الذاتي (Employee)
+    /// </summary>
+    [HttpPut("appraisals/{id}/self")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> SubmitSelfAppraisal(int id, [FromBody] HRMS.Application.Features.Performance.Appraisals.Commands.SubmitSelfAppraisal.SubmitSelfAppraisalCommand command)
+    {
+        command.AppraisalId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// تسليم تقييم المدير (Manager)
+    /// </summary>
+    [HttpPut("appraisals/{id}/manager")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Manager,Department_Manager")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> SubmitManagerAppraisal(int id, [FromBody] HRMS.Application.Features.Performance.Appraisals.Commands.SubmitManagerAppraisal.SubmitManagerAppraisalCommand command)
+    {
+        command.AppraisalId = id;
+        var result = await _mediator.Send(command);
+        return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// اعتماد التقييم النهائي (HR)
+    /// </summary>
+    [HttpPut("appraisals/{id}/finalize")]
+    [Authorize(Roles = "System_Admin,HR_Manager")]
+    [ProducesResponseType(typeof(Result<int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<int>>> FinalizeAppraisal(int id, [FromBody] HRMS.Application.Features.Performance.Appraisals.Commands.FinalizeAppraisal.FinalizeAppraisalCommand command)
+    {
+        command.AppraisalId = id;
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }

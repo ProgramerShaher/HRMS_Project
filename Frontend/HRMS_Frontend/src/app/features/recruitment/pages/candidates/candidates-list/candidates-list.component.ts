@@ -16,6 +16,7 @@ import { Candidate, CreateCandidateCommand, UpdateCandidateCommand } from '../..
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SelectModule } from 'primeng/select';
 import { FileUploadModule } from 'primeng/fileupload';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-candidates-list',
@@ -161,6 +162,12 @@ export class CandidatesListComponent implements OnInit {
     if (s.includes('instagram')) return 'Instagram';
     if (s.includes('x.com') || s.includes('twitter')) return 'X / Twitter';
     return 'رابط خارجي';
+  }
+
+  getFileUrl(path?: string): string {
+    if (!path) return '#';
+    const baseUrl = environment.apiUrl.replace('/api', '');
+    return `${baseUrl}/${path}`;
   }
 
   save() {

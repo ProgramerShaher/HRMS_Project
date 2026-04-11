@@ -94,19 +94,19 @@
         <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
              <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">إجراءات سريعة</h3>
              <div class="grid grid-cols-2 gap-4">
-                 <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                 <button [routerLink]="['/attendance/device']" class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
                      <i class="pi pi-clock text-2xl text-blue-600 mb-2"></i>
                      <span class="text-sm font-medium text-slate-700 dark:text-slate-300">تسجيل بصمة</span>
                  </button>
-                 <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                 <button [routerLink]="['/attendance/requests/new']" class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
                      <i class="pi pi-calendar-plus text-2xl text-purple-600 mb-2"></i>
                      <span class="text-sm font-medium text-slate-700 dark:text-slate-300">طلب إجازة</span>
                  </button>
-                  <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                  <button [routerLink]="['/attendance/my-roster']" class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
                      <i class="pi pi-users text-2xl text-amber-600 mb-2"></i>
                      <span class="text-sm font-medium text-slate-700 dark:text-slate-300">مناوبات</span>
                  </button>
-                  <button class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
+                  <button [routerLink]="['/attendance/reports']" class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-zinc-700">
                      <i class="pi pi-file-edit text-2xl text-emerald-600 mb-2"></i>
                      <span class="text-sm font-medium text-slate-700 dark:text-slate-300">تقارير</span>
                  </button>

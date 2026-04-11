@@ -1,19 +1,24 @@
+// ═══════════════════════════════════════════════════════
 // Leave Type Model
+// ═══════════════════════════════════════════════════════
 export interface LeaveType {
   leaveTypeId: number;
   leaveTypeNameAr: string;
-  nameEn?: string;
+  leaveTypeNameEn?: string;
   defaultDays: number;
   isDeductible: number;
   requiresAttachment: number;
+  isActive?: boolean;
 }
 
+// ═══════════════════════════════════════════════════════
 // Leave Request Model
+// ═══════════════════════════════════════════════════════
 export interface LeaveRequest {
   requestId?: number;
   employeeId: number;
   leaveTypeId: number;
-  startDate: string; // ISO date string
+  startDate: string;
   endDate: string;
   daysCount: number;
   reason: string;
@@ -22,22 +27,26 @@ export interface LeaveRequest {
   rejectionReason?: string;
   attachmentPath?: string;
   createdAt?: string;
-  
+
   // Navigation properties (populated from backend)
   leaveTypeName?: string;
   employeeName?: string;
+  employeeNumber?: string;
+  departmentName?: string;
+  approverComments?: string;
 }
 
-export enum LeaveRequestStatus {
-  PENDING = 'PENDING',
-  MANAGER_APPROVED = 'MANAGER_APPROVED',
-  HR_APPROVED = 'HR_APPROVED',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED'
-}
+export type LeaveRequestStatus =
+  | 'PENDING'
+  | 'MANAGER_APPROVED'
+  | 'HR_APPROVED'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'CANCELLED';
 
-// Leave Balance Model
+// ═══════════════════════════════════════════════════════
+// Leave Balance Models
+// ═══════════════════════════════════════════════════════
 export interface LeaveBalance {
   balanceId: number;
   employeeId: number;
@@ -45,6 +54,8 @@ export interface LeaveBalance {
   leaveTypeName: string;
   currentBalance: number;
   year: number;
+  entitlementDays?: number;
+  consumedDays?: number;
 }
 
 export interface EmployeeLeaveTypeBalance {
@@ -61,7 +72,28 @@ export interface EmployeeLeaveTypeBalance {
   remainingDays: number;
 }
 
+// ═══════════════════════════════════════════════════════
+// Balance Management DTOs
+// ═══════════════════════════════════════════════════════
+export interface InitializeBalancesDto {
+  leaveTypeId?: number;
+  year: number;
+  departmentId?: number;
+  customDays?: number;
+  enableProration?: boolean;
+}
+
+export interface AdjustBalanceCommand {
+  employeeId: number;
+  leaveTypeId: number;
+  year?: number;
+  adjustmentDays: number;
+  reason: string;
+}
+
+// ═══════════════════════════════════════════════════════
 // Leave Transaction Model
+// ═══════════════════════════════════════════════════════
 export interface LeaveTransaction {
   transactionId: number;
   employeeId: number;
@@ -75,15 +107,16 @@ export interface LeaveTransaction {
   referenceId?: number;
 }
 
-export enum TransactionType {
-  ACCRUAL = 'ACCRUAL',
-  DEDUCTION = 'DEDUCTION',
-  ADJUSTMENT = 'ADJUSTMENT',
-  CANCELLATION = 'CANCELLATION',
-  CARRY_FORWARD = 'CARRY_FORWARD'
-}
+export type TransactionType =
+  | 'ACCRUAL'
+  | 'DEDUCTION'
+  | 'ADJUSTMENT'
+  | 'CANCELLATION'
+  | 'CARRY_FORWARD';
 
+// ═══════════════════════════════════════════════════════
 // Public Holiday Model
+// ═══════════════════════════════════════════════════════
 export interface PublicHoliday {
   holidayId?: number;
   holidayNameAr: string;
@@ -92,7 +125,9 @@ export interface PublicHoliday {
   year: number;
 }
 
+// ═══════════════════════════════════════════════════════
 // API Response Wrapper
+// ═══════════════════════════════════════════════════════
 export interface ApiResponse<T> {
   data: T;
   succeeded: boolean;
@@ -101,7 +136,9 @@ export interface ApiResponse<T> {
   statusCode: number;
 }
 
-// Create Leave Request DTO
+// ═══════════════════════════════════════════════════════
+// Create/Action DTOs
+// ═══════════════════════════════════════════════════════
 export interface CreateLeaveRequestDto {
   employeeId: number;
   leaveTypeId: number;
@@ -111,7 +148,6 @@ export interface CreateLeaveRequestDto {
   attachmentPath?: string;
 }
 
-// Leave Request Filter
 export interface LeaveRequestFilter {
   employeeId?: number;
   status?: LeaveRequestStatus;
@@ -120,7 +156,9 @@ export interface LeaveRequestFilter {
   leaveTypeId?: number;
 }
 
+// ═══════════════════════════════════════════════════════
 // Dashboard Stats
+// ═══════════════════════════════════════════════════════
 export interface LeaveDashboardStats {
   totalEntitlement: number;
   totalRequestedDays: number;

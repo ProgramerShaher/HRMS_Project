@@ -7,35 +7,42 @@ export const leavesRoutes: Routes = [
     redirectTo: 'dashboard',
     pathMatch: 'full'
   },
+  // ─── لوحة التحكم الإدارية للإجازات ───────────────────────────────
   {
     path: 'dashboard',
     canActivate: [permissionGuard(['Leaves.View'])],
     loadComponent: () => import('./pages/dashboard/leave-dashboard.component').then(m => m.LeaveDashboardComponent),
-    data: { title: 'لوحة التحكم' }
+    data: { title: 'لوحة تحكم الإجازات' }
   },
-  {
-    path: 'my-leaves',
-    loadComponent: () => import('./pages/my-leaves/my-leaves.component').then(m => m.MyLeavesComponent),
-    data: { title: 'إجازاتي' }
-  },
+  // ─── اعتمادات الطلبات المعلقة ─────────────────────────────────────
   {
     path: 'approvals',
     canActivate: [permissionGuard(['Leaves.Approve'])],
     loadComponent: () => import('./pages/approvals/approvals.component').then(m => m.ApprovalsComponent),
     data: { title: 'الاعتمادات' }
   },
+  // ─── جميع طلبات الإجازة (إدارية) ──────────────────────────────────
   {
-    path: 'history',
+    path: 'all-requests',
     canActivate: [permissionGuard(['Leaves.View'])],
-    loadComponent: () => import('./pages/transaction-history/transaction-history.component').then(m => m.TransactionHistoryComponent),
-    data: { title: 'سجل الحركات' }
+    loadComponent: () => import('./pages/all-requests/all-requests.component').then(m => m.AllRequestsComponent),
+    data: { title: 'جميع طلبات الإجازة' }
   },
+  // ─── أرصدة الموظفين ───────────────────────────────────────────────
   {
     path: 'employee-balances',
     canActivate: [permissionGuard(['Leaves.Manage'])],
     loadComponent: () => import('./pages/employee-balances/employee-balances.component').then(m => m.EmployeeBalancesComponent),
     data: { title: 'أرصدة الموظفين' }
   },
+  // ─── سجل حركات الإجازات ───────────────────────────────────────────
+  {
+    path: 'history',
+    canActivate: [permissionGuard(['Leaves.View'])],
+    loadComponent: () => import('./pages/transaction-history/transaction-history.component').then(m => m.TransactionHistoryComponent),
+    data: { title: 'سجل الحركات' }
+  },
+  // ─── إعدادات أنواع الإجازات والعطل ───────────────────────────────
   {
     path: 'setup',
     canActivate: [permissionGuard(['Leaves.Manage'])],

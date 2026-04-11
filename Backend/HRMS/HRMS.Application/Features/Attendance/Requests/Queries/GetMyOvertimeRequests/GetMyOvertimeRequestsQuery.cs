@@ -17,7 +17,7 @@ public class GetMyOvertimeRequestsQueryHandler(IApplicationDbContext context) : 
     {
         var requests = await context.OvertimeRequests
             .Include(x => x.Employee)
-            .Where(x => x.EmployeeId == request.EmployeeId)
+            .Where(x => request.EmployeeId == 0 || x.EmployeeId == request.EmployeeId)
             .OrderByDescending(x => x.RequestDate)
             .Select(x => new OvertimeRequestDto
             {

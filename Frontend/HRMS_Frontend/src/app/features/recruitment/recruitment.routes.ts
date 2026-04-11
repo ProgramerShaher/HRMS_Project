@@ -27,6 +27,11 @@ export const RECRUITMENT_ROUTES: Routes = [
     title: 'عروض العمل'
   },
   {
+    path: 'reports',
+    loadComponent: () => import('./pages/reports/recruitment-reports.component').then(c => c.RecruitmentReportsComponent),
+    title: 'خرائط وتقارير التوظيف'
+  },
+  {
     path: '',
     redirectTo: 'vacancies',
     pathMatch: 'full'

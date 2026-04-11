@@ -1,127 +1,251 @@
-<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">الطلبات والإجراءات</h2>
+<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6 relative">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">سجل الطلبات والإجراءات</h2>
     <p-toast></p-toast>
 
     <p-tabs value="0">
         <p-tablist>
-            <p-tab value="0">تبديل مناوبة</p-tab>
-            <p-tab value="1">عمل إضافي</p-tab>
-            <p-tab value="2">سماحية / إذن</p-tab>
-            <p-tab value="3">تصحيح بصمة</p-tab>
+            <p-tab value="0">سجل الأذونات</p-tab>
+            <p-tab value="1">سجل الإضافي</p-tab>
+            <p-tab value="2">سجل التبديل</p-tab>
+            <p-tab value="3">سجل تصحيح البصمة</p-tab>
         </p-tablist>
         
         <p-tabpanels>
-            <!-- Swap Request Tab -->
+            <!-- Permissions History Tab -->
             <p-tabpanel value="0">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">
-                    <form [formGroup]="swapForm" (ngSubmit)="submitSwap()" class="space-y-4">
-                        <div class="field">
-                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف (طالب التبديل)</label>
-                            <p-select [options]="employees" formControlName="requesterId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
-                        </div>
-                        <div class="field">
-                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف البديل</label>
-                            <p-select [options]="employees" formControlName="targetEmployeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف البديل" styleClass="w-full"></p-select>
-                        </div>
-                        <div class="field">
-                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ المناوبة</label>
-                            <p-datepicker formControlName="rosterDate" [showIcon]="true" styleClass="w-full" inputStyleClass="w-full"></p-datepicker>
-                        </div>
-                        <div class="field">
-                            <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
-                            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
-                        </div>
-                        <div class="pt-4">
-                            <button pButton type="submit" label="إرسال الطلب" icon="pi pi-send" [disabled]="swapForm.invalid" class="p-button-primary w-full md:w-auto"></button>
-                        </div>
-                    </form>
-                    <div class="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-6">
-                        <h3 class="font-bold text-blue-800 dark:text-blue-300 mb-2">تعليمات التبديل</h3>
-                        <ul class="list-disc list-inside text-sm text-blue-700 dark:text-blue-400 space-y-2">
-                            <li>يجب اختيار موظف لديه نفس المسمى الوظيفي.</li>
-                            <li>لا يمكن التبديل في تواريخ سابقة.</li>
-                            <li>يتطلب الطلب موافقة المدير والموظف البديل.</li>
-                        </ul>
-                    </div>
+                <div class="flex justify-end mb-4">
+                    <button pButton icon="pi pi-plus" label="طلب إذن جديد" class="p-button-help p-button-sm" (click)="showPermissionDialog = true; permissionForm.reset()"></button>
                 </div>
+                <p-table [value]="myPermissions" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-striped">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>الموظف</th>
+                            <th>التاريخ</th>
+                            <th>ساعات</th>
+                            <th>السبب</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-req>
+                        <tr>
+                            <td>#{{ req.permissionRequestId }}</td>
+                            <td class="font-bold">{{ req.employeeName }}</td>
+                            <td>{{ req.permissionDate | date:'mediumDate' }}</td>
+                            <td>{{ req.hours }} ساعة</td>
+                            <td>{{ req.reason }}</td>
+                            <td>
+                                <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status"></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr><td colspan="6" class="text-center p-8 text-slate-400">لا يوجد سجل أذونات</td></tr>
+                    </ng-template>
+                </p-table>
             </p-tabpanel>
 
-            <!-- Overtime Request Tab -->
+            <!-- Overtime Tab -->
             <p-tabpanel value="1">
-                <form [formGroup]="overtimeForm" (ngSubmit)="submitOvertime()" class="max-w-xl space-y-4 pt-4">
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
-                        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">التاريخ</label>
-                        <p-datepicker formControlName="workDate" [showIcon]="true" styleClass="w-full"></p-datepicker>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">عـدد الساعات</label>
-                        <p-inputNumber formControlName="hoursRequested" [min]="1" [max]="12" suffix=" ساعة" styleClass="w-full"></p-inputNumber>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">مبرر العمل الإضافي</label>
-                        <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
-                    </div>
-                    <button pButton type="submit" label="طلب إضافي" icon="pi pi-plus-circle" [disabled]="overtimeForm.invalid"></button>
-                </form>
+                <div class="flex justify-end mb-4">
+                    <button pButton icon="pi pi-plus" label="طلب إضافي جديد" class="p-button-primary p-button-sm" (click)="showOvertimeDialog = true; overtimeForm.reset()"></button>
+                </div>
+                <p-table [value]="myOvertimes" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-striped">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>الموظف</th>
+                            <th>تاريخ العمل</th>
+                            <th>ساعات (مطلوبة)</th>
+                            <th>السبب</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-req>
+                        <tr>
+                            <td>#{{ req.overtimeRequestId }}</td>
+                            <td class="font-bold">{{ req.employeeName }}</td>
+                            <td>{{ req.requestDate | date:'mediumDate' }}</td>
+                            <td>{{ req.hoursRequested }} ساعة</td>
+                            <td>{{ req.reason }}</td>
+                            <td>
+                                <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status"></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr><td colspan="6" class="text-center p-8 text-slate-400">لا يوجد طلبات عمل إضافي</td></tr>
+                    </ng-template>
+                </p-table>
             </p-tabpanel>
 
-            <!-- Permission Request Tab -->
+            <!-- Swap Tab -->
             <p-tabpanel value="2">
-                 <form [formGroup]="permissionForm" (ngSubmit)="submitPermission()" class="max-w-xl space-y-4 pt-4">
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
-                        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الإذن</label>
-                        <p-datepicker formControlName="permissionDate" [showIcon]="true" [showTime]="true" styleClass="w-full"></p-datepicker>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">نوع الإذن</label>
-                        <p-select [options]="permissionTypes" formControlName="permissionType" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">المدة (ساعات)</label>
-                        <p-inputNumber formControlName="hours" [min]="0.5" [step]="0.5" suffix=" ساعة" styleClass="w-full"></p-inputNumber>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
-                        <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
-                    </div>
-                    <button pButton type="submit" label="إرسال طلب إذن" icon="pi pi-clock" [disabled]="permissionForm.invalid" class="p-button-help"></button>
-                </form>
+                <div class="flex justify-end mb-4">
+                    <button pButton icon="pi pi-plus" label="طلب تبديل جديد" class="p-button-success p-button-sm" (click)="showSwapDialog = true; swapForm.reset()"></button>
+                </div>
+                <p-table [value]="mySwaps" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-striped">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>طالب التبديل</th>
+                            <th>البديل</th>
+                            <th>تاريخ التبديل</th>
+                            <th>السبب</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-req>
+                        <tr>
+                            <td>#{{ req.swapRequestId }}</td>
+                            <td class="font-bold">{{ req.requesterName }}</td>
+                            <td class="font-bold text-blue-600">{{ req.targetEmployeeName }}</td>
+                            <td>{{ req.rosterDate | date:'mediumDate' }}</td>
+                            <td>{{ req.reason }}</td>
+                            <td>
+                                <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status"></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr><td colspan="6" class="text-center p-8 text-slate-400">لا يوجد طلبات تبديل مناوبة</td></tr>
+                    </ng-template>
+                </p-table>
             </p-tabpanel>
 
-            <!-- Correction Request Tab -->
+            <!-- Correction Tab -->
             <p-tabpanel value="3">
-                 <form [formGroup]="correctionForm" (ngSubmit)="submitCorrection()" class="max-w-xl space-y-4 pt-4">
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
-                        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الواقعة</label>
-                        <p-datepicker formControlName="attendanceDate" [showIcon]="true" styleClass="w-full"></p-datepicker>
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">نوع التصحيح</label>
-                        <p-select [options]="correctionTypes" formControlName="correctionType" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
-                    </div>
-                     <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">الوقت الصحيح</label>
-                        <input pInputText type="time" formControlName="newValue" class="w-full" />
-                    </div>
-                    <div class="field">
-                        <label class="block text-sm font-medium mb-1 dark:text-gray-300">ملاحظات / مبرر</label>
-                        <textarea pTextarea formControlName="auditNote" rows="3" class="w-full"></textarea>
-                    </div>
-                    <button pButton type="submit" label="إرسال للتصحيح" icon="pi pi-check-square" [disabled]="correctionForm.invalid" class="p-button-warning"></button>
-                </form>
+                <div class="flex justify-end mb-4">
+                    <button pButton icon="pi pi-plus" label="طلب تصحيح جديد" class="p-button-warning p-button-sm" (click)="showCorrectionDialog = true; correctionForm.reset()"></button>
+                </div>
+                 <div class="text-center p-8 text-slate-400">
+                     (سجل التصحيحات متاح في تقرير الإدارة)
+                 </div>
             </p-tabpanel>
         </p-tabpanels>
     </p-tabs>
 </div>
+
+<!-- ================= Dialogs ================= -->
+
+<!-- Permission Dialog -->
+<p-dialog header="طلب إذن جديد" [(visible)]="showPermissionDialog" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <form [formGroup]="permissionForm" (ngSubmit)="submitPermission()" class="space-y-4 pt-4">
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
+            <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الإذن (يشمل وقت البدء)</label>
+                <p-datepicker formControlName="permissionDate" [showIcon]="true" [showTime]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">المدة (ساعات)</label>
+                <p-inputNumber formControlName="hours" [min]="0.5" [step]="0.5" suffix=" ساعة" styleClass="w-full"></p-inputNumber>
+            </div>
+        </div>
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">نوع الإذن</label>
+            <p-select [options]="permissionTypes" formControlName="permissionType" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+        </div>
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
+            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-4">
+            <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showPermissionDialog = false"></button>
+            <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="permissionForm.invalid" class="p-button-help"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Overtime Dialog -->
+<p-dialog header="طلب تمتين إضافي" [(visible)]="showOvertimeDialog" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <form [formGroup]="overtimeForm" (ngSubmit)="submitOvertime()" class="space-y-4 pt-4">
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
+            <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ العمل</label>
+                <p-datepicker formControlName="workDate" [showIcon]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">عـدد الساعات</label>
+                <p-inputNumber formControlName="hoursRequested" [min]="1" [max]="12" suffix=" ساعة" styleClass="w-full"></p-inputNumber>
+            </div>
+        </div>
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">مبرر العمل الإضافي</label>
+            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-4">
+            <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showOvertimeDialog = false"></button>
+            <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="overtimeForm.invalid" class="p-button-primary"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Swap Dialog -->
+<p-dialog header="طلب تبديل مناوبة" [(visible)]="showSwapDialog" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <form [formGroup]="swapForm" (ngSubmit)="submitSwap()" class="space-y-4 pt-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف (طالب التبديل)</label>
+                <p-select [options]="employees" formControlName="requesterId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف البديل</label>
+                <p-select [options]="employees" formControlName="targetEmployeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف البديل" styleClass="w-full"></p-select>
+            </div>
+        </div>
+        <div class="field w-1/2 pr-2">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ المناوبة</label>
+            <p-datepicker formControlName="rosterDate" [showIcon]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+        </div>
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
+            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-4">
+             <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showSwapDialog = false"></button>
+             <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="swapForm.invalid" class="p-button-success"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Correction Dialog -->
+<p-dialog header="طلب تصحيح بصمة" [(visible)]="showCorrectionDialog" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <form [formGroup]="correctionForm" (ngSubmit)="submitCorrection()" class="space-y-4 pt-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
+                <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الواقعة المراد تصحيحها</label>
+                <p-datepicker formControlName="attendanceDate" [showIcon]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">نوع التصحيح</label>
+                <p-select [options]="correctionTypes" formControlName="correctionType" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+            </div>
+            <div class="field">
+                <label class="block text-sm font-medium mb-1 dark:text-gray-300">الوقت الصحيح</label>
+                <input pInputText type="time" formControlName="newValue" class="w-full" />
+            </div>
+        </div>
+        <div class="field">
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300">ملاحظات للمدقق</label>
+            <textarea pTextarea formControlName="auditNote" rows="3" class="w-full"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-4">
+            <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showCorrectionDialog = false"></button>
+            <button pButton type="submit" label="تصحيح الآن" icon="pi pi-check" [disabled]="correctionForm.invalid" class="p-button-warning"></button>
+        </div>
+    </form>
+</p-dialog>

@@ -4,7 +4,9 @@ using HRMS.Core.Utilities;
 namespace HRMS.Application.Features.Attendance.Commands.ManualCorrection;
 
 public record ManualCorrectionCommand(
-    long DailyAttendanceId,
+    int EmployeeId,
+    DateTime AttendanceDate,
+    long? DailyAttendanceId,
     string CorrectionType, // "InTime", "OutTime", "Status"
     string NewValue,
     string AuditNote

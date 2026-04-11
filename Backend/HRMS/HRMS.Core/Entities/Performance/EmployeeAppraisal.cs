@@ -51,9 +51,12 @@ namespace HRMS.Core.Entities.Performance
         [Column("GRADE")]
         public string? Grade { get; set; }
 
+        /// <summary>
+        /// حالة التقييم (NOT_STARTED, SELF_EVALUATION, MANAGER_EVALUATION, HR_REVIEW, COMPLETED)
+        /// </summary>
         [MaxLength(20)]
         [Column("STATUS")]
-        public string? Status { get; set; } = "DRAFT";
+        public string? Status { get; set; } = "NOT_STARTED";
 
         [MaxLength(500)]
         [Column("EMPLOYEE_COMMENT")]

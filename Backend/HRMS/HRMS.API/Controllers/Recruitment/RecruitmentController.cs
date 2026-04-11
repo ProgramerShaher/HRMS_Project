@@ -28,6 +28,7 @@ using HRMS.Application.Features.Recruitment.Config.Queries.GetJobGrades;
 using HRMS.Application.Features.Recruitment.Config.Queries.GetRejectionReasons;
 using HRMS.Application.Features.Recruitment.Candidates.Commands.Update;
 using HRMS.Application.Features.Recruitment.Candidates.Commands.Delete;
+using HRMS.Application.Features.Recruitment.Reports.Queries.GetRecruitmentReports;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -458,23 +459,13 @@ public class RecruitmentController : ControllerBase
     }
 
     /// <summary>
-    /// إحصائيات التوظيف
+    /// إحصائيات وتقارير التوظيف المتقدمة
     /// </summary>
     [HttpGet("stats")]
+    [ProducesResponseType(typeof(Result<RecruitmentReportsDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRecruitmentStats()
     {
-         // TODO: Implement proper statistics query
-        return Ok(new
-        {
-            data = new
-            {
-                totalVacancies = 0,
-                activeCandidates = 0,
-                pendingOffers = 0,
-                hiredThisMonth = 0
-            },
-            succeeded = true,
-            message = "تمت العملية بنجاح"
-        });
+        var result = await _mediator.Send(new GetRecruitmentReportsQuery());
+        return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 }

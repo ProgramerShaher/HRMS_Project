@@ -19,7 +19,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { PerformanceService } from '../../services/performance.service';
 import { PerformanceSetupService } from '../../../setup/services/performance-setup.service';
 import { EmployeeService } from '../../../personnel/services/employee.service';
-import { EmployeeViolation, RegisterViolationCommand } from '../../models/performance.model';
+import { EmployeeViolation, RegisterViolationCommand, UpdateViolationCommand } from '../../models/performance.model';
 import { ViolationType, DisciplinaryAction } from '../../../setup/models/performance-setup.model';
 
 @Component({
@@ -138,7 +138,14 @@ export class ViolationsComponent implements OnInit {
         };
 
         if (this.isEditMode && this.selectedViolationId) {
-            this.performanceService.updateViolation(this.selectedViolationId, command).subscribe(res => {
+            const updateCommand: UpdateViolationCommand = {
+                violationId: this.selectedViolationId,
+                violationTypeId: val.violationTypeId,
+                actionId: val.actionId,
+                description: val.description,
+                violationDate: val.violationDate
+            };
+            this.performanceService.updateViolation(this.selectedViolationId, updateCommand).subscribe(res => {
                 if (res.succeeded) {
                     this.messageService.add({ severity: 'success', summary: 'تم بنجاح', detail: 'تم تحديث البيانات' });
                     this.showDialog = false;
@@ -181,15 +188,15 @@ export class ViolationsComponent implements OnInit {
             return;
         }
 
-        const command: RegisterViolationCommand = {
-            employeeId: this.currentViolation.employeeId,
+        const updateCommand: UpdateViolationCommand = {
+            violationId: this.currentViolation.violationId,
             violationTypeId: this.currentViolation.violationTypeId,
             actionId: actionId,
             violationDate: this.currentViolation.violationDate,
             description: val.description
         };
 
-        this.performanceService.updateViolation(this.currentViolation.violationId, command).subscribe(res => {
+        this.performanceService.updateViolation(this.currentViolation.violationId, updateCommand).subscribe(res => {
             if (res.succeeded) {
                 this.messageService.add({ severity: 'success', summary: 'تم بنجاح', detail: 'تم تحديد الإجراء المقترح بنجاح' });
                 this.showActionDialog = false;

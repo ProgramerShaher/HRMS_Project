@@ -135,6 +135,17 @@ export interface AttendanceExceptionDto {
     issue: string;
 }
 
+export interface DeviceEmployeeDto {
+    employeeId: number;
+    employeeNumber: string;
+    fullNameAr: string;
+    jobTitle: string;
+    currentShift: string;
+    lastPunchIn?: string;
+    lastPunchOut?: string;
+    status: string;
+}
+
 export interface ManualCorrectionCommand {
     dailyAttendanceId: number;
     correctionType: string;

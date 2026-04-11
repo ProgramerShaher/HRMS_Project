@@ -31,18 +31,28 @@ public class PerformanceMappingProfile : Profile
         // ═══════════════════════════════════════════════════════════
         
         CreateMap<EmployeeAppraisal, EmployeeAppraisalDto>()
-            .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => 
+            .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src =>
                 src.Employee != null ? src.Employee.FullNameAr : string.Empty))
-            .ForMember(dest => dest.CycleName, opt => opt.MapFrom(src => 
+            .ForMember(dest => dest.CycleName, opt => opt.MapFrom(src =>
                 src.Cycle != null ? src.Cycle.CycleNameAr : string.Empty))
-            .ForMember(dest => dest.EvaluatorName, opt => opt.MapFrom(src => 
+            // ✅ FIX: تاريخ بداية ونهاية الدورة
+            .ForMember(dest => dest.CycleStartDate, opt => opt.MapFrom(src =>
+                src.Cycle != null ? src.Cycle.StartDate : default(DateTime)))
+            .ForMember(dest => dest.CycleEndDate, opt => opt.MapFrom(src =>
+                src.Cycle != null ? src.Cycle.EndDate : default(DateTime)))
+            // ✅ FIX: اسم المُقيّم (كان مفقوداً)
+            .ForMember(dest => dest.EvaluatorName, opt => opt.MapFrom(src =>
                 src.Evaluator != null ? src.Evaluator.FullNameAr : string.Empty))
             .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.Details));
 
         CreateMap<AppraisalDetail, AppraisalDetailDto>()
-            .ForMember(dest => dest.KpiName, opt => opt.MapFrom(src => 
+            .ForMember(dest => dest.KpiName, opt => opt.MapFrom(src =>
                 src.Kpi != null ? src.Kpi.KpiNameAr : string.Empty))
-            .ForMember(dest => dest.Weight, opt => opt.Ignore()); // لا يوجد Weight في KPI entity
+            // ✅ FIX: تعيين الوزن من الـ KPI
+            .ForMember(dest => dest.Weight, opt => opt.MapFrom(src =>
+                src.Kpi != null ? src.Kpi.Weight : 0))
+            .ForMember(dest => dest.KpiCategory, opt => opt.MapFrom(src =>
+                src.Kpi != null ? src.Kpi.Category : null));
 
         // ═══════════════════════════════════════════════════════════
         // MASTER DATA MAPPINGS - WITH DEFAULT VALUES (NO NULLS)
@@ -58,16 +68,16 @@ public class PerformanceMappingProfile : Profile
             .ForMember(dest => dest.DeductionDays, opt => opt.MapFrom(src => src.DeductionDays))
             .ForMember(dest => dest.IsTermination, opt => opt.MapFrom(src => src.IsTermination == 1));
         
-        // KPI Mapping - Direct mapping since DTO matches Entity
+        // ✅ FIX: KPI Mapping - يشمل Weight و TargetJobType
         CreateMap<KpiLibrary, KpiDto>()
             .ForMember(dest => dest.KpiDescription, opt => opt.MapFrom(src => src.KpiDescription ?? ""))
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category ?? ""))
-            .ForMember(dest => dest.MeasurementUnit, opt => opt.MapFrom(src => src.MeasurementUnit ?? ""));
+            .ForMember(dest => dest.MeasurementUnit, opt => opt.MapFrom(src => src.MeasurementUnit ?? ""))
+            .ForMember(dest => dest.Weight, opt => opt.MapFrom(src => src.Weight));
 
-        // AppraisalCycle Mapping
+        // ✅ FIX: AppraisalCycle Mapping - CycleNameAr مباشرة
         CreateMap<AppraisalCycle, AppraisalCycleDto>()
-            .ForMember(dest => dest.CycleName, opt => opt.MapFrom(src => src.CycleNameAr))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => 
-                src.IsActive == 1 ? "ACTIVE" : "INACTIVE")); // تحويل IsActive إلى Status
+            .ForMember(dest => dest.CycleNameAr, opt => opt.MapFrom(src => src.CycleNameAr))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
     }
 }

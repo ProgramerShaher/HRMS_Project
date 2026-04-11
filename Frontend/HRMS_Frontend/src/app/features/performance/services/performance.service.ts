@@ -7,71 +7,106 @@ import {
     EmployeeViolation,
     RegisterViolationCommand,
     EmployeeAppraisal,
-    SubmitAppraisalCommand
+    AppraisalCycle,
+    CreateCycleCommand,
+    KpiLibrary,
+    CreateKpiCommand,
+    SubmitSelfAppraisalCommand,
+    SubmitManagerAppraisalCommand,
+    FinalizeAppraisalCommand,
+    UpdateViolationCommand,
+    InitiateAppraisalCommand
 } from '../models/performance.model';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PerformanceService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/Performance`;
 
-    // 1. Violations
-    registerViolation(command: RegisterViolationCommand): Observable<Result<number>> {
-        return this.http.post<Result<number>>(`${this.apiUrl}/violations`, command);
+    // ── Appraisal Cycles ─────────────────────────────────────────────────────
+    getCycles(): Observable<Result<AppraisalCycle[]>> {
+        return this.http.get<Result<AppraisalCycle[]>>(`${this.apiUrl}/cycles`);
     }
 
-    approveViolation(id: number): Observable<Result<number>> {
-        return this.http.put<Result<number>>(`${this.apiUrl}/violations/${id}/approve`, {});
+    createCycle(cmd: CreateCycleCommand): Observable<Result<number>> {
+        return this.http.post<Result<number>>(`${this.apiUrl}/cycles`, cmd);
     }
 
-    updateViolation(id: number, command: RegisterViolationCommand): Observable<Result<number>> {
-        return this.http.put<Result<number>>(`${this.apiUrl}/violations/${id}`, command);
+    deleteCycle(id: number): Observable<Result<number>> {
+        return this.http.delete<Result<number>>(`${this.apiUrl}/cycles/${id}`);
     }
 
-    deleteViolation(id: number): Observable<Result<number>> {
-        return this.http.delete<Result<number>>(`${this.apiUrl}/violations/${id}`);
+    // ── KPI Library ──────────────────────────────────────────────────────────
+    getKpis(): Observable<Result<KpiLibrary[]>> {
+        return this.http.get<Result<KpiLibrary[]>>(`${this.apiUrl}/kpis`);
     }
 
-    getViolationById(id: number): Observable<Result<EmployeeViolation>> {
-        return this.http.get<Result<EmployeeViolation>>(`${this.apiUrl}/violations/${id}`);
+    createKpi(cmd: CreateKpiCommand): Observable<Result<number>> {
+        return this.http.post<Result<number>>(`${this.apiUrl}/kpis`, cmd);
     }
 
-    getViolations(employeeId?: number, status?: string): Observable<Result<EmployeeViolation[]>> {
+    updateKpi(id: number, cmd: CreateKpiCommand): Observable<Result<number>> {
+        return this.http.put<Result<number>>(`${this.apiUrl}/kpis/${id}`, cmd);
+    }
+
+    deleteKpi(id: number): Observable<Result<number>> {
+        return this.http.delete<Result<number>>(`${this.apiUrl}/kpis/${id}`);
+    }
+
+    // ── Appraisals ───────────────────────────────────────────────────────────
+    getAppraisals(employeeId?: number, cycleId?: number, phase?: string): Observable<Result<EmployeeAppraisal[]>> {
         let params = new HttpParams();
         if (employeeId) params = params.set('employeeId', employeeId.toString());
-        if (status) params = params.set('status', status);
-
-        return this.http.get<Result<EmployeeViolation[]>>(`${this.apiUrl}/violations`, { params });
+        if (cycleId) params = params.set('cycleId', cycleId.toString());
+        if (phase) params = params.set('phase', phase);
+        return this.http.get<Result<EmployeeAppraisal[]>>(`${this.apiUrl}/appraisals`, { params });
     }
 
-    getEmployeeViolations(employeeId: number): Observable<Result<EmployeeViolation[]>> {
-        return this.http.get<Result<EmployeeViolation[]>>(`${this.apiUrl}/violations/employee/${employeeId}`);
+    getAppraisalById(id: number): Observable<Result<EmployeeAppraisal>> {
+        return this.http.get<Result<EmployeeAppraisal>>(`${this.apiUrl}/appraisals/${id}`);
     }
 
-    // 2. Appraisals
-    submitAppraisal(command: SubmitAppraisalCommand): Observable<Result<number>> {
-        return this.http.post<Result<number>>(`${this.apiUrl}/appraisals`, command);
+    initiateAppraisal(cmd: InitiateAppraisalCommand): Observable<Result<number>> {
+        return this.http.post<Result<number>>(`${this.apiUrl}/appraisals/initiate`, cmd);
     }
 
-    updateAppraisal(id: number, command: SubmitAppraisalCommand): Observable<Result<number>> {
-        return this.http.put<Result<number>>(`${this.apiUrl}/appraisals/${id}`, command);
+    submitSelfAppraisal(id: number, cmd: SubmitSelfAppraisalCommand): Observable<Result<number>> {
+        return this.http.put<Result<number>>(`${this.apiUrl}/appraisals/${id}/self`, cmd);
+    }
+
+    submitManagerAppraisal(id: number, cmd: SubmitManagerAppraisalCommand): Observable<Result<number>> {
+        return this.http.put<Result<number>>(`${this.apiUrl}/appraisals/${id}/manager`, cmd);
+    }
+
+    finalizeAppraisal(id: number, cmd: FinalizeAppraisalCommand): Observable<Result<number>> {
+        return this.http.put<Result<number>>(`${this.apiUrl}/appraisals/${id}/finalize`, cmd);
     }
 
     deleteAppraisal(id: number): Observable<Result<number>> {
         return this.http.delete<Result<number>>(`${this.apiUrl}/appraisals/${id}`);
     }
 
-    getAppraisals(employeeId?: number, cycleId?: number): Observable<Result<EmployeeAppraisal[]>> {
+    // ── Violations ───────────────────────────────────────────────────────────
+    getViolations(employeeId?: number, status?: string): Observable<Result<EmployeeViolation[]>> {
         let params = new HttpParams();
         if (employeeId) params = params.set('employeeId', employeeId.toString());
-        if (cycleId) params = params.set('cycleId', cycleId.toString());
-
-        return this.http.get<Result<EmployeeAppraisal[]>>(`${this.apiUrl}/appraisals`, { params });
+        if (status) params = params.set('status', status);
+        return this.http.get<Result<EmployeeViolation[]>>(`${this.apiUrl}/violations`, { params });
     }
 
-    getAppraisalById(id: number): Observable<Result<EmployeeAppraisal>> {
-        return this.http.get<Result<EmployeeAppraisal>>(`${this.apiUrl}/appraisals/${id}`);
+    registerViolation(cmd: RegisterViolationCommand): Observable<Result<number>> {
+        return this.http.post<Result<number>>(`${this.apiUrl}/violations`, cmd);
+    }
+
+    approveViolation(id: number): Observable<Result<number>> {
+        return this.http.put<Result<number>>(`${this.apiUrl}/violations/${id}/approve`, {});
+    }
+
+    updateViolation(id: number, cmd: UpdateViolationCommand): Observable<Result<number>> {
+        return this.http.put<Result<number>>(`${this.apiUrl}/violations/${id}`, cmd);
+    }
+
+    deleteViolation(id: number): Observable<Result<number>> {
+        return this.http.delete<Result<number>>(`${this.apiUrl}/violations/${id}`);
     }
 }

@@ -41,31 +41,34 @@
                     
                     <!-- Absence -->
                     <td class="text-center">
-                        <span *ngIf="row.totalAbsenceDays > 0" class="px-2 py-1 rounded bg-red-100 text-red-700 font-bold text-xs">
+                        <span *ngIf="row.totalAbsenceDays > 0" class="px-2 py-1 rounded-md bg-red-100 text-red-700 font-bold text-xs">
                             {{ row.totalAbsenceDays }} يوم
                         </span>
-                        <span *ngIf="row.totalAbsenceDays === 0" class="text-slate-300">-</span>
+                        <span *ngIf="row.totalAbsenceDays === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
                     </td>
                     
                     <!-- Late -->
                     <td class="text-center">
-                        <span *ngIf="row.totalDeepLateMinutes + row.totalShortLateMinutes > 0" class="text-red-600 font-medium">
-                            {{ row.totalDeepLateMinutes + row.totalShortLateMinutes }}
+                        <span *ngIf="(row.totalDeepLateMinutes + row.totalShortLateMinutes) > 0" class="px-2 py-1 rounded-md bg-orange-100 text-orange-700 font-bold text-xs">
+                            {{ row.totalDeepLateMinutes + row.totalShortLateMinutes }} دقيقة
                         </span>
-                        <span *ngIf="row.totalDeepLateMinutes + row.totalShortLateMinutes === 0" class="text-slate-300">-</span>
+                        <span *ngIf="(row.totalDeepLateMinutes + row.totalShortLateMinutes) === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
                     </td>
                     
                     <!-- Deduction -->
-                    <td class="text-center font-bold text-red-600">
-                        {{ row.proposedDeductionAmount | currency:'USD':'symbol':'1.0-0' }}
+                    <td class="text-center">
+                        <span *ngIf="row.proposedDeductionAmount > 0" class="font-bold text-red-600">
+                            {{ row.proposedDeductionAmount | currency:'USD':'symbol':'1.0-0' }}
+                        </span>
+                        <span *ngIf="row.proposedDeductionAmount === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
                     </td>
                     
                     <!-- Overtime -->
                     <td class="text-center">
-                         <span *ngIf="row.totalOvertimeMinutes > 0" class="px-2 py-1 rounded bg-green-100 text-green-700 font-bold text-xs">
+                         <span *ngIf="row.totalOvertimeMinutes > 0" class="px-2 py-1 rounded-md bg-green-100 text-green-700 font-bold text-xs">
                             {{ row.totalOvertimeMinutes }} دقيقة
                         </span>
-                        <span *ngIf="row.totalOvertimeMinutes === 0" class="text-slate-300">-</span>
+                        <span *ngIf="row.totalOvertimeMinutes === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
                     </td>
                 </tr>
             </ng-template>

@@ -16,6 +16,10 @@ public class CreateKpiCommand : IRequest<Result<int>>
     public string? KpiDescription { get; set; }
     public string? Category { get; set; }
     public string? MeasurementUnit { get; set; }
+    /// <summary>الوزن النسبي لهذا المؤشر (0-100). مجموع كل الأوزان = 100</summary>
+    public decimal Weight { get; set; } = 1.0m;
+    /// <summary>التصنيف الوظيفي المستهدف (NURSE, ADMIN, DOCTOR, ALL)</summary>
+    public string? TargetJobType { get; set; } = "ALL";
 }
 
 public class CreateKpiCommandHandler : IRequestHandler<CreateKpiCommand, Result<int>>
@@ -45,6 +49,7 @@ public class CreateKpiCommandHandler : IRequestHandler<CreateKpiCommand, Result<
             KpiDescription = request.KpiDescription,
             Category = request.Category,
             MeasurementUnit = request.MeasurementUnit,
+            Weight = request.Weight,
             CreatedBy = _currentUserService.UserId,
             CreatedAt = DateTime.UtcNow
         };
@@ -71,5 +76,9 @@ public class CreateKpiCommandValidator : AbstractValidator<CreateKpiCommand>
         RuleFor(x => x.MeasurementUnit)
             .MaximumLength(20).WithMessage("وحدة القياس لا يمكن أن تتجاوز 20 حرف")
             .When(x => !string.IsNullOrEmpty(x.MeasurementUnit));
+
+        RuleFor(x => x.Weight)
+            .GreaterThan(0).WithMessage("الوزن يجب أن يكون أكبر من صفر")
+            .LessThanOrEqualTo(100).WithMessage("الوزن لا يمكن أن يتجاوز 100");
     }
 }

@@ -15,6 +15,7 @@ public record PayrollAttendanceSummaryDto
     public int TotalSickLeaveDays { get; init; }
     public int TotalUnpaidLeaveDays { get; init; }
     public int TotalOvertimeMinutes { get; init; }
+    public decimal TotalOvertimeAmount { get; init; }
     public decimal ProposedDeductionAmount { get; init; } // Placeholder logic
 }
 

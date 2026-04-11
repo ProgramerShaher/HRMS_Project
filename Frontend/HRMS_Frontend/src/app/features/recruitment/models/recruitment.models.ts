@@ -133,6 +133,28 @@ export interface Interview {
   feedback?: string;
 }
 
+export interface RecruitmentSummary {
+  totalCandidates: number;
+  openVacancies: number;
+  activeApplications: number;
+  hiredThisMonth: number;
+  upcomingInterviews: number;
+}
+
+export interface ChartItem {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+export interface RecruitmentReports {
+  summary: RecruitmentSummary;
+  candidatesByStatus: ChartItem[];
+  candidatesBySource: ChartItem[];
+  vacanciesByDepartment: ChartItem[];
+  applicationPipeline: ChartItem[];
+}
+
 export interface ScheduleInterviewCommand {
   appId: number;
   interviewerId?: number;

@@ -2,9 +2,16 @@
   
   <!-- Modern Header Section -->
   <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 no-print">
-    <div class="space-y-2">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
-        <i class="pi pi-chart-bar"></i> التحليلات المالية
+      <div class="flex items-center gap-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
+          <i class="pi pi-chart-bar"></i> التحليلات المالية
+        </div>
+        @if (reportData()) {
+          <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border"
+                [ngClass]="reportData()!.isFinalized ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200 animate-pulse'">
+            {{ reportData()!.isFinalized ? 'تقرير معتمد' : 'عرض تقديري (مسودة)' }}
+          </span>
+        }
       </div>
       <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">التقرير الشهري للرواتب</h1>
       <p class="text-lg text-slate-500 dark:text-zinc-400 max-w-2xl">نظرة عميقة على توزيع الميزانية وأداء القوى العاملة حسب الأقسام</p>
@@ -61,8 +68,11 @@
           </div>
         </div>
         <div class="mt-4 flex items-center gap-2 text-xs">
-          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30">دقة عالية</span>
-          <span class="text-slate-400">بناءً على المعالجة الأخيرة</span>
+          <span class="px-2 py-0.5 rounded-full font-bold" 
+                [ngClass]="reportData()!.isFinalized ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">
+            {{ reportData()!.isFinalized ? 'دقة مالية' : 'بيانات تقديرية' }}
+          </span>
+          <span class="text-slate-400">{{ reportData()!.isFinalized ? 'بناءً على المعالجة المعتمدة' : 'بناءً على الهيكل الحالي' }}</span>
         </div>
       </div>
 
@@ -187,9 +197,11 @@
         <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
           <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full -mb-16 -mr-16 blur-2xl"></div>
           <i class="pi pi-info-circle text-blue-400 text-3xl mb-4 block"></i>
-          <h4 class="font-bold text-lg mb-2">تأكيد البيانات</h4>
+          <h4 class="font-bold text-lg mb-2">{{ reportData()!.isFinalized ? 'تأكيد البيانات' : 'ملاحظة العرض التقديري' }}</h4>
           <p class="text-slate-400 text-sm leading-relaxed">
-            هذه البيانات تعكس الأرقام النهائية بعد احتساب جميع متغيرات الرواتب، بما في ذلك الحضور، الإضافي، وجزاءات الغياب.
+            {{ reportData()!.isFinalized 
+               ? 'هذه البيانات تعكس الأرقام النهائية بعد احتساب جميع متغيرات الرواتب، بما في ذلك الحضور، الإضافي، وجزاءات الغياب.'
+               : 'هذا العرض تقديري بناءً على الرواتب الأساسية والبدلات الثابتة والأقساط النشطة. الأرقام النهائية قد تختلف بعد معالجة الحضور والغياب.' }}
           </p>
           <button class="mt-6 text-xs font-bold text-blue-400 flex items-center gap-2 hover:gap-3 transition-all no-print">
             عرض الأرشيف السابق <i class="pi pi-arrow-left"></i>
@@ -249,7 +261,12 @@
               </span>
             </td>
             <td class="text-center">
-              <i class="pi" [ngClass]="dept.totalNetSalaries > 0 ? 'pi-check-circle text-emerald-500' : 'pi-exclamation-triangle text-amber-500'"></i>
+              <i class="pi" 
+                 [ngClass]="{
+                   'pi-check-circle text-emerald-500': reportData()!.isFinalized,
+                   'pi-clock text-amber-500': !reportData()!.isFinalized
+                 }"
+                 [pTooltip]="reportData()!.isFinalized ? 'تمت المعالجة واعتماده' : 'عرض تقديري لم يعالج بعد'"></i>
             </td>
           </tr>
         </ng-template>
@@ -268,4 +285,3 @@
       <p-button label="محاولة تحديث البيانات" icon="pi pi-refresh" [rounded]="true" (onClick)="loadReport()"></p-button>
     </div>
   }
-</div>

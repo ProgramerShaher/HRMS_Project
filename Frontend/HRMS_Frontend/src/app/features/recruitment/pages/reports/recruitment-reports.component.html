@@ -1,0 +1,135 @@
+<div class="p-6 bg-slate-50 min-h-screen">
+  <!-- Header -->
+  <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <h1 class="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+        <i class="pi pi-chart-bar text-violet-600 text-3xl"></i>
+        تقارير التوظيف الذكية
+      </h1>
+      <p class="text-slate-500 font-medium mt-1">تحليل شامل لبيانات الاستقطاب والتعيين</p>
+    </div>
+    <div class="flex gap-3">
+      <button (click)="loadReports()" class="p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-2 text-slate-700 font-bold">
+        <i class="pi pi-refresh" [ngClass]="{'animate-spin': loading()}"></i>
+        تحديث البيانات
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div *ngIf="reports() as r" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+      <div class="flex items-center justify-between relative z-10">
+        <div>
+          <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">إجمالي المرشحين</p>
+          <h3 class="text-3xl font-black text-slate-800">{{r.summary.totalCandidates}}</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center text-violet-600 shadow-sm group-hover:scale-110 transition-transform">
+          <i class="pi pi-users text-xl"></i>
+        </div>
+      </div>
+      <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-violet-50/30 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+      <div class="flex items-center justify-between relative z-10">
+        <div>
+          <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">الوظائف الشاغرة</p>
+          <h3 class="text-3xl font-black text-slate-800">{{r.summary.openVacancies}}</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
+          <i class="pi pi-briefcase text-xl"></i>
+        </div>
+      </div>
+      <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-50/30 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+      <div class="flex items-center justify-between relative z-10">
+        <div>
+          <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">طلبات نشطة</p>
+          <h3 class="text-3xl font-black text-slate-800">{{r.summary.activeApplications}}</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm group-hover:scale-110 transition-transform">
+          <i class="pi pi-bolt text-xl"></i>
+        </div>
+      </div>
+      <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-amber-50/30 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+      <div class="flex items-center justify-between relative z-10">
+        <div>
+          <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">مقابلات قادمة</p>
+          <h3 class="text-3xl font-black text-slate-800">{{r.summary.upcomingInterviews}}</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm group-hover:scale-110 transition-transform">
+          <i class="pi pi-calendar text-xl"></i>
+        </div>
+      </div>
+      <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-indigo-50/30 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden group">
+      <div class="flex items-center justify-between relative z-10">
+        <div>
+          <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">توظيف (خارج الشهر)</p>
+          <h3 class="text-3xl font-black text-slate-800">{{r.summary.hiredThisMonth}}</h3>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm group-hover:scale-110 transition-transform">
+          <i class="pi pi-check-circle text-xl"></i>
+        </div>
+      </div>
+      <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-50/30 rounded-full blur-2xl"></div>
+    </div>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Candidates by Status -->
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+      <h3 class="text-lg font-black text-slate-700 mb-6 flex items-center gap-2">
+        <i class="pi pi-info-circle text-violet-500"></i>
+        توزيع المرشحين حسب الحالة
+      </h3>
+      <div class="min-h-[300px]">
+        <p-chart type="pie" [data]="statusChartData" [options]="chartOptions" height="300px"></p-chart>
+      </div>
+    </div>
+
+    <!-- Vacancies by Department -->
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+      <h3 class="text-lg font-black text-slate-700 mb-6 flex items-center gap-2">
+        <i class="pi pi-building text-violet-500"></i>
+        الوظائف الشاغرة حسب الأقسام
+      </h3>
+      <div class="min-h-[300px]">
+        <p-chart type="bar" [data]="deptChartData" [options]="chartOptions" height="300px"></p-chart>
+      </div>
+    </div>
+
+    <!-- Source Doughnut -->
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+      <h3 class="text-lg font-black text-slate-700 mb-6 flex items-center gap-2">
+        <i class="pi pi-share-alt text-violet-500"></i>
+        مصادر استقطاب المرشحين
+      </h3>
+      <div class="min-h-[300px]">
+        <p-chart type="doughnut" [data]="sourceChartData" [options]="chartOptions" height="300px"></p-chart>
+      </div>
+    </div>
+
+    <!-- Pipeline Funnel -->
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+      <h3 class="text-lg font-black text-slate-700 mb-6 flex items-center gap-2">
+        <i class="pi pi-filter text-violet-500"></i>
+        قمع التوظيف الحالي (مراحل الطلبات)
+      </h3>
+      <div class="min-h-[300px]">
+        <p-chart type="bar" [data]="pipelineChartData" [options]="chartOptions" height="300px"></p-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-toast position="bottom-left"></p-toast>

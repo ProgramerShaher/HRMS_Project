@@ -17,7 +17,8 @@ public class RecruitmentMappingProfile : Profile
         
         CreateMap<Candidate, CandidateDto>()
             .ForMember(dest => dest.NationalityName, opt => opt.MapFrom(src => 
-                src.Nationality != null ? src.Nationality.CountryNameAr : null));
+                src.Nationality != null ? src.Nationality.CountryNameAr : null))
+            .ForMember(dest => dest.Resume, opt => opt.MapFrom(src => src.CvFilePath));
 
         // ═══════════════════════════════════════════════════════════
         // VACANCIES MAPPINGS

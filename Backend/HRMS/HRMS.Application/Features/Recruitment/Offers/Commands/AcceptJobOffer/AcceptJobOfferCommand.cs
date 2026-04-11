@@ -205,11 +205,17 @@ public class AcceptJobOfferCommandHandler : IRequestHandler<AcceptJobOfferComman
                 DepartmentId = vacancy.DeptId,
                 NationalityId = candidate.NationalityId,
                 
-                IsActive = true,
-                
                 CreatedBy = _currentUserService.UserId,
                 CreatedAt = DateTime.UtcNow
             };
+
+            // ✅ التحديث التلقائي لحالة الطلب إلى "تم التوظيف"
+            if (offer.Application != null)
+            {
+                offer.Application.Status = "HIRED";
+                offer.Application.UpdatedBy = _currentUserService.UserId;
+                offer.Application.UpdatedAt = DateTime.UtcNow;
+            }
 
             _context.Employees.Add(newEmployee);
             await _context.SaveChangesAsync(cancellationToken);

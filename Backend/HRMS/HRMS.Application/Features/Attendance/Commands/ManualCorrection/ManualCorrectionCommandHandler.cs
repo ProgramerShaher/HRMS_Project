@@ -18,12 +18,23 @@ public class ManualCorrectionCommandHandler : IRequestHandler<ManualCorrectionCo
 
     public async Task<Result<bool>> Handle(ManualCorrectionCommand request, CancellationToken cancellationToken)
     {
-        var record = await _context.DailyAttendances
-            .Include(d => d.Employee)
-            .FirstOrDefaultAsync(d => d.RecordId == request.DailyAttendanceId, cancellationToken);
+        DailyAttendance? record = null;
+        
+        if (request.DailyAttendanceId.HasValue && request.DailyAttendanceId.Value > 0)
+        {
+            record = await _context.DailyAttendances
+                .Include(d => d.Employee)
+                .FirstOrDefaultAsync(d => d.RecordId == request.DailyAttendanceId.Value, cancellationToken);
+        }
+        else
+        {
+            record = await _context.DailyAttendances
+                .Include(d => d.Employee)
+                .FirstOrDefaultAsync(d => d.EmployeeId == request.EmployeeId && d.AttendanceDate.Date == request.AttendanceDate.Date, cancellationToken);
+        }
 
         if (record == null)
-            return Result<bool>.Failure("سجل الحضور غير موجود", 404);
+            return Result<bool>.Failure($"سجل الحضور غير موجود للموظف في تاريخ {request.AttendanceDate:yyyy-MM-dd}", 404);
 
         string oldValue = string.Empty;
         string fieldName = request.CorrectionType;

@@ -1,46 +1,44 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import {
-  LeaveRequest,
-  CreateLeaveRequestDto,
-  ApiResponse,
-  LeaveDashboardStats
-} from '../models/leave.models';
+import { ApiResponse, CreateLeaveRequestDto, LeaveDashboardStats, LeaveRequest } from '../models/leave.models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class LeaveRequestService {
   private apiUrl = `${environment.apiUrl}/Leaves/Requests`;
 
   constructor(private http: HttpClient) {}
 
-  // Get employee's leave requests
+  /** GET /api/Leaves/Requests/employee/{id} */
   getEmployeeRequests(employeeId: number): Observable<ApiResponse<LeaveRequest[]>> {
     return this.http.get<ApiResponse<LeaveRequest[]>>(`${this.apiUrl}/employee/${employeeId}`);
   }
 
-  // Get pending requests (for managers)
+  /** GET /api/Leaves/Requests/all */
+  getAllRequests(): Observable<ApiResponse<LeaveRequest[]>> {
+    return this.http.get<ApiResponse<LeaveRequest[]>>(`${this.apiUrl}/all`);
+  }
+
+  /** GET /api/Leaves/Requests/pending */
   getPendingRequests(): Observable<ApiResponse<LeaveRequest[]>> {
     return this.http.get<ApiResponse<LeaveRequest[]>>(`${this.apiUrl}/pending`);
   }
 
-  // Create new leave request
+  /** POST /api/Leaves/Requests */
   createRequest(request: CreateLeaveRequestDto): Observable<ApiResponse<number>> {
     return this.http.post<ApiResponse<number>>(this.apiUrl, request);
   }
 
-  // Approve leave request
+  /** PUT /api/Leaves/Requests/{id}/approve */
   approveRequest(requestId: number, comments?: string): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.apiUrl}/${requestId}/approve`,
-      { requestId, approverComments: comments }
+      { requestId, approverComments: comments ?? '' }
     );
   }
 
-  // Reject leave request
+  /** PUT /api/Leaves/Requests/{id}/reject */
   rejectRequest(requestId: number, reason: string): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.apiUrl}/${requestId}/reject`,
@@ -48,7 +46,7 @@ export class LeaveRequestService {
     );
   }
 
-  // Cancel leave request
+  /** PUT /api/Leaves/Requests/{id}/cancel */
   cancelRequest(requestId: number): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.apiUrl}/${requestId}/cancel`,
@@ -56,12 +54,12 @@ export class LeaveRequestService {
     );
   }
 
-  // Get employee dashboard stats
+  /** GET /api/Leaves/Requests/stats/employee/{id} */
   getEmployeeStats(employeeId: number): Observable<ApiResponse<LeaveDashboardStats>> {
     return this.http.get<ApiResponse<LeaveDashboardStats>>(`${this.apiUrl}/stats/employee/${employeeId}`);
   }
 
-  // Get manager dashboard stats (for team overview)
+  /** GET /api/Leaves/Requests/stats/manager */
   getManagerStats(): Observable<ApiResponse<LeaveDashboardStats>> {
     return this.http.get<ApiResponse<LeaveDashboardStats>>(`${this.apiUrl}/stats/manager`);
   }

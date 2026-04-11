@@ -111,3 +111,26 @@ export interface PayrollDashboardStats {
   totalEarnings: number;
   totalAllowances: number;
 }
+
+export interface MonthlySummary {
+  month: number;
+  year: number;
+  totalEmployees: number;
+  totalBasicSalaries: number;
+  totalAllowances: number;
+  totalDeductions: number;
+  totalOvertimePayments: number;
+  totalNetSalaries: number;
+  isFinalized: boolean;
+  departmentBreakdown: DepartmentSummary[];
+}
+
+export interface DepartmentSummary {
+  departmentId: number;
+  departmentName: string;
+  employeeCount: number;
+  totalBasicSalaries: number;
+  totalAllowances: number;
+  totalDeductions: number;
+  totalNetSalaries: number;
+}

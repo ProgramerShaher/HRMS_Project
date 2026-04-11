@@ -10,6 +10,7 @@ using HRMS.Application.Features.Attendance.Queries.GetAttendanceStats;
 using HRMS.Application.Features.Attendance.Queries.GetDailyTimesheet;
 using HRMS.Application.Features.Attendance.Dashboard.Queries.GetLiveAttendanceStatus;
 using HRMS.Application.Features.Attendance.Dashboard.Queries.GetAttendanceExceptions;
+using HRMS.Application.Features.Attendance.Punch.Queries.GetDeviceEmployees;
 using HRMS.Application.Features.Attendance.Commands.ManualCorrection;
 using HRMS.Application.Features.Attendance.Reports.Queries.GetMonthlyPayrollSummary;
 using HRMS.Application.Features.Attendance.Requests.Permissions.Commands.CreatePermissionRequest;
@@ -55,6 +56,13 @@ public class AttendanceController : ControllerBase
     // ═══════════════════════════════════════════════════════════
     // SWAP LIFECYCLE
     // ═══════════════════════════════════════════════════════════
+    [HttpGet("device/employees")]
+    public async Task<ActionResult<Result<List<DeviceEmployeeDto>>>> GetDeviceEmployees()
+    {
+        var result = await _mediator.Send(new GetDeviceEmployeesQuery());
+        return Ok(result);
+    }
+
     [HttpPut("swap-requests")]
     public async Task<ActionResult<bool>> UpdateSwapRequest([FromBody] UpdateShiftSwapCommand command)
     {
@@ -222,9 +230,7 @@ public class AttendanceController : ControllerBase
     [HttpGet("my-roster")]
     public async Task<ActionResult<Result<List<MyRosterDto>>>> GetMyRoster()
     {
-         var userId = User.FindFirst("EmployeeId")?.Value;
-         if (userId == null) return Unauthorized(Result<List<MyRosterDto>>.Failure("EmployeeId claim not found"));
-
+         var userId = User.FindFirst("EmployeeId")?.Value ?? "0";
         var result = await _mediator.Send(new GetMyRosterQuery { EmployeeId = int.Parse(userId) });
         return Ok(result);
     }
@@ -232,9 +238,7 @@ public class AttendanceController : ControllerBase
     [HttpGet("my-permissions")]
     public async Task<ActionResult<Result<List<PermissionRequestDto>>>> GetMyPermissions()
     {
-         var userId = User.FindFirst("EmployeeId")?.Value;
-         if (userId == null) return Unauthorized(Result<List<PermissionRequestDto>>.Failure("EmployeeId claim not found"));
-
+         var userId = User.FindFirst("EmployeeId")?.Value ?? "0";
         var result = await _mediator.Send(new GetMyPermissionsQuery { EmployeeId = int.Parse(userId) });
         return Ok(result);
     }
@@ -242,9 +246,7 @@ public class AttendanceController : ControllerBase
     [HttpGet("my-overtime")]
     public async Task<ActionResult<Result<List<OvertimeRequestDto>>>> GetMyOvertime()
     {
-         var userId = User.FindFirst("EmployeeId")?.Value;
-         if (userId == null) return Unauthorized(Result<List<OvertimeRequestDto>>.Failure("EmployeeId claim not found"));
-
+         var userId = User.FindFirst("EmployeeId")?.Value ?? "0";
         var result = await _mediator.Send(new GetMyOvertimeRequestsQuery { EmployeeId = int.Parse(userId) });
         return Ok(result);
     }
@@ -252,9 +254,7 @@ public class AttendanceController : ControllerBase
     [HttpGet("my-swaps")]
     public async Task<ActionResult<Result<List<ShiftSwapRequestDto>>>> GetMySwaps()
     {
-         var userId = User.FindFirst("EmployeeId")?.Value;
-         if (userId == null) return Unauthorized(Result<List<ShiftSwapRequestDto>>.Failure("EmployeeId claim not found"));
-
+         var userId = User.FindFirst("EmployeeId")?.Value ?? "0";
         var result = await _mediator.Send(new GetMyShiftSwapRequestsQuery { EmployeeId = int.Parse(userId) });
         return Ok(result);
     }

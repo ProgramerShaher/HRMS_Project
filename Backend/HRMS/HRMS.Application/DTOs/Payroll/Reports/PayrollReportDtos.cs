@@ -14,6 +14,7 @@ public class MonthlyPayrollSummaryDto
     public decimal TotalDeductions { get; set; }
     public decimal TotalOvertimePayments { get; set; }
     public decimal TotalNetSalaries { get; set; }
+    public bool IsFinalized { get; set; }
     public List<DepartmentPayrollSummary> DepartmentBreakdown { get; set; } = new();
 }
 

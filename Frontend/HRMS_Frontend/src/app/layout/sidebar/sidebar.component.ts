@@ -135,8 +135,9 @@ export class SidebarComponent implements OnInit {
       permission: 'Leaves.View',
       children: [
         { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/leaves/dashboard', permission: 'Leaves.View' },
-        { label: 'إجازاتي', icon: 'pi pi-calendar', route: '/leaves/my-leaves' },
+        { label: 'جميع الطلبات', icon: 'pi pi-list', route: '/leaves/all-requests', permission: 'Leaves.View' },
         { label: 'الاعتمادات', icon: 'pi pi-check-square', route: '/leaves/approvals', permission: 'Leaves.Approve' },
+        { label: 'أرصدة الموظفين', icon: 'pi pi-users', route: '/leaves/employee-balances', permission: 'Leaves.Manage' },
         { label: 'سجل الحركات', icon: 'pi pi-history', route: '/leaves/history', permission: 'Leaves.View' },
         { label: 'إعدادات الإجازات', icon: 'pi pi-cog', route: '/leaves/setup', permission: 'Leaves.Manage' }
       ]
@@ -151,6 +152,7 @@ export class SidebarComponent implements OnInit {
         { label: 'طلبات التوظيف',    icon: 'pi pi-file-edit',       route: '/recruitment/applications' },
         { label: 'المقابلات',         icon: 'pi pi-calendar',        route: '/recruitment/interviews' },
         { label: 'عروض العمل',        icon: 'pi pi-envelope',        route: '/recruitment/offers' },
+        { label: 'تقارير وشاشات ذكية', icon: 'pi pi-chart-bar',       route: '/recruitment/reports' },
       ]
     },
     {
@@ -160,8 +162,11 @@ export class SidebarComponent implements OnInit {
       permission: 'Performance.View',
       children: [
         { label: 'لوحة التحكم', icon: 'pi pi-home', route: '/performance', permission: 'Performance.View' },
-        { label: 'المخالفات والجزاءات', icon: 'pi pi-exclamation-triangle', route: '/performance/violations', permission: 'Violations.View' },
-        { label: 'تقييم الأداء', icon: 'pi pi-star', route: '/performance/appraisals', permission: 'Performance.Evaluate' }
+        { label: 'تقييمي الذاتي', icon: 'pi pi-user-edit', route: '/performance/my-appraisals' },
+        { label: 'تقييم فريقي', icon: 'pi pi-users', route: '/performance/team-appraisals', permission: 'Performance.Evaluate' },
+        { label: 'إدارة التقييمات (HR)', icon: 'pi pi-verified', route: '/performance/appraisals', permission: 'Performance.Admin' },
+        { label: 'تحليلات الأداء', icon: 'pi pi-chart-bar', route: '/performance/analytics', permission: 'Performance.View' },
+        { label: 'المخالفات والجزاءات', icon: 'pi pi-exclamation-triangle', route: '/performance/violations', permission: 'Violations.View' }
       ]
     },
     { label: 'التقارير', icon: 'pi pi-chart-pie', route: '/reports', permission: 'Reports.View' },
