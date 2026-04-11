@@ -1,0 +1,58 @@
+:host ::v-deep {
+  .p-card {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .p-card-body {
+    padding: 0;
+  }
+
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  /* Custom input number styling for 1-5 scale */
+  .p-inputnumber-button {
+    background: transparent !important;
+    border: none !important;
+    color: #3b82f6 !important;
+    
+    &:hover {
+      background: #eff6ff !important;
+    }
+  }
+
+  .p-progressbar {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Glassmorphism for results card */
+  .result-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(79, 70, 229, 1) 100%);
+      backdrop-filter: blur(10px);
+  }
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.col-span-12, .col-span-4, .col-span-8 {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+/* RTL Adjustments for PrimeNG if needed, though standard flex/grid usually handles it */
+.font-bold {
+    font-weight: 700 !important;
+}

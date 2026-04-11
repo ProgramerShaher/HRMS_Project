@@ -29,6 +29,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using HRMS.Application.Features.Attendance.Queries.GetCorrectionHistory;
 using HRMS.Application.Features.Attendance.Roster.Queries.GetMyRoster;
+using HRMS.Application.Features.Attendance.Queries.GetAttendanceByRange;
 
 namespace HRMS.API.Controllers.Attendance;
 
@@ -116,6 +117,13 @@ public class AttendanceController : ControllerBase
     public async Task<ActionResult<Result<List<TimesheetDayDto>>>> GetTimesheet([FromQuery] int employeeId, [FromQuery] int month, [FromQuery] int year)
     {
         var result = await _mediator.Send(new GetDailyTimesheetQuery(employeeId, month, year));
+        return Ok(result);
+    }
+
+    [HttpGet("range")]
+    public async Task<ActionResult<Result<List<TimesheetDayDto>>>> GetAttendanceByRange([FromQuery] int employeeId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    {
+        var result = await _mediator.Send(new GetAttendanceByRangeQuery(employeeId, startDate, endDate));
         return Ok(result);
     }
 

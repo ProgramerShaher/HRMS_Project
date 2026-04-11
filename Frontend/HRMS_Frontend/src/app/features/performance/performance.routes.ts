@@ -49,12 +49,17 @@ export const PERFORMANCE_ROUTES: Routes = [
             .then(m => m.AppraisalsComponent)
     },
 
-    // ── Individual Appraisal Result Dashboard ─────────────────────────────────
     {
         path: 'appraisals/:id/result',
         canActivate: [permissionGuard(['Performance.View'])],
         loadComponent: () => import('./pages/appraisal-result/appraisal-result.component')
             .then(m => m.AppraisalResultComponent)
+    },
+    {
+        path: 'appraisals/:id/execute',
+        canActivate: [permissionGuard(['Performance.Evaluate'])],
+        loadComponent: () => import('./pages/appraisal-execution/appraisal-execution.component')
+            .then(m => m.AppraisalExecutionComponent)
     },
 
     // ── Violations ────────────────────────────────────────────────────────────

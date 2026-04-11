@@ -23,7 +23,7 @@ export interface Kpi {
 
 export interface AppraisalCycle {
   cycleId: number;
-  cycleName: string;
+  cycleNameAr: string;
   startDate: string; // ISO Date
   endDate: string; // ISO Date
   status: string;

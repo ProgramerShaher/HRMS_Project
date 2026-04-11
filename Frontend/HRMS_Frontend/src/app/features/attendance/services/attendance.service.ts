@@ -136,4 +136,12 @@ export class AttendanceService {
   getMySwapRequests(): Observable<Result<ShiftSwapRequestDto[]>> {
     return this.http.get<Result<ShiftSwapRequestDto[]>>(`${this.apiUrl}/my-swaps`);
   }
+
+  getAttendanceByRange(employeeId: number, from: Date, to: Date): Observable<Result<TimesheetDayDto[]>> {
+    const params = new HttpParams()
+      .set('employeeId', employeeId.toString())
+      .set('startDate', from.toISOString())
+      .set('endDate', to.toISOString());
+    return this.http.get<Result<TimesheetDayDto[]>>(`${this.apiUrl}/range`, { params });
+  }
 }
