@@ -17,7 +17,8 @@ public class RecruitmentMappingProfile : Profile
         
         CreateMap<Candidate, CandidateDto>()
             .ForMember(dest => dest.NationalityName, opt => opt.MapFrom(src => 
-                src.Nationality != null ? src.Nationality.CountryNameAr : null));
+                src.Nationality != null ? src.Nationality.CountryNameAr : null))
+            .ForMember(dest => dest.Resume, opt => opt.MapFrom(src => src.CvFilePath));
 
         // ═══════════════════════════════════════════════════════════
         // VACANCIES MAPPINGS
@@ -50,6 +51,7 @@ public class RecruitmentMappingProfile : Profile
         // ═══════════════════════════════════════════════════════════
         
         CreateMap<JobApplication, JobApplicationDto>()
+            .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.AppId))
             .ForMember(dest => dest.VacancyTitle, opt => opt.MapFrom(src => 
                 src.Vacancy != null ? src.Vacancy.Job.JobTitleAr : string.Empty))
             .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => 
@@ -60,6 +62,11 @@ public class RecruitmentMappingProfile : Profile
         // ═══════════════════════════════════════════════════════════
         
         CreateMap<JobOffer, JobOfferDto>()
+            .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.AppId))
+            .ForMember(dest => dest.CandidateId,   opt => opt.MapFrom(src =>
+                src.Application != null ? src.Application.CandidateId : 0))
+            .ForMember(dest => dest.VacancyId,     opt => opt.MapFrom(src =>
+                src.Application != null ? src.Application.VacancyId : 0))
             .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => 
                 src.Application != null && src.Application.Candidate != null 
                     ? src.Application.Candidate.FullNameEn 
@@ -69,14 +76,22 @@ public class RecruitmentMappingProfile : Profile
                     ? src.Application.Vacancy.Job.JobTitleAr 
                     : string.Empty))
             .ForMember(dest => dest.TotalPackage, opt => opt.MapFrom(src => 
-                (src.BasicSalary ?? 0) + (src.HousingAllowance ?? 0) + (src.TransportAllowance ?? 0)));
+                (src.BasicSalary ?? 0) + (src.HousingAllowance ?? 0) + (src.TransportAllowance ?? 0)
+                + (src.MedicalAllowance ?? 0) + (src.OtherAllowances ?? 0)));
 
         // ═══════════════════════════════════════════════════════════
         // INTERVIEWS MAPPINGS
         // ═══════════════════════════════════════════════════════════
         
         CreateMap<Interview, InterviewDto>()
-            .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => 
+            .ForMember(dest => dest.ApplicationId,  opt => opt.MapFrom(src => src.AppId))
+            .ForMember(dest => dest.CandidateId,    opt => opt.MapFrom(src =>
+                src.Application != null ? src.Application.CandidateId : 0))
+            .ForMember(dest => dest.InterviewDate,  opt => opt.MapFrom(src => src.ScheduledTime))
+            .ForMember(dest => dest.Status,         opt => opt.MapFrom(src => src.Status ?? "SCHEDULED"))
+            .ForMember(dest => dest.Score,          opt => opt.MapFrom(src => (decimal?)src.Rating))
+            .ForMember(dest => dest.Feedback,       opt => opt.MapFrom(src => src.ResultNotes))
+            .ForMember(dest => dest.CandidateName,  opt => opt.MapFrom(src => 
                 src.Application != null && src.Application.Candidate != null 
                     ? src.Application.Candidate.FullNameEn 
                     : string.Empty))

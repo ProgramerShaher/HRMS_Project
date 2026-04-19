@@ -147,6 +147,12 @@ public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Res
         };
 
         _context.JobOffers.Add(offer);
+
+        // ✅ التحديث التلقائي لحالة الطلب إلى "تم تقديم عرض"
+        application.Status = "OFFERED";
+        application.UpdatedBy = _currentUserService.UserId;
+        application.UpdatedAt = DateTime.UtcNow;
+
         await _context.SaveChangesAsync(cancellationToken);
 
         var totalPackage = request.BasicSalary + request.HousingAllowance + 

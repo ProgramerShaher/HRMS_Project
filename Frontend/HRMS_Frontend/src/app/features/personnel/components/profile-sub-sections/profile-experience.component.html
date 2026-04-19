@@ -1,102 +1,144 @@
-<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
-    <!-- Header -->
-    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
-        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
-            <i class="pi pi-briefcase text-teal-500 text-sm"></i>
-            الخبرات السابقة
-        </h3>
-        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showDialog()"></button>
+<p-toast position="top-center"></p-toast>
+<div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] border border-slate-200/60 shadow-lg p-4 relative group">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shadow-sm">
+                <i class="pi pi-briefcase text-base font-bold"></i>
+            </div>
+            <h3 class="text-base font-black text-slate-900">الخبرات العملية</h3>
+        </div>
+        <button (click)="showDialog()" 
+            class="flex items-center gap-1.5 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl shadow-md transition-all active:scale-95 text-[10px] font-bold">
+            <i class="pi pi-plus"></i>
+            إضافة خبرة
+        </button>
     </div>
+    
+    <div class="space-y-4">
+        <div *ngIf="experiences().length > 0" class="overflow-x-auto rounded-xl border border-slate-100">
+            <table class="w-full text-right">
+                <thead class="bg-slate-50/80 border-b border-slate-100">
+                    <tr>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">المنصب والشركة</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الفترة</th>
+                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    <tr *ngFor="let exp of experiences()" class="hover:bg-slate-50/50 transition-colors group/row">
+                        <td class="px-3 py-2">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-black text-slate-900">{{ exp.companyNameAr }}</span>
+                                <span class="text-[9px] text-slate-400 font-bold tracking-tight uppercase">{{ exp.jobTitleAr }}</span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1 text-[9px] font-bold">
+                                <span class="text-slate-400">{{ exp.startDate | date:'MMM yyyy' }}</span>
+                                <span class="text-slate-300">→</span>
+                                <span class="text-violet-600 bg-violet-50 px-1.5 rounded">{{ exp.isCurrent ? 'الحالي' : (exp.endDate | date:'MMM yyyy') }}</span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2">
+                            <div class="flex items-center gap-1">
+                                <button (click)="showEditDialog(exp)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-violet-600 hover:bg-violet-50 transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="pi pi-pencil text-[10px]"></i>
+                                </button>
+                                <button (click)="delete(exp.experienceId)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-red-600 hover:bg-red-50 transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="pi pi-trash text-[10px]"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Table -->
-    <p-table [value]="experiences()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
-        <ng-template pTemplate="header">
-            <tr class="text-xs text-slate-500 bg-slate-50/50">
-                <th class="!p-2 font-medium">المسمى الوظيفي</th>
-                <th class="!p-2 font-medium">جهة العمل</th>
-                <th class="!p-2 font-medium">الفترة</th>
-                <th class="!p-2 w-16 text-center"></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-exp>
-            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
-                <td class="!p-2 font-bold text-slate-700">{{ exp.jobTitleAr }}</td>
-                <td class="!p-2">
-                    <span class="px-1.5 py-0.5 rounded bg-teal-50 text-teal-600 text-[10px] font-bold border border-teal-100">{{ exp.companyNameAr }}</span>
-                </td>
-                <td class="!p-2">
-                    <div class="flex items-center gap-1 text-[10px] text-slate-500 font-mono">
-                        <span>{{ exp.startDate | date:'MM/yyyy' }}</span>
-                        <i class="pi pi-arrow-left text-[8px]"></i>
-                        <span *ngIf="exp.isCurrent" class="text-green-600 font-bold">الآن</span>
-                        <span *ngIf="!exp.isCurrent">{{ exp.endDate | date:'MM/yyyy' }}</span>
-                    </div>
-                </td>
-                <td class="!p-2 text-center">
-                    <div class="flex justify-center gap-1">
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-xs opacity-50 hover:opacity-100" (click)="delete(exp.experienceId)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="4" class="text-center py-4 text-slate-400 text-xs">
-                    لا توجد خبرات سابقة
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+        <div *ngIf="experiences().length === 0" class="py-8 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
+            <i class="pi pi-info-circle text-slate-300 text-2xl mb-2"></i>
+            <p class="text-[10px] font-bold text-slate-400">لا توجد خبرات سابقة مضافة</p>
+        </div>
+    </div>
 </div>
 
-<!-- Dialog -->
-<p-dialog [(visible)]="displayDialog" [header]="'إضافة خبرة عملية'" [modal]="true" [style]="{width: '600px'}" styleClass="p-fluid">
-    <form [formGroup]="expForm" class="flex flex-col gap-4 mt-2">
-        
-        <div class="field">
-            <label class="block text-sm font-medium mb-1">اسم الشركة / الجهة <span class="text-red-500">*</span></label>
-            <input pInputText formControlName="companyNameAr" placeholder="مثال: شركة أرامكو" />
-            <small class="text-red-500" *ngIf="submitted && expForm.get('companyNameAr')?.invalid">مطلوب</small>
-        </div>
-
-        <div class="field">
-            <label class="block text-sm font-medium mb-1">المسمى الوظيفي <span class="text-red-500">*</span></label>
-            <input pInputText formControlName="jobTitleAr" placeholder="مثال: مهندس برمجيات" />
-            <small class="text-red-500" *ngIf="submitted && expForm.get('jobTitleAr')?.invalid">مطلوب</small>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="field">
-                <label class="block text-sm font-medium mb-1">تاريخ البدء <span class="text-red-500">*</span></label>
-                <p-datePicker formControlName="startDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+<!-- Premium Dialog Style -->
+<p-dialog [(visible)]="displayDialog" 
+    [header]="isEditMode ? 'تعديل بيانات الخبرة' : 'إضافة خبرة عملية'" 
+    [modal]="true" 
+    [style]="{width: '500px', borderRadius: '24px', overflow: 'hidden'}" 
+    [draggable]="false" 
+    [resizable]="false"
+    styleClass="premium-dialog">
+    
+    <div class="pt-6 px-1 text-right">
+        <form [formGroup]="experienceForm" class="space-y-6">
+            
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">المنصب الوظيفي</label>
+                <div class="relative">
+                    <i class="pi pi-id-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText formControlName="jobTitleAr" placeholder="مثلاً: كبير مبرمجين، مدير تسويق..." 
+                        class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-violet-500/20 text-right" />
+                </div>
             </div>
-            <div class="field">
-                <label class="block text-sm font-medium mb-1">تاريخ الانتهاء</label>
-                <p-datePicker formControlName="endDate" appendTo="body" dateFormat="dd/mm/yy"></p-datePicker>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">الشركة / المؤسسة</label>
+                <div class="relative text-right">
+                    <i class="pi pi-building absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText formControlName="companyNameAr" placeholder="اسم جهة العمل السابقة..." 
+                        class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-violet-500/20 text-right" />
+                </div>
             </div>
-        </div>
 
-        <div class="field-checkbox flex items-center gap-2">
-            <p-checkbox formControlName="isCurrent" [binary]="true" inputId="isCurrent" (onChange)="onCurrentChange()"></p-checkbox>
-            <label for="isCurrent" class="mb-0">ما زلت أعمل هنا</label>
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-right">
+                <div class="group text-right">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">تاريخ البدء</label>
+                    <p-datePicker formControlName="startDate" appendTo="body" dateFormat="dd/mm/yy" 
+                        styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-datePicker>
+                </div>
+                <div class="group text-right">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">تاريخ الانتهاء</label>
+                    <p-datePicker formControlName="endDate" appendTo="body" dateFormat="dd/mm/yy" 
+                        [disabled]="experienceForm.get('isCurrent')?.value"
+                        styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1"></p-datePicker>
+                </div>
+            </div>
 
-        <div class="field">
-            <label class="block text-sm font-medium mb-1">المسؤوليات / المهام</label>
-            <textarea pTextarea formControlName="responsibilities" rows="3" class="w-full"></textarea>
-        </div>
+            <div class="flex items-center gap-3 p-3 bg-violet-50/50 border border-violet-100 rounded-2xl">
+                <p-checkbox formControlName="isCurrent" [binary]="true" inputId="isCurr" (onChange)="onCurrentChange()"></p-checkbox>
+                <label for="isCurr" class="text-sm font-semibold text-violet-900 cursor-pointer select-none">أعمل هنا حالياً</label>
+            </div>
 
-        <div class="field">
-            <label class="block text-sm font-medium mb-1">سبب ترك العمل</label>
-            <input pInputText formControlName="reasonForLeaving" />
-        </div>
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">وصف المهام والمسؤوليات</label>
+                <textarea pInputTextarea formControlName="responsibilities" rows="3" placeholder="اكتب نبذة مختصرة عن دورك..."
+                    class="w-full !bg-slate-50/50 !border-slate-200 !p-4 !rounded-2xl focus:!ring-2 focus:!ring-violet-500/20 text-right"></textarea>
+            </div>
 
-    </form>
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider">سبب ترك العمل (اختياري)</label>
+                <input pInputText formControlName="reasonForLeaving" placeholder="مثلاً: نهاية العقد، عرض وظيفي أفضل..." 
+                    class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-4 !rounded-2xl focus:!ring-2 focus:!ring-violet-500/20 text-right" />
+            </div>
+
+        </form>
+    </div>
+
     <ng-template pTemplate="footer">
-        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="displayDialog = false"></button>
-        <button pButton label="حفظ" icon="pi pi-check" (click)="save()" [loading]="loading()"></button>
+        <div class="flex items-center justify-between w-full pt-4 border-t border-slate-100 mt-4 text-right">
+            <button (click)="displayDialog = false" 
+                class="px-6 py-2 text-slate-400 hover:text-slate-600 font-semibold transition-colors">
+                إلغاء
+            </button>
+            <button (click)="save()" [disabled]="loading()"
+                class="flex items-center gap-2 px-8 py-2.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-2xl shadow-lg shadow-violet-200 transition-all font-bold">
+                <i class="pi pi-check" *ngIf="!loading()"></i>
+                <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+                <span>حفظ بيانات الخبرة</span>
+            </button>
+        </div>
     </ng-template>
 </p-dialog>
 
-<p-confirmDialog [style]="{width: '450px'}" [rtl]="true"></p-confirmDialog>
-<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '400px'}" [rtl]="true" appendTo="body"></p-confirmDialog>

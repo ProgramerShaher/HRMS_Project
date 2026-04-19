@@ -25,13 +25,13 @@
     <!-- Table -->
     <p-table #dt [value]="cycles()" [rows]="10" [paginator]="true" [loading]="loading()"
              styleClass="p-datatable-sm p-datatable-gridlines"
-             [globalFilterFields]="['cycleName']"
+             [globalFilterFields]="['cycleNameAr']"
              [rowHover]="true"
              responsiveLayout="scroll">
         
         <ng-template pTemplate="header">
             <tr class="bg-slate-50 dark:bg-zinc-950 text-slate-700 dark:text-zinc-300 text-sm">
-                <th pSortableColumn="cycleName" class="text-center">اسم الفترة <p-sortIcon field="cycleName"></p-sortIcon></th>
+                <th pSortableColumn="cycleNameAr" class="text-center">اسم الفترة <p-sortIcon field="cycleNameAr"></p-sortIcon></th>
                 <th pSortableColumn="startDate" class="text-center">تاريخ البداية <p-sortIcon field="startDate"></p-sortIcon></th>
                 <th pSortableColumn="endDate" class="text-center">تاريخ النهاية <p-sortIcon field="endDate"></p-sortIcon></th>
                 <th pSortableColumn="status" class="text-center">الحالة <p-sortIcon field="status"></p-sortIcon></th>
@@ -41,7 +41,7 @@
 
         <ng-template pTemplate="body" let-item>
             <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50">
-                <td class="font-medium text-slate-800 dark:text-zinc-200 text-center">{{item.cycleName}}</td>
+                <td class="font-medium text-slate-800 dark:text-zinc-200 text-center">{{item.cycleNameAr}}</td>
                 <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.startDate | date:'yyyy-MM-dd'}}</td>
                 <td class="text-slate-600 dark:text-zinc-400 text-center">{{item.endDate | date:'yyyy-MM-dd'}}</td>
                 <td class="text-center">
@@ -70,8 +70,8 @@
         <ng-template pTemplate="content">
             <div class="field mb-4">
                 <label for="name">اسم الفترة</label>
-                <input type="text" pInputText id="name" [(ngModel)]="currentItem.cycleName" required autofocus />
-                <small class="p-error" *ngIf="submitted && !currentItem.cycleName">اسم الفترة مطلوب.</small>
+                <input type="text" pInputText id="name" [(ngModel)]="currentItem.cycleNameAr" required autofocus />
+                <small class="p-error" *ngIf="submitted && !currentItem.cycleNameAr">اسم الفترة مطلوب.</small>
             </div>
             <div class="field mb-4">
                 <label for="startDate">تاريخ البداية</label>

@@ -180,6 +180,24 @@ public class LeaveRequestsController : ControllerBase
     }
 
     // ═══════════════════════════════════════════════════════════
+    // جلب كل الطلبات (للمديرين - جميع الحالات)
+    // Get All Requests (For Managers)
+    // ═══════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Get all leave requests for admin/HR overview.
+    /// </summary>
+    /// <returns>List of all requests</returns>
+    [HttpGet("all")]
+    [Authorize(Roles = "System_Admin,HR_Manager,Department_Manager")]
+    [AllowAnonymous] // 🔓 للتطوير فقط - احذف هذا السطر في الإنتاج
+    public async Task<ActionResult<Result<List<LeaveRequestDto>>>> GetAllRequests()
+    {
+        var result = await _mediator.Send(new HRMS.Application.Features.Leaves.Requests.Queries.GetAllRequests.GetAllRequestsQuery());
+        return Ok(result);
+    }
+
+    // ═══════════════════════════════════════════════════════════
     // إحصائيات لوحة التحكم
     // Dashboard Statistics
     // ═══════════════════════════════════════════════════════════

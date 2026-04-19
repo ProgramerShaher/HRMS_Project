@@ -1,0 +1,102 @@
+<div class="card p-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-white">إدارة المستخدمين</h2>
+            <p class="text-sm text-slate-500">تخصيص الأدوار للمستخدمين المسجلين في النظام</p>
+        </div>
+        <button pButton label="مستخدم جديد" icon="pi pi-user-plus" (click)="openNewUser()"
+            class="p-button-success"></button>
+    </div>
+
+    <p-table [value]="users()" [loading]="loading()" responsiveLayout="scroll" [rowHover]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>المستخدم</th>
+                <th>البريد الإلكتروني</th>
+                <th>الأدوار</th>
+                <th style="width: 150px">الإجراءات</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+            <tr>
+                <td>
+                    <div class="flex flex-col">
+                        <span class="font-bold">{{ user.fullNameAr || user.userName }}</span>
+                        <span class="text-xs text-slate-400">{{ user.userName }}</span>
+                    </div>
+                </td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <div class="flex flex-wrap gap-1">
+                        <p-tag *ngFor="let role of user.roles" [value]="role" severity="info"
+                            class="text-[10px]"></p-tag>
+                        <span *ngIf="!user.roles || user.roles.length === 0" class="text-slate-300 text-xs italic">بدون
+                            أدوار</span>
+                    </div>
+                </td>
+                <td>
+                    <button pButton icon="pi pi-user-edit" label="تعديل الأدوار" class="p-button-outlined p-button-sm"
+                        (click)="editRoles(user)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- User Create Dialog -->
+<p-dialog [visible]="userDialog()" (visibleChange)="userDialog.set($event)" header="مستخدم جديد" [modal]="true"
+    [style]="{width: '500px'}" styleClass="p-fluid">
+    <div class="flex flex-col gap-4 py-4 px-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="field">
+                <label class="font-bold flex items-center gap-1 mb-1">اسم المستخدم <span
+                        class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="newUser.userName" placeholder="مثلاً: sarah.ahmed" />
+            </div>
+            <div class="field">
+                <label class="font-bold flex items-center gap-1 mb-1">البريد الإلكتروني <span
+                        class="text-red-500">*</span></label>
+                <input pInputText [(ngModel)]="newUser.email" placeholder="example@hospital.com" />
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="font-bold mb-1">الاسم الكامل (عربي)</label>
+            <input pInputText [(ngModel)]="newUser.fullNameAr" placeholder="الاسم الرباعي بالعربية" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="field">
+                <label class="font-bold flex items-center gap-1 mb-1">كلمة المرور <span
+                        class="text-red-500">*</span></label>
+                <p-password [(ngModel)]="newUser.password" [toggleMask]="true" [feedback]="false" styleClass="w-full"
+                    inputStyleClass="w-full"></p-password>
+            </div>
+            <div class="field">
+                <label class="font-bold flex items-center gap-1 mb-1">تأكيد كلمة المرور <span
+                        class="text-red-500">*</span></label>
+                <p-password [(ngModel)]="newUser.confirmPassword" [toggleMask]="true" [feedback]="false"
+                    styleClass="w-full" inputStyleClass="w-full"></p-password>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="userDialog.set(false)"></button>
+        <button pButton label="إنشاء الحساب" icon="pi pi-check" class="p-button-success" (click)="saveUser()"></button>
+    </ng-template>
+</p-dialog>
+
+<!-- Roles Toggle Dialog -->
+<p-dialog [visible]="roleDialog()" (visibleChange)="roleDialog.set($event)"
+    [header]="'تعديل أدوار: ' + selectedUser()?.userName" [modal]="true" [style]="{width: '450px'}">
+    <div class="flex flex-col gap-4 py-4">
+        <label class="font-bold">اختر الأدوار</label>
+        <p-multiSelect [options]="roles()" [ngModel]="userRoles()" (ngModelChange)="userRoles.set($event)"
+            optionLabel="name" optionValue="name" placeholder="اختر الأدوار" class="w-full"
+            appendTo="body"></p-multiSelect>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="roleDialog.set(false)"></button>
+        <button pButton label="حفظ" icon="pi pi-check" class="p-button-primary" (click)="saveRoles()"></button>
+    </ng-template>
+</p-dialog>

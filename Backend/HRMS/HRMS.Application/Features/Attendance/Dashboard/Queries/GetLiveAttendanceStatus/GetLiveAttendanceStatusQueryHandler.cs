@@ -16,61 +16,84 @@ public class GetLiveAttendanceStatusQueryHandler : IRequestHandler<GetLiveAttend
 
     public async Task<Result<LiveStatusDto>> Handle(GetLiveAttendanceStatusQuery request, CancellationToken cancellationToken)
     {
-        var today = DateTime.Today;
+        // استخدام الوقت المحلي للمستشفى (اليمن/السعودية +3)
+        // Hospital Local Time (+3)
+        var now = DateTime.UtcNow.AddHours(3);
+        var today = now.Date; 
 
-        // 1. إحصائيات الموظفين النشطين
-        var totalEmployees = await _context.Employees
-            .CountAsync(e => e.IsDeleted == 0, cancellationToken);
 
-        // 2. إحصائيات الإجازات اليوم
-        var onLeave = await _context.LeaveRequests
-            .CountAsync(l => l.Status == "APPROVED" 
-                          && l.IsDeleted == 0 
-                          && l.StartDate <= today 
-                          && l.EndDate >= today, cancellationToken);
-
-        // 3. تحليل البصمات لليوم (Raw Punches)
-        // لمعرفة من "بالداخل" حالياً، نبحث عن آخر بصمة لكل موظف
-        // To know who is currently IN, look for the last punch
-        
-        // ملاحظة: هذا يتطلب تجميع (GroupBy) وهو قد يكون ثقيلاً إذا كان الجدول ضخماً
-        // الأفضل وجود جدول وسيط "CurrentStatus" ولكن سنستخدم RawPunchLogs للوقت الحالي
-        
-        var todayPunches = await _context.RawPunchLogs
-            .AsNoTracking()
-            .Where(p => p.PunchTime >= today && p.PunchTime < today.AddDays(1))
-            .Select(p => new { p.EmployeeId, p.PunchType, p.PunchTime })
+        // 1. الموظفين المجدولين لليوم (Scheduled Today)
+        var scheduledStaffIds = await _context.EmployeeRosters
+            .Where(r => r.RosterDate == today && r.IsOffDay == 0 && r.IsDeleted == 0)
+            .Select(r => r.EmployeeId)
             .ToListAsync(cancellationToken);
 
-        var employeePunches = todayPunches
-            .GroupBy(p => p.EmployeeId)
-            .Select(g => new 
-            { 
-                EmployeeId = g.Key, 
-                LastPunch = g.OrderByDescending(p => p.PunchTime).First() 
-            })
-            .ToList();
+        var totalScheduled = scheduledStaffIds.Count;
 
-        var currentlyIn = employeePunches.Count(ep => ep.LastPunch.PunchType == "IN" || ep.LastPunch.PunchType == "BREAK_IN"); // Adjust types as needed
-        var checkedOut = employeePunches.Count(ep => ep.LastPunch.PunchType == "OUT" || ep.LastPunch.PunchType == "BREAK_OUT");
+        // 2. الموظفين في إجازة معتمدة اليوم
+        var onLeaveIds = await _context.LeaveRequests
+            .Where(l => l.Status == "APPROVED" 
+                     && l.IsDeleted == 0 
+                     && l.StartDate <= today 
+                     && l.EndDate >= today)
+            .Select(l => l.EmployeeId)
+            .ToListAsync(cancellationToken);
 
-        // Absent / Not Yet In
-        // Total - (OnLeave + In + Out) = Not accounted for
-        // الفرق بين "لم يحضر بعد" و "غائب" يعتمد على وقت بداية الدوام
-        // للتبسيط في الداشبورد، سنجمعهم في NotYetIn إذا لم ينته الدوام، و Absent إذا انتهى
+        // 3. تحليل البصمات الفعلية لليوم (Actual Punches)
+        // تصحيح فجوة التوقيت: جلب البصمات بناءً على "يوم المستشفى المحلي +3"
+        // Timezone Adjustment: Fetch punches within the local day window (Shifted UTC)
+        var startUtc = today.AddHours(-3); 
+        var endUtc = today.AddDays(1).AddHours(-3);
+
+        var todayPunches = await _context.RawPunchLogs
+            .AsNoTracking()
+            .Where(p => p.PunchTime >= startUtc && p.PunchTime < endUtc)
+            .ToListAsync(cancellationToken);
+
+        var punchedEmployeeIds = todayPunches.Select(p => p.EmployeeId).Distinct().ToList();
+
+        // 4. التصنيف الذكي (Smart Classification for 100% Accuracy)
+        var currentlyInCount = 0;
+        var checkedOutCount = 0;
+
+        foreach (var empId in punchedEmployeeIds)
+        {
+            var lastPunch = todayPunches
+                .Where(p => p.EmployeeId == empId)
+                .OrderByDescending(p => p.PunchTime)
+                .First();
+
+            if (lastPunch.PunchType == "IN")
+            {
+                currentlyInCount++;
+            }
+            else
+            {
+                checkedOutCount++;
+            }
+        }
+
+        // الغائبون أو الذين لم يحضروا بعد: من هم في الجدول المشغل، وليسوا في إجازة، ولم يبصموا حتى الآن
+        var notPunchedIds = scheduledStaffIds.Except(punchedEmployeeIds).Except(onLeaveIds).ToList();
         
-        var notAccounted = totalEmployees - (onLeave + currentlyIn + checkedOut);
-        var notYetIn = notAccounted > 0 ? notAccounted : 0; 
+        // حساب "لم يحضر بعد" (إذا كان لا يزال الدوام مبكراً على سبيل المثال) أو مجرد الغياب الفعلي
+        // دمجناهم للتبسيط بناءً على اللوحة السابقة، حيث أن غير الحاضرين هم notYetIn
+        var notYetInCount = notPunchedIds.Count;
+        var absentCount = notYetInCount;
 
-        // TODO: Refine "Absent" based on shift end time later logic
+        // الإجازات: من هم في إجازة اليوم
+        var leaveCount = onLeaveIds.Distinct().Count();
+
+        // إجمالي الموظفين النشطين
+        var totalEmployees = await _context.Employees.CountAsync(e => e.IsActive && e.IsDeleted == 0, cancellationToken);
 
         return Result<LiveStatusDto>.Success(new LiveStatusDto(
             totalEmployees,
-            currentlyIn,
-            checkedOut,
-            notYetIn,
-            onLeave,
-            0 // Placeholder for confirmed absent
+            currentlyInCount,
+            checkedOutCount,
+            notYetInCount, // Not yet in
+            leaveCount,
+            absentCount
         ));
     }
 }

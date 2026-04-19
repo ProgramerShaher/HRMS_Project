@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.report-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card-stat {
+  @apply relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    @apply bg-blue-500;
+  }
+}
+
+.card-stat-blue { &::before { @apply bg-blue-500; } }
+.card-stat-emerald { &::before { @apply bg-emerald-500; } }
+.card-stat-purple { &::before { @apply bg-purple-500; } }
+.card-stat-rose { &::before { @apply bg-rose-500; } }
+
+.insights-card {
+  @apply bg-white/50 backdrop-blur shadow-sm border border-slate-100 dark:bg-zinc-900/50 dark:border-zinc-800;
+}
+
+.dept-bar {
+  @apply h-2 rounded-full bg-slate-100 dark:bg-zinc-800 relative overflow-hidden;
+  .progress {
+    @apply absolute top-0 right-0 h-full bg-blue-500 rounded-full transition-all duration-1000;
+  }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  .glass-panel { border: none !important; box-shadow: none !important; }
+}

@@ -9,18 +9,22 @@ using HRMS.Core.Entities.Recruitment;
 using HRMS.Core.Entities.Identity;
 using HRMS.Core.Entities.Attendance;
 using HRMS.Core.Entities.Accounting;
+using Microsoft.AspNetCore.Identity;
 
 namespace HRMS.Application.Interfaces;
 
 /// <summary>
 /// واجهة سياق قاعدة البيانات - تطبيق Dependency Inversion Principle
 /// </summary>
-/// <remarks>
-/// هذه الواجهة تسمح لطبقة Application بالاستقلال عن Infrastructure
-/// وتسهل عمل Unit Testing باستخدام Mock Objects
-/// </remarks>
 public interface IApplicationDbContext
 {
+    // Identity Tables needed for PermissionService
+    DbSet<IdentityUserRole<int>> UserRoles { get; }
+    DbSet<ApplicationRole> Roles { get; }
+
+    // Permission System Tables
+    DbSet<Permission> Permissions { get; }
+    DbSet<RolePermission> RolePermissions { get; }
     #region Core Entities
 
     /// <summary>

@@ -1,0 +1,99 @@
+<div class="p-6 space-y-6 animate-in fade-in duration-500">
+  <!-- Header -->
+  <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">سلفي</h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1">إدارة ومتابعة جميع السلف والأقساط</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <p-select 
+        [(ngModel)]="selectedStatus" 
+        [options]="statusOptions" 
+        optionLabel="label" 
+        optionValue="value"
+        (onChange)="onStatusChange()"
+        placeholder="تصفية حسب الحالة"
+        styleClass="w-48" />
+      <button pButton icon="pi pi-plus" label="سلفة جديدة" 
+              class="p-button-raised p-button-success rounded-xl px-6"
+              (click)="navigateToNewLoan()"></button>
+      <button pButton icon="pi pi-refresh" 
+              class="p-button-text p-button-rounded"
+              [loading]="loading()" (click)="loadLoans()"></button>
+    </div>
+  </div>
+
+  <!-- Loans Table -->
+  <div class="glass-panel rounded-2xl overflow-hidden">
+    <p-table 
+      [value]="filteredLoans()" 
+      [loading]="loading()"
+      [paginator]="true" 
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} سلفة"
+      styleClass="p-datatable-sm"
+      [globalFilterFields]="['loanAmount', 'status']">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-right">رقم السلفة</th>
+          <th class="text-right">المبلغ</th>
+          <th class="text-right">عدد الأقساط</th>
+          <th class="text-right">المدفوع</th>
+          <th class="text-right">المتبقي</th>
+          <th class="text-right">التقدم</th>
+          <th class="text-right">تاريخ الطلب</th>
+          <th class="text-right">الحالة</th>
+          <th class="text-center">الإجراءات</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-loan>
+        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer" (click)="viewLoanDetails(loan)">
+          <td class="font-semibold text-blue-600">{{ loan.loanId }}</td>
+          <td class="font-bold">{{ formatCurrency(loan.loanAmount) }} ريال</td>
+          <td>{{ loan.installmentCount }} قسط</td>
+          <td class="text-emerald-600 font-semibold">{{ formatCurrency(loan.paidAmount) }}</td>
+          <td class="text-amber-600 font-semibold">{{ formatCurrency(loan.remainingAmount) }}</td>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 bg-slate-200 dark:bg-zinc-700 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" 
+                     [style.width.%]="calculateProgress(loan)"></div>
+              </div>
+              <span class="text-xs font-bold text-slate-600 dark:text-zinc-400 min-w-[3rem]">{{ calculateProgress(loan) }}%</span>
+            </div>
+          </td>
+          <td class="text-sm">{{ formatDate(loan.requestDate) }}</td>
+          <td>
+            <p-tag 
+              [value]="getStatusLabel(loan.status)" 
+              [severity]="getStatusSeverity(loan.status)"
+              styleClass="rounded-full"></p-tag>
+          </td>
+          <td class="text-center">
+            <button pButton 
+                    icon="pi pi-eye" 
+                    class="p-button-text p-button-rounded p-button-sm"
+                    (click)="viewLoanDetails(loan); $event.stopPropagation()"
+                    pTooltip="عرض التفاصيل"></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="text-center py-8">
+            <div class="text-slate-400">
+              <i class="pi pi-inbox text-5xl mb-3"></i>
+              <p class="text-lg">لا توجد سلف</p>
+              <p class="text-sm mt-2">يمكنك إنشاء سلفة جديدة من الزر أعلاه</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

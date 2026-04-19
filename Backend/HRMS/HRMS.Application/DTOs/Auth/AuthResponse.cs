@@ -46,6 +46,11 @@ namespace HRMS.Application.DTOs.Auth
         public List<string> Roles { get; set; } = new();
 
         /// <summary>
+        /// الصلاحيات المخصصة للمستخدم
+        /// </summary>
+        public List<string> Permissions { get; set; } = new();
+
+        /// <summary>
         /// معرف الموظف (إذا كان المستخدم موظف)
         /// </summary>
         public int? EmployeeId { get; set; }

@@ -11,7 +11,10 @@ import { DatePickerModule } from 'primeng/datepicker'; // Use DatePickerModule f
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../services/employee.service';
+import { SelectModule } from 'primeng/select'; // Add SelectModule if used in template
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { environment } from '../../../../../environments/environment';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-certifications',
@@ -27,8 +30,11 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     ToastModule,
     DatePickerModule,
     ConfirmDialogModule,
-    CheckboxModule
-  ],
+    ConfirmDialogModule,
+    CheckboxModule,
+    SelectModule,
+    Tag
+],
   templateUrl: './profile-certifications.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -40,13 +46,25 @@ export class ProfileCertificationsComponent implements OnInit {
   
   displayDialog = false;
   submitted = false;
+  isEditMode = false;
   certForm: FormGroup;
+  selectedCertificationId: number | null = null;
   selectedFile: File | null = null;
 
   private employeeService = inject(EmployeeService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
+  
+  get fileName(): string {
+    return this.selectedFile ? this.selectedFile.name : '';
+  }
+
+  getAttachmentUrl(path: string): string {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    return `${environment.apiUrl}/${path.startsWith('/') ? path.substring(1) : path}`;
+  }
 
   constructor() {
     this.certForm = this.fb.group({
@@ -82,7 +100,25 @@ export class ProfileCertificationsComponent implements OnInit {
   }
 
   showDialog() {
+    this.isEditMode = false;
+    this.selectedCertificationId = null;
     this.certForm.reset({ isMandatory: false });
+    this.selectedFile = null;
+    this.submitted = false;
+    this.displayDialog = true;
+  }
+
+  showEditDialog(cert: any) {
+    this.isEditMode = true;
+    this.selectedCertificationId = cert.certificationId;
+    this.certForm.patchValue({
+        certificationName: cert.certificationName,
+        issuingOrganization: cert.issuingOrganization,
+        issueDate: cert.issueDate ? new Date(cert.issueDate) : null,
+        expiryDate: cert.expiryDate ? new Date(cert.expiryDate) : null,
+        certNumber: cert.certNumber,
+        isMandatory: cert.isMandatory
+    });
     this.selectedFile = null;
     this.submitted = false;
     this.displayDialog = true;
@@ -99,11 +135,11 @@ export class ProfileCertificationsComponent implements OnInit {
     if (this.certForm.invalid) return;
 
     this.loading.set(true);
-    
-    // Map form values to API DTO keys
     const formVal = this.certForm.value;
+
     const data = {
         EmployeeId: this.employeeId,
+        CertificationId: this.selectedCertificationId,
         CertNameAr: formVal.certificationName,
         IssuingAuthority: formVal.issuingOrganization,
         IssueDate: formVal.issueDate ? new Date(formVal.issueDate).toISOString() : null,
@@ -112,17 +148,31 @@ export class ProfileCertificationsComponent implements OnInit {
         IsMandatory: formVal.isMandatory ? 1 : 0
     };
 
-    this.employeeService.addCertification(this.employeeId, data, this.selectedFile || undefined).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم إضافة الشهادة بنجاح' });
-        this.displayDialog = false;
-        this.loadData();
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
-        this.loading.set(false);
-      }
-    });
+    if (this.isEditMode && this.selectedCertificationId) {
+        this.employeeService.updateCertification(this.employeeId, this.selectedCertificationId, data, this.selectedFile || undefined).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم تحديث الشهادة بنجاح' });
+              this.displayDialog = false;
+              this.loadData();
+            },
+            error: () => {
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء التحديث' });
+              this.loading.set(false);
+            }
+        });
+    } else {
+        this.employeeService.addCertification(this.employeeId, data, this.selectedFile || undefined).subscribe({
+            next: () => {
+              this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم إضافة الشهادة بنجاح' });
+              this.displayDialog = false;
+              this.loadData();
+            },
+            error: () => {
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+              this.loading.set(false);
+            }
+        });
+    }
   }
 
   isExpired(dateStr: string): boolean {

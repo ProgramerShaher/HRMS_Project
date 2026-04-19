@@ -8,8 +8,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
+import { SelectModule } from 'primeng/select';
 import { EmployeeService } from '../../services/employee.service';
+import { LookupService } from '../../../../core/services/lookup.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Tag } from "primeng/tag";
 
 @Component({
   selector: 'app-profile-bank-accounts',
@@ -23,8 +26,10 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     InputTextModule,
     ToastModule,
     ConfirmDialogModule,
-    CheckboxModule
-  ],
+    CheckboxModule,
+    SelectModule,
+    Tag
+],
   templateUrl: './profile-bank-accounts.component.html',
   providers: [MessageService, ConfirmationService]
 })
@@ -32,6 +37,7 @@ export class ProfileBankAccountsComponent implements OnInit {
   @Input() employeeId!: number;
   
   accounts = signal<any[]>([]);
+  banks = signal<any[]>([]);
   loading = signal<boolean>(false);
   
   displayDialog = false;
@@ -41,13 +47,14 @@ export class ProfileBankAccountsComponent implements OnInit {
   selectedAccountId: number | null = null;
 
   private employeeService = inject(EmployeeService);
+  private lookupService = inject(LookupService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
 
   constructor() {
     this.bankForm = this.fb.group({
-      bankName: ['', Validators.required],
+      bankId: [null, Validators.required],
       accountHolderName: ['', Validators.required],
       accountNumber: ['', Validators.required],
       ibanNumber: ['', [Validators.required, Validators.pattern('^[A-Z]{2}[0-9]{2}[a-zA-Z0-9]{1,30}$')]],
@@ -58,7 +65,12 @@ export class ProfileBankAccountsComponent implements OnInit {
   ngOnInit() {
     if (this.employeeId) {
       this.loadData();
+      this.loadLookups();
     }
+  }
+
+  loadLookups() {
+      this.lookupService.getBanks().subscribe(data => this.banks.set(data));
   }
 
   loadData() {
@@ -84,7 +96,7 @@ export class ProfileBankAccountsComponent implements OnInit {
     this.isEditMode = true;
     this.selectedAccountId = acc.bankAccountId;
     this.bankForm.patchValue({
-        bankName: acc.bankName,
+        bankId: acc.bankId,
         accountHolderName: acc.accountHolderName,
         accountNumber: acc.accountNumber,
         ibanNumber: acc.ibanNumber,
@@ -95,18 +107,28 @@ export class ProfileBankAccountsComponent implements OnInit {
 
   save() {
     this.submitted = true;
-    if (this.bankForm.invalid) return;
+    console.log('Bank Form Status:', this.bankForm.status);
+    console.log('Bank Form Errors:', this.bankForm.errors);
+    console.log('Bank Form Value:', this.bankForm.value);
+
+    if (this.bankForm.invalid) {
+         Object.keys(this.bankForm.controls).forEach(key => {
+            const controlErrors = this.bankForm.get(key)?.errors;
+            if (controlErrors) {
+                console.log(`Key control: ${key}, Errors:`, controlErrors);
+            }
+        });
+        return;
+    }
 
     this.loading.set(true);
     const formVal = this.bankForm.value;
-    const data = {
-        EmployeeId: this.employeeId,
-        BankAccountId: this.selectedAccountId, // For update
-        BankName: formVal.bankName,
-        AccountHolderName: formVal.accountHolderName,
-        AccountNumber: formVal.accountNumber,
-        IbanNumber: formVal.ibanNumber,
-        IsPrimary: formVal.isPrimary
+    const data = { 
+        ...formVal,
+        employeeId: this.employeeId,
+        accountId: this.selectedAccountId,
+        Iban: formVal.ibanNumber, // Backend expects Iban
+        BankId: formVal.bankId
     };
 
     if (this.isEditMode && this.selectedAccountId) {
@@ -128,8 +150,10 @@ export class ProfileBankAccountsComponent implements OnInit {
               this.displayDialog = false;
               this.loadData();
             },
-            error: () => {
-              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+            error: (err) => {
+              console.error('Save Error:', err);
+              const errorMessage = err.error?.message || err.error?.detail || 'حدث خطأ أثناء الحفظ';
+              this.messageService.add({ severity: 'error', summary: 'خطأ', detail: errorMessage });
               this.loading.set(false);
             }
         });

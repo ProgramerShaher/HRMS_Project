@@ -1,36 +1,71 @@
 :host {
     display: block;
+    height: 100vh;
+    overflow: hidden;
 }
 
-// Helper for animations
-.animate-fade-in {
-    animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+:host ::ng-deep {
+    /* Robust Grid Layout for Fixed Header + Scrollable Content */
+    .custom-premium-tabs {
+        display: grid !important;
+        grid-template-rows: auto minmax(0, 1fr) !important;
+        height: 100% !important;
+        width: 100% !important;
+        overflow: hidden !important;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-// Custom Scrollbar and Overrides for p-tabs
-::ng-deep {
-    .p-tabpanels {
-        @apply bg-transparent p-0 !important;
-    }
-
+    /* Row 1: Header -> Fixed height based on content */
     .p-tablist {
-        @apply bg-transparent border-b border-slate-100 dark:border-zinc-800 px-4 !important;
+        grid-row: 1 !important;
+        z-index: 10;
+        background-color: rgba(248, 250, 252, 0.95) !important;
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #e2e8f0 !important;
+        width: 100% !important;
     }
     
-    // Ensure tabs have no default background/border that conflicts
     .p-tab {
-        @apply shadow-none outline-none ring-0 !important;
+        @apply transition-all duration-200 border-b-2 border-transparent !important;
+        margin-bottom: -1px !important;
+        
+        &.p-tab-active {
+            @apply border-indigo-600 !important;
+            color: #4f46e5 !important;
+            background-color: #fff !important;
+        }
+    }
+
+    /* Row 2: Content -> Fills remaining space & Scrolls */
+    .p-tabpanels {
+        grid-row: 2 !important;
+        height: 100% !important;
+        width: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: relative !important;
+        display: block !important;
+        padding: 0 !important;
+        
+        /* Standardize Internal Panel */
+        .p-tabpanel {
+            min-height: 100% !important;
+            height: auto !important;
+        }
+
+        /* Custom Scrollbar */
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 99px;
+            border: 2px solid #f1f5f9;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8;
+        }
     }
 }

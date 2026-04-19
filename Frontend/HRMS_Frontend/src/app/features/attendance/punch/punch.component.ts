@@ -52,8 +52,14 @@ export class PunchComponent implements OnInit {
       next: (res) => {
         this.loading.set(false);
         if (res.succeeded) {
-          const todayStr = today.toISOString().split('T')[0];
-          const record = res.data.find(d => d.date.startsWith(todayStr));
+          // Fix: Use Local Date for comparison instead of ISO (UTC) string
+          const todayDate = new Date();
+          const record = res.data.find(d => {
+            const dDate = new Date(d.date);
+            return dDate.getDate() === todayDate.getDate() &&
+                   dDate.getMonth() === todayDate.getMonth() &&
+                   dDate.getFullYear() === todayDate.getFullYear();
+          });
           
           if (record) {
             this.todayPunch.set(record);

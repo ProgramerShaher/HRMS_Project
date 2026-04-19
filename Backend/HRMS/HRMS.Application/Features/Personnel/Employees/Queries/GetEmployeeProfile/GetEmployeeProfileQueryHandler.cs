@@ -32,6 +32,9 @@ public class GetEmployeeProfileQueryHandler : IRequestHandler<GetEmployeeProfile
 
         var dto = _mapper.Map<EmployeeProfileDto>(employee);
         
+        // Add ProfilePicturePath explicitly as it might not be mapped by default or needs to be overridden
+        dto.ProfilePicturePath = employee.ProfilePicturePath;
+
         // Use centralized FullNameAr logic
         dto.FullNameAr = employee.FullNameAr;
 

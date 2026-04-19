@@ -1,0 +1,164 @@
+<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+  <!-- Header -->
+  <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-l from-emerald-50 to-slate-50 border-b border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+        <i class="pi pi-file-edit text-emerald-500"></i>
+        طلبات التوظيف
+      </h2>
+      <p class="text-slate-500 text-sm mt-1">متابعة مراحل تقدم المتقدمين عبر خط الأنابيب</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search text-slate-400"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="بحث بالاسم أو الوظيفة..." class="p-inputtext-sm border-slate-200 w-64" />
+      </span>
+      <button pButton label="طلب جديد" icon="pi pi-plus" class="p-button-sm shadow-none"
+        style="background:#059669; border-color:#059669;" (click)="openSubmit()"></button>
+    </div>
+  </div>
+
+  <!-- Pipeline Summary Badges -->
+  <div class="flex flex-wrap gap-2 px-6 py-3 bg-slate-50 border-b border-slate-100">
+    <span *ngFor="let s of statuses"
+      class="px-3 py-1 rounded-full text-xs font-bold border bg-white transition-all"
+      style="border-color: #e2e8f0;">
+      {{ s.labelAr }}
+      <span class="mr-1 font-black text-slate-500">
+        ({{ countByStatus(s.key) }})
+      </span>
+    </span>
+  </div>
+
+  <!-- Table -->
+  <p-table #dt [value]="applications()" [loading]="loading()" [rowHover]="true"
+    styleClass="p-datatable-striped" responsiveLayout="scroll"
+    [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+    [globalFilterFields]="['candidateName','vacancyTitle','status']"
+    currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} طلب"
+    [showCurrentPageReport]="true">
+
+    <ng-template pTemplate="header">
+      <tr class="bg-slate-50 text-slate-600 text-sm">
+        <th class="font-semibold p-4">المرشح</th>
+        <th class="font-semibold p-4">الوظيفة الشاغرة</th>
+        <th class="font-semibold p-4">تاريخ التقديم</th>
+        <th class="font-semibold p-4 text-center">مرحلة الطلب</th>
+        <th class="font-semibold p-4 text-center">الإجراءات</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-app>
+      <tr class="border-b border-slate-50 hover:bg-emerald-50/30 transition-colors">
+        <td class="p-4">
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-800 text-sm">{{ app.candidateName }}</span>
+            <span class="text-xs text-slate-400">#{{ app.applicationId }}</span>
+          </div>
+        </td>
+        <td class="p-4">
+          <span class="text-emerald-700 font-semibold text-sm">{{ app.vacancyTitle }}</span>
+        </td>
+        <td class="p-4 text-slate-500 text-sm">{{ app.applicationDate | date:'yyyy-MM-dd' }}</td>
+        <td class="p-4 text-center">
+          <p-tag [severity]="severity(app.status)" [value]="labelAr(app.status)"
+            styleClass="text-[11px] font-bold tracking-wide px-2"></p-tag>
+        </td>
+        <td class="p-4 text-center">
+          <div class="flex justify-center gap-1">
+            <button pButton icon="pi pi-arrow-right-arrow-left"
+              class="p-button-rounded p-button-text p-button-info hover:bg-blue-50"
+              pTooltip="تغيير المرحلة" tooltipPosition="top"
+              (click)="openStatus(app)"></button>
+            <button *ngIf="app.status !== 'HIRED' && app.status !== 'REJECTED'"
+              pButton icon="pi pi-times-circle"
+              class="p-button-rounded p-button-text p-button-danger hover:bg-red-50"
+              pTooltip="سحب الطلب" tooltipPosition="top"
+              (click)="withdraw(app)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center p-10">
+          <div class="flex flex-col items-center text-slate-400">
+            <i class="pi pi-file-edit text-5xl mb-3 opacity-30"></i>
+            <p class="font-bold text-slate-500">لا توجد طلبات توظيف حالياً</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Submit Application Dialog -->
+<p-dialog [(visible)]="showSubmitDialog" header="تقديم طلب توظيف جديد"
+  [style]="{width: '520px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+  <ng-template pTemplate="content">
+    <form [formGroup]="submitForm" class="mt-2 flex flex-col gap-4">
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">الوظيفة الشاغرة <span class="text-red-500">*</span></label>
+        <p-select [options]="vacancyOptions" formControlName="vacancyId"
+          placeholder="اختر الوظيفة..." [filter]="true" appendTo="body" styleClass="w-full"></p-select>
+        <small class="text-red-500" *ngIf="submittedApp && submitForm.controls['vacancyId'].invalid">الوظيفة مطلوبة</small>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">المرشح <span class="text-red-500">*</span></label>
+        <p-select [options]="candidateOptions" formControlName="candidateId"
+          placeholder="اختر المرشح..." [filter]="true" appendTo="body" styleClass="w-full"></p-select>
+        <small class="text-red-500" *ngIf="submittedApp && submitForm.controls['candidateId'].invalid">المرشح مطلوب</small>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">مصدر التقديم (اختياري)</label>
+        <input pInputText formControlName="source" placeholder="LinkedIn / Referral / Website..."
+          class="w-full !border-slate-300" />
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="showSubmitDialog=false"></button>
+      <button pButton label="تقديم الطلب" icon="pi pi-check"
+        style="background:#059669; border-color:#059669;" class="font-bold px-6" (click)="saveSubmit()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Change Status Dialog -->
+<p-dialog [(visible)]="showStatusDialog" header="تغيير مرحلة الطلب"
+  [style]="{width: '440px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+  <ng-template pTemplate="content">
+    <div class="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100" *ngIf="selectedApp">
+      <p class="text-sm text-slate-500">المرشح: <span class="font-bold text-slate-800">{{ selectedApp.candidateName }}</span></p>
+      <p class="text-sm text-slate-500 mt-1">الوظيفة: <span class="font-bold text-emerald-700">{{ selectedApp.vacancyTitle }}</span></p>
+    </div>
+    <form [formGroup]="statusForm" class="flex flex-col gap-4">
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">المرحلة الجديدة <span class="text-red-500">*</span></label>
+        <p-select [options]="statusOptions" formControlName="status"
+          placeholder="اختر المرحلة..." appendTo="body" styleClass="w-full"></p-select>
+        <small class="text-red-500" *ngIf="submittedStatus && statusForm.controls['status'].invalid">المرحلة مطلوبة</small>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">ملاحظات (اختياري)</label>
+        <textarea pTextarea formControlName="notes" rows="2"
+          class="w-full !border-slate-300 !rounded-xl" placeholder="ملاحظات على قرار التغيير..."></textarea>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="showStatusDialog=false"></button>
+      <button pButton label="تطبيق التغيير" icon="pi pi-save"
+        class="p-button-info font-bold px-6" (click)="saveStatus()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '420px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>

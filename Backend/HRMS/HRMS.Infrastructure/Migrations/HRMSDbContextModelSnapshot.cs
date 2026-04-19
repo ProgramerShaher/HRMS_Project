@@ -411,6 +411,10 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
+                    b.Property<decimal>("DeductionAmount")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("DEDUCTION_AMOUNT");
+
                     b.Property<short>("EarlyLeaveMinutes")
                         .HasColumnType("smallint")
                         .HasColumnName("EARLY_LEAVE_MINUTES");
@@ -426,6 +430,10 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<short>("LateMinutes")
                         .HasColumnType("smallint")
                         .HasColumnName("LATE_MINUTES");
+
+                    b.Property<decimal>("OvertimeAmount")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("OVERTIME_AMOUNT");
 
                     b.Property<short>("OvertimeMinutes")
                         .HasColumnType("smallint")
@@ -1930,6 +1938,82 @@ namespace HRMS.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Identity.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED_AT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CREATED_BY");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint")
+                        .HasColumnName("IS_DELETED");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED_AT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("UPDATED_BY");
+
+                    b.Property<int>("VersionNo")
+                        .IsConcurrencyToken()
+                        .HasColumnType("int")
+                        .HasColumnName("VERSION_NO");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Identity.RolePermission", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissions");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Leaves.EmployeeLeaveBalance", b =>
                 {
                     b.Property<int>("BalanceId")
@@ -3140,7 +3224,7 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<int>("ElementId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ELEMENT_ID");
+                        .HasColumnName("ElementId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ElementId"));
 
@@ -3155,22 +3239,22 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Property<decimal?>("DefaultPercentage")
                         .HasColumnType("decimal(5, 2)")
-                        .HasColumnName("DEFAULT_PERCENTAGE");
+                        .HasColumnName("DefaultPercentage");
 
                     b.Property<string>("ElementNameAr")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("ELEMENT_NAME_AR");
+                        .HasColumnName("ElementNameAr");
 
                     b.Property<string>("ElementType")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
-                        .HasColumnName("ELEMENT_TYPE");
+                        .HasColumnName("ElementType");
 
                     b.Property<byte>("IsBasic")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_BASIC");
+                        .HasColumnName("IsBasic");
 
                     b.Property<byte>("IsDeleted")
                         .HasColumnType("tinyint")
@@ -3178,15 +3262,15 @@ namespace HRMS.Infrastructure.Migrations
 
                     b.Property<byte>("IsGosiBase")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_GOSI_BASE");
+                        .HasColumnName("IsGosiBase");
 
                     b.Property<byte>("IsRecurring")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_RECURRING");
+                        .HasColumnName("IsRecurring");
 
                     b.Property<byte>("IsTaxable")
                         .HasColumnType("tinyint")
-                        .HasColumnName("IS_TAXABLE");
+                        .HasColumnName("IsTaxable");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -4743,6 +4827,11 @@ namespace HRMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CandidateId"));
 
+                    b.Property<string>("ApplicationSource")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("APPLICATION_SOURCE");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("CREATED_AT");
@@ -4796,6 +4885,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("PHONE");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("STATUS");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -5456,6 +5550,25 @@ namespace HRMS.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("HRMS.Core.Entities.Identity.RolePermission", b =>
+                {
+                    b.HasOne("HRMS.Core.Entities.Identity.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HRMS.Core.Entities.Identity.ApplicationRole", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("HRMS.Core.Entities.Leaves.EmployeeLeaveBalance", b =>
                 {
                     b.HasOne("HRMS.Core.Entities.Personnel.Employee", "Employee")
@@ -6091,6 +6204,16 @@ namespace HRMS.Infrastructure.Migrations
             modelBuilder.Entity("HRMS.Core.Entities.Core.JobGrade", b =>
                 {
                     b.Navigation("Jobs");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Identity.ApplicationRole", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("HRMS.Core.Entities.Identity.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("HRMS.Core.Entities.Leaves.LeaveType", b =>

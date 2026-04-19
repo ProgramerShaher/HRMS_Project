@@ -33,9 +33,9 @@ public class GetAppraisalByIdQueryHandler : IRequestHandler<GetAppraisalByIdQuer
         var appraisal = await _context.EmployeeAppraisals
             .Include(a => a.Employee)
             .Include(a => a.Cycle)
-            .Include(a => a.Employee)
+            .Include(a => a.Evaluator)           // ✅ FIX #4: إضافة Evaluator (كان مفقوداً)
             .Include(a => a.Details)
-                .ThenInclude(d => d.Kpi)
+                .ThenInclude(d => d.Kpi)         // ✅ نجلب KPI مع الوزن
             .FirstOrDefaultAsync(a => a.AppraisalId == request.AppraisalId && a.IsDeleted == 0, cancellationToken);
 
         if (appraisal == null)

@@ -9,10 +9,12 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
-import { Result } from '../models/attendance.models';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Toast } from "primeng/toast";
 import { EmployeeService } from '../../personnel/services/employee.service';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-requests',
@@ -27,7 +29,10 @@ import { EmployeeService } from '../../personnel/services/employee.service';
     TextareaModule,
     ButtonModule,
     InputNumberModule,
-    Toast
+    Toast,
+    TableModule,
+    TagModule,
+    DialogModule
 ],
   providers: [MessageService],
   templateUrl: './requests.component.html'
@@ -47,18 +52,31 @@ export class RequestsComponent implements OnInit {
   // Data Sources (Mock or Real)
   employees: any[] = []; // In real app, fetch colleague list
   permissionTypes = [
-     { label: 'شخصي', value: 'Personal' }, 
-     { label: 'مرضي', value: 'Sick' }, 
-     { label: 'رسمي', value: 'Official' }
+     { label: 'تأخير دخول (استئذان صباحي)', value: 'LateEntry' }, 
+     { label: 'خروج مبكر (استئذان مسائي)', value: 'EarlyExit' }
   ];
   correctionTypes = [
      { label: 'نسيان بصمة دخول', value: 'MissedIn' },
      { label: 'نسيان بصمة خروج', value: 'MissedOut' }
   ];
 
+  // Dialog States
+  showSwapDialog = false;
+  showOvertimeDialog = false;
+  showPermissionDialog = false;
+  showCorrectionDialog = false;
+
+  // History Tables
+  myPermissions: any[] = [];
+  myOvertimes: any[] = [];
+  mySwaps: any[] = [];
+  
+  loadingTables = false;
+
   ngOnInit() {
     this.initForms();
     this.loadEmployees();
+    this.loadHistory();
   }
 
   loadEmployees() {
@@ -70,40 +88,67 @@ export class RequestsComponent implements OnInit {
     });
   }
 
+  loadHistory() {
+      this.loadingTables = true;
+      // In a real ERP with authentication, these endpoints return history for the logged-in user.
+      // Or if HR Officer, they fetch pending approvals. We simulate by fetching the history endpoints.
+      this.attendanceService.getMyPermissions().subscribe({
+          next: (res: any) => this.myPermissions = res.data || res,
+          error: () => console.error('Failed to load permissions')
+      });
+      
+      this.attendanceService.getMyOvertimeRequests().subscribe({
+          next: (res: any) => this.myOvertimes = res.data || res,
+          error: () => console.error('Failed to load overtime')
+      });
+
+      this.attendanceService.getMySwapRequests().subscribe({
+          next: (res: any) => {
+              this.mySwaps = res.data || res;
+              this.loadingTables = false;
+          },
+          error: () => this.loadingTables = false
+      });
+  }
+
   initForms() {
-    // Swap Request
     this.swapForm = this.fb.group({
-      targetEmployeeId: [null, [Validators.required]],
-      rosterDate: [null, [Validators.required]],
-      reason: ['', [Validators.required]]
+      requesterId: [null, Validators.required],
+      targetEmployeeId: [null, Validators.required],
+      rosterDate: [null, Validators.required],
+      reason: ['', Validators.required]
     });
 
-    // Overtime Request
     this.overtimeForm = this.fb.group({
-      employeeId: [null, [Validators.required]],
-      workDate: [null, [Validators.required]],
+      employeeId: [null, Validators.required],
+      workDate: [null, Validators.required],
       hoursRequested: [null, [Validators.required, Validators.min(1)]],
-      reason: ['', [Validators.required]]
+      reason: ['', Validators.required]
     });
 
-    // Permission Request
     this.permissionForm = this.fb.group({
-      employeeId: [null, [Validators.required]],
-      permissionDate: [null, [Validators.required]],
-      permissionType: [null, [Validators.required]],
+      employeeId: [null, Validators.required],
+      permissionDate: [null, Validators.required],
+      permissionType: [null, Validators.required],
       hours: [null, [Validators.required, Validators.min(0.5)]],
-      reason: ['', [Validators.required]]
+      reason: ['', Validators.required]
     });
 
-    // Correction Request
     this.correctionForm = this.fb.group({
-      employeeId: [null, [Validators.required]],
+      employeeId: [null, Validators.required],
       dailyAttendanceId: [null], 
-      attendanceDate: [null, [Validators.required]],
-      correctionType: [null, [Validators.required]],
-      newValue: ['', [Validators.required]],
-      auditNote: ['', [Validators.required]]
+      attendanceDate: [null, Validators.required],
+      correctionType: [null, Validators.required],
+      newValue: ['', Validators.required],
+      auditNote: ['', Validators.required]
     });
+  }
+
+  // Utils
+  toLocalISOString(date: Date): string {
+      const tzOffset = date.getTimezoneOffset() * 60000; // offset in milliseconds
+      const localISOTime = (new Date(date.getTime() - tzOffset)).toISOString().slice(0, -1);
+      return localISOTime;
   }
 
   // Submit Handlers
@@ -111,19 +156,20 @@ export class RequestsComponent implements OnInit {
     if (this.swapForm.invalid) return;
     const val = this.swapForm.value;
     const cmd = {
-      requesterId: 0, // Backend contextual
+      requesterId: val.requesterId,
       targetEmployeeId: val.targetEmployeeId,
-      rosterDate: val.rosterDate.toISOString(),
+      rosterDate: this.toLocalISOString(val.rosterDate),
       reason: val.reason
     };
     
-    // In real implementation, call service.applySwap
     this.attendanceService.applySwap(cmd).subscribe({
         next: () => {
              this.messageService.add({severity:'success', summary: 'تم', detail: 'تم إرسال طلب التبديل بنجاح'});
+             this.showSwapDialog = false;
              this.swapForm.reset();
+             this.loadHistory();
         },
-        error: () => this.messageService.add({severity:'error', summary: 'خطأ', detail: 'فشل إرسال طلب التبديل'})
+        error: (err) => this.messageService.add({severity:'error', summary: 'خطأ', detail: err.error?.message || 'فشل إرسال طلب التبديل'})
     });
   }
 
@@ -132,7 +178,7 @@ export class RequestsComponent implements OnInit {
     const val = this.overtimeForm.value;
     const cmd = {
       employeeId: val.employeeId,
-      workDate: val.workDate.toISOString(),
+      workDate: this.toLocalISOString(val.workDate),
       hoursRequested: val.hoursRequested,
       reason: val.reason
     };
@@ -140,9 +186,11 @@ export class RequestsComponent implements OnInit {
     this.attendanceService.applyOvertime(cmd).subscribe({
         next: () => {
              this.messageService.add({severity:'success', summary: 'تم', detail: 'تم إرسال طلب العمل الإضافي'});
+             this.showOvertimeDialog = false;
              this.overtimeForm.reset();
+             this.loadHistory();
         },
-        error: () => this.messageService.add({severity:'error', summary: 'خطأ', detail: 'فشل إرسال طلب العمل الإضافي'})
+        error: (err) => this.messageService.add({severity:'error', summary: 'خطأ', detail: err.error?.message || 'فشل إرسال طلب العمل الإضافي'})
     });
   }
 
@@ -151,7 +199,7 @@ export class RequestsComponent implements OnInit {
     const val = this.permissionForm.value;
     const cmd = {
         employeeId: val.employeeId,
-        permissionDate: val.permissionDate.toISOString(),
+        permissionDate: this.toLocalISOString(val.permissionDate),
         permissionType: val.permissionType,
         hours: val.hours,
         reason: val.reason
@@ -159,9 +207,11 @@ export class RequestsComponent implements OnInit {
     this.attendanceService.applyPermission(cmd).subscribe({
         next: () => {
             this.messageService.add({severity:'success', summary: 'تم', detail: 'تم إرسال طلب الإذن'});
+            this.showPermissionDialog = false;
             this.permissionForm.reset();
+            this.loadHistory();
         },
-        error: (err) => this.messageService.add({severity:'error', summary: 'خطأ', detail: 'فشل إرسال الطلب'})
+        error: (err) => this.messageService.add({severity:'error', summary: 'خطأ', detail: err.error?.message || 'فشل إرسال الطلب'})
     });
   }
 
@@ -170,6 +220,7 @@ export class RequestsComponent implements OnInit {
       const val = this.correctionForm.value;
       const cmd = {
           employeeId: val.employeeId,
+          attendanceDate: this.toLocalISOString(val.attendanceDate),
           dailyAttendanceId: val.dailyAttendanceId,
           correctionType: val.correctionType,
           newValue: val.newValue,
@@ -179,9 +230,10 @@ export class RequestsComponent implements OnInit {
       this.attendanceService.manualCorrection(cmd as any).subscribe({
           next: () => {
               this.messageService.add({severity:'success', summary: 'تم', detail: 'تم إرسال طلب التصحيح'});
+              this.showCorrectionDialog = false;
               this.correctionForm.reset();
           },
-          error: () => this.messageService.add({severity:'error', summary: 'خطأ', detail: 'فشل إرسال طلب التصحيح'})
+          error: (err) => this.messageService.add({severity:'error', summary: 'خطأ', detail: err.error?.message || 'فشل إرسال طلب التصحيح'})
       });
   }
 }

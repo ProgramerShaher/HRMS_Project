@@ -1,0 +1,298 @@
+<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+  <!-- Header -->
+  <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-l from-violet-50 to-slate-50 border-b border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+        <i class="pi pi-users text-violet-500"></i>
+        بنك المرشحين
+      </h2>
+      <p class="text-slate-500 text-sm mt-1">سجل كامل لجميع المتقدمين وبياناتهم</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search text-slate-400"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="بحث بالاسم أو البريد..." class="p-inputtext-sm border-slate-200 w-64" />
+      </span>
+      <button pButton label="تسجيل مرشح" icon="pi pi-user-plus" class="p-button-sm shadow-none"
+        style="background: #7c3aed; border-color: #7c3aed;" (click)="openNew()"></button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <p-table #dt [value]="candidates()" [loading]="loading()" [rowHover]="true"
+    styleClass="p-datatable-striped" responsiveLayout="scroll"
+    [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+    [globalFilterFields]="['fullNameEn','firstNameAr','email','phone','status']"
+    currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} مرشح"
+    [showCurrentPageReport]="true">
+
+    <ng-template pTemplate="header">
+      <tr class="bg-slate-50 text-slate-600 text-sm">
+        <th class="font-semibold p-4">المرشح</th>
+        <th class="font-semibold p-4">البريد الإلكتروني</th>
+        <th class="font-semibold p-4">الهاتف</th>
+        <th class="font-semibold p-4">الجنسية</th>
+        <th class="font-semibold p-4">مصدر التقديم</th>
+        <th class="font-semibold p-4 text-center">الحالة</th>
+        <th class="font-semibold p-4 text-center border-l border-slate-100">الإجراءات</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-c>
+      <tr class="border-b border-slate-50 hover:bg-violet-50/30 transition-colors">
+        <td class="p-4">
+          <div class="flex items-center gap-3">
+            <p-avatar [label]="initials(c.fullNameEn)" styleClass="bg-violet-100 text-violet-700 font-bold" shape="circle" size="normal"></p-avatar>
+            <div class="flex flex-col">
+              <span class="font-bold text-slate-800 text-sm">{{ c.fullNameEn }}</span>
+              <span *ngIf="c.firstNameAr" class="text-xs text-slate-400">{{ c.firstNameAr }} {{ c.familyNameAr }}</span>
+            </div>
+          </div>
+        </td>
+        <td class="p-4 text-slate-600 text-sm">{{ c.email }}</td>
+        <td class="p-4 text-slate-500 text-sm">{{ c.phone || '-' }}</td>
+        <td class="p-4 text-slate-500 text-sm">{{ c.nationalityName || '-' }}</td>
+        <td class="p-4">
+          <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-2 py-1 w-fit shadow-xs">
+            <i class="pi" [ngClass]="getSourceIcon(c.linkedinProfile || c.applicationSource)" 
+              [style.color]="(c.linkedinProfile || c.applicationSource) ? '#7c3aed' : '#94a3b8'"></i>
+            <span class="text-[10px] font-bold text-slate-600">{{ getSourceLabel(c.linkedinProfile || c.applicationSource) }}</span>
+          </div>
+        </td>
+        <td class="p-4 text-center">
+          <p-tag [severity]="statusSeverity(c.status)" [value]="statusLabel(c.status)"
+            styleClass="text-[11px] font-bold tracking-wide px-3 rounded-md shadow-xs"></p-tag>
+        </td>
+        <td class="p-4 text-center border-l border-slate-100">
+          <div class="flex justify-center gap-1">
+            <button pButton icon="pi pi-eye"
+              class="p-button-rounded p-button-text p-button-secondary hover:bg-slate-50"
+              pTooltip="عرض الملف الشخصي" tooltipPosition="top" (click)="view(c)"></button>
+            <button pButton icon="pi pi-user-edit"
+              class="p-button-rounded p-button-text p-button-info hover:bg-blue-50"
+              pTooltip="تعديل" tooltipPosition="top" (click)="edit(c)"></button>
+            <button pButton icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger hover:bg-red-50"
+              pTooltip="حذف" tooltipPosition="top" (click)="delete(c.candidateId)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center p-10">
+          <div class="flex flex-col items-center text-slate-400">
+            <i class="pi pi-users text-5xl mb-3 opacity-30"></i>
+            <p class="font-bold text-slate-500">لا يوجد مرشحون في النظام</p>
+            <p class="text-sm mt-1">ابدأ بتسجيل أول مرشح في بنك المواهب</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Register Dialog -->
+<p-dialog [(visible)]="showDialog" header="تسجيل مرشح جديد"
+  [style]="{width: '580px'}" [modal]="true"
+  [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="mt-2">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Full Name EN -->
+        <div class="field col-span-2">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">الاسم الكامل (بالإنجليزية) <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="fullNameEn" placeholder="John Smith"
+            class="w-full !border-slate-300 focus:!border-violet-400" />
+          <small class="text-red-500" *ngIf="submitted && form.controls['fullNameEn'].invalid">الاسم الكامل بالإنجليزية مطلوب</small>
+        </div>
+
+        <!-- First Name AR -->
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">الاسم الأول (بالعربية)</label>
+          <input pInputText formControlName="firstNameAr" placeholder="محمد"
+            class="w-full !border-slate-300 focus:!border-violet-400" />
+        </div>
+
+        <!-- Family Name AR -->
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">اسم العائلة (بالعربية)</label>
+          <input pInputText formControlName="familyNameAr" placeholder="العنزي"
+            class="w-full !border-slate-300 focus:!border-violet-400" />
+        </div>
+
+        <!-- Email -->
+        <div class="field col-span-2 md:col-span-1">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">البريد الإلكتروني <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="email" type="email" placeholder="example@email.com"
+            class="w-full !border-slate-300 focus:!border-violet-400" />
+          <small class="text-red-500" *ngIf="submitted && form.controls['email'].invalid">بريد إلكتروني صالح مطلوب</small>
+        </div>
+
+        <!-- Phone -->
+        <div class="field col-span-2 md:col-span-1">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">رقم الهاتف <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="phone" placeholder="+966 5x xxx xxxx"
+            class="w-full !border-slate-300 focus:!border-violet-400" />
+          <div *ngIf="submitted && form.controls['phone'].invalid">
+            <small class="text-red-500" *ngIf="form.controls['phone'].errors?.['required']">رقم الهاتف مطلوب</small>
+            <small class="text-red-500" *ngIf="form.controls['phone'].errors?.['pattern']">صيغة رقم الهاتف غير صحيحة (أرقام فقط)</small>
+          </div>
+        </div>
+
+        <!-- Nationality -->
+        <div class="field col-span-2">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">الجنسية</label>
+          <p-select [options]="nationalities()" formControlName="nationalityId"
+            optionLabel="countryNameAr" optionValue="countryId" [filter]="true"
+            placeholder="اختر الجنسية..." appendTo="body" styleClass="w-full"></p-select>
+        </div>
+
+        <!-- LinkedIn & Resume -->
+        <div class="field col-span-2">
+          <label class="flex justify-between items-center text-slate-700 font-bold mb-2 text-sm">
+            <span>
+              <i class="pi pi-link text-violet-600 mr-1"></i>
+              رابط الحساب (LinkedIn / GitHub)
+            </span>
+            <div class="flex flex-wrap gap-2 text-[10px]">
+              <button type="button" (click)="fillSocial('linkedin')" 
+                class="bg-blue-50 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-100 transition-colors border border-blue-200">
+                <i class="pi pi-linkedin"></i> LinkedIn
+              </button>
+              <button type="button" (click)="fillSocial('github')" 
+                class="bg-slate-100 text-slate-700 px-2 py-1 rounded-md hover:bg-slate-200 transition-colors border border-slate-200">
+                <i class="pi pi-github"></i> GitHub
+              </button>
+              <button type="button" (click)="fillSocial('facebook')" 
+                class="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors">
+                <i class="pi pi-facebook"></i> Facebook
+              </button>
+              <button type="button" (click)="fillSocial('instagram')" 
+                class="bg-pink-100 text-pink-700 px-2 py-1 rounded-md hover:bg-pink-200 transition-colors border border-pink-200">
+                <i class="pi pi-instagram"></i> Instagram
+              </button>
+              <button type="button" (click)="fillSocial('x')" 
+                class="bg-slate-800 text-white px-2 py-1 rounded-md hover:bg-slate-900 transition-colors border border-slate-600">
+                <i class="pi pi-twitter"></i> X
+              </button>
+            </div>
+          </label>
+          <input pInputText formControlName="linkedinProfile" placeholder="https://..."
+            class="w-full !border-slate-300 focus:!border-violet-400" />
+          <small class="text-red-500" *ngIf="submitted && form.controls['linkedinProfile'].errors?.['pattern']">الرابط المدخل غير صالح</small>
+        </div>
+
+        <div *ngIf="!isEdit" class="field col-span-2">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">ملف السيرة الذاتية (CV)</label>
+          <p-fileUpload mode="basic" chooseLabel="اختر ملف PDF" name="cvFile"
+            accept=".pdf,.doc,.docx" [maxFileSize]="5000000"
+            (onSelect)="onFileSelect($event)" class="w-full"></p-fileUpload>
+        </div>
+      </div>
+
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times"
+        class="p-button-text p-button-secondary" (click)="showDialog = false"></button>
+      <button pButton [label]="isEdit ? 'تحديث البيانات' : 'تسجيل المرشح'"
+        [icon]="isEdit ? 'pi pi-save' : 'pi pi-user-plus'"
+        style="background: #7c3aed; border-color: #7c3aed;"
+        class="shadow-md font-bold px-6" (click)="save()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- View Candidate Dialog -->
+<p-dialog [(visible)]="showViewDialog" header="الملف الشخصي للمرشح"
+  [style]="{width: '650px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="rounded-xl overflow-hidden shadow-2xl border-0">
+  <div *ngIf="selectedCandidate" class="p-2">
+    <!-- Profile Header -->
+    <div class="bg-gradient-to-r from-violet-600 to-indigo-700 p-8 rounded-2xl text-white mb-6 shadow-violet-200 shadow-xl relative overflow-hidden">
+      <div class="relative z-10 flex items-center gap-6">
+        <p-avatar [label]="initials(selectedCandidate.fullNameEn)" size="xlarge"
+          styleClass="bg-white/20 text-white font-black text-3xl border-2 border-white/30 shadow-lg" shape="circle"></p-avatar>
+        <div class="flex-1">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-3xl font-black tracking-tight">{{selectedCandidate.fullNameEn}}</h3>
+              <p class="text-violet-100 font-medium flex items-center gap-2 mt-1">
+                <i class="pi pi-map-marker opacity-70"></i> {{selectedCandidate.nationalityName || 'جنسية غير محددة'}}
+              </p>
+            </div>
+            <p-tag [severity]="statusSeverity(selectedCandidate.status)" [value]="statusLabel(selectedCandidate.status)"
+              styleClass="font-bold border border-white/20"></p-tag>
+          </div>
+        </div>
+      </div>
+      <!-- Decorative element -->
+      <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Contact Info Cards -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600">
+          <i class="pi pi-envelope"></i>
+        </div>
+        <div class="overflow-hidden">
+          <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">البريد الإلكتروني</p>
+          <p class="font-bold text-slate-700 truncate text-sm">{{selectedCandidate.email}}</p>
+        </div>
+      </div>
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600">
+          <i class="pi pi-phone"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">رقم الهاتف</p>
+          <p class="font-bold text-slate-700 text-sm">{{selectedCandidate.phone || '-'}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Data -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-colors">
+        <div class="flex items-center gap-3">
+          <i class="pi pi-external-link text-violet-500"></i>
+          <span class="text-sm font-bold text-slate-600">مصدر التقديم</span>
+        </div>
+        <span class="text-sm font-black text-violet-700 bg-violet-50 px-3 py-1 rounded-lg">
+          {{selectedCandidate.applicationSource || 'DIRECT'}}
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-colors">
+        <div class="flex items-center gap-3">
+          <i class="pi pi-file-pdf text-red-500"></i>
+          <span class="text-sm font-bold text-slate-600">السيرة الذاتية (CV)</span>
+        </div>
+        <div>
+          <a *ngIf="selectedCandidate.resume" [href]="getFileUrl(selectedCandidate.resume)" target="_blank"
+            class="text-xs font-black text-indigo-600 hover:underline flex items-center gap-1">
+            تحميل الملف <i class="pi pi-download"></i>
+          </a>
+          <span *ngIf="!selectedCandidate.resume" class="text-xs text-slate-400">لا يوجد ملف مرفوع</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="قمت بالمراجعة" class="p-button-secondary font-bold px-8" (click)="showViewDialog = false"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '420px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>

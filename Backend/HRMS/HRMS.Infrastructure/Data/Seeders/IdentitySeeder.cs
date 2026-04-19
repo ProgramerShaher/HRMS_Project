@@ -47,6 +47,7 @@ public static class IdentitySeeder
 
     private static async Task SeedSuperAdminAsync(UserManager<ApplicationUser> userManager)
     {
+        // 1. System Admin
         var adminEmail = "admin@hrms.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -54,23 +55,57 @@ public static class IdentitySeeder
         {
             adminUser = new ApplicationUser
             {
-                UserName = adminEmail, // Using Email as Username for simplicity or strict requirement? Usually Username can be "admin" or same as email.
+                UserName = "admin", 
                 Email = adminEmail,
                 FullNameAr = "المدير العام",
-                FullNameEn = "Super Admin",
+                FullNameEn = "System Administrator",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             };
-
-            // STRICT REQUIREMENT: Password "Admin@123"
             var result = await userManager.CreateAsync(adminUser, "Admin@123");
+            if (result.Succeeded) await userManager.AddToRoleAsync(adminUser, "System_Admin");
+        }
 
-            if (result.Succeeded)
+        // 2. HR Manager
+        var hrEmail = "hr@hrms.com";
+        var hrUser = await userManager.FindByEmailAsync(hrEmail);
+        if (hrUser == null)
+        {
+            hrUser = new ApplicationUser
             {
-                await userManager.AddToRoleAsync(adminUser, "System_Admin");
-            }
+                UserName = "hr_manager",
+                Email = hrEmail,
+                FullNameAr = "مدير الموارد البشرية",
+                FullNameEn = "HR Manager",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+            var result = await userManager.CreateAsync(hrUser, "HR@123");
+            if (result.Succeeded) await userManager.AddToRoleAsync(hrUser, "HR_Manager");
+        }
+
+        // 3. Employee
+        var empEmail = "employee@hrms.com";
+        var empUser = await userManager.FindByEmailAsync(empEmail);
+        if (empUser == null)
+        {
+            empUser = new ApplicationUser
+            {
+                UserName = "employee",
+                Email = empEmail,
+                FullNameAr = "موظف تجريبي",
+                FullNameEn = "Demo Employee",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+            var result = await userManager.CreateAsync(empUser, "Employee@123");
+            if (result.Succeeded) await userManager.AddToRoleAsync(empUser, "Employee");
         }
     }
 }

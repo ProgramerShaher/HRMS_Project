@@ -1,83 +1,81 @@
-<div class="p-6 space-y-6 animate-in fade-in duration-500">
+<div class="p-6 space-y-6">
+  <p-toast></p-toast>
+
   <!-- Header -->
-  <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-none shadow-sm">
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
-        <i class="pi pi-check-square text-emerald-600"></i>
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-400/30">
+          <i class="pi pi-check-square text-white text-xl"></i>
+        </div>
         اعتمادات الإجازات
       </h1>
-      <p class="text-slate-500 dark:text-zinc-400 mt-1">مراجعة ومعالجة طلبات الإجازات المقدمة من قبل أعضاء الفريق.</p>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">
+        {{ pendingRequests().length }} طلب معلق ينتظر المراجعة
+      </p>
     </div>
-    <div class="flex items-center gap-2">
-      <span class="px-4 py-2 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 rounded-xl text-sm font-bold">
-        {{ pendingRequests().length }} طلبات معلقة
-      </span>
-      <p-button icon="pi pi-refresh" [text]="true" [rounded]="true" (click)="loadPendingRequests()" [loading]="loading()"></p-button>
-    </div>
+    <button pButton icon="pi pi-refresh" label="تحديث" class="p-button-outlined p-button-secondary" (click)="load()"></button>
   </div>
 
-  <!-- Main Content -->
-  <div class="glass-panel rounded-2xl border-none shadow-sm overflow-hidden bg-white dark:bg-zinc-900">
-    <p-table 
-      [value]="pendingRequests()" 
-      [paginator]="true" 
-      [rows]="10"
+  <!-- Table -->
+  <div class="glass-card rounded-3xl overflow-hidden">
+    <p-table
+      [value]="pendingRequests()"
       [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
       responsiveLayout="scroll"
-      styleClass="p-datatable-lg custom-table">
-      
+      styleClass="p-datatable-striped">
+
       <ng-template pTemplate="header">
         <tr>
-          <th class="bg-slate-50 dark:bg-zinc-800/50 text-slate-700 dark:text-zinc-300 font-bold py-4">الموظف</th>
-          <th class="bg-slate-50 dark:bg-zinc-800/50 text-slate-700 dark:text-zinc-300 font-bold py-4">نوع الإجازة</th>
-          <th class="bg-slate-50 dark:bg-zinc-800/50 text-slate-700 dark:text-zinc-300 font-bold py-4 text-center">الفترة</th>
-          <th class="bg-slate-50 dark:bg-zinc-800/50 text-slate-700 dark:text-zinc-300 font-bold py-4 text-center">الأيام</th>
-          <th class="bg-slate-50 dark:bg-zinc-800/50 text-slate-700 dark:text-zinc-300 font-bold py-4">السبب</th>
-          <th class="bg-slate-50 dark:bg-zinc-800/50 text-slate-700 dark:text-zinc-300 font-bold py-4 text-center">الإجراءات</th>
+          <th>الموظف</th>
+          <th>القسم</th>
+          <th>نوع الإجازة</th>
+          <th class="text-center">من</th>
+          <th class="text-center">إلى</th>
+          <th class="text-center">الأيام</th>
+          <th>السبب</th>
+          <th class="text-center">الحالة</th>
+          <th class="text-center">الإجراء</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-request>
-        <tr class="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-          <td class="py-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
-                {{ request.employeeName?.charAt(0) }}
+      <ng-template pTemplate="body" let-req>
+        <tr>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-sm font-black text-slate-600">
+                {{ req.employeeName?.charAt(0) ?? '?' }}
               </div>
               <div>
-                <div class="font-bold text-slate-900 dark:text-white">{{ request.employeeName }}</div>
-                <div class="text-xs text-slate-500">مشرف مباشر</div>
+                <p class="font-bold text-slate-900 dark:text-white text-sm">{{ req.employeeName ?? '—' }}</p>
+                <p class="text-xs text-slate-400">#{{ req.employeeNumber ?? req.employeeId }}</p>
               </div>
             </div>
           </td>
-          <td class="py-4">
-            <span class="px-3 py-1 bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 rounded-lg text-xs font-semibold">
-              {{ request.leaveTypeName }}
+          <td class="text-sm text-slate-500">{{ req.departmentName ?? '—' }}</td>
+          <td class="font-semibold text-slate-700 dark:text-zinc-300 text-sm">{{ req.leaveTypeName ?? '—' }}</td>
+          <td class="text-center text-sm">{{ req.startDate | date:'dd/MM/yyyy' }}</td>
+          <td class="text-center text-sm">{{ req.endDate | date:'dd/MM/yyyy' }}</td>
+          <td class="text-center">
+            <span class="px-3 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-black text-sm">
+              {{ req.daysCount }}
             </span>
           </td>
-          <td class="py-4 text-center">
-            <div class="text-sm font-medium text-slate-700 dark:text-zinc-300">
-               {{ request.startDate | date: 'dd/MM/yyyy' }}
-              <i class="pi pi-arrow-left text-[10px] mx-1 opacity-40"></i>
-              {{ request.endDate | date: 'dd/MM/yyyy' }}
-            </div>
+          <td class="text-sm text-slate-500 max-w-[160px] truncate" [title]="req.reason">{{ req.reason }}</td>
+          <td class="text-center">
+            <p-tag [severity]="getStatusSeverity(req.status)" [value]="getStatusLabel(req.status)"></p-tag>
           </td>
-          <td class="py-4 text-center">
-            <span class="text-lg font-black text-slate-900 dark:text-white">{{ request.daysCount }}</span>
-          </td>
-          <td class="py-4">
-            <div class="text-xs text-slate-500 max-w-[200px] truncate" [title]="request.reason">
-              {{ request.reason }}
-            </div>
-          </td>
-          <td class="py-4">
-            <div class="flex justify-center gap-2">
-              <p-button icon="pi pi-check" label="موافقة" 
-                      severity="success" size="small" styleClass="rounded-xl px-4"
-                      (click)="approve(request)"></p-button>
-              <p-button icon="pi pi-times" label="رفض" 
-                      severity="danger" [outlined]="true" size="small" styleClass="rounded-xl px-4"
-                      (click)="reject(request)"></p-button>
+          <td>
+            <div class="flex justify-center items-center gap-2">
+              <button pButton icon="pi pi-check" label="قبول"
+                      class="p-button-success p-button-sm p-button-raised"
+                      (click)="openApprove(req)"></button>
+              <button pButton icon="pi pi-times" label="رفض"
+                      class="p-button-danger p-button-sm p-button-outlined"
+                      (click)="openReject(req)"></button>
             </div>
           </td>
         </tr>
@@ -85,12 +83,10 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="text-center py-20 text-slate-400">
-            <div class="flex flex-col items-center gap-4">
-              <i class="pi pi-inbox text-6xl opacity-20"></i>
-              <div class="text-xl font-bold">لا يوجد طلبات معلقة حالياً</div>
-              <p class="text-sm">سيتم عرض جميع الطلبات التي تحتاج إلى موافقتك هنا.</p>
-            </div>
+          <td colspan="9" class="text-center py-20">
+            <i class="pi pi-check-circle text-5xl block mb-3 text-emerald-400"></i>
+            <p class="text-lg font-bold text-slate-600 dark:text-zinc-300">لا توجد طلبات معلقة</p>
+            <p class="text-sm text-slate-400 mt-1">جميع الطلبات تمت معالجتها</p>
           </td>
         </tr>
       </ng-template>
@@ -98,16 +94,108 @@
   </div>
 </div>
 
-<!-- Rejection Reason Dialog -->
-<p-dialog [(visible)]="showRejectDialog" [header]="'سبب رفض الإجازة'" [modal]="true" [style]="{width: '450px'}" styleClass="custom-dialog">
-  <div class="p-4 space-y-4">
-    <div class="space-y-2">
-      <label class="block text-sm font-bold text-slate-700">يرجى كتابة سبب الرفض ليتم إرساله للموظف:</label>
-      <textarea pTextarea [(ngModel)]="rejectionReason" rows="4" class="w-full rounded-xl border-slate-200" placeholder="اكتب السبب هنا..."></textarea>
+<!-- ══════════════════════════════════════════════
+     APPROVE DIALOG
+══════════════════════════════════════════════ -->
+<p-dialog
+  [(visible)]="showApproveDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  header="تأكيد الموافقة على الإجازة"
+  [style]="{ width: '460px' }">
+
+  <div class="space-y-5 px-2 py-2" *ngIf="selectedRequest">
+
+    <!-- Summary -->
+    <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 space-y-2">
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">الموظف</span>
+        <span class="font-bold text-slate-900 dark:text-white">{{ selectedRequest.employeeName }}</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">نوع الإجازة</span>
+        <span class="font-bold text-slate-900 dark:text-white">{{ selectedRequest.leaveTypeName }}</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">الفترة</span>
+        <span class="font-bold text-slate-900 dark:text-white">
+          {{ selectedRequest.startDate | date:'dd/MM/yyyy' }} — {{ selectedRequest.endDate | date:'dd/MM/yyyy' }}
+        </span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">عدد الأيام</span>
+        <span class="font-black text-emerald-600 text-lg">{{ selectedRequest.daysCount }}</span>
+      </div>
     </div>
-    <div class="flex justify-end gap-2 pt-4">
-      <p-button label="إلغاء" [text]="true" (click)="showRejectDialog = false"></p-button>
-      <p-button label="تأكيد الرفض" severity="danger" styleClass="rounded-xl px-6" [disabled]="!rejectionReason" (click)="confirmReject()"></p-button>
+
+    <!-- Comments -->
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600 dark:text-zinc-300">ملاحظات المعتمد (اختياري)</label>
+      <textarea pTextarea [(ngModel)]="approveComments" rows="3"
+                placeholder="أضف أي ملاحظات..."
+                class="w-full rounded-xl"></textarea>
     </div>
   </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
+              (click)="showApproveDialog = false"></button>
+      <button pButton label="تأكيد الاعتماد" icon="pi pi-check" class="p-button-success"
+              [loading]="approving()" (click)="confirmApprove()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- ══════════════════════════════════════════════
+     REJECT DIALOG
+══════════════════════════════════════════════ -->
+<p-dialog
+  [(visible)]="showRejectDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  header="رفض طلب الإجازة"
+  [style]="{ width: '460px' }">
+
+  <div class="space-y-5 px-2 py-2" *ngIf="selectedRequest">
+
+    <!-- Summary -->
+    <div class="bg-rose-50 dark:bg-rose-900/20 rounded-2xl p-4 space-y-2">
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">الموظف</span>
+        <span class="font-bold text-slate-900 dark:text-white">{{ selectedRequest.employeeName }}</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">نوع الإجازة</span>
+        <span class="font-bold text-slate-900 dark:text-white">{{ selectedRequest.leaveTypeName }}</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-slate-500">الأيام المطلوبة</span>
+        <span class="font-black text-rose-600">{{ selectedRequest.daysCount }}</span>
+      </div>
+    </div>
+
+    <!-- Rejection reason (required) -->
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600 dark:text-zinc-300">
+        سبب الرفض <span class="text-rose-500">*</span>
+      </label>
+      <textarea pTextarea [(ngModel)]="rejectionReason" rows="4"
+                placeholder="يجب كتابة سبب الرفض بوضوح..."
+                class="w-full rounded-xl"></textarea>
+      <p class="text-xs text-rose-500" *ngIf="!rejectionReason.trim()">سبب الرفض إلزامي</p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
+              (click)="showRejectDialog = false"></button>
+      <button pButton label="تأكيد الرفض" icon="pi pi-times-circle" class="p-button-danger"
+              [loading]="rejecting()" [disabled]="!rejectionReason.trim()"
+              (click)="confirmReject()"></button>
+    </div>
+  </ng-template>
 </p-dialog>

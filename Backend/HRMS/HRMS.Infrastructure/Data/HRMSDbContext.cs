@@ -21,8 +21,9 @@ namespace HRMS.Infrastructure.Data
 {
     public interface IHRMSDbContext
     {
-        // ...
-        DbSet<HRMS.Core.Entities.Notifications.Notification> Notifications { get; set; }
+		#region IHRMSDbContext Interface واجهه كل الجداول 
+		// ...
+		DbSet<HRMS.Core.Entities.Notifications.Notification> Notifications { get; set; }
         DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
         DbSet<ReportTemplate> ReportTemplates { get; set; }
         DbSet<Employee> Employees { get; set; }
@@ -83,7 +84,8 @@ namespace HRMS.Infrastructure.Data
         DbSet<JournalEntry> JournalEntries { get; set; }
         DbSet<JournalEntryLine> JournalEntryLines { get; set; }
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default); 
+        #endregion
     }
 
     /// <summary>
@@ -204,18 +206,27 @@ namespace HRMS.Infrastructure.Data
             return base.SaveChangesAsync();
         }
 
-        // ===================================
-        // Identity Tables (ASP.NET Core Identity)
-        // ===================================
-        // هذه الجداول موجودة تلقائياً من IdentityDbContext
-        // لكن يمكن إضافتها بشكل صريح للوضوح:
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+		#region Identity Tables (ASP.NET Core Identity)
+		// ===================================
+		// Identity Tables (ASP.NET Core Identity)
+		// ===================================
+		// هذه الجداول موجودة تلقائياً من IdentityDbContext
+		// لكن يمكن إضافتها بشكل صريح للوضوح:
+		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
+		#endregion
 
-        // ===================================
-        // HR_CORE Schema
-        // ===================================
-        public DbSet<Country> Countries { get; set; }
+		#region Permission System Tables
+		// Permission System Tables
+		public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+		#endregion
+
+		#region HR_CORE Schema
+		// ===================================
+		// HR_CORE Schema
+		// ===================================
+		public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Department> Departments { get; set; }
@@ -228,8 +239,10 @@ namespace HRMS.Infrastructure.Data
         public DbSet<HRMS.Core.Entities.Notifications.Notification> Notifications { get; set; } = null!;
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
-        public DbSet<ReportTemplate> ReportTemplates { get; set; }
+        public DbSet<ReportTemplate> ReportTemplates { get; set; } 
+        #endregion
 
+        #region HR_PERSONNEL Schema
         // ===================================
         // HR_PERSONNEL Schema
         // ===================================
@@ -247,9 +260,10 @@ namespace HRMS.Infrastructure.Data
         public DbSet<EmployeeBankAccount> BankAccounts { get; set; }
 
         // Aliases for IApplicationDbContext
-        public DbSet<EmployeeBankAccount> EmployeeBankAccounts => BankAccounts;
+        public DbSet<EmployeeBankAccount> EmployeeBankAccounts => BankAccounts; 
+        #endregion
 
-
+        #region HR_ATTENDANCE Schema
         // ===================================
         // HR_ATTENDANCE Schema
         // ===================================
@@ -262,47 +276,56 @@ namespace HRMS.Infrastructure.Data
         public DbSet<ShiftSwapRequest> ShiftSwapRequests { get; set; }
         public DbSet<OvertimeRequest> OvertimeRequests { get; set; }
         public DbSet<AttendancePolicy> AttendancePolicies { get; set; }
-        public DbSet<PermissionRequest> PermissionRequests { get; set; }
+        public DbSet<PermissionRequest> PermissionRequests { get; set; } 
+        #endregion
 
+        #region HR_LEAVES Schema
         // ===================================
         // HR_LEAVES Schema
         // ===================================
         public DbSet<LeaveType> LeaveTypes { get; set; }
-        public DbSet<EmployeeLeaveBalance> LeaveBalances { get; set; }
-        public DbSet<EmployeeLeaveBalance> EmployeeLeaveBalances => LeaveBalances; // Alias for IApplicationDbContext
-        public DbSet<LeaveRequest> LeaveRequests { get; set; }
-        public DbSet<PublicHoliday> PublicHolidays { get; set; }
-        public DbSet<LeaveAccrualRule> LeaveAccrualRules { get; set; }
-        public DbSet<LeaveEncashment> LeaveEncashments { get; set; }
-        public DbSet<LeaveTransaction> LeaveTransactions { get; set; }
-        public DbSet<LeaveApprovalHistory> LeaveApprovalHistory { get; set; }
-        // public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
+		public DbSet<EmployeeLeaveBalance> LeaveBalances { get; set; }
+		public DbSet<EmployeeLeaveBalance> EmployeeLeaveBalances => LeaveBalances; // Alias for IApplicationDbContext
+		public DbSet<LeaveRequest> LeaveRequests { get; set; }
+		public DbSet<PublicHoliday> PublicHolidays { get; set; }
+		public DbSet<LeaveAccrualRule> LeaveAccrualRules { get; set; }
+		public DbSet<LeaveEncashment> LeaveEncashments { get; set; }
+		public DbSet<LeaveTransaction> LeaveTransactions { get; set; }
+		public DbSet<LeaveApprovalHistory> LeaveApprovalHistory { get; set; }
+		// public DbSet<WorkflowApproval> WorkflowApprovals { get; set; }
+		#endregion
 
-        // ===================================
-        // HR_PERFORMANCE Schema
-        // ===================================
-        public DbSet<EmployeeViolation> EmployeeViolations { get; set; }
-        public DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
-        public DbSet<EmployeeAppraisal> EmployeeAppraisals { get; set; }
-        public DbSet<AppraisalDetail> AppraisalDetails { get; set; }
-        public DbSet<KpiLibrary> KpiLibraries { get; set; }
-        public DbSet<ViolationType> ViolationTypes { get; set; }
-        public DbSet<AppraisalCycle> AppraisalCycles { get; set; }
+		#region HR_PERFORMANCE Schema
+		// ===================================
+		// HR_PERFORMANCE Schema
+		// ===================================
+		public DbSet<EmployeeViolation> EmployeeViolations { get; set; }
+		public DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
+		public DbSet<EmployeeAppraisal> EmployeeAppraisals { get; set; }
+		public DbSet<AppraisalDetail> AppraisalDetails { get; set; }
+		public DbSet<KpiLibrary> KpiLibraries { get; set; }
+		public DbSet<ViolationType> ViolationTypes { get; set; }
+		public DbSet<AppraisalCycle> AppraisalCycles { get; set; }
 
-        // ===================================
-        // HR_RECRUITMENT Schema
-        // ===================================
-        public DbSet<Candidate> Candidates { get; set; }
+		#endregion
+
+		#region HR_RECRUITMENT Schema
+		// ===================================
+		// HR_RECRUITMENT Schema
+		// ===================================
+		public DbSet<Candidate> Candidates { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<JobOffer> JobOffers { get; set; }
         public DbSet<JobVacancy> JobVacancies { get; set; }
         public DbSet<Interview> Interviews { get; set; }
+		#endregion
 
-        // ===================================
-        // HR_PAYROLL Schema
-        // ===================================
-        // Payroll
-        public DbSet<SalaryElement> SalaryElements { get; set; }
+		#region HR_PAYROLL Schema
+		// ===================================
+		// HR_PAYROLL Schema
+		// ===================================
+		// Payroll
+		public DbSet<SalaryElement> SalaryElements { get; set; }
         public DbSet<EmployeeSalaryStructure> SalaryStructures { get; set; }
         public DbSet<EmployeeSalaryStructure> EmployeeSalaryStructures => SalaryStructures; // Alias for IApplicationDbContext
         public DbSet<PayrollRun> PayrollRuns { get; set; }
@@ -313,13 +336,16 @@ namespace HRMS.Infrastructure.Data
         public DbSet<EndOfServiceCalc> EndOfServiceCalcs { get; set; }
         public DbSet<PayrollAdjustment> PayrollAdjustments { get; set; }
 
+		#endregion
 
-        // ===================================
-        // ACCOUNTING Schema
-        // ===================================
-        public DbSet<Account> Accounts { get; set; }
+		#region ACCOUNTING Schema
+		// ===================================
+		// ACCOUNTING Schema
+		// ===================================
+		public DbSet<Account> Accounts { get; set; }
         public DbSet<JournalEntry> JournalEntries { get; set; }
-        public DbSet<JournalEntryLine> JournalEntryLines { get; set; }
+        public DbSet<JournalEntryLine> JournalEntryLines { get; set; } 
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -444,6 +470,34 @@ namespace HRMS.Infrastructure.Data
                 .HasOne(e => e.Compensation)
                 .WithOne(c => c.Employee)
                 .HasForeignKey<EmployeeCompensation>(c => c.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            #endregion
+
+            #region Permission System Configuration - تكوين نظام الصلاحيات
+
+            // Permission: Configure primary key and unique constraint
+            modelBuilder.Entity<Permission>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<Permission>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+
+            // RolePermission: Many-to-Many relationship configuration
+            modelBuilder.Entity<RolePermission>()
+                .HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(rp => rp.Role)
+                .WithMany(r => r.RolePermissions)
+                .HasForeignKey(rp => rp.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(rp => rp.Permission)
+                .WithMany(p => p.RolePermissions)
+                .HasForeignKey(rp => rp.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             #endregion

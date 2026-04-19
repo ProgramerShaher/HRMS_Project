@@ -6,6 +6,7 @@ using HRMS.Application.Features.Payroll.Configuration.Elements.Queries.GetSalary
 using HRMS.Application.Features.Payroll.Configuration.Structure.Commands.SetEmployeeSalaryStructure;
 using HRMS.Application.Features.Payroll.Configuration.Structure.Commands.InitializeSalaryFromGrade;
 using HRMS.Application.Features.Payroll.Configuration.Structure.Queries.GetEmployeeSalaryStructure;
+using HRMS.Application.Features.Payroll.Configuration.Structure.Queries.GetAllStructures;
 using HRMS.Core.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -78,5 +79,23 @@ public class PayrollSettingsController : ControllerBase
     {
         var result = await _mediator.Send(new InitializeSalaryFromGradeCommand { EmployeeId = employeeId });
         return result.Succeeded ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>
+    /// الحصول على جدول شامل بهياكل رواتب جميع الموظفين
+    /// Get comprehensive table of all employees' salary structures
+    /// </summary>
+    [HttpGet("all-structures")]
+    public async Task<ActionResult<Result<List<EmployeeStructureSummaryDto>>>> GetAllStructures(
+        [FromQuery] int? departmentId,
+        [FromQuery] string? searchTerm)
+    {
+        var query = new GetAllStructuresQuery
+        {
+            DepartmentId = departmentId,
+            SearchTerm = searchTerm
+        };
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 }

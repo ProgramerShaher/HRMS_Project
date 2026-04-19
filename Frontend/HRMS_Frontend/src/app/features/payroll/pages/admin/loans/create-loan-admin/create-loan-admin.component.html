@@ -1,0 +1,151 @@
+<div class="p-6 max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500">
+  <!-- Header -->
+  <div class="glass-panel p-6 rounded-2xl flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">إنشاء سلفة جديدة</h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1">قم بتعبئة النموذج أدناه لإنشاء سلفة لموظف</p>
+    </div>
+    <button pButton icon="pi pi-arrow-right" label="رجوع" 
+            class="p-button-text" (click)="cancel()"></button>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="loanForm" (ngSubmit)="onSubmit()">
+    <div class="glass-panel p-6 rounded-2xl space-y-6">
+      <!-- Employee Selector -->
+      <div>
+        <label class="block text-sm font-bold text-slate-700 dark:text-zinc-300 mb-2">
+          الموظف <span class="text-red-500">*</span>
+        </label>
+        <app-employee-selector 
+          formControlName="employeeId"
+          (employeeSelected)="onEmployeeSelected($event)"
+          [showDetails]="true">
+        </app-employee-selector>
+        @if (loanForm.get('employeeId')?.invalid && loanForm.get('employeeId')?.touched) {
+          <small class="text-red-500 mt-1 block">يرجى اختيار موظف</small>
+        }
+      </div>
+
+      <!-- Loan Amount -->
+      <div>
+        <label class="block text-sm font-bold text-slate-700 dark:text-zinc-300 mb-2">
+          مبلغ السلفة <span class="text-red-500">*</span>
+        </label>
+        <p-inputNumber formControlName="loanAmount" 
+                       mode="decimal" 
+                       [minFractionDigits]="2"
+                       [maxFractionDigits]="2"
+                       suffix=" ريال"
+                       placeholder="أدخل المبلغ"
+                       styleClass="w-full">
+        </p-inputNumber>
+        @if (loanForm.get('loanAmount')?.invalid && loanForm.get('loanAmount')?.touched) {
+          <small class="text-red-500 mt-1 block">يرجى إدخال مبلغ صحيح (100 ريال كحد أدنى)</small>
+        }
+        @if (exceedsLimit()) {
+          <p-message severity="warn" 
+                     text="المبلغ يتجاوز الحد المسموح (30% من الراتب الأساسي)"
+                     styleClass="mt-2 w-full"></p-message>
+        }
+      </div>
+
+      <!-- Installment Count -->
+      <div>
+        <label class="block text-sm font-bold text-slate-700 dark:text-zinc-300 mb-2">
+          عدد الأقساط <span class="text-red-500">*</span>
+        </label>
+        <p-inputNumber formControlName="installmentCount" 
+                       [min]="1" 
+                       [max]="60"
+                       [showButtons]="true"
+                       placeholder="عدد الأقساط"
+                       styleClass="w-full">
+        </p-inputNumber>
+        @if (loanForm.get('installmentCount')?.invalid && loanForm.get('installmentCount')?.touched) {
+          <small class="text-red-500 mt-1 block">يرجى إدخال عدد صحيح (1-60)</small>
+        }
+      </div>
+
+      <!-- Start Date -->
+      <div>
+        <label class="block text-sm font-bold text-slate-700 dark:text-zinc-300 mb-2">
+          تاريخ البدء <span class="text-red-500">*</span>
+        </label>
+        <p-datePicker formControlName="startDate" 
+                      dateFormat="yy-mm-dd"
+                      placeholder="اختر تاريخ البدء"
+                      styleClass="w-full">
+        </p-datePicker>
+        @if (loanForm.get('startDate')?.invalid && loanForm.get('startDate')?.touched) {
+          <small class="text-red-500 mt-1 block">يرجى اختيار تاريخ البدء</small>
+        }
+      </div>
+
+      <!-- Preview Card -->
+      @if (loanForm.get('loanAmount')?.value && loanForm.get('installmentCount')?.value) {
+        <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">معاينة الحساب</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="text-center">
+              <p class="text-sm text-slate-600 dark:text-zinc-400">إجمالي المبلغ</p>
+              <p class="text-2xl font-extrabold text-blue-600 mt-1">
+                {{ formatCurrency(loanForm.get('loanAmount')?.value) }} ريال
+              </p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-slate-600 dark:text-zinc-400">القسط الشهري</p>
+              <p class="text-2xl font-extrabold text-emerald-600 mt-1">
+                {{ formatCurrency(monthlyInstallment()) }} ريال
+              </p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-slate-600 dark:text-zinc-400">عدد الأقساط</p>
+              <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">
+                {{ loanForm.get('installmentCount')?.value }}
+              </p>
+            </div>
+          </div>
+
+          <!-- 30% Rule Check -->
+          <div class="mt-4 p-3 rounded-xl" 
+               [class.bg-emerald-100]="!exceedsLimit()"
+               [class.dark:bg-emerald-900/30]="!exceedsLimit()"
+               [class.bg-red-100]="exceedsLimit()"
+               [class.dark:bg-red-900/30]="exceedsLimit()">
+            <div class="flex items-center gap-2">
+              <i class="pi" [class.pi-check-circle]="!exceedsLimit()" 
+                 [class.text-emerald-600]="!exceedsLimit()"
+                 [class.pi-exclamation-triangle]="exceedsLimit()"
+                 [class.text-red-600]="exceedsLimit()"></i>
+              <span class="text-sm font-medium" 
+                    [class.text-emerald-700]="!exceedsLimit()"
+                    [class.dark:text-emerald-300]="!exceedsLimit()"
+                    [class.text-red-700]="exceedsLimit()"
+                    [class.dark:text-red-300]="exceedsLimit()">
+                @if (exceedsLimit()) {
+                  القسط الشهري يتجاوز 30% من الراتب الأساسي
+                } @else {
+                  القسط الشهري ضمن الحد المسموح (30%)
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center justify-end gap-3">
+      <button pButton type="button" label="إلغاء" icon="pi pi-times" 
+              class="p-button-outlined p-button-secondary rounded-xl px-6"
+              (click)="cancel()"></button>
+      <button pButton type="submit" label="إنشاء السلفة" icon="pi pi-check" 
+              class="p-button-raised p-button-success rounded-xl px-6"
+              [loading]="loading()"
+              [disabled]="loanForm.invalid || exceedsLimit()"></button>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>

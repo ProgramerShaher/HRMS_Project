@@ -55,8 +55,8 @@ public class UpdateVacancyCommandHandler : IRequestHandler<UpdateVacancyCommand,
         // التحديث
         vacancy.JobId = request.JobId;
         vacancy.DeptId = request.DepartmentId;
-        // vacancy.NumberOfPositions = request.NumberOfPositions;
-        // vacancy.Description = request.Description;
+        vacancy.RequiredCount = (short)request.NumberOfPositions;
+        vacancy.JobDescription = request.Description;
         vacancy.Requirements = request.Requirements;
         vacancy.ClosingDate = request.ClosingDate;
         vacancy.UpdatedBy = _currentUserService.UserId;

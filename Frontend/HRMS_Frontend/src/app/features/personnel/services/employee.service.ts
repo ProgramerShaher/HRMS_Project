@@ -49,8 +49,8 @@ export class EmployeeService {
   /**
    * Create a new employee with full details
    */
-  create(employee: CreateEmployeeDto): Observable<number> {
-    return this.http.post<number>(this.apiUrl, employee);
+  create(employee: CreateEmployeeDto): Observable<any> {
+    return this.http.post<any>(this.apiUrl, employee);
   }
 
   /**
@@ -67,13 +67,13 @@ export class EmployeeService {
     const formData = new FormData();
     formData.append('EmployeeId', employeeId.toString());
     formData.append('DocumentTypeId', documentTypeId.toString());
-    formData.append('File', file);
+    formData.append('file', file); // Backend expects 'file' (or 'File', check controller)
     
     if (documentNumber) formData.append('DocumentNumber', documentNumber);
     if (expiryDate) formData.append('ExpiryDate', expiryDate);
 
-    // Using the correct endpoint structure: api/employee-profile/{employeeId}/documents
-    return this.http.post(`${environment.apiUrl}/employee-profile/${employeeId}/documents`, formData);
+    // Using the user requested endpoint: api/Employees/{id}/documents
+    return this.http.post(`${this.apiUrl}/${employeeId}/documents`, formData);
   }
 
   /**
@@ -81,10 +81,10 @@ export class EmployeeService {
    */
   uploadProfilePicture(employeeId: number, file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('photo', file);
+    formData.append('file', file); // User's controller expects 'file'
 
-    // Using the correct endpoint: api/employee-profile/{id}/photo
-    return this.http.put(`${environment.apiUrl}/employee-profile/${employeeId}/photo`, formData);
+    // Using the user requested endpoint: api/Employees/{id}/profile-picture
+    return this.http.post(`${this.apiUrl}/${employeeId}/profile-picture`, formData);
   }
   // ====================================================================================================
   // 1. Qualifications
@@ -101,6 +101,15 @@ export class EmployeeService {
     });
     if (file) formData.append('Attachment', file);
     return this.http.post(`${environment.apiUrl}/employee-profile/${employeeId}/qualifications`, formData);
+  }
+
+  updateQualification(employeeId: number, id: number, data: any, file?: File): Observable<any> {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+        if (data[key] !== null && data[key] !== undefined) formData.append(key, data[key]);
+    });
+    if (file) formData.append('Attachment', file);
+    return this.http.put(`${environment.apiUrl}/employee-profile/${employeeId}/qualifications/${id}`, formData);
   }
 
   deleteQualification(employeeId: number, id: number): Observable<any> {
@@ -124,6 +133,19 @@ export class EmployeeService {
       return this.http.post(`${environment.apiUrl}/employee-profile/${employeeId}/certifications`, formData);
   }
 
+  updateCertification(employeeId: number, id: number, data: any, file?: File): Observable<any> {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+        if (data[key] !== null && data[key] !== undefined) {
+            formData.append(key, data[key]);
+        }
+    });
+    if (file) {
+        formData.append('file', file);
+    }
+    return this.http.put(`${environment.apiUrl}/employee-profile/${employeeId}/certifications/${id}`, formData);
+  }
+
   deleteCertification(employeeId: number, id: number): Observable<any> {
       return this.http.delete(`${environment.apiUrl}/employee-profile/${employeeId}/certifications/${id}`);
   }
@@ -137,6 +159,10 @@ export class EmployeeService {
 
   addExperience(employeeId: number, data: any): Observable<any> {
       return this.http.post(`${environment.apiUrl}/employee-profile/${employeeId}/experiences`, data);
+  }
+
+  updateExperience(employeeId: number, id: number, data: any): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/employee-profile/${employeeId}/experiences/${id}`, data);
   }
 
   deleteExperience(employeeId: number, id: number): Observable<any> {
@@ -232,5 +258,13 @@ export class EmployeeService {
 
   renewContract(employeeId: number, data: any): Observable<any> {
       return this.http.put(`${environment.apiUrl}/employee-profile/${employeeId}/contracts/renew`, data);
+  }
+
+  updateContract(employeeId: number, id: number, data: any): Observable<any> {
+      return this.http.put(`${environment.apiUrl}/employee-profile/${employeeId}/contracts/${id}`, data);
+  }
+
+  deleteContract(employeeId: number, id: number): Observable<any> {
+      return this.http.delete(`${environment.apiUrl}/employee-profile/${employeeId}/contracts/${id}`);
   }
 }

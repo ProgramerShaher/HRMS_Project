@@ -1,0 +1,182 @@
+<div class="employee-structure-container p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+  
+  <!-- Premium Header & Actions -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 no-print">
+    <div class="flex items-center gap-6">
+      <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center text-white text-3xl font-black shadow-2xl shadow-indigo-500/30">
+        {{ structure()?.employeeNameAr?.charAt(0) }}
+      </div>
+      <div class="space-y-1">
+        <div class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          <a routerLink="/payroll/structures" class="hover:text-indigo-500 transition-colors">هياكل الرواتب</a>
+          <i class="pi pi-chevron-left text-[8px]"></i>
+          <span>{{ structure()?.employeeCode }}</span>
+        </div>
+        <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+          {{ structure()?.employeeNameAr }}
+        </h1>
+        <p class="text-sm font-bold text-slate-500 dark:text-zinc-400 flex items-center gap-2">
+          <i class="pi pi-building text-indigo-500"></i> {{ structure()?.departmentName }}
+          <span class="opacity-30">|</span>
+          <i class="pi pi-user text-indigo-500"></i> {{ structure()?.jobTitleAr }}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <p-button label="طباعة الهيكل" icon="pi pi-print" severity="secondary" [rounded]="true" [outlined]="true"></p-button>
+      <div class="h-10 w-px bg-slate-200 dark:bg-zinc-800"></div>
+      <p-button icon="pi pi-times" [rounded]="true" [text]="true" routerLink="/payroll/structures"></p-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-32 space-y-4">
+      <div class="relative w-16 h-16">
+        <div class="absolute inset-0 border-4 border-indigo-500/10 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+      <p class="text-slate-500 font-medium">جاري تحليل هيكل الراتب...</p>
+    </div>
+  } @else if (structure()) {
+    
+    <!-- Financial Overview Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Total Earnings -->
+      <div class="glass-panel p-6 rounded-[32px] group hover:shadow-2xl transition-all duration-500 border-white/40">
+        <div class="flex justify-between items-start mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
+            <i class="pi pi-plus-circle text-xl"></i>
+          </div>
+          <span class="text-[9px] font-black py-1 px-3 rounded-full bg-emerald-100 text-emerald-600 uppercase">المستحقات</span>
+        </div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">إجمالي ما يتقاضاه الموظف</p>
+        <h3 class="text-3xl font-black text-slate-900 dark:text-white">{{ formatCurrency(structure()?.totalEarnings) }}</h3>
+      </div>
+
+      <!-- Total Deductions -->
+      <div class="glass-panel p-6 rounded-[32px] group hover:shadow-2xl transition-all duration-500 border-white/40">
+        <div class="flex justify-between items-start mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600">
+            <i class="pi pi-minus-circle text-xl"></i>
+          </div>
+          <span class="text-[9px] font-black py-1 px-3 rounded-full bg-rose-100 text-rose-600 uppercase">الاستقطاعات</span>
+        </div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">إجمالي الخصومات الشهرية</p>
+        <h3 class="text-3xl font-black text-rose-600">{{ formatCurrency(structure()?.totalDeductions) }}</h3>
+      </div>
+
+      <!-- Final Net -->
+      <div class="glass-panel p-6 rounded-[32px] bg-gradient-to-br from-slate-900 to-slate-800 text-white relative overflow-hidden shadow-xl border-none group transition-transform hover:scale-[1.02] duration-500">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+        <div class="relative z-10">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">صافي الراتب المستلم</p>
+          <h3 class="text-4xl font-black text-amber-400 mb-4">{{ formatCurrency(structure()?.netSalary) }}</h3>
+          <div class="flex items-center gap-2">
+            <div class="px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-full text-[10px] font-bold">
+              <i class="pi pi-star-fill text-amber-500 ml-1"></i>
+              {{ structure()?.gradeNameAr }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Earnings Section -->
+      <div class="space-y-6">
+        <div class="flex items-center justify-between px-4">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+              <i class="pi pi-plus text-xs"></i>
+            </span>
+            المستحقات (Earnings)
+          </h3>
+          <span class="text-xs font-bold text-slate-400">{{ getEarnings().length }} عناصر</span>
+        </div>
+
+        <div class="glass-panel rounded-[40px] shadow-2xl overflow-hidden border-none backdrop-blur-3xl bg-white/90 dark:bg-zinc-900/90">
+          <p-table [value]="getEarnings()" styleClass="p-datatable-lg no-border">
+            <ng-template pTemplate="header">
+              <tr class="bg-emerald-50/30 dark:bg-emerald-900/10">
+                <th class="!bg-transparent text-emerald-900 dark:text-emerald-300 font-black py-6">البند المالي</th>
+                <th class="!bg-transparent text-left font-black">القيمة/النسبة</th>
+                <th class="!bg-transparent text-left font-black">المبلغ الفعلي</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-e>
+              <tr class="border-b border-slate-50 dark:border-zinc-800 hover:bg-emerald-50/10 transition-colors">
+                <td class="font-bold py-6">
+                  <div class="flex flex-col">
+                    <span class="text-slate-900 dark:text-white">{{ e.elementNameAr }}</span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">#ID: {{ e.elementId }}</span>
+                  </div>
+                </td>
+                <td class="text-left font-black text-slate-600 dark:text-zinc-400">
+                  {{ e.percentage > 0 ? e.percentage + '%' : '-' }}
+                </td>
+                <td class="text-left font-black text-emerald-600 text-lg">
+                  {{ formatCurrency(e.amount) }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+      <!-- Deductions Section -->
+      <div class="space-y-6">
+        <div class="flex items-center justify-between px-4">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center text-white">
+              <i class="pi pi-minus text-xs"></i>
+            </span>
+            الاستقطاعات (Deductions)
+          </h3>
+          <span class="text-xs font-bold text-slate-400">{{ getDeductions().length }} عناصر</span>
+        </div>
+
+        <div class="glass-panel rounded-[40px] shadow-2xl overflow-hidden border-none backdrop-blur-3xl bg-white/90 dark:bg-zinc-900/90">
+          <p-table [value]="getDeductions()" styleClass="p-datatable-lg no-border">
+            <ng-template pTemplate="header">
+              <tr class="bg-rose-50/30 dark:bg-rose-900/10">
+                <th class="!bg-transparent text-rose-900 dark:text-rose-300 font-black py-6">البند المالي</th>
+                <th class="!bg-transparent text-left font-black">القيمة/النسبة</th>
+                <th class="!bg-transparent text-left font-black">المبلغ المختصم</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-e>
+              <tr class="border-b border-slate-50 dark:border-zinc-800 hover:bg-rose-50/10 transition-colors">
+                <td class="font-bold py-6">
+                  <div class="flex flex-col">
+                    <span class="text-slate-900 dark:text-white">{{ e.elementNameAr }}</span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">#ID: {{ e.elementId }}</span>
+                  </div>
+                </td>
+                <td class="text-left font-black text-slate-600 dark:text-zinc-400">
+                  {{ e.percentage > 0 ? e.percentage + '%' : '-' }}
+                </td>
+                <td class="text-left font-black text-rose-600 text-lg">
+                  {{ formatCurrency(e.amount) }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3" class="text-center py-20">
+                  <div class="flex flex-col items-center gap-2 opacity-30">
+                    <i class="pi pi-shield text-4xl"></i>
+                    <p class="text-xs font-bold uppercase tracking-widest">لا توجد استقطاعات مسجلة</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

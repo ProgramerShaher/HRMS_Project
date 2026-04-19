@@ -10,7 +10,7 @@ namespace HRMS.API.Controllers
     public class CandidatesController : ControllerBase
     {
         private readonly HRMSDbContext _context;
-
+        
         public CandidatesController(HRMSDbContext context)
         {
             _context = context;

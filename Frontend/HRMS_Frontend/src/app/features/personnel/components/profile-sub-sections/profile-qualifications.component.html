@@ -1,140 +1,128 @@
-<div class="bg-white dark:bg-zinc-900 rounded-lg border border-slate-200 dark:border-zinc-800 overflow-hidden">
-    <!-- Header -->
-    <div class="px-4 py-2 border-b border-slate-100 dark:border-zinc-800 flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
-        <h3 class="font-bold text-sm text-slate-700 dark:text-white flex items-center gap-2">
-            <i class="pi pi-verified text-purple-500 text-sm"></i>
-            المؤهلات العلمية
-        </h3>
-        <button pButton icon="pi pi-plus" class="p-button-text p-button-sm !w-6 !h-6 !p-0 text-slate-500 hover:text-blue-600" (click)="showDialog()"></button>
-    </div>
-
-    <!-- Table -->
-    <p-table [value]="qualifications()" [loading]="loading()" styleClass="p-datatable-sm text-xs" [rowHover]="true">
-        <ng-template pTemplate="header">
-            <tr class="text-xs text-slate-500 bg-slate-50/50">
-                <th class="!p-2 font-medium">الدرجة</th>
-                <th class="!p-2 font-medium">التخصص</th>
-                <th class="!p-2 font-medium">الجهة</th>
-                <th class="!p-2 font-medium w-20">سنة التخرج</th>
-                <th class="!p-2 w-16 text-center"></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-qual>
-            <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
-                <td class="!p-2">
-                    <span class="px-1.5 py-0.5 rounded bg-purple-50 text-purple-600 text-[10px] font-bold border border-purple-100">{{ qual.degreeType }}</span>
-                </td>
-                <td class="!p-2 font-bold text-slate-700">{{ qual.majorAr }}</td>
-                <td class="!p-2 text-slate-500">{{ qual.universityAr }}</td>
-                <td class="!p-2 font-mono text-center">{{ qual.graduationYear }}</td>
-                <td class="!p-2 text-center">
-                    <div class="flex justify-center gap-1">
-                         <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-xs opacity-50 hover:opacity-100" (click)="delete(qual.qualificationId)"></button>
+<p-toast position="top-center"></p-toast>
+<div class="bg-white/80 backdrop-blur-md border border-slate-200/60 rounded-3xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
+    <!-- Header Section -->
+    <div class="relative p-6 pb-0">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-right">
+            <div>
+                <div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] border border-slate-200/60 shadow-lg p-4 relative group">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shadow-sm">
+                                <i class="pi pi-graduation-cap text-base font-bold"></i>
+                            </div>
+                            <h3 class="text-base font-black text-slate-900">المؤهلات العلمية والدراسية</h3>
+                        </div>
+                        <button (click)="showDialog()" 
+                            class="flex items-center gap-1.5 px-3 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl shadow-md transition-all active:scale-95 text-[10px] font-bold">
+                            <i class="pi pi-plus"></i>
+                            إضافة مؤهل
+                        </button>
                     </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="5" class="text-center py-4 text-slate-400 text-xs">
-                    لا توجد مؤهلات
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    
+                    <div class="space-y-4">
+                        <div *ngIf="qualifications().length > 0" class="overflow-x-auto rounded-xl border border-slate-100">
+                            <table class="w-full text-right">
+                                <thead class="bg-slate-50/80 border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">المستوى</th>
+                                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">التخصص / الدرجة</th>
+                                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">المؤسسة التعليمية</th>
+                                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">سنة التخرج</th>
+                                        <th class="px-3 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    <tr *ngFor="let qual of qualifications()" class="hover:bg-slate-50/50 transition-colors group/row">
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-black text-slate-800">{{ qual.degreeType }}</span>
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-bold text-slate-600">{{ qual.majorAr }}</span>
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            <span class="text-xs font-medium text-slate-500">{{ qual.universityAr }}</span>
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            <span class="text-[10px] font-bold text-slate-400">{{ qual.graduationYear }}</span>
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            <div class="flex items-center gap-1">
+                                                <button (click)="showEditDialog(qual)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center shadow-sm">
+                                                    <i class="pi pi-pencil text-[10px]"></i>
+                                                </button>
+                                                <button (click)="delete(qual.qualificationId)" class="w-7 h-7 rounded-lg bg-white border border-slate-100 text-red-600 hover:bg-red-50 transition-colors flex items-center justify-center shadow-sm">
+                                                    <i class="pi pi-trash text-[10px]"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Premium Dialog -->
-<p-dialog 
-    [(visible)]="displayDialog" 
-    [header]="'إضافة مؤهل علمي جديد'" 
+<!-- Premium Dialog Style -->
+<p-dialog [(visible)]="displayDialog" 
+    [header]="isEditMode ? 'تعديل بيانات مؤهل' : 'إضافة مؤهل علمي'" 
     [modal]="true" 
-    [style]="{width: '550px'}" 
-    styleClass="p-fluid rounded-2xl overflow-hidden"
-    [draggable]="false"
+    [style]="{width: '650px', borderRadius: '24px', overflow: 'hidden'}" 
+    [draggable]="false" 
     [resizable]="false"
-    [closable]="true">
+    styleClass="premium-dialog">
     
-    <ng-template pTemplate="closeicon">
-        <i class="pi pi-times text-slate-400 hover:text-slate-600"></i>
-    </ng-template>
-
-    <div class="mt-2">
-        <form [formGroup]="qualificationForm" class="flex flex-col gap-5">
+    <div class="pt-6 px-1 text-right">
+        <form [formGroup]="qualificationForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <div class="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl border border-purple-100 dark:border-purple-800/30 mb-2">
-                <h5 class="flex items-center gap-2 text-purple-800 dark:text-purple-300 font-bold text-sm mb-1">
-                    <i class="pi pi-info-circle"></i>
-                    بيانات المؤهل
-                </h5>
-                <p class="text-xs text-purple-600 dark:text-purple-400/80">يرجى التأكد من صحة بيانات التخصص والدرجة العلمية.</p>
+            <div class="col-span-1 md:col-span-2 group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">المستوى الأكاديمي</label>
+                <p-select [options]="levels()" formControlName="qualificationLevelId" optionLabel="qualificationLevelNameAr" optionValue="qualificationLevelId" 
+                    [filter]="true" appendTo="body" placeholder="اختر الدرجة العلمية (بكالوريوس، ماجستير...)" 
+                    styleClass="w-full !rounded-2xl !border-slate-200 !bg-slate-50/50 !py-1 text-right"></p-select>
             </div>
 
-            <div class="grid grid-cols-2 gap-5">
-                <span class="p-float-label w-full col-span-2 md:col-span-1">
-                    <p-select 
-                        [options]="['بكلاريوس', 'ماجستير', 'دكتوراه', 'دبلوم', 'ثانوية عامة']" 
-                        formControlName="degreeType" 
-                        appendTo="body" 
-                        styleClass="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700"
-                        [ngClass]="{'ng-invalid ng-dirty': submitted && qualificationForm.get('degreeType')?.invalid}">
-                    </p-select>
-                    <label class="text-slate-500">الدرجة العلمية <span class="text-red-500">*</span></label>
-                </span>
-
-                <span class="p-float-label w-full col-span-2 md:col-span-1">
-                    <p-inputNumber 
-                        formControlName="graduationYear" 
-                        [useGrouping]="false" 
-                        [min]="1950" 
-                        [max]="2030" 
-                        inputStyleClass="p-3 rounded-xl w-full text-center font-bold"
-                        class="w-full">
-                    </p-inputNumber>
-                    <label class="text-slate-500">سنة التخرج <span class="text-red-500">*</span></label>
-                </span>
-
-                <span class="p-float-label w-full col-span-2">
-                    <input 
-                        pInputText 
-                        formControlName="majorAr" 
-                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" 
-                        [ngClass]="{'ng-invalid ng-dirty': submitted && qualificationForm.get('majorAr')?.invalid}" />
-                    <label class="text-slate-500">التخصص (عربي فقط) <span class="text-red-500">*</span></label>
-                </span>
-                <small class="col-span-2 text-red-500 -mt-4 text-xs" *ngIf="submitted && qualificationForm.get('majorAr')?.errors?.['pattern']">يجب استخدام الأحرف العربية فقط</small>
-
-                <span class="p-float-label w-full col-span-2">
-                    <input 
-                        pInputText 
-                        formControlName="universityAr" 
-                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                    <label class="text-slate-500">الجامعة / الجهة المانحة <span class="text-red-500">*</span></label>
-                </span>
-
-                <span class="p-float-label w-full col-span-2 md:col-span-1">
-                    <input 
-                        pInputText 
-                        formControlName="grade" 
-                        class="w-full p-3 rounded-xl border-slate-200 dark:border-zinc-700" />
-                    <label class="text-slate-500">التقدير (اختياري)</label>
-                </span>
-            </div>
-
-            <!-- File Upload -->
-            <div class="border-2 border-dashed border-slate-200 dark:border-zinc-700 rounded-xl p-4 text-center hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer relative" (click)="fileInput.click()">
-                <input #fileInput type="file" class="hidden" accept="image/*,application/pdf" (change)="onFileSelect({files: fileInput.files})">
-                <div *ngIf="!selectedFile" class="flex flex-col items-center gap-2 text-slate-400">
-                    <i class="pi pi-cloud-upload text-2xl"></i>
-                    <span class="text-sm font-medium">اضغط لإرفاق الشهادة (اختياري)</span>
-                    <span class="text-xs opacity-70">JPG, PNG, PDF (Max 2MB)</span>
+            <div class="col-span-1 md:col-span-2 group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">المؤسسة التعليمية (جامعة/معهد)</label>
+                <div class="relative text-right">
+                    <i class="pi pi-building absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText formControlName="universityAr" placeholder="اسم الجامعة أو المعهد الأكاديمي..." 
+                        class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !pr-11 !rounded-2xl focus:!ring-2 focus:!ring-cyan-500/20 text-right" />
                 </div>
-                <div *ngIf="selectedFile" class="flex items-center justify-between bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg text-purple-700 dark:text-purple-300">
-                    <div class="flex items-center gap-2">
-                        <i class="pi pi-file text-lg"></i>
-                        <span class="text-sm font-bold truncate max-w-[200px]">{{ selectedFile.name }}</span>
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">التخصص (بالعربي)</label>
+                <input pInputText formControlName="majorAr" placeholder="مثلاً: هندسة برمجيات" 
+                    class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !rounded-2xl focus:!ring-2 focus:!ring-cyan-500/20 text-right text-sm" />
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">التقدير / النسبة</label>
+                <input pInputText formControlName="grade" placeholder="امتياز / 90%..." 
+                    class="w-full !bg-slate-50/50 !border-slate-200 !py-3 !rounded-2xl focus:!ring-2 focus:!ring-cyan-500/20 text-right text-sm" />
+            </div>
+
+            <div class="group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">سنة التخرج</label>
+                <p-inputNumber formControlName="graduationYear" [useGrouping]="false" placeholder="YYYY" 
+                    styleClass="w-full !bg-slate-50/50 !border-slate-200 !rounded-2xl focus:!ring-2 focus:!ring-cyan-500/20 text-right"></p-inputNumber>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 group text-right">
+                <label class="block text-xs font-bold text-slate-500 mb-2 mr-1 uppercase tracking-wider text-right">المرفقات (شهادة التخرج)</label>
+                <div class="flex items-center gap-4 p-5 border-2 border-dashed border-slate-200 rounded-2xl hover:border-cyan-400 hover:bg-cyan-50/30 transition-all relative group/upload">
+                    <input type="file" (change)="onFileSelect($event)" class="absolute inset-0 opacity-0 cursor-pointer z-10" accept=".pdf,.jpg,.jpeg,.png">
+                    <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover/upload:bg-cyan-100 group-hover/upload:text-cyan-600 transition-colors">
+                        <i class="pi pi-cloud-upload text-xl"></i>
                     </div>
-                    <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger w-8 h-8" (click)="$event.stopPropagation(); selectedFile = null"></button>
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-slate-700 group-hover/upload:text-cyan-700 transition-colors">{{ fileName || 'اختر ملف الشهادة (PDF/IMG)' }}</p>
+                        <p class="text-[10px] text-slate-400">يرجى رفع ملف واضح لا يتجاوز حجمه 5 ميجابايت</p>
+                    </div>
                 </div>
             </div>
 
@@ -142,25 +130,20 @@
     </div>
 
     <ng-template pTemplate="footer">
-         <div class="flex justify-between items-center w-full pt-4 border-t border-slate-100 dark:border-zinc-800">
-            <button 
-                pButton 
-                label="إلغاء" 
-                icon="pi pi-times" 
-                class="p-button-text p-button-secondary rounded-xl" 
-                (click)="displayDialog = false">
+        <div class="flex items-center justify-between w-full pt-4 border-t border-slate-100 mt-4 text-right">
+            <button (click)="displayDialog = false" 
+                class="px-6 py-2 text-slate-400 hover:text-slate-600 font-semibold transition-colors">
+                إلغاء
             </button>
-            <button 
-                pButton 
-                label="حفظ البيانات" 
-                icon="pi pi-check" 
-                class="p-button-primary rounded-xl px-6" 
-                (click)="save()" 
-                [loading]="loading()">
+            <button (click)="save()" [disabled]="loading()"
+                class="flex items-center gap-2 px-8 py-2.5 bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 text-white rounded-2xl shadow-lg shadow-cyan-200 transition-all font-bold">
+                <i class="pi pi-check" *ngIf="!loading()"></i>
+                <i class="pi pi-spin pi-spinner" *ngIf="loading()"></i>
+                <span>حفظ المؤهل العلمي</span>
             </button>
         </div>
     </ng-template>
 </p-dialog>
 
-<p-confirmDialog [style]="{width: '400px'}" [rtl]="true" styleClass="premium-confirm-dialog"></p-confirmDialog>
-<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '400px'}" [rtl]="true"></p-confirmDialog>
+

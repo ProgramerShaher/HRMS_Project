@@ -1,0 +1,113 @@
+<div class="audit-trail-container p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+  
+  <!-- Premium Header & Stats -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 no-print">
+    <div class="flex items-center gap-6">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center text-white text-2xl shadow-xl shadow-slate-500/10">
+        <i class="pi pi-history"></i>
+      </div>
+      <div>
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">سجل التتبع (Audit Trail)</h1>
+        <p class="text-sm font-bold text-slate-500 flex items-center gap-2">
+          <i class="pi pi-shield text-indigo-500"></i> مراقبة العمليات والحركات المالية في النظام
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="glass-panel px-4 py-2 rounded-full flex items-center gap-3">
+        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">إجمالي العمليات</span>
+        <span class="text-lg font-black text-indigo-600">{{ filteredLogs().length }}</span>
+      </div>
+      <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" (onClick)="loadLogs()" [loading]="loading()"></p-button>
+    </div>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="glass-panel p-4 rounded-[32px] border-white/40 flex flex-wrap items-center gap-4">
+    <div class="flex-1 min-w-[300px] relative">
+      <i class="pi pi-search absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+      <input 
+        type="text" 
+        pInputText 
+        [ngModel]="searchTerm()" 
+        (ngModelChange)="searchTerm.set($event); applyFilters()"
+        placeholder="ابحث عن عملية، مستخدم، أو بيانات محددة..." 
+        class="w-full !pr-12 !pl-4 !py-3 !rounded-2xl !bg-slate-50/50 dark:!bg-zinc-800/50 !border-none focus:!ring-2 focus:!ring-indigo-500 transition-all font-medium"
+      />
+    </div>
+  </div>
+
+  <!-- Audit Logs Table -->
+  <div class="glass-panel rounded-[40px] shadow-2xl overflow-hidden border-none backdrop-blur-3xl bg-white/90 dark:bg-zinc-900/90">
+    <p-table 
+      [value]="filteredLogs()" 
+      [loading]="loading()"
+      [paginator]="true" 
+      [rows]="10"
+      styleClass="p-datatable-lg no-border"
+    >
+      <ng-template pTemplate="header">
+        <tr class="bg-slate-50/50 dark:bg-zinc-800/50">
+          <th class="!bg-transparent text-slate-900 dark:text-white font-black py-6">العملية</th>
+          <th class="!bg-transparent font-black">المستهدف</th>
+          <th class="!bg-transparent font-black">بواسطة</th>
+          <th class="!bg-transparent font-black">الوقت والتاريخ</th>
+          <th class="!bg-transparent font-black">التغييرات (مختصر)</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-log>
+        <tr class="border-b border-slate-50 dark:border-zinc-800 hover:bg-slate-50/50 transition-colors group">
+          <td class="py-6">
+            <p-tag 
+              [value]="getActionLabel(log.action)" 
+              [severity]="getActionSeverity(log.action)"
+              styleClass="!rounded-lg !px-3 font-bold"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="flex flex-col">
+              <span class="font-bold text-slate-800 dark:text-zinc-200">{{ getEntityLabel(log.entityName) }}</span>
+              <span class="text-[10px] font-black text-slate-400">ID: {{ log.entityId }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] font-black">
+                {{ log.performedBy.charAt(0) }}
+              </div>
+              <span class="font-bold text-slate-600 dark:text-zinc-400">{{ log.performedBy }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold text-slate-800 dark:text-slate-200">{{ formatDate(log.performedAt) }}</span>
+              <span class="text-[10px] font-black text-slate-400">{{ log.notes }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="max-w-md">
+              <div class="bg-indigo-50/50 dark:bg-indigo-900/10 p-3 rounded-2xl border border-indigo-100/20">
+                <p class="text-xs font-medium text-slate-600 dark:text-zinc-300 leading-relaxed">
+                  {{ parseValues(log.newValues) }}
+                </p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center py-20">
+            <div class="flex flex-col items-center gap-4 opacity-40">
+              <i class="pi pi-history text-5xl"></i>
+              <p class="text-lg font-black uppercase tracking-widest">لا توجد سجلات تتبع مطابقة</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

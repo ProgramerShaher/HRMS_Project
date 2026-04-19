@@ -20,6 +20,13 @@
                 <p class="text-slate-500 dark:text-zinc-400">نظام إدارة المستشفيات HRMS</p>
             </div>
 
+            <!-- Quick Login Options (Demo Only) -->
+            <div class="mb-6 grid grid-cols-3 gap-2">
+                <button pButton type="button" label="مدير النظام" class="p-button-outlined p-button-sm text-xs" (click)="quickLogin('Admin')"></button>
+                <button pButton type="button" label="مدير الموارد" class="p-button-outlined p-button-sm text-xs" (click)="quickLogin('HR')"></button>
+                <button pButton type="button" label="موظف" class="p-button-outlined p-button-sm text-xs" (click)="quickLogin('Employee')"></button>
+            </div>
+
             <!-- Form -->
             <form (ngSubmit)="login()" class="space-y-6">
                 <div class="field">
@@ -45,6 +52,11 @@
                 </div>
 
                 <p-button type="submit" label="دخول" [loading]="loading()" styleClass="w-full p-button-rounded p-button-lg p-button-primary shadow-lg shadow-blue-500/20"></p-button>
+            
+                <div class="mt-6 text-center text-sm">
+                    <span class="text-slate-500 dark:text-zinc-400">ليس لديك حساب؟</span>
+                    <a routerLink="/auth/register" class="font-bold text-blue-600 dark:text-blue-400 hover:underline mr-1">إنشاء حساب جديد</a>
+                </div>
             </form>
         </div>
         

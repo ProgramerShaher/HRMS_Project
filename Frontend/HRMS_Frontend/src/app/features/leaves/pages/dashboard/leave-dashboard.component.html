@@ -1,126 +1,161 @@
-<div class="p-6 space-y-6 animate-in fade-in duration-500">
-  <!-- Header with Glass Effect -->
-  <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="p-6 space-y-8">
+
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">نظرة عامة على الإجازات</h1>
-      <p class="text-slate-500 dark:text-zinc-400 mt-1">تتبع أرصدتك، استهلاكك، وحالة طلباتك في مكان واحد.</p>
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+          <i class="pi pi-calendar text-white text-xl"></i>
+        </div>
+        لوحة تحكم الإجازات — إدارية
+      </h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">نظرة إجمالية على طلبات وأرصدة الإجازات لجميع الموظفين</p>
     </div>
-    <div class="flex items-center gap-3">
-      <button pButton icon="pi pi-plus" label="طلب إجازة جديد" 
-              class="p-button-raised p-button-primary rounded-xl px-6"
-              (click)="navigateToNewRequest()"></button>
-      <button pButton icon="pi pi-refresh" 
-              class="p-button-text p-button-rounded"
-              [loading]="loading()" (click)="loadStats()"></button>
-    </div>
-  </div>
-
-  <!-- Stats Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Consumed Days Card -->
-    <div class="card-floating relative overflow-hidden group">
-      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all duration-500"></div>
-      <div class="relative z-10 flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">الأيام المستهلكة</p>
-          <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">{{ stats()?.consumedDays || 0 }}</h2>
-        </div>
-        <div class="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
-          <i class="pi pi-chart-bar text-2xl"></i>
-        </div>
-      </div>
-      <div class="mt-4 flex items-center gap-2 text-xs">
-        <span class="text-emerald-500 font-bold">من أصل {{ stats()?.totalEntitlement || 0 }}</span>
-        <span class="text-slate-400">إجمالي الرصيد السنوي</span>
-      </div>
-    </div>
-
-    <!-- Remaining Balance Card -->
-    <div class="card-floating relative overflow-hidden group border-emerald-100 dark:border-emerald-900/30">
-      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
-      <div class="relative z-10 flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">الرصيد المتبقي</p>
-          <h2 class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ stats()?.remainingDays || 0 }}</h2>
-        </div>
-        <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
-          <i class="pi pi-wallet text-2xl"></i>
-        </div>
-      </div>
-      <div class="mt-4">
-        <div class="w-full bg-slate-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-          <div class="bg-emerald-500 h-full rounded-full transition-all duration-1000" 
-               [style.width.%]="calculatePercentage(stats()?.remainingDays, stats()?.totalEntitlement)"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pending Requests Card -->
-    <div class="card-floating relative overflow-hidden group border-amber-100 dark:border-amber-900/30">
-      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all duration-500"></div>
-      <div class="relative z-10 flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">طلبات قيد الانتظار</p>
-          <h2 class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ stats()?.pendingRequestsCount || 0 }}</h2>
-        </div>
-        <div class="p-3 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl">
-          <i class="pi pi-clock text-2xl"></i>
-        </div>
-      </div>
-      <div class="mt-4 flex items-center gap-1 text-xs text-amber-600">
-        <i class="pi pi-info-circle"></i>
-        <span>تحتاج لمتابعة من المدير</span>
-      </div>
-    </div>
-
-    <!-- Success Rate Card -->
-    <div class="card-floating relative overflow-hidden group">
-      <div class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
-      <div class="relative z-10 flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">نسبة القبول</p>
-          <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">{{ calculateAcceptanceRate() }}%</h2>
-        </div>
-        <div class="p-3 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-xl">
-          <i class="pi pi-thumbs-up text-2xl"></i>
-        </div>
-      </div>
-      <div class="mt-4 flex items-center gap-2 text-xs">
-        <span class="text-purple-500 font-bold">{{ stats()?.approvedRequestsCount || 0 }} طلب مقبول</span>
-      </div>
+    <div class="flex gap-3">
+      <button pButton icon="pi pi-refresh" label="تحديث" class="p-button-outlined p-button-secondary" (click)="load()"></button>
+      <button pButton icon="pi pi-check-circle" label="الاعتمادات المعلقة" class="p-button-warning" (click)="navigateTo('approvals')"></button>
     </div>
   </div>
 
-  <!-- Visualizations & Charts -->
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+
+    <!-- Pending -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
+      <div class="absolute -right-4 -top-4 w-20 h-20 bg-amber-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+          <i class="pi pi-clock text-amber-600 text-xl"></i>
+        </div>
+        <span class="text-xl font-black text-amber-600">{{ stats()!.pendingRequestsCount }}</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500">طلبات معلقة</p>
+      <button pButton label="مراجعة" icon="pi pi-arrow-left" class="p-button-text p-button-sm p-button-warning mt-3" (click)="navigateTo('approvals')"></button>
+    </div>
+
+    <!-- Approved -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
+      <div class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+          <i class="pi pi-check-circle text-emerald-600 text-xl"></i>
+        </div>
+        <span class="text-xl font-black text-emerald-600">{{ stats()!.approvedRequestsCount }}</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500">طلبات معتمدة</p>
+      <p class="text-xs text-slate-400 mt-1">من إجمالي الطلبات</p>
+    </div>
+
+    <!-- Consumed Days -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
+      <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+          <i class="pi pi-calendar-minus text-blue-600 text-xl"></i>
+        </div>
+        <span class="text-xl font-black text-blue-600">{{ stats()!.consumedDays }}</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500">أيام مستهلكة</p>
+      <p class="text-xs text-slate-400 mt-1">من بداية السنة حتى الآن</p>
+    </div>
+
+    <!-- Remaining -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
+      <div class="absolute -right-4 -top-4 w-20 h-20 bg-violet-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
+          <i class="pi pi-calendar-plus text-violet-600 text-xl"></i>
+        </div>
+        <span class="text-xl font-black text-violet-600">{{ stats()!.remainingDays }}</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500">أيام متبقية</p>
+      <p class="text-xs text-slate-400 mt-1">الأرصدة الكلية لجميع الموظفين</p>
+    </div>
+  </div>
+
+  <!-- Charts + Recent Pending -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Chart Section -->
-    <div class="lg:col-span-2 glass-panel p-6 rounded-2xl border-none shadow-sm">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-bold text-slate-900 dark:text-white">توزيع الإجازات حسب النوع</h3>
-        <span class="px-3 py-1 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-xs font-medium">مباشر</span>
+
+    <!-- Donut Chart: Leave type distribution -->
+    <div class="glass-card p-6 rounded-3xl">
+      <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">توزيع أنواع الإجازات المستهلكة</h3>
+      <p class="text-sm text-slate-400 mb-4">الأيام المستهلكة حسب نوع الإجازة</p>
+      <div *ngIf="stats() && stats()!.leaveTypeSummaries?.length; else noChart">
+        <canvas id="leaveTypeChart"></canvas>
       </div>
-      <div class="h-64 flex items-center justify-center">
-        <!-- Placeholder for Chart.js -->
-        <canvas id="leaveDistributionChart"></canvas>
-      </div>
+      <ng-template #noChart>
+        <div class="h-40 flex items-center justify-center text-slate-400">
+          <span>لا توجد بيانات في السنة الحالية</span>
+        </div>
+      </ng-template>
     </div>
 
-    <!-- Balance Summary List -->
-    <div class="glass-panel p-6 rounded-2xl border-none shadow-sm flex flex-col">
-      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">تفاصيل الرصيد</h3>
-      <div class="space-y-4 flex-1 overflow-y-auto">
-        @for (item of stats()?.leaveTypeSummaries; track item.leaveTypeId) {
-          <div class="p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl border border-slate-100 dark:border-zinc-800 transition-hover hover:shadow-md transition-shadow">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm font-semibold text-slate-700 dark:text-zinc-300">{{ item.leaveTypeNameAr }}</span>
-              <span class="text-xs font-bold text-blue-600">{{ item.remainingDays }}/{{ item.totalDays }} يوم</span>
+    <!-- Recent Pending Requests -->
+    <div class="lg:col-span-2 glass-card rounded-3xl overflow-hidden">
+      <div class="p-6 flex items-center justify-between">
+        <h3 class="text-lg font-black text-slate-900 dark:text-white">آخر الطلبات المعلقة</h3>
+        <button pButton label="عرض الكل" icon="pi pi-arrow-left" class="p-button-text p-button-sm" (click)="navigateTo('approvals')"></button>
+      </div>
+
+      <div *ngIf="loading()" class="p-12 text-center text-slate-400">
+        <i class="pi pi-spin pi-spinner text-3xl block mb-2"></i> جاري التحميل...
+      </div>
+
+      <div *ngIf="!loading() && recentPending().length === 0" class="p-12 text-center text-slate-400">
+        <i class="pi pi-check-circle text-3xl block mb-2 text-emerald-400"></i>
+        لا توجد طلبات معلقة حالياً
+      </div>
+
+      <div *ngIf="!loading() && recentPending().length > 0" class="divide-y divide-slate-100 dark:divide-zinc-800">
+        <div *ngFor="let req of recentPending()" class="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-sm font-black text-slate-600">
+              {{ req.employeeName?.charAt(0) ?? '?' }}
             </div>
-            <div class="w-full bg-slate-200 dark:bg-zinc-700 h-1 rounded-full overflow-hidden">
-              <div class="bg-blue-500 h-full rounded-full" [style.width.%]="calculatePercentage(item.consumedDays, item.totalDays)"></div>
+            <div>
+              <p class="font-bold text-slate-900 dark:text-white text-sm">{{ req.employeeName }}</p>
+              <p class="text-xs text-slate-400">{{ req.leaveTypeName }} · {{ req.daysCount }} أيام</p>
             </div>
           </div>
-        }
+          <div class="flex items-center gap-3">
+            <p-tag [severity]="getStatusSeverity(req.status)" [value]="getStatusLabel(req.status)"></p-tag>
+            <button pButton icon="pi pi-eye" class="p-button-text p-button-sm p-button-rounded" (click)="navigateTo('approvals')"></button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+            (click)="navigateTo('all-requests')">
+      <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <i class="pi pi-list text-blue-600 text-xl"></i>
+      </div>
+      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">جميع الطلبات</span>
+    </button>
+    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+            (click)="navigateTo('employee-balances')">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <i class="pi pi-users text-emerald-600 text-xl"></i>
+      </div>
+      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">أرصدة الموظفين</span>
+    </button>
+    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+            (click)="navigateTo('history')">
+      <div class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <i class="pi pi-history text-violet-600 text-xl"></i>
+      </div>
+      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">سجل الحركات</span>
+    </button>
+    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+            (click)="navigateTo('setup')">
+      <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <i class="pi pi-cog text-slate-600 text-xl"></i>
+      </div>
+      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">الإعدادات</span>
+    </button>
+  </div>
+
 </div>

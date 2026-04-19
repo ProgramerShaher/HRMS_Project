@@ -1,0 +1,220 @@
+<div class="p-6 space-y-8">
+
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+          <i class="pi pi-chart-bar text-white text-xl"></i>
+        </div>
+        لوحة تحكم الرواتب الإدارية
+      </h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">
+        <i class="pi pi-clock mr-1"></i> {{ greeting() }} | {{ currentTime() }} | إجمالي الموظفين: {{ allEmployeesSalaries().length }}
+      </p>
+    </div>
+    <div class="flex gap-3">
+      <button pButton icon="pi pi-refresh" label="تحديث" class="p-button-outlined p-button-secondary" (click)="loadData()"></button>
+      <button pButton icon="pi pi-cog" label="إعدارات المسير" class="p-button-primary" (click)="navigateToAdmin()"></button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+
+    <!-- Total Gross -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+          <i class="pi pi-money-bill text-blue-600 text-xl"></i>
+        </div>
+        <span class="text-xs font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-600 px-2 py-1 rounded-lg">إجمالي</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">إجمالي الرواتب</p>
+      <h2 class="text-2xl font-black text-slate-900 dark:text-white mt-1">
+        {{ formatCurrency(totalGrossSalary()) }}
+        <span class="text-xs font-normal text-slate-400">ريال</span>
+      </h2>
+    </div>
+
+    <!-- Total Net -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+          <i class="pi pi-wallet text-emerald-600 text-xl"></i>
+        </div>
+        <span class="text-xs font-bold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 px-2 py-1 rounded-lg">صافي</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">صافي الرواتب الكلي</p>
+      <h2 class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
+        {{ formatCurrency(totalNetSalary()) }}
+        <span class="text-xs font-normal text-slate-400">ريال</span>
+      </h2>
+    </div>
+
+    <!-- Total Deductions -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center">
+          <i class="pi pi-minus-circle text-rose-600 text-xl"></i>
+        </div>
+        <span class="text-xs font-bold bg-rose-50 dark:bg-rose-900/30 text-rose-600 px-2 py-1 rounded-lg">
+          {{ totalActiveLoans() }} سلفة نشطة
+        </span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">إجمالي الاستقطاعات</p>
+      <h2 class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">
+        {{ formatCurrency(totalDeductions()) }}
+        <span class="text-xs font-normal text-slate-400">ريال</span>
+      </h2>
+    </div>
+
+    <!-- Coverage -->
+    <div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl"></div>
+      <div class="flex justify-between items-start mb-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+          <i class="pi pi-users text-amber-600 text-xl"></i>
+        </div>
+        <span class="text-xs font-bold px-2 py-1 rounded-lg"
+              [class]="employeesWithoutSalary() > 0 ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'">
+          {{ employeesWithoutSalary() }} بدون هيكل
+        </span>
+      </div>
+      <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">تغطية هياكل الرواتب</p>
+      <h2 class="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1">
+        {{ employeesWithSalary() }} / {{ allEmployeesSalaries().length }}
+        <span class="text-xs font-normal text-slate-400">موظف</span>
+      </h2>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Dept. Chart -->
+    <div class="lg:col-span-2 glass-card p-6 rounded-3xl">
+      <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">توزيع الرواتب حسب الأقسام</h3>
+      <p class="text-sm text-slate-400 mb-6">مقارنة إجمالي الرواتب لكل قسم</p>
+      <canvas id="deptChart" style="max-height:280px"></canvas>
+    </div>
+
+    <!-- Salary Range Chart -->
+    <div class="glass-card p-6 rounded-3xl">
+      <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">توزيع شرائح الرواتب</h3>
+      <p class="text-sm text-slate-400 mb-6">توزيع الموظفين حسب صافي الراتب</p>
+      <canvas id="salaryRangeChart" style="max-height:260px"></canvas>
+    </div>
+  </div>
+
+  <!-- Employees Table -->
+  <div class="glass-card rounded-3xl overflow-hidden">
+    <div class="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <h3 class="text-lg font-black text-slate-900 dark:text-white">جدول رواتب جميع الموظفين</h3>
+        <p class="text-sm text-slate-400">{{ filteredEmployees().length }} موظف معروض</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="p-input-icon-right relative">
+          <i class="pi pi-search absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input pInputText [(ngModel)]="searchTerm" (ngModelChange)="filterEmployees()" placeholder="ابحث باسم أو قسم..." class="pr-10 rounded-2xl" />
+        </span>
+        <button pButton icon="pi pi-users" label="السلف" class="p-button-outlined p-button-warning" (click)="navigateToLoans()"></button>
+      </div>
+    </div>
+
+    <p-table
+      [value]="filteredEmployees()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      styleClass="p-datatable-striped"
+      responsiveLayout="scroll">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:40px">#</th>
+          <th>الموظف</th>
+          <th>القسم</th>
+          <th class="text-center">الراتب الأساسي</th>
+          <th class="text-center">إجمالي البدلات</th>
+          <th class="text-center">إجمالي الاستحقاق</th>
+          <th class="text-center">الاستقطاعات</th>
+          <th class="text-center">صافي الراتب</th>
+          <th class="text-center">السلف النشطة</th>
+          <th class="text-center">الحالة</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-emp let-i="rowIndex">
+        <tr>
+          <td class="text-slate-400 text-xs">{{ i + 1 }}</td>
+          <td>
+            <div class="flex flex-col">
+              <span class="font-bold text-slate-800 dark:text-white">{{ emp.employeeNameAr }}</span>
+              <small class="text-slate-400">{{ emp.employeeCode }}</small>
+            </div>
+          </td>
+          <td class="text-slate-500 text-sm">{{ emp.departmentName || '—' }}</td>
+          <td class="text-center font-bold text-slate-700 dark:text-zinc-300">
+            {{ emp.hasSalaryStructure ? formatCurrency(emp.basicSalary) : '—' }}
+          </td>
+          <td class="text-center text-blue-600 font-semibold text-sm">
+            <span *ngIf="emp.hasSalaryStructure">
+              {{ formatCurrency(emp.totalAllowances) }}
+              <small class="text-slate-400 font-normal"> ({{ emp.allowancesCount }} بند)</small>
+            </span>
+            <span *ngIf="!emp.hasSalaryStructure" class="text-slate-300">—</span>
+          </td>
+          <td class="text-center font-bold text-slate-700 dark:text-zinc-300">
+            {{ emp.hasSalaryStructure ? formatCurrency(emp.grossSalary) : '—' }}
+          </td>
+          <td class="text-center text-rose-600 font-semibold text-sm">
+            {{ emp.hasSalaryStructure && emp.totalDeductions > 0 ? formatCurrency(emp.totalDeductions) : '—' }}
+          </td>
+          <td class="text-center">
+            <span *ngIf="emp.hasSalaryStructure" class="font-black text-emerald-600">
+              {{ formatCurrency(emp.netSalary) }}
+            </span>
+            <span *ngIf="!emp.hasSalaryStructure" class="text-slate-400 font-medium text-sm">لا يوجد هيكل</span>
+          </td>
+          <td class="text-center">
+            <span *ngIf="emp.activeLoansCount > 0" class="px-2 py-1 rounded-lg bg-amber-100 text-amber-700 font-bold text-xs">
+              {{ emp.activeLoansCount }} سلفة
+            </span>
+            <span *ngIf="emp.activeLoansCount === 0" class="text-slate-300 text-sm">—</span>
+          </td>
+          <td class="text-center">
+            <p-tag
+              [severity]="emp.hasSalaryStructure ? 'success' : 'danger'"
+              [value]="emp.hasSalaryStructure ? 'مفعّل' : 'بدون هيكل'">
+            </p-tag>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center py-10 text-slate-400">
+            <i class="pi pi-inbox text-3xl block mb-2"></i>
+            لا توجد بيانات
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <tr class="font-black bg-slate-50 dark:bg-slate-800">
+          <td colspan="5" class="p-4 text-right text-slate-600 dark:text-zinc-300">الإجمالي الكلي</td>
+          <td class="p-4 text-center text-slate-700 dark:text-zinc-200">{{ formatCurrency(totalGrossSalary()) }}</td>
+          <td class="p-4 text-center text-rose-600">{{ formatCurrency(totalDeductions()) }}</td>
+          <td class="p-4 text-center text-emerald-600 text-lg">{{ formatCurrency(totalNetSalary()) }}</td>
+          <td colspan="2"></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</div>

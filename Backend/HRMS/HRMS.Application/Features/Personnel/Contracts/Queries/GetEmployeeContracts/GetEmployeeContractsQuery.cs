@@ -23,8 +23,28 @@ public class GetEmployeeContractsQueryHandler : IRequestHandler<GetEmployeeContr
     public async Task<List<ContractDto>> Handle(GetEmployeeContractsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Contracts
+            .Include(c => c.Employee)
+                .ThenInclude(e => e.Job)
+                    .ThenInclude(j => j.DefaultGrade)
             .Where(c => c.EmployeeId == request.EmployeeId)
-            .ProjectTo<ContractDto>(_mapper.ConfigurationProvider)
+            .Select(c => new ContractDto
+            {
+                ContractId = c.ContractId,
+                EmployeeId = c.EmployeeId,
+                ContractType = c.ContractType,
+                StartDate = c.StartDate,
+                EndDate = c.EndDate,
+                IsRenewable = c.IsRenewable,
+                BasicSalary = c.BasicSalary,
+                HousingAllowance = c.HousingAllowance,
+                TransportAllowance = c.TransportAllowance,
+                OtherAllowances = c.OtherAllowances,
+                VacationDays = c.VacationDays,
+                WorkingHoursDaily = c.WorkingHoursDaily,
+                ContractStatus = c.ContractStatus,
+                JobGradeAr = c.Employee.Job.DefaultGrade.GradeNameAr,
+                IsActive = c.ContractStatus == "ACTIVE" && (c.EndDate == null || c.EndDate >= DateTime.Now)
+            })
             .ToListAsync(cancellationToken);
     }
 }

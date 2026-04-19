@@ -1,7 +1,7 @@
 using AutoMapper;
 using HRMS.Application.DTOs.Personnel;
-using HRMS.Application.Features.Personnel.Contracts.Helpers;
 using HRMS.Application.Interfaces;
+using HRMS.Core.Entities.Payroll;
 using HRMS.Core.Entities.Personnel;
 using HRMS.Core.Utilities;
 using MediatR;
@@ -17,13 +17,6 @@ public record CreateContractCommand(CreateContractDto Data) : IRequest<Result<in
 /// <summary>
 /// معالج أمر إنشاء العقد مع تطبيق قواعد العمل الصارمة والمزامنة المالية الكاملة
 /// </summary>
-/// <remarks>
-/// القواعد المطبقة:
-/// 1. التحقق من نطاق الراتب حسب الدرجة الوظيفية
-/// 2. ضمان عقد نشط واحد فقط لكل موظف
-/// 3. مزامنة كاملة لجميع مكونات العقد مع هيكل الراتب (Basic, Housing, Transport, Other Allowances)
-/// 4. استخدام Transaction لضمان سلامة البيانات
-/// </remarks>
 public class CreateContractCommandHandler : IRequestHandler<CreateContractCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
@@ -67,17 +60,18 @@ public class CreateContractCommandHandler : IRequestHandler<CreateContractComman
         }
 
         // ═══════════════════════════════════════════════════════════
-        // STEP 3: Single Active Contract Rule - REJECT if exists
+        // STEP 3: Single Active Contract Rule - Check & Expire exists
         // ═══════════════════════════════════════════════════════════
-        var hasActiveContract = await _context.Contracts
-            .AnyAsync(c => c.EmployeeId == request.Data.EmployeeId && c.ContractStatus == "ACTIVE", cancellationToken);
+        var activeContracts = await _context.Contracts
+            .Where(c => c.EmployeeId == request.Data.EmployeeId && c.ContractStatus == "ACTIVE")
+            .ToListAsync(cancellationToken);
 
-        if (hasActiveContract)
+        // Auto-expire existing active contracts instead of rejecting (Requirement Update)
+        foreach (var activeContract in activeContracts)
         {
-            return Result<int>.Failure(
-                $"لا يمكن إضافة عقد جديد. الموظف رقم {request.Data.EmployeeId} لديه عقد نشط بالفعل. " +
-                "يرجى إنهاء العقد الحالي أولاً أو استخدام خاصية التجديد."
-            );
+            activeContract.ContractStatus = "EXPIRED";
+            activeContract.EndDate = request.Data.StartDate.AddDays(-1); // End yesterday
+            _context.Contracts.Update(activeContract);
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -91,52 +85,16 @@ public class CreateContractCommandHandler : IRequestHandler<CreateContractComman
             // STEP 5: Create New Contract
             // ═══════════════════════════════════════════════════════════
             var contract = _mapper.Map<Contract>(request.Data);
-            contract.ContractStatus = "ACTIVE";
+            contract.ContractStatus = "ACTIVE"; // Validated status
             _context.Contracts.Add(contract);
 
             // ═══════════════════════════════════════════════════════════
-            // STEP 6: Sync EmployeeCompensation (Backward Compatibility)
+            // STEP 6: Execute Private Sync Logic (Financial Integration)
             // ═══════════════════════════════════════════════════════════
-            var compensation = await _context.EmployeeCompensations
-                .FirstOrDefaultAsync(c => c.EmployeeId == request.Data.EmployeeId, cancellationToken);
-
-            if (compensation == null)
-            {
-                compensation = new EmployeeCompensation
-                {
-                    EmployeeId = request.Data.EmployeeId,
-                    BasicSalary = request.Data.BasicSalary,
-                    HousingAllowance = request.Data.HousingAllowance,
-                    TransportAllowance = request.Data.TransportAllowance,
-                    OtherAllowances = request.Data.OtherAllowances
-                };
-                _context.EmployeeCompensations.Add(compensation);
-            }
-            else
-            {
-                compensation.BasicSalary = request.Data.BasicSalary;
-                compensation.HousingAllowance = request.Data.HousingAllowance;
-                compensation.TransportAllowance = request.Data.TransportAllowance;
-                compensation.OtherAllowances = request.Data.OtherAllowances;
-            }
+            await SyncSalaryStructure(request.Data, cancellationToken);
 
             // ═══════════════════════════════════════════════════════════
-            // STEP 7: ✅ COMPLETE Financial Sync - ALL Contract Components
-            // Syncs: Basic Salary, Housing, Transport, Medical, Other Allowances
-            // ═══════════════════════════════════════════════════════════
-            await SalaryStructureSyncHelper.SyncAllContractComponentsAsync(
-                _context,
-                request.Data.EmployeeId,
-                basicSalary: request.Data.BasicSalary,
-                housingAllowance: request.Data.HousingAllowance,
-                transportAllowance: request.Data.TransportAllowance,
-                medicalAllowance: 0, // Not in contract DTO
-                otherAllowances: request.Data.OtherAllowances, // ✅ Syncs Other Allowances
-                cancellationToken
-            );
-
-            // ═══════════════════════════════════════════════════════════
-            // STEP 8: Save All Changes and Commit Transaction
+            // STEP 7: Commit Transaction
             // ═══════════════════════════════════════════════════════════
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
@@ -148,5 +106,102 @@ public class CreateContractCommandHandler : IRequestHandler<CreateContractComman
             await transaction.RollbackAsync(cancellationToken);
             return Result<int>.Failure($"فشل في إنشاء العقد: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Private Helper to Sync Salary Structure Elements directly from Contract Data
+    /// </summary>
+    private async Task SyncSalaryStructure(CreateContractDto data, CancellationToken cancellationToken)
+    {
+        // 1. Clean Up: Remove existing structure for this employee to avoid duplicates
+        var existingStructure = await _context.EmployeeSalaryStructures
+            .Where(s => s.EmployeeId == data.EmployeeId)
+            .ToListAsync(cancellationToken);
+
+        if (existingStructure.Any())
+        {
+            _context.EmployeeSalaryStructures.RemoveRange(existingStructure);
+        }
+
+        // 2. Fetch necessary Salary Elements from DB (Dynamic Lookup)
+        var elements = await _context.SalaryElements
+            .Where(e => e.IsBasic == 1 
+                     || e.ElementNameAr.Contains("سكن") 
+                     || e.ElementNameAr.Contains("نقل") 
+                     || e.ElementNameAr.Contains("تأمينات") || e.ElementNameAr.Contains("GOSI")
+                     || e.ElementType == "EARNING") // General fetch to filter in memory if strictly needed, but let's be specific
+            .ToListAsync(cancellationToken);
+
+        var basicElement = elements.FirstOrDefault(e => e.IsBasic == 1) 
+                           ?? throw new Exception("عنصر الراتب الأساسي غير معرف في النظام");
+        
+        var housingElement = elements.FirstOrDefault(e => e.ElementNameAr.Contains("سكن"));
+        var transportElement = elements.FirstOrDefault(e => e.ElementNameAr.Contains("نقل"));
+        var otherElement = elements.FirstOrDefault(e => e.ElementNameAr.Contains("أخرى") || e.ElementNameAr.Contains("Other"));
+        var gosiElement = elements.FirstOrDefault(e => e.ElementNameAr.Contains("تأمينات") || e.ElementNameAr.Contains("GOSI"));
+
+        var newStructures = new List<EmployeeSalaryStructure>();
+
+        // 3. Insert Basic Salary
+        newStructures.Add(new EmployeeSalaryStructure
+        {
+            EmployeeId = data.EmployeeId,
+            ElementId = basicElement.ElementId,
+            Amount = data.BasicSalary,
+            IsActive = 1
+        });
+
+        // 4. Insert Housing Allowance (if > 0)
+        if (data.HousingAllowance > 0 && housingElement != null)
+        {
+            newStructures.Add(new EmployeeSalaryStructure
+            {
+                EmployeeId = data.EmployeeId,
+                ElementId = housingElement.ElementId,
+                Amount = data.HousingAllowance,
+                IsActive = 1
+            });
+        }
+
+        // 5. Insert Transport Allowance (if > 0)
+        if (data.TransportAllowance > 0 && transportElement != null)
+        {
+            newStructures.Add(new EmployeeSalaryStructure
+            {
+                EmployeeId = data.EmployeeId,
+                ElementId = transportElement.ElementId,
+                Amount = data.TransportAllowance,
+                IsActive = 1
+            });
+        }
+
+        // 6. Insert Other Allowances (if > 0)
+        if (data.OtherAllowances > 0 && otherElement != null)
+        {
+            newStructures.Add(new EmployeeSalaryStructure
+            {
+                EmployeeId = data.EmployeeId,
+                ElementId = otherElement.ElementId,
+                Amount = data.OtherAllowances,
+                IsActive = 1
+            });
+        }
+
+        // 7. Auto-Calculate GOSI Deduction (9% of Basic)
+        // Assume GOSI is a deduction element
+        if (gosiElement != null)
+        {
+            var gosiAmount = data.BasicSalary * 0.09m; // 9% Rule
+            newStructures.Add(new EmployeeSalaryStructure
+            {
+                EmployeeId = data.EmployeeId,
+                ElementId = gosiElement.ElementId,
+                Amount = gosiAmount,
+                IsActive = 1
+            });
+        }
+
+        // 8. Add range to context
+        await _context.EmployeeSalaryStructures.AddRangeAsync(newStructures, cancellationToken);
     }
 }

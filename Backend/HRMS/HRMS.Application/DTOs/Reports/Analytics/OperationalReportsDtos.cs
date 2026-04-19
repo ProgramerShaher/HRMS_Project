@@ -5,6 +5,8 @@ public class DailyAttendanceDetailsDto
     public long RecordId { get; set; }
     public DateTime Date { get; set; }
     public int EmployeeId { get; set; }
+    public string FirstNameAr { get; set; } = string.Empty;
+    public string LastNameAr { get; set; } = string.Empty;
     public string EmployeeName { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
     public string PlannedShift { get; set; } = string.Empty;

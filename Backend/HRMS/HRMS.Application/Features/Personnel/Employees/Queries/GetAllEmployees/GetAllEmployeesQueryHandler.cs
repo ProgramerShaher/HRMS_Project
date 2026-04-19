@@ -45,10 +45,11 @@ public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery,
         if (request.JobId.HasValue)
             query = query.Where(e => e.JobId == request.JobId);
 
+
         if (request.IsActive.HasValue)
-            query = query.Where(e => e.IsDeleted == (request.IsActive.Value ? 0 : 1)); // Assuming IsDeleted logic
+            query = query.Where(e => e.IsActive == request.IsActive.Value);  // استخدام IsActive الصحيح
         else
-            query = query.Where(e => e.IsDeleted == 0); // Default active only
+            query = query.Where(e => e.IsDeleted == 0); // Default: عرض الموظفين غير المحذوفين فقط
 
         // 2. Pagination
         var totalCount = await query.CountAsync(cancellationToken);
@@ -103,7 +104,7 @@ public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery,
                 JobTitle = e.Job?.JobTitleAr ?? "", 
                 Mobile = e.Mobile,
                 HireDate = e.HireDate,
-                IsActive = e.IsDeleted == 0,
+                IsActive = e.IsActive,  // استخدام الحقل الصحيح IsActive بدلاً من IsDeleted
                 LastPunchIn = status?.LastIn,
                 LastPunchOut = status?.LastOut
             };

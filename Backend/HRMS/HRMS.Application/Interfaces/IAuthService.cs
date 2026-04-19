@@ -1,4 +1,5 @@
 using HRMS.Application.DTOs.Auth;
+using HRMS.Core.Entities.Identity;
 using HRMS.Core.Utilities;
 
 namespace HRMS.Application.Interfaces
@@ -37,6 +38,11 @@ namespace HRMS.Application.Interfaces
         /// إزالة دور من مستخدم
         /// </summary>
         Task<bool> RemoveUserFromRoleAsync(int userId, string roleName);
+
+        /// <summary>
+        /// الحصول على جميع المستخدمين
+        /// </summary>
+        Task<List<ApplicationUser>> GetAllUsersAsync();
 
         /// <summary>
         /// الحصول على أدوار المستخدم

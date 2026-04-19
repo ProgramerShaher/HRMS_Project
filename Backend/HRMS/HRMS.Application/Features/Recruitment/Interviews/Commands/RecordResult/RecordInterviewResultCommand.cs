@@ -50,6 +50,21 @@ public class RecordInterviewResultCommandHandler : IRequestHandler<RecordIntervi
         interview.UpdatedBy = _currentUserService.UserId;
         interview.UpdatedAt = DateTime.UtcNow;
 
+        // ✅ التحديث التلقائي لحالة الطلب بناءً على نتيجة المقابلة
+        var application = await _context.JobApplications
+            .FirstOrDefaultAsync(a => a.AppId == interview.AppId, cancellationToken);
+            
+        if (application != null)
+        {
+            if (request.Result == "PASSED")
+                application.Status = "SHORTLISTED";
+            else if (request.Result == "FAILED")
+                application.Status = "REJECTED";
+                
+            application.UpdatedBy = _currentUserService.UserId;
+            application.UpdatedAt = DateTime.UtcNow;
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return Result<bool>.Success(true, "تم تسجيل نتيجة المقابلة بنجاح");

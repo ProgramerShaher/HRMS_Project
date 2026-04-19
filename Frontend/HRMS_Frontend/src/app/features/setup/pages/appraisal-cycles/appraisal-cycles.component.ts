@@ -55,6 +55,7 @@ export class AppraisalCyclesComponent implements OnInit {
           // Ensure dates are parsed as Date objects for Calendar
           const data = (res.data || []).map(item => ({
              ...item,
+             cycleNameAr: item.cycleNameAr ?? " ",
              startDate: item.startDate ? new Date(item.startDate) : null,
              endDate: item.endDate ? new Date(item.endDate) : null
           }));
@@ -83,7 +84,7 @@ export class AppraisalCyclesComponent implements OnInit {
 
   delete(item: AppraisalCycle) {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + item.cycleName + '?',
+      message: 'Are you sure you want to delete ' + item.cycleNameAr + '?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {

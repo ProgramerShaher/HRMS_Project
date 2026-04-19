@@ -1,179 +1,155 @@
-import { Component, Input, Output, EventEmitter, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SetupService } from '../../../../setup/services/setup.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreateEmployeeDto } from '../../../models/create-employee.dto';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DialogModule } from 'primeng/dialog';
+import { DatePickerModule } from 'primeng/datepicker';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TextareaModule } from 'primeng/textarea';
+import { CreateEmployeeDto } from '../../../models/create-employee.dto';
+import { Qualification, Certification } from '../../../models/sub-models';
+import { DynamicArrayListComponent } from '../../shared/dynamic-array-list/dynamic-array-list.component';
+
+interface QualificationWithFile extends Qualification {
+  file?: File;
+}
+
+interface CertificationWithFile extends Certification {
+  file?: File;
+}
 
 @Component({
   selector: 'app-qualifications-step',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     FormsModule,
     InputTextModule,
-    ButtonModule,
-    SelectModule,
-    DatePickerModule,
     InputNumberModule,
-    DialogModule,
-    FileUploadModule
+    DatePickerModule,
+    FileUploadModule,
+    TextareaModule,
+    DynamicArrayListComponent
   ],
   templateUrl: './qualifications-step.component.html',
-  styles: []
+  styles: [`:host { display: block; }`]
 })
-export class QualificationsStepComponent implements OnInit {
+export class QualificationsStepComponent {
   @Input() data!: CreateEmployeeDto;
   @Output() dataChange = new EventEmitter<Partial<CreateEmployeeDto>>();
-  @Output() prev = new EventEmitter<void>();
-  @Output() next = new EventEmitter<void>();
-  
-  private fb = inject(FormBuilder);
-  private setupService = inject(SetupService);
-  private cdr = inject(ChangeDetectorRef);
+  @Output() filesChange = new EventEmitter<Map<number, File>>();
+  @Output() certificationFilesChange = new EventEmitter<Map<number, File>>();
 
-  countries: any[] = [];
-  
-  // Qualifications State
-  showQualDialog = false;
-  editingQualIndex: number | null = null;
-  qualForm: FormGroup;
-  selectedQualFile: File | null = null;
+  qualColumns = [
+    { field: 'degreeType', header: 'الدرجة العلمية' },
+    { field: 'majorAr', header: 'التخصص' },
+    { field: 'universityAr', header: 'الجامعة/المعهد' },
+    { field: 'graduationYear', header: 'سنة التخرج' }
+  ];
 
-  // Experience State
-  showExpDialog = false;
-  editingExpIndex: number | null = null;
-  expForm: FormGroup;
+  certColumns = [
+    { field: 'certificationName', header: 'اسم الشهادة' },
+    { field: 'issuingOrganization', header: 'جهة الإصدار' },
+    { field: 'issueDate', header: 'تاريخ الإصدار' }
+  ];
 
-  currentYear = new Date().getFullYear();
+  expColumns = [
+    { field: 'jobTitleAr', header: 'المسمى الوظيفي' },
+    { field: 'companyNameAr', header: 'اسم الشركة' },
+    { field: 'startDate', header: 'تاريخ البدء' }
+  ];
 
-  constructor() {
-      // Init Qual Form
-      this.qualForm = this.fb.group({
-          degreeType: ['', Validators.required],
-          majorAr: ['', [Validators.required, Validators.pattern(/^[\u0600-\u06FF\s]+$/)]],
-          universityAr: ['', Validators.required],
-          graduationYear: [this.currentYear, [Validators.required, Validators.min(1950), Validators.max(this.currentYear + 5)]],
-          grade: [''],
-          countryId: [null, Validators.required] // Added Country
-      });
-
-      // Init Exp Form
-      this.expForm = this.fb.group({
-          companyNameAr: ['', Validators.required],
-          jobTitleAr: ['', Validators.required],
-          startDate: [null, [Validators.required]],
-          endDate: [null],
-          isCurrent: [false]
-      });
+  // Qualifications Logic
+  onSaveQualification(event: { item: QualificationWithFile, index: number }) {
+    if (!this.data.qualifications) this.data.qualifications = [];
+    
+    if (event.index > -1) {
+      this.data.qualifications[event.index] = event.item;
+    } else {
+      this.data.qualifications.push(event.item);
+    }
+    
+    this.emitChanges();
   }
 
-  ngOnInit() {
-      this.loadLookups();
+  onDeleteQualification(event: { item: any, index: number }) {
+    this.data.qualifications.splice(event.index, 1);
+    this.emitChanges();
   }
 
-  loadLookups() {
-      this.setupService.getAll('Countries').subscribe({
-          next: (res: any) => {
-              const items = res.data?.items || res.items || res.data || res || [];
-              this.countries = items.map((c: any) => ({ label: c.countryNameAr, value: c.countryId }));
-              this.cdr.markForCheck();
-          }
-      });
+  onQualFileSelect(event: any, item: QualificationWithFile) {
+    if (event.files && event.files.length > 0) {
+      item.file = event.files[0];
+    }
   }
 
-  // --- Qualifications Handling ---
-  openAddQual() {
-      this.editingQualIndex = null;
-      this.selectedQualFile = null;
-      this.qualForm.reset({ graduationYear: this.currentYear });
-      this.showQualDialog = true;
+  // Certifications Logic
+  onSaveCertification(event: { item: CertificationWithFile, index: number }) {
+    if (!this.data.certifications) this.data.certifications = [];
+    
+    if (event.index > -1) {
+      this.data.certifications[event.index] = event.item;
+    } else {
+      this.data.certifications.push(event.item);
+    }
+    
+    this.emitChanges();
   }
 
-  saveQual() {
-      if (this.qualForm.invalid) return;
-      
-      if (!this.data.qualifications) this.data.qualifications = [];
+  onDeleteCertification(event: { item: any, index: number }) {
+    this.data.certifications.splice(event.index, 1);
+    this.emitChanges();
+  }
 
-      const val = this.qualForm.value;
-      const dto = {
-          qualificationId: 0,
-          degreeType: val.degreeType,
-          majorAr: val.majorAr,
-          universityAr: val.universityAr,
-          graduationYear: val.graduationYear,
-          grade: val.grade,
-          countryId: val.countryId // Used selected ID
-      };
+  onCertFileSelect(event: any, item: CertificationWithFile) {
+    if (event.files && event.files.length > 0) {
+      item.file = event.files[0];
+    }
+  }
 
-      if (this.editingQualIndex !== null) {
-          const existing = this.data.qualifications[this.editingQualIndex];
-          this.data.qualifications[this.editingQualIndex] = { ...existing, ...dto };
-      } else {
-          this.data.qualifications.push(dto);
+  // Experience Logic
+  onSaveExperience(event: { item: any, index: number }) {
+    if (!this.data.experiences) this.data.experiences = [];
+    
+    if (event.index > -1) {
+      this.data.experiences[event.index] = event.item;
+    } else {
+      this.data.experiences.push(event.item);
+    }
+    this.emitChanges();
+  }
+
+  onDeleteExperience(event: { item: any, index: number }) {
+    this.data.experiences.splice(event.index, 1);
+    this.emitChanges();
+  }
+
+  onDataChange() {
+    this.dataChange.emit({ ...this.data });
+  }
+
+  private emitChanges() {
+    this.onDataChange();
+    
+    // Rebuild file map for qualifications 
+    // (Note: Wizard expects map<number, File>. Current logic maps index -> file)
+    const filesMap = new Map<number, File>();
+    this.data.qualifications.forEach((q: QualificationWithFile, index) => {
+      if (q.file) {
+        filesMap.set(index, q.file);
       }
-      this.showQualDialog = false;
-  }
-
-  removeQual(index: number) {
-      this.data.qualifications.splice(index, 1);
-  }
-
-  // --- Experience Handling ---
-  openAddExp() {
-      this.editingExpIndex = null;
-      this.expForm.reset({ isCurrent: false });
-      this.showExpDialog = true;
-  }
-
-  saveExp() {
-      if (this.expForm.invalid) return;
-
-      if (!this.data.experiences) this.data.experiences = [];
-
-      const val = this.expForm.value;
-      // Date Validation
-      if (val.startDate && val.endDate && new Date(val.startDate) > new Date(val.endDate)) {
-          // Ideally show error on form
-          return; 
+    });
+    
+    this.filesChange.emit(filesMap);
+    
+    // Certifications Files
+    const certFilesMap = new Map<number, File>();
+    this.data.certifications.forEach((c: CertificationWithFile, index) => {
+      if (c.file) {
+        certFilesMap.set(index, c.file);
       }
+    });
 
-      const dto = {
-          experienceId: 0,
-          companyNameAr: val.companyNameAr,
-          jobTitleAr: val.jobTitleAr,
-          startDate: val.startDate,
-          endDate: val.endDate,
-          isCurrent: val.isCurrent ? 1 : 0,
-          responsibilities: '',
-          reasonForLeaving: ''
-      };
-
-      if (this.editingExpIndex !== null) {
-          const existing = this.data.experiences[this.editingExpIndex];
-          this.data.experiences[this.editingExpIndex] = { ...existing, ...dto };
-      } else {
-          this.data.experiences.push(dto);
-      }
-      this.showExpDialog = false;
-  }
-
-  removeExp(index: number) {
-      this.data.experiences.splice(index, 1);
-  }
-
-  onPrev() {
-    this.prev.emit();
-  }
-
-  onNext() {
-    this.next.emit();
+    this.certificationFilesChange.emit(certFilesMap);
   }
 }

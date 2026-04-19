@@ -1,0 +1,125 @@
+<div class="p-6 max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500">
+  <p-toast></p-toast>
+  
+  <!-- Header -->
+  <div class="glass-panel p-6 rounded-2xl">
+    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">طلب سلفة جديدة</h1>
+    <p class="text-slate-500 dark:text-zinc-400 mt-1">قم بتعبئة النموذج أدناه لطلب سلفة جديدة</p>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="loanForm" (ngSubmit)="onSubmit()">
+    <div class="glass-panel p-8 rounded-2xl space-y-6">
+      
+      <!-- Loan Amount -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-zinc-300 mb-2">
+          مبلغ السلفة <span class="text-red-500">*</span>
+        </label>
+        <p-inputNumber 
+          formControlName="loanAmount"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="0"
+          [min]="1000"
+          suffix=" ريال"
+          placeholder="أدخل مبلغ السلفة"
+          styleClass="w-full"
+          inputStyleClass="w-full p-3 rounded-xl"></p-inputNumber>
+        <small class="text-slate-500 dark:text-zinc-400 mt-1 block">الحد الأدنى: 1,000 ريال</small>
+      </div>
+
+      <!-- Installment Count -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-zinc-300 mb-2">
+          عدد الأقساط <span class="text-red-500">*</span>
+        </label>
+        <p-inputNumber 
+          formControlName="installmentCount"
+          [min]="1"
+          [max]="60"
+          [showButtons]="true"
+          placeholder="عدد الأقساط"
+          styleClass="w-full"
+          inputStyleClass="w-full p-3 rounded-xl"></p-inputNumber>
+        <small class="text-slate-500 dark:text-zinc-400 mt-1 block">من 1 إلى 60 قسط</small>
+      </div>
+
+      <!-- Start Date -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-zinc-300 mb-2">
+          تاريخ البداية <span class="text-red-500">*</span>
+        </label>
+        <p-datePicker 
+          formControlName="startDate"
+          dateFormat="dd/mm/yy"
+          [iconDisplay]="'input'"
+          placeholder="اختر تاريخ البداية"
+          styleClass="w-full"
+          inputStyleClass="w-full p-3 rounded-xl" />
+      </div>
+
+      <!-- Calculation Preview -->
+      @if (loanForm.get('loanAmount')?.value && loanForm.get('installmentCount')?.value) {
+        <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800 space-y-4">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="pi pi-calculator text-blue-600"></i>
+            معاينة الحساب
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-white dark:bg-zinc-800 rounded-xl">
+              <p class="text-sm text-slate-500 dark:text-zinc-400">القسط الشهري</p>
+              <p class="text-2xl font-bold text-blue-600 mt-1">{{ formatCurrency(monthlyInstallment()) }} ريال</p>
+            </div>
+            
+            <div class="p-4 bg-white dark:bg-zinc-800 rounded-xl">
+              <p class="text-sm text-slate-500 dark:text-zinc-400">نسبة من الراتب الأساسي</p>
+              <p class="text-2xl font-bold mt-1" 
+                 [class.text-emerald-600]="isValid30Percent()"
+                 [class.text-red-600]="!isValid30Percent()">
+                {{ installmentPercentage().toFixed(2) }}%
+              </p>
+            </div>
+          </div>
+
+          <!-- 30% Rule Validation -->
+          @if (!isValid30Percent()) {
+            <p-message 
+              severity="error" 
+              text="تحذير: القسط الشهري يتجاوز 30% من الراتب الأساسي. يرجى تقليل المبلغ أو زيادة عدد الأقساط."
+              styleClass="w-full"></p-message>
+          } @else {
+            <p-message 
+              severity="success" 
+              text="✓ القسط الشهري ضمن الحد المسموح (30% من الراتب الأساسي)"
+              styleClass="w-full"></p-message>
+          }
+
+          <div class="p-4 bg-white dark:bg-zinc-800 rounded-xl">
+            <p class="text-sm text-slate-500 dark:text-zinc-400 mb-2">الراتب الأساسي الحالي</p>
+            <p class="text-xl font-bold text-slate-900 dark:text-white">{{ formatCurrency(basicSalary()) }} ريال</p>
+          </div>
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3 pt-4">
+        <button pButton 
+                type="submit"
+                icon="pi pi-check" 
+                label="تقديم الطلب" 
+                class="p-button-raised p-button-success rounded-xl flex-1"
+                [loading]="loading()"
+                [disabled]="loanForm.invalid || !isValid30Percent()"></button>
+        
+        <button pButton 
+                type="button"
+                icon="pi pi-times" 
+                label="إلغاء" 
+                class="p-button-outlined p-button-secondary rounded-xl flex-1"
+                (click)="cancel()"></button>
+      </div>
+    </div>
+  </form>
+</div>

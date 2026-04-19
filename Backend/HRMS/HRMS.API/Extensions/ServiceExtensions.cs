@@ -7,11 +7,12 @@ using HRMS.Application.Settings;
 using HRMS.Core.Entities.Identity;
 using HRMS.Infrastructure.Data;
 using HRMS.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using HRMS.Application.Features.Payroll.Loans.Services;
 
 namespace HRMS.API.Extensions;
 
@@ -132,11 +133,12 @@ public static class ServiceExtensions
     public static IServiceCollection AddCustomServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<PayrollAccountingService>();
         
         // Payroll & Loan Services
-        services.AddScoped<HRMS.Application.Features.Payroll.Loans.Services.GenerateInstallmentsService>();
+        services.AddScoped<GenerateInstallmentsService>();
         
         // يمكن إضافة المزيد من الخدمات هنا
 

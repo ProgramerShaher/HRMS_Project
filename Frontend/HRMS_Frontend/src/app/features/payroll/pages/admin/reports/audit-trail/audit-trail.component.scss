@@ -1,0 +1,49 @@
+@layer components {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  }
+}
+
+:host-context(.dark) .glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:host ::v-deep {
+  .p-datatable.no-border {
+    .p-datatable-thead > tr > th {
+      border: none !important;
+      @apply py-4 bg-transparent;
+    }
+    .p-datatable-tbody > tr > td {
+      border: none !important;
+      @apply py-4 bg-transparent;
+    }
+  }
+
+  .p-paginator {
+    @apply bg-transparent border-none py-6 !important;
+    
+    .p-paginator-pages .p-paginator-page.p-highlight {
+      @apply bg-indigo-600 text-white rounded-xl !important;
+      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+    }
+    
+    .p-paginator-page, .p-paginator-next, .p-paginator-last, .p-paginator-first, .p-paginator-prev {
+      @apply rounded-xl transition-all !important;
+      
+      &:hover {
+        @apply bg-slate-100 !important;
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :host ::v-deep .p-paginator .p-paginator-page:hover {
+    @apply bg-zinc-800 !important;
+  }
+}

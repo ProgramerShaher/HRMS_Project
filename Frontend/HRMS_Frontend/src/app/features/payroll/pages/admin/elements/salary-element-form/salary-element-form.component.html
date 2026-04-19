@@ -1,0 +1,177 @@
+<div class="premium-container animate-fade-in-up">
+  <p-toast></p-toast>
+  
+  <!-- Form Holder -->
+  <div class="max-w-4xl mx-auto glass-card">
+    
+    <!-- Header Section -->
+    <div class="form-header flex items-center justify-between border-b border-slate-100 dark:border-slate-800 mb-8 pb-8">
+      <div class="flex items-center gap-6">
+        <div class="header-icon luxury-gradient-blue">
+          <i class="pi" [ngClass]="isEditMode() ? 'pi-pencil' : 'pi-plus'"></i>
+        </div>
+        <div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            {{ isEditMode() ? 'تحديث عنصر راتب' : 'إضافة عنصر راتب جديد' }}
+          </h1>
+          <p class="text-slate-500 dark:t
+          ext-zinc-400 font-medium mt-1">
+            {{ isEditMode() ? 'قم بتعديل بيانات العنصر الحالي وتأكيد الحفظ' : 'يرجى إدخال تفاصيل العنصر المالي الجديد' }}
+          </p>
+        </div>
+      </div>
+      
+      <div class="flex gap-3">
+        <button pButton icon="pi pi-times" (click)="onCancel()" class="p-button-rounded p-button-text p-button-secondary glass-card w-12 h-12"></button>
+        <button pButton label="حفظ البيانات" icon="pi pi-check" (click)="onSubmit()" [loading]="loading()" class="p-button-raised luxury-gradient-blue rounded-2xl px-10 border-none shadow-xl h-12 font-bold"></button>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <form [formGroup]="elementForm" class="p-12 pt-0 space-y-12">
+      
+      <!-- Section 1: Basic Information -->
+      <div class="space-y-8">
+        <div class="section-title">
+          <div class="dot"></div>
+          <h3>المعلومات الأساسية</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="input-field-group">
+            <label>اسم العنصر (عربي)</label>
+            <input type="text" pInputText formControlName="elementNameAr" placeholder="مثلاً: بدل سكن، خصم غياب..." 
+                   [ngClass]="{'p-invalid': isFieldInvalid('elementNameAr')}"/>
+            <small class="text-rose-500 mt-1 block font-bold" *ngIf="isFieldInvalid('elementNameAr')">{{ getFieldError('elementNameAr') }}</small>
+          </div>
+
+          <div class="input-field-group">
+            <label>نوع العنصر</label>
+            <p-select [options]="typeOptions" formControlName="elementType" optionLabel="label" optionValue="value"
+                     styleClass="w-full" [ngClass]="{'p-invalid': isFieldInvalid('elementType')}"></p-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Financial Rules -->
+      <div class="space-y-8">
+        <div class="section-title">
+          <div class="dot"></div>
+          <h3>القواعد والخصائص المالية</h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- isBasic -->
+          <div class="toggle-card group" [ngClass]="{'active': elementForm.get('isBasic')?.value}" (click)="elementForm.get('isBasic')?.setValue(!elementForm.get('isBasic')?.value)">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
+                   [ngClass]="elementForm.get('isBasic')?.value ? 'luxury-gradient-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
+                <i class="pi pi-star text-xl"></i>
+              </div>
+              <div>
+                <p class="font-black text-sm mb-1" [ngClass]="elementForm.get('isBasic')?.value ? 'text-blue-600' : 'text-slate-600 dark:text-zinc-400'">عنصر أساسي</p>
+                <p class="text-[10px] text-slate-400 leading-tight">هل هذا هو الراتب الرئيسي؟</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- isTaxable -->
+          <div class="toggle-card group" [ngClass]="{'active': elementForm.get('isTaxable')?.value}" (click)="elementForm.get('isTaxable')?.setValue(!elementForm.get('isTaxable')?.value)">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
+                   [ngClass]="elementForm.get('isTaxable')?.value ? 'luxury-gradient-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
+                <i class="pi pi-percentage text-xl"></i>
+              </div>
+              <div>
+                <p class="font-black text-sm mb-1" [ngClass]="elementForm.get('isTaxable')?.value ? 'text-blue-600' : 'text-slate-600 dark:text-zinc-400'">خاضع للضريبة</p>
+                <p class="text-[10px] text-slate-400 leading-tight">إخضاع العنصر لضريبة الدخل</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- isGosiBase -->
+          <div class="toggle-card group" [ngClass]="{'active': elementForm.get('isGosiBase')?.value}" (click)="elementForm.get('isGosiBase')?.setValue(!elementForm.get('isGosiBase')?.value)">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
+                   [ngClass]="elementForm.get('isGosiBase')?.value ? 'luxury-gradient-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
+                <i class="pi pi-verified text-xl"></i>
+              </div>
+              <div>
+                <p class="font-black text-sm mb-1" [ngClass]="elementForm.get('isGosiBase')?.value ? 'text-blue-600' : 'text-slate-600 dark:text-zinc-400'">خاضع للتأمينات</p>
+                <p class="text-[10px] text-slate-400 leading-tight">اعتبار العنصر جزءاً من وعاء التأمينات</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- isRecurring -->
+          <div class="toggle-card group" [ngClass]="{'active': elementForm.get('isRecurring')?.value}" (click)="elementForm.get('isRecurring')?.setValue(!elementForm.get('isRecurring')?.value)">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
+                   [ngClass]="elementForm.get('isRecurring')?.value ? 'luxury-gradient-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'">
+                <i class="pi pi-sync text-xl"></i>
+              </div>
+              <div>
+                <p class="font-black text-sm mb-1" [ngClass]="elementForm.get('isRecurring')?.value ? 'text-blue-600' : 'text-slate-600 dark:text-zinc-400'">عنصر متكرر</p>
+                <p class="text-[10px] text-slate-400 leading-tight">صرف/خصم العنصر بشكل شهري آلي</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Calculation Defaults -->
+      <div class="space-y-8 pb-10">
+        <div class="section-title">
+          <div class="dot"></div>
+          <h3>إعدادات الحساب الافتراضية</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div class="input-field-group">
+            <label>النسبة المئوية الافتراضية (%)</label>
+            <p-inputNumber formControlName="defaultPercentage" suffix="%" [min]="0" [max]="100" [showButtons]="true"
+                          buttonLayout="horizontal" spinnerMode="horizontal" decrementButtonClass="p-button-danger"
+                          incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                          [style]="{'width': '100%'}"></p-inputNumber>
+            <p class="text-[10px] text-slate-400 mt-2 font-medium"><i class="pi pi-info-circle text-[9px]"></i> يمكن تعديل هذه القيمة لكل هيكل راتب على حدة.</p>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Bottom Action Bar -->
+    <div class="p-8 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-end gap-4">
+        <button pButton label="إلغاء التغييرات" icon="pi pi-times" (click)="onCancel()" class="p-button-text p-button-secondary font-bold"></button>
+        <button pButton label="تأكيد وحفظ العنصر" icon="pi pi-save" (click)="onSubmit()" [loading]="loading()" class="luxury-gradient-blue rounded-xl px-12 border-none shadow-lg h-14 font-black"></button>
+    </div>
+
+  </div>
+            <p-checkbox 
+              formControlName="isTaxable" 
+              [binary]="true"
+              inputId="isTaxable"
+            ></p-checkbox>
+            <label for="isTaxable" class="font-medium text-slate-700 dark:text-zinc-300 cursor-pointer">
+              خاضع للضريبة
+            </label>
+          </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-zinc-700">
+        <p-button
+          label="إلغاء"
+          icon="pi pi-times"
+          styleClass="p-button-text p-button-secondary"
+          (onClick)="onCancel()"
+          type="button"
+        ></p-button>
+        <p-button
+          [label]="isEditMode() ? 'تحديث' : 'حفظ'"
+          icon="pi pi-check"
+          severity="success"
+          [loading]="loading()"
+          type="submit"
+        ></p-button>
+      </div>
+
+<p-toast></p-toast>

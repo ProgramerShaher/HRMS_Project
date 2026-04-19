@@ -8,12 +8,13 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { CreateCountryCommand, Country } from '../../models/setup.models';
 import { SetupService } from '../../services/setup.service';
 import { MessageService } from 'primeng/api';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
-  selector: 'app-country-form',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, FloatLabelModule],
-  template: `
+    selector: 'app-country-form',
+    standalone: true,
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, FloatLabelModule],
+    template: `
     <form [formGroup]="form" (ngSubmit)="save()" class="p-4" dir="rtl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
@@ -52,7 +53,7 @@ import { MessageService } from 'primeng/api';
             <!-- ISO Code -->
             <div class="col-span-1">
                 <p-floatLabel>
-                    <input pInputText id="isoCode" formControlName="isoCode" class="w-full uppercase" />
+                    <input pInputText id="isoCode" formControlName="isoCode" class="w-full uppercase" maxlength="2" />
                     <label for="isoCode">رمز الدولة (ISO)</label>
                 </p-floatLabel>
             </div>
@@ -77,19 +78,20 @@ export class CountryFormComponent implements OnInit {
         public ref: DynamicDialogRef,
         public config: DynamicDialogConfig,
         private setupService: SetupService,
-        private messageService: MessageService
-    ) {}
+        private messageService: MessageService,
+        private cd: ChangeDetectorRef
+    ) { }
 
     ngOnInit() {
         this.isEdit = !!this.config.data?.id;
         this.id = this.config.data?.id;
 
         this.form = this.fb.group({
-            countryNameAr: [this.config.data?.countryNameAr || '', Validators.required],
-            countryNameEn: [this.config.data?.countryNameEn || ''],
-            citizenshipNameAr: [this.config.data?.citizenshipNameAr || '', Validators.required],
-            citizenshipNameEn: [this.config.data?.citizenshipNameEn || ''],
-            isoCode: [this.config.data?.isoCode || '', Validators.required]
+            countryNameAr: [this.config.data?.countryNameAr || '', [Validators.required, Validators.maxLength(100)]],
+            countryNameEn: [this.config.data?.countryNameEn || '', [Validators.required, Validators.maxLength(100)]],
+            citizenshipNameAr: [this.config.data?.citizenshipNameAr || '', [Validators.maxLength(100)]],
+            citizenshipNameEn: [this.config.data?.citizenshipNameEn || '', [Validators.maxLength(100)]],
+            isoCode: [this.config.data?.isoCode || '', [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[a-zA-Z]{2}$')]]
         });
     }
 
@@ -97,6 +99,7 @@ export class CountryFormComponent implements OnInit {
         if (this.form.invalid) return;
 
         this.loading = true;
+        this.cd.detectChanges();
         const payload = this.form.value;
 
         const request = this.isEdit
@@ -106,12 +109,13 @@ export class CountryFormComponent implements OnInit {
         request.subscribe({
             next: () => {
                 this.loading = false;
-                this.messageService.add({severity:'success', summary:'نجاح', detail: 'تم الحفظ بنجاح'});
+                this.messageService.add({ severity: 'success', summary: 'نجاح', detail: 'تم الحفظ بنجاح' });
                 this.ref.close(true);
             },
             error: () => {
                 this.loading = false;
-                this.messageService.add({severity:'error', summary:'خطأ', detail: 'حدث خطأ أثناء الحفظ'});
+                this.messageService.add({ severity: 'error', summary: 'خطأ', detail: 'حدث خطأ أثناء الحفظ' });
+                this.cd.detectChanges();
             }
         });
     }

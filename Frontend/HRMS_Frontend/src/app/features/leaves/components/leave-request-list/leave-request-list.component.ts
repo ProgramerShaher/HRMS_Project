@@ -28,13 +28,13 @@ import { LeaveRequest, LeaveRequestStatus } from '../../models/leave.models';
       </div>
 
       <!-- Table -->
-      <p-table 
-        [value]="filteredRequests()" 
-        [paginator]="true" 
+      <p-table
+        [value]="filteredRequests()"
+        [paginator]="true"
         [rows]="10"
         [tableStyle]="{ 'min-width': '60rem' }"
         styleClass="p-datatable-sm">
-        
+
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 5%">#</th>
@@ -60,17 +60,17 @@ import { LeaveRequest, LeaveRequestStatus } from '../../models/leave.models';
               <span class="text-xs text-gray-600">{{ request.reason | slice:0:30 }}...</span>
             </td>
             <td>
-              <p-tag 
-                [value]="getStatusLabel(request.status)" 
+              <p-tag
+                [value]="getStatusLabel(request.status)"
                 [severity]="getStatusSeverity(request.status)">
               </p-tag>
             </td>
             <td class="text-xs text-gray-500">{{ request.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
             <td>
-              @if (request.status === 'PENDING') {
-                <p-button 
-                  icon="pi pi-times" 
-                  severity="danger" 
+              @if (request.status === 'PENDING' || request.status === 'MANAGER_APPROVED') {
+                <p-button
+                  icon="pi pi-times"
+                  severity="danger"
                   size="small"
                   [outlined]="true"
                   [rounded]="true"
@@ -110,6 +110,8 @@ export class LeaveRequestListComponent {
   statusOptions = [
     { label: 'جميع الحالات', value: null },
     { label: 'معلق', value: 'PENDING' },
+    { label: 'موافقة مدير', value: 'MANAGER_APPROVED' },
+    { label: 'موافقة HR', value: 'HR_APPROVED' },
     { label: 'مقبول', value: 'APPROVED' },
     { label: 'مرفوض', value: 'REJECTED' },
     { label: 'ملغي', value: 'CANCELLED' }
@@ -131,6 +133,8 @@ export class LeaveRequestListComponent {
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
       'PENDING': 'معلق',
+      'MANAGER_APPROVED': 'موافقة مدير',
+      'HR_APPROVED': 'موافقة HR',
       'APPROVED': 'مقبول',
       'REJECTED': 'مرفوض',
       'CANCELLED': 'ملغي'
@@ -143,6 +147,8 @@ export class LeaveRequestListComponent {
       'APPROVED': 'success',
       'REJECTED': 'danger',
       'PENDING': 'warn',
+      'MANAGER_APPROVED': 'info',
+      'HR_APPROVED': 'info',
       'CANCELLED': 'info'
     };
     return severities[status] || 'info';

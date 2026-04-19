@@ -25,6 +25,7 @@ public class GetCandidatesQueryHandler : IRequestHandler<GetCandidatesQuery, Res
     public async Task<Result<List<CandidateDto>>> Handle(GetCandidatesQuery request, CancellationToken cancellationToken)
     {
         var candidates = await _context.Candidates
+            .Include(c => c.Nationality)
             .Where(c => c.IsDeleted == 0)
             .OrderByDescending(c => c.CreatedAt)
             .ToListAsync(cancellationToken);

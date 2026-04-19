@@ -5,69 +5,20 @@ namespace HRMS.Application.DTOs.Performance;
 /// </summary>
 public class EmployeeViolationDto
 {
-    /// <summary>
-    /// معرف المخالفة
-    /// </summary>
     public int ViolationId { get; set; }
-
-    /// <summary>
-    /// معرف الموظف
-    /// </summary>
     public int EmployeeId { get; set; }
-
-    /// <summary>
-    /// اسم الموظف الكامل
-    /// </summary>
     public string EmployeeName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// معرف نوع المخالفة
-    /// </summary>
     public int ViolationTypeId { get; set; }
-
-    /// <summary>
-    /// نوع المخالفة (عربي)
-    /// </summary>
     public string ViolationTypeNameAr { get; set; } = string.Empty;
-
-    /// <summary>
-    /// معرف الإجراء التأديبي
-    /// </summary>
     public int ActionId { get; set; }
-
-    /// <summary>
-    /// الإجراء التأديبي (عربي)
-    /// </summary>
     public string ActionNameAr { get; set; } = string.Empty;
-
-    /// <summary>
-    /// عدد أيام الخصم
-    /// </summary>
     public int DeductionDays { get; set; }
-
-    /// <summary>
-    /// المبلغ المخصوم
-    /// </summary>
     public decimal? DeductionAmount { get; set; }
-
-    /// <summary>
-    /// تاريخ المخالفة
-    /// </summary>
     public DateTime ViolationDate { get; set; }
-
-    /// <summary>
-    /// الوصف
-    /// </summary>
     public string? Description { get; set; }
-
-    /// <summary>
-    /// هل تم ترحيلها للرواتب
-    /// </summary>
+    /// <summary>الحالة (PENDING, INVESTIGATION, APPROVED, CANCELLED)</summary>
+    public string Status { get; set; } = string.Empty;
     public bool IsExecuted { get; set; }
-
-    /// <summary>
-    /// تاريخ التنفيذ
-    /// </summary>
     public DateTime? ExecutionDate { get; set; }
 }
 
@@ -76,64 +27,23 @@ public class EmployeeViolationDto
 /// </summary>
 public class EmployeeAppraisalDto
 {
-    /// <summary>
-    /// معرف التقييم
-    /// </summary>
     public int AppraisalId { get; set; }
-
-    /// <summary>
-    /// معرف الموظف
-    /// </summary>
     public int EmployeeId { get; set; }
-
-    /// <summary>
-    /// اسم الموظف
-    /// </summary>
     public string EmployeeName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// معرف فترة التقييم
-    /// </summary>
     public int CycleId { get; set; }
-
-    /// <summary>
-    /// اسم فترة التقييم
-    /// </summary>
+    /// <summary>✅ FIX #6: اسم الدورة يُعاد من CycleNameAr</summary>
     public string CycleName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// معرف المقيّم
-    /// </summary>
+    public DateTime CycleStartDate { get; set; }
+    public DateTime CycleEndDate { get; set; }
     public int EvaluatorId { get; set; }
-
-    /// <summary>
-    /// اسم المقيّم
-    /// </summary>
+    /// <summary>✅ FIX #4: اسم المُقيّم يظهر الآن بعد إضافة Include(a => a.Evaluator)</summary>
     public string EvaluatorName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// تاريخ التقييم
-    /// </summary>
     public DateTime AppraisalDate { get; set; }
-
-    /// <summary>
-    /// الدرجة النهائية
-    /// </summary>
     public decimal FinalScore { get; set; }
-
-    /// <summary>
-    /// التقدير (ممتاز، جيد جداً، إلخ)
-    /// </summary>
     public string Grade { get; set; } = string.Empty;
-
-    /// <summary>
-    /// حالة التقييم
-    /// </summary>
     public string Status { get; set; } = string.Empty;
-
-    /// <summary>
-    /// تفاصيل KPIs
-    /// </summary>
+    public string? EmployeeComment { get; set; }
+    public string? Comments { get; set; }
     public List<AppraisalDetailDto> Details { get; set; } = new();
 }
 
@@ -142,25 +52,24 @@ public class EmployeeAppraisalDto
 /// </summary>
 public class AppraisalDetailDto
 {
-    /// <summary>
-    /// معرف مؤشر الأداء
-    /// </summary>
+    public long DetailId { get; set; }
     public int KpiId { get; set; }
-
-    /// <summary>
-    /// اسم مؤشر الأداء
-    /// </summary>
     public string KpiName { get; set; } = string.Empty;
+    public string? KpiCategory { get; set; }
+    /// <summary>✅ FIX #5: Weight مُضاف لاستعماله في العرض وحساب الصفحة</summary>
+    public decimal Weight { get; set; }
+    public decimal? TargetValue { get; set; }
+    public decimal? ActualValue { get; set; }
+    public decimal EmployeeScore { get; set; }
+    public decimal ManagerScore { get; set; }
 
     /// <summary>
-    /// الوزن النسبي
+    /// الدرجة المحققة النهائية
     /// </summary>
-    public decimal? Weight { get; set; }
+    public decimal FinalScore { get; set; }
 
-    /// <summary>
-    /// الدرجة المحققة
-    /// </summary>
-    public decimal Score { get; set; }
+    // Compatbility
+    public decimal Score => FinalScore;
 
     /// <summary>
     /// التعليقات
@@ -200,25 +109,58 @@ public class DisciplinaryActionDto
 
 /// <summary>
 /// DTO لمؤشر الأداء (KPI)
+/// ✅ FIX #5: إضافة Weight و TargetJobType
 /// </summary>
 public class KpiDto
 {
     public int KpiId { get; set; }
     public string KpiNameAr { get; set; } = string.Empty;
-    public string KpiDescription { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public string MeasurementUnit { get; set; } = string.Empty;
+    public string? KpiDescription { get; set; }
+    public string? Category { get; set; }
+    public string? MeasurementUnit { get; set; }
+    /// <summary>الوزن النسبي — مجموع أوزان كل الـ KPIs يجب أن يساوي 100</summary>
+    public decimal Weight { get; set; }
+    public string? TargetJobType { get; set; }
 }
-
 
 /// <summary>
 /// DTO لفترة التقييم
+/// ✅ FIX #6: تصحيح أسماء الحقول لتتطابق مع Entity
 /// </summary>
 public class AppraisalCycleDto
 {
     public int CycleId { get; set; }
-    public string CycleName { get; set; } = string.Empty;
+    /// <summary>✅ FIX: الاسم الصحيح من العربية</summary>
+    public string CycleNameAr { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public byte IsActive { get; set; }
+}
+
+/// <summary>
+/// DTO ملخص نتائج تقييم موظف (للـ Dashboard)
+/// </summary>
+public class AppraisalResultSummaryDto
+{
+    public int AppraisalId { get; set; }
+    public string EmployeeName { get; set; } = string.Empty;
+    public string CycleName { get; set; } = string.Empty;
+    public decimal FinalScore { get; set; }
+    public string Grade { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
+    public List<KpiScoreChartDto> KpiScores { get; set; } = new();
+}
+
+/// <summary>
+/// DTO لبيانات الـ Radar Chart (نقاط القوة والضعف)
+/// </summary>
+public class KpiScoreChartDto
+{
+    public string KpiName { get; set; } = string.Empty;
+    public string? Category { get; set; }
+    public decimal Weight { get; set; }
+    public decimal EmployeeScore { get; set; }
+    public decimal ManagerScore { get; set; }
+    public decimal FinalScore { get; set; }
+    public decimal WeightedContribution => Math.Round(FinalScore * Weight / 100, 2);
 }

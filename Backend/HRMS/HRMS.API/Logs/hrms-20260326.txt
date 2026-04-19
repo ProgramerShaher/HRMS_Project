@@ -1,0 +1,182 @@
+2026-03-26 00:10:52.355 +03:00 [INF] Executed action HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API) in 739610.2102ms
+2026-03-26 00:10:52.368 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API)'
+2026-03-26 00:11:00.851 +03:00 [ERR] CRITICAL ERROR CAUGHT: The LINQ expression 'DbSet<EmployeeDocument>()
+    .Where(e => e.ExpiryDate != null && e.ExpiryDate >= __today_0 && e.ExpiryDate <= __thirtyDaysFromNow_1)
+    .OrderBy(e => (e.ExpiryDate.Value - __today_2).Days)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+System.InvalidOperationException: The LINQ expression 'DbSet<EmployeeDocument>()
+    .Where(e => e.ExpiryDate != null && e.ExpiryDate >= __today_0 && e.ExpiryDate <= __thirtyDaysFromNow_1)
+    .OrderBy(e => (e.ExpiryDate.Value - __today_2).Days)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutorExpression[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass11_0`1.<ExecuteCore>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteCore[TResult](Expression query, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1.GetAsyncEnumerator(CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.ConfiguredCancelableAsyncEnumerable`1.GetAsyncEnumerator()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at HRMS.Infrastructure.Services.ReportingService.GetHROverviewAsync() in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.Infrastructure\Services\ReportingService.cs:line 52
+   at HRMS.API.Controllers.Reports.ReportsController.GetHROverview() in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Controllers\Reports\ReportsController.cs:line 28
+   at lambda_method308(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at HRMS.API.Middleware.GlobalExceptionMiddleware.InvokeAsync(HttpContext context) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Middleware\GlobalExceptionMiddleware.cs:line 31
+2026-03-26 00:11:01.015 +03:00 [ERR] HTTP GET /api/Reports/analytics/hr-overview responded 500 in 748343.8044 ms
+2026-03-26 00:11:01.027 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Reports/analytics/hr-overview - 500 null application/json 748364.3549ms
+2026-03-26 00:11:15.676 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Reports/analytics/hr-overview - null null
+2026-03-26 00:11:15.688 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API)'
+2026-03-26 00:11:15.691 +03:00 [INF] Route matched with {action = "GetHROverview", controller = "Reports"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[HRMS.Application.DTOs.Reports.Analytics.AnalyticsHROverviewDto]]] GetHROverview() on controller HRMS.API.Controllers.Reports.ReportsController (HRMS.API).
+2026-03-26 00:11:15.791 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_ACTIVE] = CAST(1 AS bit) AND [e].[TERMINATION_DATE] IS NULL
+2026-03-26 00:11:15.800 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_CORE].[DEPARTMENTS] AS [d]
+2026-03-26 00:11:15.813 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__firstDayOfMonth_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[HIRE_DATE] >= @__firstDayOfMonth_0
+2026-03-26 00:11:15.828 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Key] AS [DepartmentName], COUNT(*) AS [EmployeeCount]
+FROM (
+    SELECT [d].[DEPT_NAME_AR] AS [Key]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+    WHERE [e].[IS_ACTIVE] = CAST(1 AS bit) AND [e].[TERMINATION_DATE] IS NULL
+) AS [s]
+GROUP BY [s].[Key]
+2026-03-26 00:18:06.560 +03:00 [INF] Executed action HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API) in 410831.2795ms
+2026-03-26 00:18:06.596 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API)'
+2026-03-26 00:18:06.832 +03:00 [ERR] CRITICAL ERROR CAUGHT: The LINQ expression 'DbSet<EmployeeDocument>()
+    .Where(e => e.ExpiryDate != null && e.ExpiryDate >= __today_0 && e.ExpiryDate <= __thirtyDaysFromNow_1)
+    .OrderBy(e => (e.ExpiryDate.Value - __today_2).Days)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+System.InvalidOperationException: The LINQ expression 'DbSet<EmployeeDocument>()
+    .Where(e => e.ExpiryDate != null && e.ExpiryDate >= __today_0 && e.ExpiryDate <= __thirtyDaysFromNow_1)
+    .OrderBy(e => (e.ExpiryDate.Value - __today_2).Days)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutorExpression[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass11_0`1.<ExecuteCore>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteCore[TResult](Expression query, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1.GetAsyncEnumerator(CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.ConfiguredCancelableAsyncEnumerable`1.GetAsyncEnumerator()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at HRMS.Infrastructure.Services.ReportingService.GetHROverviewAsync()
+   at HRMS.API.Controllers.Reports.ReportsController.GetHROverview() in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Controllers\Reports\ReportsController.cs:line 28
+   at lambda_method308(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at HRMS.API.Middleware.GlobalExceptionMiddleware.InvokeAsync(HttpContext context) in D:\HRMS\HRMS_Project\Backend\HRMS\HRMS.API\Middleware\GlobalExceptionMiddleware.cs:line 31
+2026-03-26 00:18:06.918 +03:00 [ERR] HTTP GET /api/Reports/analytics/hr-overview responded 500 in 411231.5149 ms
+2026-03-26 00:18:06.921 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Reports/analytics/hr-overview - 500 null application/json 411245.328ms
+2026-03-26 00:18:08.188 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/swagger/index.html - null null
+2026-03-26 00:18:08.232 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 2.2246 ms
+2026-03-26 00:18:08.237 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/swagger/index.html - 200 null text/html;charset=utf-8 49.6598ms
+2026-03-26 00:18:08.302 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/_framework/aspnetcore-browser-refresh.js - null null
+2026-03-26 00:18:08.317 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/_vs/browserLink - null null
+2026-03-26 00:18:08.332 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/_framework/aspnetcore-browser-refresh.js - 200 16501 application/javascript; charset=utf-8 29.3383ms
+2026-03-26 00:18:08.384 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/_vs/browserLink - 200 null text/javascript; charset=UTF-8 67.4771ms
+2026-03-26 00:18:10.978 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/swagger/v1/swagger.json - null null
+2026-03-26 00:18:11.946 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 794.4376 ms
+2026-03-26 00:18:11.957 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 978.9321ms
+2026-03-26 00:18:36.391 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Reports/analytics/hr-overview - null null
+2026-03-26 00:18:36.396 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API)'
+2026-03-26 00:18:36.411 +03:00 [INF] Route matched with {action = "GetHROverview", controller = "Reports"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[HRMS.Application.DTOs.Reports.Analytics.AnalyticsHROverviewDto]]] GetHROverview() on controller HRMS.API.Controllers.Reports.ReportsController (HRMS.API).
+2026-03-26 00:18:36.497 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_ACTIVE] = CAST(1 AS bit) AND [e].[TERMINATION_DATE] IS NULL
+2026-03-26 00:18:36.505 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_CORE].[DEPARTMENTS] AS [d]
+2026-03-26 00:18:36.513 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__firstDayOfMonth_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[HIRE_DATE] >= @__firstDayOfMonth_0
+2026-03-26 00:18:36.529 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[Key] AS [DepartmentName], COUNT(*) AS [EmployeeCount]
+FROM (
+    SELECT [d].[DEPT_NAME_AR] AS [Key]
+    FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+    INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+    WHERE [e].[IS_ACTIVE] = CAST(1 AS bit) AND [e].[TERMINATION_DATE] IS NULL
+) AS [s]
+GROUP BY [s].[Key]
+2026-03-26 00:18:36.580 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__p_2='?' (DbType = Int32), @__today_0='?' (DbType = DateTime2), @__thirtyDaysFromNow_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e1].[EMPLOYEE_ID] AS [EmployeeId], [e0].[FIRST_NAME_AR] + N' ' + [e0].[LAST_NAME_AR] AS [EmployeeName], [d].[DOCUMENT_TYPE_NAME_AR] AS [DocumentType], [e1].[EXPIRY_DATE] AS [ExpiryDate], 0 AS [DaysRemaining]
+FROM (
+    SELECT TOP(@__p_2) [e].[DOCUMENT_TYPE_ID], [e].[EMPLOYEE_ID], [e].[EXPIRY_DATE]
+    FROM [HR_PERSONNEL].[EMPLOYEE_DOCUMENTS] AS [e]
+    WHERE [e].[EXPIRY_DATE] IS NOT NULL AND [e].[EXPIRY_DATE] >= @__today_0 AND [e].[EXPIRY_DATE] <= @__thirtyDaysFromNow_1
+    ORDER BY [e].[EXPIRY_DATE]
+) AS [e1]
+INNER JOIN [HR_PERSONNEL].[EMPLOYEES] AS [e0] ON [e1].[EMPLOYEE_ID] = [e0].[EMPLOYEE_ID]
+INNER JOIN [HR_CORE].[DOCUMENT_TYPES] AS [d] ON [e1].[DOCUMENT_TYPE_ID] = [d].[DOCUMENT_TYPE_ID]
+ORDER BY [e1].[EXPIRY_DATE]
+2026-03-26 00:18:36.599 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[HRMS.Application.DTOs.Reports.Analytics.AnalyticsHROverviewDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-03-26 00:18:36.620 +03:00 [INF] Executed action HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API) in 200.6293ms
+2026-03-26 00:18:36.621 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetHROverview (HRMS.API)'
+2026-03-26 00:18:36.624 +03:00 [INF] HTTP GET /api/Reports/analytics/hr-overview responded 200 in 228.5105 ms
+2026-03-26 00:18:36.630 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Reports/analytics/hr-overview - 200 null application/json; charset=utf-8 239.8476ms
+2026-03-26 00:19:30.231 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Reports/dashboard/comprehensive - null null
+2026-03-26 00:19:30.244 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Reports.ReportsController.GetComprehensiveDashboard (HRMS.API)'
+2026-03-26 00:19:30.260 +03:00 [INF] Route matched with {action = "GetComprehensiveDashboard", controller = "Reports"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[HRMS.Application.DTOs.Reports.Analytics.ComprehensiveDashboardDto]]] GetComprehensiveDashboard() on controller HRMS.API.Controllers.Reports.ReportsController (HRMS.API).
+2026-03-26 00:19:30.395 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__today_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[RECORD_ID], [d].[ACTUAL_IN_TIME], [d].[ACTUAL_OUT_TIME], [d].[ATTENDANCE_DATE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[EARLY_LEAVE_MINUTES], [d].[EMPLOYEE_ID], [d].[IS_DELETED], [d].[LATE_MINUTES], [d].[OVERTIME_MINUTES], [d].[PLANNED_SHIFT_ID], [d].[STATUS], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_ATTENDANCE].[DAILY_ATTENDANCE] AS [d]
+WHERE [d].[ATTENDANCE_DATE] = @__today_0 AND [d].[IS_DELETED] = CAST(0 AS tinyint)
+2026-03-26 00:19:30.425 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__today_0='?' (DbType = DateTime2), @__AddDays_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[EMPLOYEE_ID] AS [EmployeeId], [r].[PUNCH_TYPE] AS [PunchType]
+FROM [HR_ATTENDANCE].[RAW_PUNCH_LOGS] AS [r]
+WHERE [r].[PUNCH_TIME] >= @__today_0 AND [r].[PUNCH_TIME] < @__AddDays_1
+2026-03-26 00:19:30.453 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint) AND [e].[IS_ACTIVE] = CAST(1 AS bit)
+2026-03-26 00:19:30.488 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__today_0='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_LEAVES].[LEAVE_REQUESTS] AS [l]
+WHERE [l].[START_DATE] <= @__today_0 AND [l].[END_DATE] >= @__today_0 AND [l].[STATUS] IN (N'APPROVED', N'Approved') AND [l].[IS_DELETED] = CAST(0 AS tinyint)
+2026-03-26 00:19:30.536 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+WHERE [e].[IS_DELETED] = CAST(0 AS tinyint)
+2026-03-26 00:19:30.572 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__today_0='?' (DbType = DateTime2), @__thirtyDaysFromNow_1='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [HR_PERSONNEL].[EMPLOYEE_DOCUMENTS] AS [e]
+WHERE [e].[EXPIRY_DATE] IS NOT NULL AND [e].[EXPIRY_DATE] >= @__today_0 AND [e].[EXPIRY_DATE] <= @__thirtyDaysFromNow_1 AND [e].[IS_DELETED] = CAST(0 AS tinyint)

@@ -1,0 +1,82 @@
+<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white mb-6">
+    <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-t-xl">
+        <h2 class="text-3xl font-bold tracking-tight">لوحة الأداء الشاملة</h2>
+        <p class="text-blue-100 mt-2">رؤية إدارية عليا لأداء المنظمة وسجل المخالفات المعتمدة</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    <!-- Stat 1 -->
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+        <div>
+            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">التقييمات المكتملة</p>
+            <h3 class="text-3xl font-black text-slate-800">{{ completedAppraisals() }} <span class="text-lg text-slate-400 font-normal">من {{ totalAppraisals() }}</span></h3>
+        </div>
+        <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
+            <i class="pi pi-verified"></i>
+        </div>
+    </div>
+
+    <!-- Stat 2 -->
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+        <div>
+            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">متوسط الأداء العام</p>
+            <h3 class="text-3xl font-black text-emerald-600">{{ averageScore() }}%</h3>
+        </div>
+        <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
+            <i class="pi pi-chart-line"></i>
+        </div>
+    </div>
+
+    <!-- Stat 3 -->
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
+        <div>
+            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">أيام الخصم المعتمدة</p>
+            <h3 class="text-3xl font-black text-red-600">{{ totalDeductionDays() }}</h3>
+        </div>
+        <div class="w-14 h-14 bg-red-50 text-red-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
+            <i class="pi pi-calendar-minus"></i>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold text-slate-800">مرحلة التقييمات</h3>
+            <button pButton label="إدارة التقييمات" icon="pi pi-arrow-left" class="p-button-text p-button-sm" routerLink="/performance/appraisals"></button>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium text-slate-700">مكتملة</span>
+                    <span class="font-bold text-blue-600">{{ completedAppraisals() }} / {{ totalAppraisals() }}</span>
+                </div>
+                <!-- Avoid divide by 0 using safe navigation equivalent -->
+                <p-progressBar [value]="(totalAppraisals() > 0 ? (completedAppraisals() / totalAppraisals()) * 100 : 0)" [showValue]="false"></p-progressBar>
+            </div>
+            
+            <div class="mt-4 p-4 bg-slate-50 rounded-lg">
+                <i class="pi pi-info-circle text-blue-500 mr-2"></i>
+                <span class="text-sm text-slate-600">هذه الإحصائية تعكس التقييمات المعتمدة من قبل الموارد البشرية فقط.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold text-slate-800">حالة المخالفات</h3>
+            <button pButton label="سجل المخالفات" icon="pi pi-arrow-left" class="p-button-text p-button-sm p-button-danger" routerLink="/performance/violations"></button>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="flex-1 text-center p-4 bg-orange-50 rounded-xl border border-orange-100">
+                <p class="text-xs font-bold text-orange-600 uppercase mb-1">معلقة</p>
+                <p class="text-2xl font-black text-orange-700">{{ pendingViolations() }}</p>
+            </div>
+            <div class="flex-1 text-center p-4 bg-red-50 rounded-xl border border-red-100">
+                <p class="text-xs font-bold text-red-600 uppercase mb-1">إجمالي الحالات</p>
+                <p class="text-2xl font-black text-red-700">{{ totalViolations() }}</p>
+            </div>
+        </div>
+    </div>
+</div>

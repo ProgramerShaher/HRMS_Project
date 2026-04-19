@@ -5,11 +5,13 @@ import { LiveStatusDto, AttendanceExceptionDto } from '../models/attendance.mode
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-attendance-dashboard',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TooltipModule],
+  imports: [CommonModule, TableModule, ButtonModule, TooltipModule, RouterModule],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {

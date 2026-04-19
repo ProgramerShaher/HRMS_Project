@@ -17,4 +17,6 @@ public class ContractDto
     public short VacationDays { get; set; }
     public byte WorkingHoursDaily { get; set; }
     public string? ContractStatus { get; set; }
+    public string? JobGradeAr { get; set; }
+    public bool IsActive { get; set; }
 }

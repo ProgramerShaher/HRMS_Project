@@ -67,5 +67,14 @@ namespace HRMS.Core.Entities.Identity
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
         #endregion
+        #region UI Properties
+        
+        /// <summary>
+        /// أدوار المستخدم (للعرض فقط)
+        /// </summary>
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public List<string> Roles { get; set; } = new();
+
+        #endregion
     }
 }

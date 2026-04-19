@@ -1,0 +1,211 @@
+<div class="p-6 space-y-6">
+  <p-toast></p-toast>
+
+  <!-- Header -->
+  <div class="glass-card p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+          <i class="pi pi-users text-white text-xl"></i>
+        </div>
+        أرصدة إجازات الموظفين
+      </h1>
+      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">عرض وإدارة الاستحقاق والمستهلك والمتبقي لكل موظف</p>
+    </div>
+
+    <div class="flex items-center gap-3 flex-wrap">
+      <!-- Year filter -->
+      <div class="flex items-center gap-2">
+        <label class="text-xs font-bold text-slate-500">السنة:</label>
+        <input type="number" pInputText [(ngModel)]="year" class="w-24 rounded-xl text-center" (change)="load()" />
+      </div>
+      <!-- Search -->
+      <input pInputText [(ngModel)]="search" placeholder="بحث..." class="rounded-xl w-48" />
+      <button pButton icon="pi pi-refresh" label="عرض" class="p-button-primary" (click)="load()" [loading]="loading()"></button>
+      <button pButton icon="pi pi-calendar-plus" label="تهيئة الأرصدة" class="p-button-outlined p-button-success" (click)="openInitDialog()"></button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="glass-card rounded-3xl overflow-hidden">
+    <p-table
+      [value]="rows()"
+      [loading]="loading()"
+      [rowGroupMode]="'subheader'"
+      groupRowsBy="employeeId"
+      sortField="employeeId"
+      [sortOrder]="1"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-lg">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>نوع الإجازة</th>
+          <th class="text-center">الإجمالي</th>
+          <th class="text-center">المستهلك</th>
+          <th class="text-center">المتبقي</th>
+          <th class="text-center">السنة</th>
+          <th class="text-center">تعديل</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="groupheader" let-r>
+        <tr class="bg-indigo-50/60 dark:bg-indigo-900/10">
+          <td colspan="6" class="py-4 px-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-700 font-black">
+                  {{ r.employeeNameAr?.charAt(0) }}
+                </div>
+                <div>
+                  <p class="font-black text-slate-900 dark:text-white">
+                    {{ r.employeeNameAr }}
+                    <span class="text-slate-400 font-semibold text-sm mr-2">#{{ r.employeeNumber }}</span>
+                  </p>
+                  <p class="text-xs text-slate-500">{{ r.departmentNameAr }}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 flex-wrap text-xs font-bold">
+                <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700">
+                  إجمالي: {{ totalsFor(r.employeeId).entitlementDays }}
+                </span>
+                <span class="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700">
+                  مستهلك: {{ totalsFor(r.employeeId).consumedDays }}
+                </span>
+                <span class="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700">
+                  متبقي: {{ totalsFor(r.employeeId).remainingDays }}
+                </span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-r>
+        <tr class="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+          <td>
+            <span class="font-bold text-slate-900 dark:text-white text-sm">{{ r.leaveTypeNameAr }}</span>
+          </td>
+          <td class="text-center font-extrabold text-slate-800 dark:text-white">{{ r.entitlementDays }}</td>
+          <td class="text-center font-extrabold text-amber-700 dark:text-amber-300">{{ r.consumedDays }}</td>
+          <td class="text-center">
+            <span class="font-extrabold px-3 py-1 rounded-lg"
+                  [ngClass]="r.remainingDays > 0 ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20' : 'text-rose-600 bg-rose-50 dark:bg-rose-900/20'">
+              {{ r.remainingDays }}
+            </span>
+          </td>
+          <td class="text-center text-slate-500 font-mono text-sm">{{ r.year }}</td>
+          <td class="text-center">
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-info p-button-rounded"
+                    pTooltip="ضبط الرصيد" tooltipPosition="left"
+                    (click)="openAdjustDialog(r)"></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center py-20 text-slate-400">
+            <i class="pi pi-inbox text-6xl opacity-20 mb-4 block"></i>
+            <p class="text-lg font-bold">لا توجد بيانات</p>
+            <p class="text-sm mt-1">تأكد من تهيئة الأرصدة لهذه السنة أولاً</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     Initialize Dialog
+══════════════════════════════════ -->
+<p-dialog [(visible)]="showInitDialog" [modal]="true" [draggable]="false" [resizable]="false"
+          header="تهيئة أرصدة الإجازات السنوية" [style]="{ width: '480px' }">
+
+  <form [formGroup]="initForm" class="px-2 py-4 space-y-4">
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600">السنة <span class="text-rose-500">*</span></label>
+      <p-select [options]="yearOptions" [formControlName]="'year'"
+                placeholder="اختر السنة" class="w-full"></p-select>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600">نوع الإجازة (اختياري — الكل إن فارغ)</label>
+      <p-select [options]="leaveTypeOptions()" [formControlName]="'leaveTypeId'"
+                optionLabel="label" optionValue="value"
+                placeholder="جميع الأنواع" [showClear]="true" class="w-full"></p-select>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600">عدد أيام مخصص (اختياري)</label>
+      <p-inputNumber [formControlName]="'customDays'" [min]="0" [max]="365"
+                     placeholder="يستخدم الافتراضي إن فارغ" class="w-full"></p-inputNumber>
+    </div>
+
+    <div class="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
+      <input type="checkbox" [formControlName]="'enableProration'" id="prorate" class="rounded" />
+      <label for="prorate" class="text-sm font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
+        تفعيل التناسب الزمني للموظفين الجدد (Proration)
+      </label>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
+              (click)="showInitDialog = false"></button>
+      <button pButton label="تهيئة الأرصدة" icon="pi pi-calendar-plus" class="p-button-success"
+              [loading]="initSaving()" (click)="saveInitialize()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- ══════════════════════════════════
+     Adjust Dialog
+══════════════════════════════════ -->
+<p-dialog [(visible)]="showAdjustDialog" [modal]="true" [draggable]="false" [resizable]="false"
+          header="ضبط رصيد الإجازة" [style]="{ width: '440px' }">
+
+  <form [formGroup]="adjustForm" class="px-2 py-4 space-y-4" *ngIf="selectedEmployee">
+
+    <!-- Employee Info -->
+    <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-4">
+      <p class="font-black text-slate-900 dark:text-white">{{ selectedEmployee.employeeNameAr }}</p>
+      <p class="text-sm text-slate-500">#{{ selectedEmployee.employeeNumber }} — {{ selectedEmployee.departmentNameAr }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600">نوع الإجازة <span class="text-rose-500">*</span></label>
+      <p-select [options]="leaveTypeOptions()" [formControlName]="'leaveTypeId'"
+                optionLabel="label" optionValue="value"
+                placeholder="اختر نوع الإجازة" class="w-full"></p-select>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600">
+        عدد الأيام <span class="text-rose-500">*</span>
+        <span class="text-slate-400 font-normal text-xs mr-2">(سالب للخصم، موجب للإضافة)</span>
+      </label>
+      <p-inputNumber [formControlName]="'adjustmentDays'" [min]="-365" [max]="365"
+                     [showButtons]="true" class="w-full"></p-inputNumber>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-bold text-slate-600">سبب التعديل <span class="text-rose-500">*</span></label>
+      <textarea pTextarea [formControlName]="'reason'" rows="3"
+                placeholder="اذكر سبب التعديل..." class="w-full rounded-xl"></textarea>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
+              (click)="showAdjustDialog = false"></button>
+      <button pButton label="حفظ التعديل" icon="pi pi-save" class="p-button-primary"
+              [loading]="adjustSaving()" [disabled]="adjustForm.invalid"
+              (click)="saveAdjust()"></button>
+    </div>
+  </ng-template>
+</p-dialog>

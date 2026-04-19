@@ -1,0 +1,648 @@
+2026-04-12 00:21:23.215 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Payroll/all-employees-salaries - null null
+2026-04-12 00:21:23.243 +03:00 [INF] CORS policy execution successful.
+2026-04-12 00:21:23.249 +03:00 [INF] HTTP OPTIONS /api/Payroll/all-employees-salaries responded 204 in 6.1634 ms
+2026-04-12 00:21:23.252 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Payroll/all-employees-salaries - 204 null null 37.4109ms
+2026-04-12 00:21:23.311 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Payroll/all-employees-salaries - null null
+2026-04-12 00:21:23.322 +03:00 [INF] CORS policy execution successful.
+2026-04-12 00:21:23.377 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '11/04/2026 04:54:48 م', Current time (UTC): '11/04/2026 09:21:23 م'.
+   at Microsoft.IdentityModel.Tokens.ValidatorUtilities.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2026-04-12 00:21:23.398 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '11/04/2026 04:54:48 م', Current time (UTC): '11/04/2026 09:21:23 م'.
+2026-04-12 00:21:23.403 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Payroll.PayrollController.GetAllEmployeesSalaries (HRMS.API)'
+2026-04-12 00:21:23.406 +03:00 [INF] Route matched with {action = "GetAllEmployeesSalaries", controller = "Payroll"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Payroll.Processing.EmployeeSalaryDetailDto]]]] GetAllEmployeesSalaries(System.Nullable`1[System.Int32], System.Nullable`1[System.Boolean], System.String) on controller HRMS.API.Controllers.Payroll.PayrollController (HRMS.API).
+2026-04-12 00:21:23.542 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e].[JOB_ID] = [j].[JOB_ID]
+2026-04-12 00:21:24.626 +03:00 [INF] Executed DbCommand (62ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:24.763 +03:00 [INF] Executed DbCommand (19ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:24.797 +03:00 [INF] Executed DbCommand (31ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:24.813 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:24.822 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:24.827 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:24.953 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.700 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.706 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.727 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.739 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.746 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.751 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.759 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.765 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.777 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.843 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.852 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.862 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.868 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.882 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.892 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.897 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.907 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.917 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.933 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:25.958 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:25.975 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:25.996 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.114 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.119 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.125 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.133 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.139 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.146 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.154 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.165 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.173 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.178 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.194 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.206 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.215 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.221 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.226 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.231 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.264 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.271 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.278 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.283 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.288 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.293 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.302 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.306 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.310 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.314 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.321 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.325 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.331 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:26.335 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:26.342 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:26.346 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Payroll.Processing.EmployeeSalaryDetailDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-12 00:21:26.349 +03:00 [INF] Executed action HRMS.API.Controllers.Payroll.PayrollController.GetAllEmployeesSalaries (HRMS.API) in 2940.5951ms
+2026-04-12 00:21:26.351 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Payroll.PayrollController.GetAllEmployeesSalaries (HRMS.API)'
+2026-04-12 00:21:26.353 +03:00 [INF] HTTP GET /api/Payroll/all-employees-salaries responded 200 in 3031.0526 ms
+2026-04-12 00:21:26.355 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Payroll/all-employees-salaries - 200 null application/json; charset=utf-8 3043.6379ms
+2026-04-12 00:21:42.269 +03:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:5201/api/Payroll/all-employees-salaries - null null
+2026-04-12 00:21:42.290 +03:00 [INF] CORS policy execution successful.
+2026-04-12 00:21:42.322 +03:00 [INF] HTTP OPTIONS /api/Payroll/all-employees-salaries responded 204 in 31.2610 ms
+2026-04-12 00:21:42.324 +03:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:5201/api/Payroll/all-employees-salaries - 204 null null 54.7409ms
+2026-04-12 00:21:42.326 +03:00 [INF] Request starting HTTP/2 GET https://localhost:5201/api/Payroll/all-employees-salaries - null null
+2026-04-12 00:21:42.330 +03:00 [INF] CORS policy execution successful.
+2026-04-12 00:21:42.332 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '11/04/2026 04:54:48 م', Current time (UTC): '11/04/2026 09:21:42 م'.
+   at Microsoft.IdentityModel.Tokens.ValidatorUtilities.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2026-04-12 00:21:42.335 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '11/04/2026 04:54:48 م', Current time (UTC): '11/04/2026 09:21:42 م'.
+2026-04-12 00:21:42.346 +03:00 [INF] Executing endpoint 'HRMS.API.Controllers.Payroll.PayrollController.GetAllEmployeesSalaries (HRMS.API)'
+2026-04-12 00:21:42.347 +03:00 [INF] Route matched with {action = "GetAllEmployeesSalaries", controller = "Payroll"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[HRMS.Core.Utilities.Result`1[System.Collections.Generic.List`1[HRMS.Application.DTOs.Payroll.Processing.EmployeeSalaryDetailDto]]]] GetAllEmployeesSalaries(System.Nullable`1[System.Int32], System.Nullable`1[System.Boolean], System.String) on controller HRMS.API.Controllers.Payroll.PayrollController (HRMS.API).
+2026-04-12 00:21:42.364 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EMPLOYEE_ID], [e].[BIRTH_DATE], [e].[CREATED_AT], [e].[CREATED_BY], [e].[DEPARTMENT_ID], [e].[EMAIL], [e].[EMPLOYEE_NUMBER], [e].[FIRST_NAME_AR], [e].[FULL_NAME_EN], [e].[GENDER], [e].[HIRE_DATE], [e].[IS_ACTIVE], [e].[IS_DELETED], [e].[JOB_GRADE_ID], [e].[JOB_ID], [e].[LAST_NAME_AR], [e].[LICENSE_EXPIRY_DATE], [e].[LICENSE_NUMBER], [e].[MANAGER_ID], [e].[MARITAL_STATUS], [e].[MOBILE], [e].[NATIONAL_ID], [e].[NATIONALITY_ID], [e].[PROFILE_PICTURE_PATH], [e].[SECOND_NAME_AR], [e].[SPECIALTY], [e].[TERMINATION_DATE], [e].[THIRD_NAME_AR], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[USER_ID], [e].[VERSION_NO], [d].[DEPT_ID], [d].[BranchId], [d].[COST_CENTER_CODE], [d].[CREATED_AT], [d].[CREATED_BY], [d].[DEPT_NAME_AR], [d].[DEPT_NAME_EN], [d].[IS_ACTIVE], [d].[IS_DELETED], [d].[MANAGER_ID], [d].[PARENT_DEPT_ID], [d].[UPDATED_AT], [d].[UPDATED_BY], [d].[VERSION_NO], [j].[JOB_ID], [j].[CREATED_AT], [j].[CREATED_BY], [j].[DEFAULT_GRADE_ID], [j].[DepartmentDeptId], [j].[IS_DELETED], [j].[IS_MEDICAL], [j].[JOB_TITLE_AR], [j].[JOB_TITLE_EN], [j].[UPDATED_AT], [j].[UPDATED_BY], [j].[VERSION_NO]
+FROM [HR_PERSONNEL].[EMPLOYEES] AS [e]
+INNER JOIN [HR_CORE].[DEPARTMENTS] AS [d] ON [e].[DEPARTMENT_ID] = [d].[DEPT_ID]
+INNER JOIN [HR_CORE].[JOBS] AS [j] ON [e].[JOB_ID] = [j].[JOB_ID]
+2026-04-12 00:21:42.383 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.391 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.411 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.539 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.574 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.579 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.588 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.602 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.612 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.618 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.622 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.630 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.635 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.640 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.644 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.651 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.655 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.658 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.663 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.667 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.673 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.678 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.682 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.686 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.693 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.697 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.702 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.706 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.712 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.716 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.720 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.723 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.727 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.732 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.735 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.741 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.748 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.755 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.758 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.762 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.765 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.768 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.774 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.779 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.783 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.787 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.790 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.796 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.804 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.812 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.819 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.825 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.829 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.833 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.840 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.844 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.851 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.859 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[StructureId], [e].[Amount], [e].[CREATED_AT], [e].[CREATED_BY], [e].[ELEMENT_ID], [e].[EMPLOYEE_ID], [e].[IsActive], [e].[IS_DELETED], [e].[Percentage], [e].[UPDATED_AT], [e].[UPDATED_BY], [e].[VERSION_NO], [s].[ElementId], [s].[CREATED_AT], [s].[CREATED_BY], [s].[DefaultPercentage], [s].[ElementNameAr], [s].[ElementType], [s].[IsBasic], [s].[IS_DELETED], [s].[IsGosiBase], [s].[IsRecurring], [s].[IsTaxable], [s].[UPDATED_AT], [s].[UPDATED_BY], [s].[VERSION_NO]
+FROM [HR_PAYROLL].[EMPLOYEE_SALARY_STRUCTURE] AS [e]
+INNER JOIN [HR_PAYROLL].[SALARY_ELEMENTS] AS [s] ON [e].[ELEMENT_ID] = [s].[ElementId]
+WHERE [e].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [e].[IsActive] = CAST(1 AS tinyint)
+2026-04-12 00:21:42.864 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LoanId], [l].[ApprovalDate], [l].[APPROVED_BY], [l].[CREATED_AT], [l].[CREATED_BY], [l].[EMPLOYEE_ID], [l].[InstallmentCount], [l].[IS_DELETED], [l].[LoanAmount], [l].[RequestDate], [l].[SettlementDate], [l].[SettlementNotes], [l].[Status], [l].[UPDATED_AT], [l].[UPDATED_BY], [l].[VERSION_NO]
+FROM [HR_PAYROLL].[LOANS] AS [l]
+WHERE [l].[EMPLOYEE_ID] = @__employee_EmployeeId_0 AND [l].[Status] = N'ACTIVE'
+2026-04-12 00:21:42.868 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__employee_EmployeeId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[PayslipId], [p].[ABSENCE_DAYS], [p].[BasicSalary], [p].[CREATED_AT], [p].[CREATED_BY], [p].[EMPLOYEE_ID], [p].[IS_DELETED], [p].[NetSalary], [p].[OTHER_DEDUCTIONS], [p].[OT_EARNINGS], [p].[RUN_ID], [p].[TotalAllowances], [p].[TotalDeductions], [p].[TOTAL_LATE_MINUTES], [p].[TOTAL_OT_MINUTES], [p].[TOTAL_VIOLATIONS], [p].[UPDATED_AT], [p].[UPDATED_BY], [p].[VERSION_NO], [p0].[RunId], [p0].[CREATED_AT], [p0].[CREATED_BY], [p0].[IS_DELETED], [p0].[Month], [p0].[Notes], [p0].[RunDate], [p0].[Status], [p0].[TotalPayout], [p0].[UPDATED_AT], [p0].[UPDATED_BY], [p0].[VERSION_NO], [p0].[Year]
+FROM [HR_PAYROLL].[PAYSLIPS] AS [p]
+INNER JOIN [HR_PAYROLL].[PAYROLL_RUNS] AS [p0] ON [p].[RUN_ID] = [p0].[RunId]
+WHERE [p].[EMPLOYEE_ID] = @__employee_EmployeeId_0
+ORDER BY [p].[PayslipId] DESC
+2026-04-12 00:21:42.872 +03:00 [INF] Executing OkObjectResult, writing value of type 'HRMS.Core.Utilities.Result`1[[System.Collections.Generic.List`1[[HRMS.Application.DTOs.Payroll.Processing.EmployeeSalaryDetailDto, HRMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-12 00:21:42.874 +03:00 [INF] Executed action HRMS.API.Controllers.Payroll.PayrollController.GetAllEmployeesSalaries (HRMS.API) in 525.3734ms
+2026-04-12 00:21:42.878 +03:00 [INF] Executed endpoint 'HRMS.API.Controllers.Payroll.PayrollController.GetAllEmployeesSalaries (HRMS.API)'
+2026-04-12 00:21:42.880 +03:00 [INF] HTTP GET /api/Payroll/all-employees-salaries responded 200 in 549.5586 ms
+2026-04-12 00:21:42.882 +03:00 [INF] Request finished HTTP/2 GET https://localhost:5201/api/Payroll/all-employees-salaries - 200 null application/json; charset=utf-8 556.066ms

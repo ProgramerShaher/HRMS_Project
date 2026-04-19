@@ -1,97 +1,109 @@
+/**
+ * Sub-models for Employee DTOs
+ * These represent the nested entities within an employee record
+ */
+
 export interface Qualification {
-    qualificationId?: number;
-    degreeType: string;
-    majorAr: string;
-    universityAr: string;
-    countryId: number;
-    graduationYear: number;
-    grade: string;
-}
-
-export interface Experience {
-    experienceId?: number;
-    companyNameAr: string;
-    jobTitleAr: string;
-    startDate: Date | string;
-    endDate?: Date | string;
-    isCurrent: number | boolean; // API shows 0, likely mapped to boolean or number
-    responsibilities?: string;
-    reasonForLeaving?: string;
-}
-
-export interface EmergencyContact {
-    contactId?: number;
-    contactNameAr: string;
-    relationship: string;
-    phonePrimary: string;
-    phoneSecondary?: string;
-    isPrimary: number | boolean;
-}
-
-export interface Contract {
-    contractId?: number;
-    employeeId?: number;
-    contractType: string;
-    startDate: Date | string;
-    endDate?: Date | string;
-    isRenewable: boolean;
-    basicSalary: number;
-    housingAllowance: number;
-    transportAllowance: number;
-    otherAllowances: number;
-    vacationDays: number;
-    workingHoursDaily: number;
-    contractStatus?: string;
+  qualificationId?: number;
+  employeeId?: number;
+  degreeType: string;
+  majorAr: string;
+  universityAr: string;
+  countryId?: number;
+  graduationYear: number;
+  grade?: string;
+  attachmentPath?: string;
 }
 
 export interface Certification {
-    certificationId?: number;
-    certificationName: string;
-    issuingOrganization: string;
-    issueDate: Date | string;
-    expiryDate?: Date | string;
-    credentialId?: string;
-    credentialUrl?: string;
+  certificationId?: number;
+  employeeId?: number;
+  certificationName: string;
+  issuingOrganization: string;
+  issueDate: Date | string;
+  expiryDate?: Date | string;
+  credentialId?: string;
+  credentialUrl?: string;
+  attachmentPath?: string;
 }
 
-export interface BankAccount {
-    employeeBankAccountId?: number;
-    bankId: number;
-    accountHolderName: string;
-    ibanNumber: string;
-    isPrimary: boolean;
+export interface Experience {
+  experienceId?: number;
+  employeeId?: number;
+  companyNameAr: string;
+  jobTitleAr: string;
+  startDate: Date | string;
+  endDate?: Date | string;
+  responsibilities?: string;
+  reasonForLeaving?: string;
+  isCurrent: number | boolean;
+}
+
+export interface EmergencyContact {
+  contactId?: number;
+  employeeId?: number;
+  contactNameAr: string;
+  relationship: string;
+  phonePrimary: string;
+  phoneSecondary?: string;
+  isPrimary?: number | boolean;
 }
 
 export interface Dependent {
-    dependentId?: number;
-    fullNameAr: string;
-    fullNameEn: string;
-    relationship: string;
-    birthDate: Date | string;
-    nationalId: string;
-    gender: string;
+  dependentId?: number;
+  employeeId?: number;
+  fullNameAr: string;
+  fullNameEn?: string;
+  relationship: string; // Spouse, Son, Daughter
+  birthDate: Date | string;
+  nationalId?: string;
+  gender: string;
+}
+
+export interface BankAccount {
+  employeeBankAccountId?: number;
+  employeeId?: number;
+  bankId: number;
+  accountHolderName: string;
+  ibanNumber: string;
+  isPrimary: boolean | number;
 }
 
 export interface Address {
-    addressId?: number;
-    addressTypeId: number; // Changed from addressType string to ID
-    countryId: number; // Added
-    cityId: number;
-    district: string;
-    street: string;
-    buildingNo?: string; // Renamed from buildingNumber to match DTO if needed, or keep alias
-    postalCode?: string; // Renamed from zipCode
-    additionalDetails?: string;
-    isPrimary?: boolean; // Added
+  addressId?: number;
+  employeeId?: number;
+  addressType: string; // Permanent, Temporary, Work
+  street: string;
+  cityId?: number;
+  countryId?: number;
+  buildingNumber?: string;
+  zipCode?: string;
+  additionalDetails?: string;
 }
 
 export interface EmployeeDocument {
-    documentId?: number;
-    documentTypeName: string;
-    documentNumber: string;
-    expiryDate?: Date | string;
-    filePath?: string;
-    fileName?: string;
-    documentTypeId: number;
-    file?: File; // For upload logic
+  documentId?: number;
+  employeeId?: number;
+  documentTypeId: number;
+  documentNumber?: string;
+  expiryDate?: Date | string;
+  filePath?: string;
+  fileName?: string;
+}
+
+export interface Contract {
+  contractId?: number;
+  employeeId?: number;
+  contractType: string; // Initial, Renewal, Amendment
+  startDate: Date | string;
+  endDate: Date | string;
+  isRenewable: boolean;
+  basicSalary: number;
+  housingAllowance?: number;
+  transportAllowance?: number;
+  otherAllowances?: number;
+  workingHoursDaily?: number;
+  vacationDays?: number;
+  contractStatus?: string;
+  filePath?: string;
 }

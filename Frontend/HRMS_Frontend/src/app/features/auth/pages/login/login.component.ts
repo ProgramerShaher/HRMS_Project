@@ -42,6 +42,25 @@ export class LoginComponent {
   };
 
   loading = signal(false);
+  
+  // Quick Login Options
+  quickLogin(role: string) {
+    switch(role) {
+      case 'Admin':
+        this.loginRequest.userName = 'admin';
+        this.loginRequest.password = 'Admin@123';
+        break;
+      case 'HR':
+        this.loginRequest.userName = 'hr_manager';
+        this.loginRequest.password = 'HR@123';
+        break;
+      case 'Employee':
+        this.loginRequest.userName = 'employee';
+        this.loginRequest.password = 'Employee@123';
+        break;
+    }
+    this.messageService.add({severity:'info', summary:'تعبئة تلقائية', detail: 'تم تعبئة بيانات الدخول الخاصة بـ ' + role});
+  }
 
   login() {
     if (!this.loginRequest.userName || !this.loginRequest.password) {

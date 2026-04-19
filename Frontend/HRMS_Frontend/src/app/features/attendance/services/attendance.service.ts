@@ -19,7 +19,8 @@ import {
   MyRosterDto, 
   PermissionRequestDto,
   OvertimeRequestDto,
-  ShiftSwapRequestDto
+  ShiftSwapRequestDto,
+  DeviceEmployeeDto
 } from '../models/attendance.models';
 
 @Injectable({
@@ -91,6 +92,11 @@ export class AttendanceService {
     return this.http.get<Result<AttendanceExceptionDto[]>>(`${this.apiUrl}/dashboard/exceptions`);
   }
 
+  // Device Punch
+  getDeviceEmployees(): Observable<Result<DeviceEmployeeDto[]>> {
+    return this.http.get<Result<DeviceEmployeeDto[]>>(`${this.apiUrl}/device/employees`);
+  }
+
   // Correction
   manualCorrection(command: ManualCorrectionCommand): Observable<Result<boolean>> {
     return this.http.post<Result<boolean>>(`${this.apiUrl}/correction`, command);
@@ -129,5 +135,13 @@ export class AttendanceService {
 
   getMySwapRequests(): Observable<Result<ShiftSwapRequestDto[]>> {
     return this.http.get<Result<ShiftSwapRequestDto[]>>(`${this.apiUrl}/my-swaps`);
+  }
+
+  getAttendanceByRange(employeeId: number, from: Date, to: Date): Observable<Result<TimesheetDayDto[]>> {
+    const params = new HttpParams()
+      .set('employeeId', employeeId.toString())
+      .set('startDate', from.toISOString())
+      .set('endDate', to.toISOString());
+    return this.http.get<Result<TimesheetDayDto[]>>(`${this.apiUrl}/range`, { params });
   }
 }

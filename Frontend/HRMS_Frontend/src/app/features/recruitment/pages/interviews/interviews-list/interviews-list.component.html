@@ -1,0 +1,174 @@
+<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+  <!-- Header -->
+  <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-l from-sky-50 to-slate-50 border-b border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+        <i class="pi pi-calendar text-sky-500"></i>
+        إدارة المقابلات
+      </h2>
+      <p class="text-slate-500 text-sm mt-1">جدولة المقابلات وتسجيل نتائجها</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search text-slate-400"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="بحث..." class="p-inputtext-sm border-slate-200 w-56" />
+      </span>
+      <button pButton label="جدولة مقابلة" icon="pi pi-calendar-plus" class="p-button-sm shadow-none"
+        style="background:#0284c7; border-color:#0284c7;" (click)="openSchedule()"></button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <p-table #dt [value]="interviews()" [loading]="loading()" [rowHover]="true"
+    styleClass="p-datatable-striped" responsiveLayout="scroll"
+    [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+    [globalFilterFields]="['candidateName','interviewType','status']"
+    currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} مقابلة"
+    [showCurrentPageReport]="true">
+
+    <ng-template pTemplate="header">
+      <tr class="bg-slate-50 text-slate-600 text-sm">
+        <th class="font-semibold p-4">المرشح</th>
+        <th class="font-semibold p-4">المقابِل</th>
+        <th class="font-semibold p-4">موعد المقابلة</th>
+        <th class="font-semibold p-4 text-center">النوع</th>
+        <th class="font-semibold p-4 text-center">الدرجة</th>
+        <th class="font-semibold p-4 text-center">الحالة</th>
+        <th class="font-semibold p-4 text-center">الإجراءات</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-i>
+      <tr class="border-b border-slate-50 hover:bg-sky-50/30 transition-colors">
+        <td class="p-4">
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-800 text-sm">{{ i.candidateName }}</span>
+            <span class="text-xs text-slate-400">#{{ i.interviewId }}</span>
+          </div>
+        </td>
+        <td class="p-4 text-slate-600 text-sm">{{ i.interviewerName || '—' }}</td>
+        <td class="p-4 text-slate-500 text-sm">{{ i.interviewDate | date:'yyyy-MM-dd HH:mm' }}</td>
+        <td class="p-4 text-center">
+          <span class="bg-sky-100 text-sky-700 rounded px-2 py-0.5 text-xs font-bold">
+            {{ typeLabel(i.interviewType) }}
+          </span>
+        </td>
+        <td class="p-4 text-center">
+          <span *ngIf="i.score != null" class="font-bold text-slate-700">{{ i.score }}<span class="text-slate-400 text-xs">/100</span></span>
+          <span *ngIf="i.score == null" class="text-slate-400 text-xs">—</span>
+        </td>
+        <td class="p-4 text-center">
+          <p-tag [severity]="statusSeverity(i.status)" [value]="statusLabel(i.status)"
+            styleClass="text-[11px] font-bold px-2"></p-tag>
+        </td>
+        <td class="p-4 text-center">
+          <div class="flex justify-center gap-1">
+            <button *ngIf="i.status === 'SCHEDULED'" pButton icon="pi pi-check-circle"
+              class="p-button-rounded p-button-text p-button-success hover:bg-green-50"
+              pTooltip="تسجيل النتيجة" tooltipPosition="top"
+              (click)="openResult(i)"></button>
+            <button *ngIf="i.status === 'SCHEDULED'" pButton icon="pi pi-calendar-times"
+              class="p-button-rounded p-button-text p-button-danger hover:bg-red-50"
+              pTooltip="إلغاء المقابلة" tooltipPosition="top"
+              (click)="cancel(i.interviewId)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center p-10">
+          <div class="flex flex-col items-center text-slate-400">
+            <i class="pi pi-calendar text-5xl mb-3 opacity-30"></i>
+            <p class="font-bold text-slate-500">لا توجد مقابلات مجدولة</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Schedule Dialog -->
+<p-dialog [(visible)]="showScheduleDialog" header="جدولة مقابلة جديدة"
+  [style]="{width: '520px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+  <ng-template pTemplate="content">
+    <div class="mb-4 p-3 bg-sky-50 rounded-xl border border-sky-100 flex items-center gap-2">
+      <i class="pi pi-info-circle text-sky-500"></i>
+      <p class="text-xs text-sky-700">يجب أن يكون الطلب في مرحلة <strong>قائمة المرشحين (SHORTLISTED)</strong> لجدولة مقابلة.</p>
+    </div>
+    <form [formGroup]="scheduleForm" class="flex flex-col gap-4">
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">طلب التوظيف <span class="text-red-500">*</span></label>
+        <p-select [options]="appOptions" formControlName="appId"
+          placeholder="اختر الطلب..." [filter]="true" appendTo="body" styleClass="w-full"></p-select>
+        <small class="text-red-500" *ngIf="submittedSchedule && scheduleForm.controls['appId'].invalid">الطلب مطلوب</small>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">موعد المقابلة <span class="text-red-500">*</span></label>
+          <p-datePicker formControlName="scheduledTime" [showIcon]="true" [showTime]="true"
+            dateFormat="yy-mm-dd" appendTo="body" styleClass="w-full"></p-datePicker>
+          <small class="text-red-500" *ngIf="submittedSchedule && scheduleForm.controls['scheduledTime'].invalid">الموعد مطلوب</small>
+        </div>
+        <div class="field">
+          <label class="block text-slate-700 font-bold mb-2 text-sm">نوع المقابلة <span class="text-red-500">*</span></label>
+          <p-select [options]="interviewTypeOptions" formControlName="interviewType"
+            appendTo="body" styleClass="w-full"></p-select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">رمز المقابِل (Employee ID) - اختياري</label>
+        <p-inputNumber formControlName="interviewerId" placeholder="مثال: 5" styleClass="w-full"></p-inputNumber>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="showScheduleDialog=false"></button>
+      <button pButton label="جدولة المقابلة" icon="pi pi-calendar-plus"
+        style="background:#0284c7; border-color:#0284c7;" class="font-bold px-6" (click)="saveSchedule()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Record Result Dialog -->
+<p-dialog [(visible)]="showResultDialog" header="تسجيل نتيجة المقابلة"
+  [style]="{width: '440px'}" [modal]="true" [draggable]="false" [resizable]="false"
+  styleClass="p-fluid rounded-xl overflow-hidden">
+  <ng-template pTemplate="content">
+    <div class="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100" *ngIf="selectedInterview">
+      <p class="text-sm text-slate-500">المرشح: <span class="font-bold text-slate-800">{{ selectedInterview.candidateName }}</span></p>
+    </div>
+    <form [formGroup]="resultForm" class="flex flex-col gap-4">
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">النتيجة <span class="text-red-500">*</span></label>
+        <p-select [options]="resultOptions" formControlName="result"
+          placeholder="اختر النتيجة..." appendTo="body" styleClass="w-full"></p-select>
+        <small class="text-red-500" *ngIf="submittedResult && resultForm.controls['result'].invalid">النتيجة مطلوبة</small>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">تقييم أداء المرشح (1 – 5)</label>
+        <p-select [options]="ratingOptions" formControlName="rating"
+          placeholder="اختر التقييم..." appendTo="body" styleClass="w-full"></p-select>
+      </div>
+      <div class="field">
+        <label class="block text-slate-700 font-bold mb-2 text-sm">ملاحظات المقابِل</label>
+        <textarea pTextarea formControlName="notes" rows="3"
+          class="w-full !border-slate-300 !rounded-xl" placeholder="ملاحظات على أداء المرشح..."></textarea>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
+      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="showResultDialog=false"></button>
+      <button pButton label="حفظ النتيجة" icon="pi pi-save"
+        class="p-button-success font-bold px-6" (click)="saveResult()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast position="bottom-left"></p-toast>
+<p-confirmDialog [style]="{width: '420px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>

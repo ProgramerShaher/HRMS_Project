@@ -1,0 +1,229 @@
+<div class="p-4 md:p-6 bg-slate-50 min-h-screen">
+    <p-toast></p-toast>
+    
+    <!-- Top Action Bar -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                <i class="pi pi-chart-line text-blue-600"></i>
+                لوحة تنفيذ تقييم الأداء
+            </h1>
+            <p class="text-slate-500 mt-1">نظام ERP المتكامل - إدارة تقييمات الموظفين</p>
+        </div>
+        <div class="flex gap-2">
+            <button pButton icon="pi pi-arrow-right" label="عودة" class="p-button-text p-button-secondary" (click)="router.navigate(['/performance/appraisals'])"></button>
+            <button *ngIf="canSubmit()" pButton icon="pi pi-save" [label]="isHRPhase() ? 'اعتماد نهائي' : 'حفظ التقييم'" 
+                class="p-button-primary shadow-md" [loading]="submitting()" (click)="submit()" [disabled]="form.invalid"></button>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD GRID -->
+    <div class="grid grid-cols-12 gap-6" *ngIf="appraisal() as a; else loadingTpl">
+        
+        <!-- ROW 1: Employee & Cycle Summary (Full Width) -->
+        <p-card class="col-span-12 border-none shadow-sm rounded-xl overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center gap-6 p-2">
+                <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-3xl font-bold">
+                    {{ a.employeeName.substring(0, 1) }}
+                </div>
+                <div class="flex-grow grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+                    <div>
+                        <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">الموظف</label>
+                        <p class="text-lg font-bold text-slate-800">{{ a.employeeName }}</p>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">دورة التقييم</label>
+                        <p class="text-slate-700 font-medium">{{ a.cycleName }}</p>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">الفترة</label>
+                        <p class="text-slate-600 text-sm">{{ a.cycleStartDate | date:'yyyy-MM-dd' }} ↔ {{ a.cycleEndDate | date:'yyyy-MM-dd' }}</p>
+                    </div>
+                    <div class="flex flex-col items-end justify-center">
+                        <p-tag [value]="a.status" [severity]="a.status === 'COMPLETED' ? 'success' : 'warn'" styleClass="px-4 py-1 text-sm rounded-full"></p-tag>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+
+        <!-- ROW 2: Left Column (Metrics) & Right Column (Evaluation) -->
+        
+        <!-- LEFT: Automated Metrics (4 cols) -->
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+            
+            <!-- Attendance Summary -->
+            <p-card header="سجل الحضور والغياب" styleClass="border-none shadow-sm h-fit">
+                <ng-template pTemplate="header">
+                    <div class="px-4 pt-4 flex items-center gap-2 text-blue-700 font-bold">
+                        <i class="pi pi-clock"></i> سجل الحضور (آلي)
+                    </div>
+                </ng-template>
+                <p-table [value]="attendance()" styleClass="p-datatable-sm" [rows]="5" [paginator]="attendance().length > 5">
+                    <ng-template pTemplate="header">
+                        <tr class="text-xs text-slate-400">
+                            <th>التاريخ</th>
+                            <th class="text-center">الحالة</th>
+                            <th class="text-center">تأخير</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-day>
+                        <tr class="text-sm">
+                            <td>{{ day.date | date:'MM-dd' }}</td>
+                            <td class="text-center">
+                                <p-tag [value]="day.status" [severity]="getStatusColor(day.status)" styleClass="text-xs"></p-tag>
+                            </td>
+                            <td class="text-center font-bold" [class.text-red-500]="day.lateMinutes > 0">
+                                {{ day.lateMinutes || 0 }}m
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr><td colspan="3" class="text-center p-4 text-slate-400">لا توجد سجلات حضور</td></tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+
+            <!-- Violations Summary -->
+            <p-card header="الجزاءات والمخالفات" styleClass="border-none shadow-sm h-fit">
+                 <ng-template pTemplate="header">
+                    <div class="px-4 pt-4 flex items-center gap-2 text-red-700 font-bold">
+                        <i class="pi pi-exclamation-triangle"></i> السلوك والجزاءات (آلي)
+                    </div>
+                </ng-template>
+                <div class="space-y-3">
+                    <div *ngFor="let v of violations()" class="p-3 bg-red-50 border-r-4 border-red-500 rounded flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-red-800 text-sm">{{ v.violationTypeNameAr }}</p>
+                            <span class="text-xs text-red-600">{{ v.violationDate | date:'yyyy-MM-dd' }}</span>
+                        </div>
+                        <p-tag [value]="v.actionNameAr" severity="danger"></p-tag>
+                    </div>
+                    <div *ngIf="violations().length === 0" class="text-center p-8 border-2 border-dashed border-slate-200 rounded-xl text-slate-400">
+                        لا توجد مخالفات مسجلة
+                    </div>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- RIGHT: Appraisal Form (8 cols) -->
+        <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+            
+            <!-- Scoring Grid -->
+            <p-card styleClass="border-none shadow-md overflow-hidden p-0">
+                <ng-template pTemplate="header">
+                    <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+                        <div class="flex items-center gap-2 font-bold">
+                            <i class="pi pi-check-square"></i> تنفيذ بنود التقييم
+                        </div>
+                        <div class="bg-blue-600 px-4 py-1 rounded-full text-sm">
+                            المجموع الحالي: {{ preliminaryTotal() }}%
+                        </div>
+                    </div>
+                </ng-template>
+                
+                <form [formGroup]="form" *ngIf="form" class="p-4 md:p-6 space-y-8">
+                    <div formArrayName="scores" class="space-y-4">
+                        <div *ngFor="let kpi of scoreDetails.controls; let i=index" [formGroupName]="i" 
+                            class="group bg-white border border-slate-100 p-5 rounded-2xl hover:border-blue-200 transition-all flex flex-col md:flex-row gap-6 shadow-sm">
+                            
+                            <!-- KPI Info -->
+                            <div class="flex-grow">
+                                <span class="bg-slate-100 text-slate-500 text-xs px-2 py-0.5 rounded font-bold uppercase">{{ kpi.get('kpiCategory')?.value }}</span>
+                                <h3 class="text-lg font-bold text-slate-800 mt-1">{{ kpi.get('kpiName')?.value }}</h3>
+                                <div class="flex gap-4 mt-2">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-slate-400 font-bold">الوزن</span>
+                                        <span class="text-sm font-bold text-blue-600">{{ kpi.get('weight')?.value }}%</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-slate-400 font-bold">تقييم الموظف</span>
+                                        <span class="text-sm font-bold text-slate-600">{{ kpi.get('employeeScore')?.value }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Input Scores -->
+                            <div class="flex flex-col md:flex-row items-end gap-3 w-full md:w-auto">
+                                
+                                <div *ngIf="isManagerPhase()" class="flex flex-col items-center">
+                                    <label class="text-xs text-slate-400 mb-1">درجة المدير (1-5)</label>
+                                    <p-inputNumber formControlName="managerScore" [min]="0" [max]="5" [step]="0.5" [showButtons]="true"
+                                        buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                                        inputStyleClass="w-16 text-center font-bold text-lg text-blue-700 bg-blue-50 border-none rounded">
+                                    </p-inputNumber>
+                                </div>
+
+                                <div *ngIf="isHRPhase()" class="flex flex-col items-center">
+                                    <label class="text-xs text-slate-400 mb-1">الاعتماد النهائي (1-5)</label>
+                                    <p-inputNumber formControlName="finalScore" [min]="0" [max]="5" [step]="0.5" [showButtons]="true"
+                                        buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                                        inputStyleClass="w-16 text-center font-bold text-lg text-green-700 bg-green-50 border-none rounded">
+                                    </p-inputNumber>
+                                </div>
+                                
+                                <div *ngIf="isReadOnly()" class="flex flex-col items-center px-6 py-2 bg-slate-100 rounded-xl">
+                                    <span class="text-xs text-slate-400">الدرجة النهائية</span>
+                                    <span class="text-2xl font-black text-slate-800">{{ (kpi.get('finalScore')?.value || 0).toFixed(1) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Comment -->
+                    <div class="pt-6 border-t border-slate-100">
+                        <label class="block text-slate-700 font-bold mb-3 flex items-center gap-2">
+                             <i class="pi pi-comments text-slate-400"></i>
+                             التوصيات العامة والملاحظات الختامية
+                        </label>
+                        <textarea pTextarea formControlName="comments" rows="4" 
+                            class="w-full bg-slate-50 border-slate-200 focus:bg-white transition-all rounded-xl p-4"
+                            placeholder="اكتب خلاصة التقييم، نقاط القوة، وفرص التحسين للموظف..."></textarea>
+                    </div>
+                </form>
+            </p-card>
+
+            <!-- Results Analytics Card -->
+            <p-card styleClass="border-none shadow-lg bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl overflow-hidden relative">
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <i class="pi pi-verified text-9xl"></i>
+                </div>
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="text-center md:text-right">
+                        <h2 class="text-xl font-bold opacity-80">الخلاصة والنتيجة المبدئية</h2>
+                        <div class="text-6xl font-black mt-2 flex items-baseline gap-2">
+                             {{ preliminaryTotal() }}
+                             <span class="text-2xl font-light opacity-60">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-grow w-full max-w-sm space-y-4">
+                        <div class="flex justify-between text-sm font-bold">
+                            <span>جولة تقدم التقييم</span>
+                            <span>{{ preliminaryTotal() }} / 100</span>
+                        </div>
+                        <p-progressBar [value]="preliminaryTotal()" [showValue]="false" 
+                            [color]="preliminaryTotal() >= 80 ? '#4ade80' : (preliminaryTotal() >= 60 ? '#facc15' : '#f87171')"
+                            styleClass="h-4 rounded-full bg-blue-900/40">
+                        </p-progressBar>
+                        <p class="text-xs opacity-70 italic text-center md:text-right">يتم الحساب تلقائياً بناءً على الأوزان المرتبطة بكل مؤشر من مؤشرات الأداء.</p>
+                    </div>
+                </div>
+            </p-card>
+        </div><!-- End Right Column -->
+    </div><!-- End Dashboard Grid -->
+    
+    <!-- Loading Template -->
+    <ng-template #loadingTpl>
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12"><p-skeleton height="100px" borderRadius="15px"></p-skeleton></div>
+            <div class="col-span-4 space-y-6">
+                <p-skeleton height="300px" borderRadius="15px"></p-skeleton>
+                <p-skeleton height="200px" borderRadius="15px"></p-skeleton>
+            </div>
+            <div class="col-span-8 space-y-6">
+                <p-skeleton height="500px" borderRadius="15px"></p-skeleton>
+                <p-skeleton height="150px" borderRadius="15px"></p-skeleton>
+            </div>
+        </div>
+    </ng-template>
+</div>
