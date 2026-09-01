@@ -1,84 +1,102 @@
-<div class="grid grid-cols-1 gap-6 p-4">
-    <!-- Header/Filter -->
-    <div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-slate-100 dark:border-zinc-800 p-6 flex flex-col md:flex-row items-end gap-4">
-        <div class="flex-1">
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">تقرير الحضور الشهري</h1>
-            <p class="text-slate-500 text-sm">إعداد بيانات الرواتب (الغياب، التأخير، العمل الإضافي)</p>
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+        <i class="pi pi-file-edit text-[11px]"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">تقرير الحضور الشهري</h3>
         </div>
-        
-        <div class="field">
-            <label class="block text-sm font-medium mb-1">اختر الشهر</label>
-            <p-datepicker [(ngModel)]="selectedDate" view="month" dateFormat="mm/yy" [readonlyInput]="true" [showIcon]="true"></p-datepicker>
-        </div>
-        
-        <button pButton label="عرض التقرير" icon="pi pi-search" (click)="generateReport()" [loading]="loading()"></button>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إعداد بيانات الرواتب (الغياب، التأخير، العمل الإضافي)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+        <p-datepicker [(ngModel)]="selectedDate" view="month" dateFormat="mm/yy" [readonlyInput]="true" [showIcon]="true" styleClass="p-inputtext-sm"></p-datepicker>
+        <button pButton icon="pi pi-search" title="عرض التقرير"
+          class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all text-[11px]"
+          (click)="generateReport()" [loading]="loading()"></button>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col mt-2">
+    <div class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800 px-3 py-2 flex items-center justify-between">
+      <h3 class="text-[10px] font-bold text-slate-800 dark:text-slate-200">الجدول التحليلي للحضور</h3>
+      <div class="flex items-center gap-1.5 no-print">
+        <button pButton icon="pi pi-file-excel" class="p-button-text p-button-success !w-6 !h-6 !p-0 !text-[11px]" title="Excel"></button>
+        <button pButton icon="pi pi-file-pdf" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-[11px]" title="PDF"></button>
+      </div>
     </div>
 
-    <!-- Data Table -->
-    <div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-xl overflow-hidden border border-slate-100 dark:border-zinc-800">
-        <p-table [value]="reportData()" [paginator]="true" [rows]="10" [loading]="loading()" styleClass="p-datatable-striped">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th rowspan="2">الموظف</th>
-                    <th rowspan="2">القسم</th>
-                    <th colspan="3" class="text-center bg-red-50 dark:bg-red-900/20">الخصومات / المخالفات</th>
-                    <th colspan="1" class="text-center bg-green-50 dark:bg-green-900/20">الاستحقاقات</th>
-                </tr>
-                <tr>
-                    <!-- Deductions -->
-                    <th class="text-center text-red-600 dark:text-red-400 text-sm">غياب (أيام)</th>
-                    <th class="text-center text-red-600 dark:text-red-400 text-sm">تأخير (دقائق)</th>
-                    <th class="text-center text-red-600 dark:text-red-400 text-sm">مبلغ الخصم المتوقع</th>
-                    
-                    <!-- Entitlements -->
-                    <th class="text-center text-green-600 dark:text-green-400 text-sm">إضافي (دقائق)</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-row>
-                <tr>
-                    <td class="font-bold">{{ row.fullNameAr || row.employeeName }}</td>
-                    <td class="text-slate-500">{{ row.departmentName }}</td>
-                    
-                    <!-- Absence -->
-                    <td class="text-center">
-                        <span *ngIf="row.totalAbsenceDays > 0" class="px-2 py-1 rounded-md bg-red-100 text-red-700 font-bold text-xs">
-                            {{ row.totalAbsenceDays }} يوم
-                        </span>
-                        <span *ngIf="row.totalAbsenceDays === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
-                    </td>
-                    
-                    <!-- Late -->
-                    <td class="text-center">
-                        <span *ngIf="(row.totalDeepLateMinutes + row.totalShortLateMinutes) > 0" class="px-2 py-1 rounded-md bg-orange-100 text-orange-700 font-bold text-xs">
-                            {{ row.totalDeepLateMinutes + row.totalShortLateMinutes }} دقيقة
-                        </span>
-                        <span *ngIf="(row.totalDeepLateMinutes + row.totalShortLateMinutes) === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
-                    </td>
-                    
-                    <!-- Deduction -->
-                    <td class="text-center">
-                        <span *ngIf="row.proposedDeductionAmount > 0" class="font-bold text-red-600">
-                            {{ row.proposedDeductionAmount | currency:'USD':'symbol':'1.0-0' }}
-                        </span>
-                        <span *ngIf="row.proposedDeductionAmount === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
-                    </td>
-                    
-                    <!-- Overtime -->
-                    <td class="text-center">
-                         <span *ngIf="row.totalOvertimeMinutes > 0" class="px-2 py-1 rounded-md bg-green-100 text-green-700 font-bold text-xs">
-                            {{ row.totalOvertimeMinutes }} دقيقة
-                        </span>
-                        <span *ngIf="row.totalOvertimeMinutes === 0" class="text-slate-400 font-medium text-sm text-center block">لا يوجد</span>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="6" class="text-center p-8 text-slate-500">
-                        لا توجد بيانات لهذا الشهر.
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
+    <p-table [value]="reportData()" [paginator]="true" [rows]="10" [loading]="loading()" styleClass="p-datatable-sm clean-table">
+        <ng-template pTemplate="header">
+            <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                <th rowspan="2" class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                <th rowspan="2" class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">القسم</th>
+                <th colspan="3" class="!px-3 !py-1.5 !text-[9px] !font-bold !text-rose-600 dark:!text-rose-400 !bg-rose-50/50 dark:!bg-rose-900/10 !border-none text-center">الخصومات / المخالفات</th>
+                <th colspan="1" class="!px-3 !py-1.5 !text-[9px] !font-bold !text-emerald-600 dark:!text-emerald-400 !bg-emerald-50/50 dark:!bg-emerald-900/10 !border-none text-center">الاستحقاقات</th>
+            </tr>
+            <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                <th class="!px-3 !py-1.5 !text-[8px] !font-bold !text-rose-500 !bg-transparent !border-none text-center">غياب (أيام)</th>
+                <th class="!px-3 !py-1.5 !text-[8px] !font-bold !text-rose-500 !bg-transparent !border-none text-center">تأخير (دقائق)</th>
+                <th class="!px-3 !py-1.5 !text-[8px] !font-bold !text-rose-500 !bg-transparent !border-none text-center">مبلغ الخصم</th>
+                <th class="!px-3 !py-1.5 !text-[8px] !font-bold !text-emerald-500 !bg-transparent !border-none text-center">إضافي (دقائق)</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-row>
+            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-1 h-3 rounded-full bg-blue-500"></div>
+                        {{ row.fullNameAr || row.employeeName }}
+                    </div>
+                </td>
+                <td class="!px-3 !py-1.5 !border-none text-[9px] text-slate-500">{{ row.departmentName }}</td>
+                
+                <!-- Absence -->
+                <td class="!px-3 !py-1.5 !border-none text-center">
+                    <span *ngIf="row.totalAbsenceDays > 0" class="px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest border bg-rose-50 text-rose-600 border-rose-200 inline-block min-w-[40px]">
+                        {{ row.totalAbsenceDays }} يوم
+                    </span>
+                    <span *ngIf="row.totalAbsenceDays === 0" class="text-slate-300 text-[9px] font-mono block">-</span>
+                </td>
+                
+                <!-- Late -->
+                <td class="!px-3 !py-1.5 !border-none text-center">
+                    <span *ngIf="(row.totalDeepLateMinutes + row.totalShortLateMinutes) > 0" class="px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest border bg-amber-50 text-amber-600 border-amber-200 inline-block min-w-[40px]">
+                        {{ row.totalDeepLateMinutes + row.totalShortLateMinutes }} د
+                    </span>
+                    <span *ngIf="(row.totalDeepLateMinutes + row.totalShortLateMinutes) === 0" class="text-slate-300 text-[9px] font-mono block">-</span>
+                </td>
+                
+                <!-- Deduction -->
+                <td class="!px-3 !py-1.5 !border-none text-center">
+                    <span *ngIf="row.proposedDeductionAmount > 0" class="font-bold text-[9px] text-rose-600 font-mono">
+                        {{ row.proposedDeductionAmount | currency:'USD':'symbol':'1.0-0' }}
+                    </span>
+                    <span *ngIf="row.proposedDeductionAmount === 0" class="text-slate-300 text-[9px] font-mono block">-</span>
+                </td>
+                
+                <!-- Overtime -->
+                <td class="!px-3 !py-1.5 !border-none text-center">
+                     <span *ngIf="row.totalOvertimeMinutes > 0" class="px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest border bg-emerald-50 text-emerald-600 border-emerald-200 inline-block min-w-[40px]">
+                        {{ row.totalOvertimeMinutes }} د
+                    </span>
+                    <span *ngIf="row.totalOvertimeMinutes === 0" class="text-slate-300 text-[9px] font-mono block">-</span>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" class="text-center py-6 text-slate-500 text-[10px]">
+                    لا توجد بيانات لهذا الشهر.
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+  </div>
 </div>

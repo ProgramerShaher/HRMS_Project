@@ -59,12 +59,16 @@ export class JobsComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(JobFormComponent, {
-      header: 'إضافة وظيفة جديدة',
-      width: '50vw',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      maximizable: true,
-      data: {}
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
+        breakpoints: {
+            '960px': '75vw',
+            '640px': '95vw'
+        },
+        data: {}
     });
 
     this.ref?.onClose.subscribe((result: any) => {
@@ -76,12 +80,16 @@ export class JobsComponent implements OnInit {
 
   edit(job: any) {
     this.ref = this.dialogService.open(JobFormComponent, {
-      header: 'تعديل بيانات الوظيفة',
-      width: '50vw',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      maximizable: true,
-      data: job
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
+        breakpoints: {
+            '960px': '75vw',
+            '640px': '95vw'
+        },
+        data: job
     });
 
     this.ref?.onClose.subscribe((result: any) => {

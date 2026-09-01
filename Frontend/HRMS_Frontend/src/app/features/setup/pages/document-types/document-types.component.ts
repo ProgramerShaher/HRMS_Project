@@ -49,12 +49,14 @@ export class DocumentTypesComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(DocumentTypeFormComponent, {
-        header: 'إضافة نوع وثيقة جديد',
-        width: '500px',
-        contentStyle: { overflow: 'visible' }, // visible for dropdowns etc to pop out if needed
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -66,12 +68,14 @@ export class DocumentTypesComponent implements OnInit {
 
   edit(item: DocumentType) {
     this.ref = this.dialogService.open(DocumentTypeFormComponent, {
-        header: 'تعديل بيانات الوثيقة',
-        width: '500px',
-        contentStyle: { overflow: 'visible' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item
     });

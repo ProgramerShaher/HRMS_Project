@@ -49,12 +49,14 @@ export class PayrollElementsComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(PayrollElementFormComponent, {
-        header: 'إضافة بند راتب جديد',
-        width: '500px',
-        contentStyle: { overflow: 'visible' },
+        showHeader: false,
+        width: '550px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -66,12 +68,14 @@ export class PayrollElementsComponent implements OnInit {
 
   edit(item: PayrollElement) {
     this.ref = this.dialogService.open(PayrollElementFormComponent, {
-        header: 'تعديل بند الراتب',
-        width: '500px',
-        contentStyle: { overflow: 'visible' },
+        showHeader: false,
+        width: '550px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item
     });

@@ -1,101 +1,106 @@
-<div class="min-h-screen bg-slate-50 dark:bg-zinc-950 flex flex-col items-center py-8 px-4">
+<div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center py-8 px-4 animate-in fade-in zoom-in-95 duration-700" dir="rtl">
     
     <!-- Header / Clock -->
-    <div class="mb-8 text-center animate-fade-in-down">
-        <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-2">نظام الحضور الذكي</h1>
-        <div class="text-5xl font-mono dir-ltr font-bold text-blue-600 dark:text-blue-400 drop-shadow-md tracking-wider">
+    <div class="mb-8 text-center flex flex-col items-center gap-2">
+        <div class="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center mb-2 shadow-inner border border-blue-500/20">
+            <i class="pi pi-desktop text-3xl"></i>
+        </div>
+        <h1 class="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">نظام الحضور الذكي</h1>
+        <div class="text-4xl font-mono dir-ltr font-black text-blue-600 dark:text-blue-400 drop-shadow-sm tracking-widest bg-white dark:bg-slate-900 px-6 py-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mt-2">
             {{ currentTime() | date:'HH:mm:ss' }}
         </div>
-        <div class="text-lg text-slate-500 dark:text-slate-400 mt-2 font-medium">
+        <div class="text-sm text-slate-500 dark:text-slate-400 mt-2 font-bold uppercase tracking-widest">
             {{ currentTime() | date:'fullDate' }}
         </div>
-        <div class="mt-2 inline-block px-3 py-1 bg-slate-200 dark:bg-zinc-800 rounded-full text-xs font-mono text-slate-600 dark:text-slate-400">
+        <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-slate-200/50 dark:bg-slate-800/50 rounded-lg text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+            <i class="pi pi-verified text-[10px] text-emerald-500"></i>
             Device ID: {{ DEVICE_ID }}
         </div>
     </div>
 
     <!-- Search Tool -->
-    <div class="w-full max-w-6xl mb-6 relative group">
-        <i class="pi pi-search absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 z-10"></i>
+    <div class="w-full max-w-5xl mb-6 relative group">
+        <i class="pi pi-search absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 z-10 text-lg"></i>
         <input type="text" 
                [(ngModel)]="searchQuery" 
                (input)="filterEmployees()" 
                placeholder="ابحث برقم الموظف أو الاسم..." 
-               class="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-lg shadow-slate-200/50 dark:shadow-black/50 bg-white dark:bg-zinc-900 text-lg focus:ring-2 focus:ring-blue-500/50 transition-all outline-none">
+               class="w-full pl-4 pr-12 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700/50 shadow-sm bg-white dark:bg-slate-900 text-sm font-bold focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-700 dark:text-slate-200 placeholder:text-slate-400">
     </div>
 
     <!-- Employees Table -->
-    <div class="w-full max-w-6xl card bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-zinc-800">
-        <p-table [value]="filteredEmployees" [paginator]="true" [rows]="10" styleClass="p-datatable-lg">
+    <div class="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+        <div class="bg-slate-50/80 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200">قائمة الموظفين</h3>
+        </div>
+
+        <p-table [value]="filteredEmployees" [paginator]="true" [rows]="10" styleClass="p-datatable-sm clean-table">
             <ng-template pTemplate="header">
-                <tr>
-                    <th class="text-right">الموظف</th>
-                    <th class="text-right">الوظيفة</th>
-                    <th class="text-right">المناوبة (اليوم)</th>
-                    <th class="text-center">سجل الحركة اليومي</th>
-                    <th class="text-center">تسجيل الحركة</th>
+                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                    <th class="!px-4 !py-3 !text-[11px] !font-bold !text-slate-500 !bg-transparent !border-none text-right">الموظف</th>
+                    <th class="!px-4 !py-3 !text-[11px] !font-bold !text-slate-500 !bg-transparent !border-none text-right">الوظيفة</th>
+                    <th class="!px-4 !py-3 !text-[11px] !font-bold !text-slate-500 !bg-transparent !border-none text-right">المناوبة</th>
+                    <th class="!px-4 !py-3 !text-[11px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">سجل الحركة</th>
+                    <th class="!px-4 !py-3 !text-[11px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الإجراء</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-emp>
-                <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors">
-                    <td>
+                <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/80 transition-colors border-b border-slate-100 dark:border-slate-800/50">
+                    <td class="!px-4 !py-3 !border-none">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
+                            <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-sm shadow-sm border border-blue-100 dark:border-blue-800/50">
                                 {{ emp.fullNameAr?.charAt(0) }}
                             </div>
                             <div>
-                                <div class="font-bold text-slate-900 dark:text-white">{{ emp.fullNameAr }}</div>
-                                <div class="text-xs text-slate-500">#{{ emp.id }}</div>
+                                <div class="font-bold text-sm text-slate-900 dark:text-slate-100">{{ emp.fullNameAr }}</div>
+                                <div class="text-[10px] font-mono text-slate-500">ID: {{ emp.id }}</div>
                             </div>
                         </div>
                     </td>
-                    <td class="text-slate-600 dark:text-slate-400">{{ emp.jobTitle }}</td>
-                    <td>
-                        <span class="px-2 py-1 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                    <td class="!px-4 !py-3 !border-none text-xs font-medium text-slate-600 dark:text-slate-400">{{ emp.jobTitle }}</td>
+                    <td class="!px-4 !py-3 !border-none">
+                        <span class="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-700">
                             {{ emp.currentShift }}
                         </span>
                     </td>
-                    <td class="text-center">
-                        <div class="flex flex-col gap-1 items-center justify-center text-xs">
-                            <div *ngIf="emp.lastPunchIn" class="flex items-center gap-1 text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded border border-green-100 dark:border-green-800">
-                                <i class="pi pi-arrow-down"></i>
-                                <span>{{ emp.lastPunchIn | date:'hh:mm a' }}</span>
+                    <td class="!px-4 !py-3 !border-none text-center">
+                        <div class="flex flex-col gap-1 items-center justify-center text-[10px] font-mono font-bold">
+                            <div *ngIf="emp.lastPunchIn" class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-md border border-emerald-100 dark:border-emerald-800/50">
+                                <i class="pi pi-arrow-down text-[8px]"></i>
+                                <span>{{ emp.lastPunchIn | date:'HH:mm' }}</span>
                             </div>
-                            <div *ngIf="emp.lastPunchOut" class="flex items-center gap-1 text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded border border-red-100 dark:border-red-800">
-                                <i class="pi pi-arrow-up"></i>
-                                <span>{{ emp.lastPunchOut | date:'hh:mm a' }}</span>
+                            <div *ngIf="emp.lastPunchOut" class="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 px-2 py-0.5 rounded-md border border-rose-100 dark:border-rose-800/50">
+                                <i class="pi pi-arrow-up text-[8px]"></i>
+                                <span>{{ emp.lastPunchOut | date:'HH:mm' }}</span>
                             </div>
-                            <span *ngIf="!emp.lastPunchIn && !emp.lastPunchOut" class="text-slate-400">-- : --</span>
+                            <span *ngIf="!emp.lastPunchIn && !emp.lastPunchOut" class="text-slate-400 block w-full text-center">-</span>
                         </div>
                     </td>
-                    <td>
+                    <td class="!px-4 !py-3 !border-none text-center">
                         <div class="flex items-center justify-center gap-2">
                             <button pButton 
                                     (click)="quickPunch(emp, 'IN')" 
                                     [disabled]="punchLoading"
-                                    class="p-button-rounded p-button-success p-button-outlined hover:bg-green-500 hover:text-white transition-all shadow-sm"
+                                    class="p-button-rounded p-button-outlined p-button-success !w-24 !h-8 !text-[11px] !font-bold hover:!bg-emerald-500 hover:!text-white transition-all shadow-sm"
                                     icon="pi pi-sign-in" 
-                                    label="دخول"
-                                    pTooltip="تسجيل دخول"></button>
+                                    label="دخول"></button>
                                     
                             <button pButton 
                                     (click)="quickPunch(emp, 'OUT')" 
                                     [disabled]="punchLoading"
-                                    class="p-button-rounded p-button-danger p-button-outlined hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                                    class="p-button-rounded p-button-outlined p-button-danger !w-24 !h-8 !text-[11px] !font-bold hover:!bg-rose-500 hover:!text-white transition-all shadow-sm"
                                     icon="pi pi-sign-out" 
-                                    label="خروج"
-                                    pTooltip="تسجيل خروج"></button>
+                                    label="خروج"></button>
                         </div>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
         
-        <div *ngIf="filteredEmployees.length === 0" class="text-center py-12">
-            <i class="pi pi-users text-4xl text-slate-300 mb-4"></i>
-            <p class="text-slate-500">لا يوجد موظفين مطابقين للبحث</p>
+        <div *ngIf="filteredEmployees.length === 0" class="text-center py-12 bg-slate-50/50 dark:bg-slate-800/20">
+            <i class="pi pi-users text-3xl text-slate-300 dark:text-slate-600 mb-3"></i>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400">لا يوجد موظفين مطابقين للبحث</p>
         </div>
     </div>
 </div>
-<p-toast></p-toast>
 <p-toast></p-toast>

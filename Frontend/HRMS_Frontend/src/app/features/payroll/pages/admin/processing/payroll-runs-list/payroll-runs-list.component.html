@@ -1,105 +1,99 @@
-<div class="runs-container p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
   
-  <!-- Premium Header Section -->
-  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 no-print">
-    <div class="space-y-2">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider">
-        <i class="pi pi-history"></i> سجل العمليات
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+        <i class="pi pi-history text-[11px]"></i>
       </div>
-      <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">مسيرات الرواتب المُعالجة</h1>
-      <p class="text-lg text-slate-500 dark:text-zinc-400 max-w-2xl">تتبع وإدارة كافة دورات صرف الرواتب الشهرية والسنوية</p>
+      <div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">مسيرات الرواتب المُعالجة</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">تتبع وإدارة كافة دورات صرف الرواتب الشهرية والسنوية</p>
+      </div>
     </div>
-
-    <!-- Interactive Filter Toolbar -->
-    <div class="glass-panel p-4 rounded-3xl flex flex-wrap items-center gap-4 shadow-xl border-white/40">
-      <div class="relative flex-1 min-w-[200px]">
-        <i class="pi pi-search absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input 
-          type="text" 
-          [(ngModel)]="searchTerm" 
-          (input)="applyFilters()"
-          placeholder="بحث برقم المسير..." 
-          class="w-full pr-12 pl-4 py-2.5 bg-slate-50 dark:bg-zinc-800/50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-        >
+    
+    <div class="flex items-center gap-2">
+      <!-- Search Input -->
+      <div class="relative flex items-center">
+          <i class="pi pi-search absolute right-2.5 text-slate-400 text-[10px]"></i>
+          <input pInputText type="text" placeholder="بحث برقم المسير..." [(ngModel)]="searchTerm" (input)="applyFilters()" 
+              class="!h-8 !pr-8 !pl-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-indigo-500 transition-all w-48 md:w-56" />
       </div>
       
-      <div class="flex items-center gap-3">
-        <select [(ngModel)]="selectedYear" (change)="loadRuns()" class="bg-transparent border-none font-bold text-slate-900 dark:text-white outline-none cursor-pointer">
-          <option *ngFor="let y of yearOptions()" [value]="y.value">{{ y.label }}</option>
-        </select>
-        
-        <div class="h-8 w-px bg-slate-200 dark:bg-zinc-800"></div>
-        
-        <select [(ngModel)]="selectedStatus" (change)="loadRuns()" class="bg-transparent border-none font-bold text-slate-900 dark:text-white outline-none cursor-pointer">
-          <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
-        </select>
-      </div>
+      <select [(ngModel)]="selectedYear" (change)="loadRuns()" class="!h-8 !px-2 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] !font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-indigo-500 transition-all">
+        <option *ngFor="let y of yearOptions()" [value]="y.value">{{ y.label }}</option>
+      </select>
+      
+      <select [(ngModel)]="selectedStatus" (change)="loadRuns()" class="!h-8 !px-2 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] !font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-indigo-500 transition-all">
+        <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
+      </select>
 
-      <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" (onClick)="loadRuns()" [loading]="loading()"></p-button>
+      <button pButton icon="pi pi-refresh" title="تحديث"
+          class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+          (click)="loadRuns()" [loading]="loading()"></button>
     </div>
   </div>
 
   @if (loading()) {
-    <div class="flex flex-col items-center justify-center py-32 space-y-4">
-      <div class="relative w-16 h-16">
-        <div class="absolute inset-0 border-4 border-indigo-500/10 rounded-full"></div>
-        <div class="absolute inset-0 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+    <div class="flex flex-col items-center justify-center py-20 space-y-3">
+      <div class="relative w-8 h-8">
+        <div class="absolute inset-0 border-2 border-indigo-500/10 rounded-full"></div>
+        <div class="absolute inset-0 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
-      <p class="text-slate-500 font-medium animate-pulse">جاري جلب سجلات مسيرات الرواتب...</p>
+      <p class="text-[10px] text-slate-500 font-bold">جاري جلب سجلات مسيرات الرواتب...</p>
     </div>
   } @else if (filteredRuns().length > 0) {
-    <!-- Dynamic Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <!-- Compact Dynamic Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
       <div *ngFor="let run of filteredRuns()" 
            (click)="viewDetails(run)"
-           class="run-card glass-panel group p-6 rounded-[32px] cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border-white/20">
+           class="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-3 cursor-pointer transition-all duration-300 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md flex flex-col gap-3 group">
         
-        <div class="flex justify-between items-start mb-6">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex flex-col items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-              <span class="text-[10px] font-bold opacity-80 uppercase">{{ run.year }}</span>
-              <span class="text-lg font-black leading-tight">{{ run.month }}</span>
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400">
+              <span class="text-[7px] font-bold opacity-80 uppercase">{{ run.year }}</span>
+              <span class="text-[12px] font-black leading-tight">{{ run.month }}</span>
             </div>
             <div>
-              <h3 class="text-xl font-black text-slate-900 dark:text-white">مسير شهر {{ getMonthName(run.month) }}</h3>
-              <p class="text-xs font-bold text-slate-400">ID: #{{ run.runId }} • {{ run.processDate | date:'mediumDate' }}</p>
+              <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-100">مسير شهر {{ getMonthName(run.month) }}</h3>
+              <p class="text-[8px] font-medium text-slate-500 font-mono mt-0.5">ID: #{{ run.runId }} • {{ run.processDate | date:'shortDate' }}</p>
             </div>
           </div>
-          <p-tag [value]="getStatusLabel(run.status)" [severity]="getStatusSeverity(run.status)" [rounded]="true"></p-tag>
+          <p-tag [value]="getStatusLabel(run.status)" [severity]="getStatusSeverity(run.status)" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded"></p-tag>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/50">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">صافي الصرف</p>
-            <p class="text-lg font-black text-indigo-600">{{ formatCurrency(run.totalNet) }}</p>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-100 dark:border-slate-700/50">
+            <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">صافي الصرف</p>
+            <p class="text-[11px] font-mono font-black text-indigo-600 dark:text-indigo-400">{{ formatCurrency(run.totalNet) }}</p>
           </div>
-          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/50">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">العدد المعالج</p>
-            <p class="text-lg font-black text-slate-900 dark:text-white">{{ run.employeeCount }} موظف</p>
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-100 dark:border-slate-700/50">
+            <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">العدد المعالج</p>
+            <p class="text-[11px] font-black text-slate-700 dark:text-slate-300">{{ run.employeeCount }} موظف</p>
           </div>
         </div>
 
-        <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-zinc-700 flex items-center justify-center text-[10px] font-bold text-slate-500">
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 mt-auto">
+          <div class="flex items-center gap-1.5">
+            <div class="w-5 h-5 rounded-md bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[8px] font-bold text-slate-600 dark:text-slate-300">
               {{ run.processedBy ? (run.processedBy | slice:0:1) : 'S' }}
             </div>
-            <span class="text-xs font-bold text-slate-500">بواسطة: {{ run.processedBy || 'النظام' }}</span>
+            <span class="text-[8px] font-bold text-slate-500">بواسطة: {{ run.processedBy || 'النظام' }}</span>
           </div>
-          <i class="pi pi-arrow-left text-slate-300 group-hover:text-indigo-500 group-hover:-translate-x-2 transition-all"></i>
+          <i class="pi pi-arrow-left text-[10px] text-slate-300 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 group-hover:-translate-x-1 transition-transform"></i>
         </div>
       </div>
     </div>
   } @else {
-    <div class="glass-panel p-32 rounded-[40px] text-center space-y-6">
-      <div class="w-32 h-32 bg-slate-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
-        <i class="pi pi-history text-5xl text-slate-300"></i>
+    <div class="flex flex-col items-center justify-center py-16 text-center">
+      <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-3">
+        <i class="pi pi-history text-2xl text-slate-300 dark:text-slate-600"></i>
       </div>
-      <div class="space-y-2">
-        <h3 class="text-2xl font-black text-slate-900 dark:text-white mt-1">لا يوجد سجلات في {{ selectedYear() }}</h3>
-        <p class="text-slate-400 max-w-md mx-auto">لم يتم العثور على أي مسيرات رواتب مُعالجة للفترة المحددة. يمكنك البدء بمعالجة رواتب جديدة.</p>
-      </div>
-      <p-button label="بدء معالجة جديدة" icon="pi pi-plus" [rounded]="true" routerLink="/payroll/processing/new"></p-button>
+      <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-1">لا يوجد سجلات في {{ selectedYear() }}</h3>
+      <p class="text-[9px] text-slate-500 mb-4 max-w-xs">لم يتم العثور على أي مسيرات رواتب مُعالجة للفترة المحددة.</p>
+      <button pButton label="بدء معالجة جديدة" icon="pi pi-plus" routerLink="/payroll/processing/process-payroll"
+        class="p-button-primary !h-8 !text-[10px] !font-bold !rounded-md !px-4 shadow-sm transition-colors"></button>
     </div>
   }
 </div>

@@ -1,81 +1,103 @@
-<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white mb-6">
-    <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-t-xl">
-        <h2 class="text-3xl font-bold tracking-tight">لوحة الأداء الشاملة</h2>
-        <p class="text-blue-100 mt-2">رؤية إدارية عليا لأداء المنظمة وسجل المخالفات المعتمدة</p>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-    <!-- Stat 1 -->
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
-        <div>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">التقييمات المكتملة</p>
-            <h3 class="text-3xl font-black text-slate-800">{{ completedAppraisals() }} <span class="text-lg text-slate-400 font-normal">من {{ totalAppraisals() }}</span></h3>
-        </div>
-        <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
-            <i class="pi pi-verified"></i>
-        </div>
-    </div>
-
-    <!-- Stat 2 -->
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
-        <div>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">متوسط الأداء العام</p>
-            <h3 class="text-3xl font-black text-emerald-600">{{ averageScore() }}%</h3>
-        </div>
-        <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
-            <i class="pi pi-chart-line"></i>
-        </div>
-    </div>
-
-    <!-- Stat 3 -->
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow">
-        <div>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">أيام الخصم المعتمدة</p>
-            <h3 class="text-3xl font-black text-red-600">{{ totalDeductionDays() }}</h3>
-        </div>
-        <div class="w-14 h-14 bg-red-50 text-red-600 rounded-full flex items-center justify-center text-2xl shadow-inner">
-            <i class="pi pi-calendar-minus"></i>
-        </div>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-bold text-slate-800">مرحلة التقييمات</h3>
-            <button pButton label="إدارة التقييمات" icon="pi pi-arrow-left" class="p-button-text p-button-sm" routerLink="/performance/appraisals"></button>
-        </div>
-        <div class="space-y-4">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-900/30">
+                <i class="pi pi-chart-line text-[11px]"></i>
+            </div>
             <div>
-                <div class="flex justify-between text-sm mb-1">
-                    <span class="font-medium text-slate-700">مكتملة</span>
-                    <span class="font-bold text-blue-600">{{ completedAppraisals() }} / {{ totalAppraisals() }}</span>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">لوحة الأداء الشاملة</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">رؤية إدارية عليا لأداء المنظمة وسجل المخالفات المعتمدة</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- Stat 1 -->
+        <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-lg p-3 border border-blue-100 dark:border-blue-900/30 flex items-center justify-between group hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+            <div class="flex flex-col gap-1">
+                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">التقييمات المكتملة</span>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-black text-slate-800 dark:text-slate-100">{{ completedAppraisals() }}</span>
+                    <span class="text-[10px] font-bold text-slate-400 font-mono">/ {{ totalAppraisals() }}</span>
                 </div>
-                <!-- Avoid divide by 0 using safe navigation equivalent -->
-                <p-progressBar [value]="(totalAppraisals() > 0 ? (completedAppraisals() / totalAppraisals()) * 100 : 0)" [showValue]="false"></p-progressBar>
+            </div>
+            <div class="w-8 h-8 rounded bg-white dark:bg-slate-800 flex items-center justify-center text-blue-500 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:scale-110 transition-transform">
+                <i class="pi pi-verified text-sm"></i>
+            </div>
+        </div>
+
+        <!-- Stat 2 -->
+        <div class="bg-emerald-50/50 dark:bg-emerald-900/10 rounded-lg p-3 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between group hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors">
+            <div class="flex flex-col gap-1">
+                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">متوسط الأداء العام</span>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-black text-emerald-600 dark:text-emerald-400">{{ averageScore() }}%</span>
+                </div>
+            </div>
+            <div class="w-8 h-8 rounded bg-white dark:bg-slate-800 flex items-center justify-center text-emerald-500 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:scale-110 transition-transform">
+                <i class="pi pi-star-fill text-sm"></i>
+            </div>
+        </div>
+
+        <!-- Stat 3 -->
+        <div class="bg-rose-50/50 dark:bg-rose-900/10 rounded-lg p-3 border border-rose-100 dark:border-rose-900/30 flex items-center justify-between group hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">
+            <div class="flex flex-col gap-1">
+                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">أيام الخصم المعتمدة</span>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-black text-rose-600 dark:text-rose-400">{{ totalDeductionDays() }}</span>
+                </div>
+            </div>
+            <div class="w-8 h-8 rounded bg-white dark:bg-slate-800 flex items-center justify-center text-rose-500 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:scale-110 transition-transform">
+                <i class="pi pi-calendar-minus text-sm"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
+        <!-- Appraisals Progress -->
+        <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800 flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200">مرحلة التقييمات</h3>
+                <button pButton label="إدارة التقييمات" icon="pi pi-arrow-left" class="p-button-text p-button-sm !text-[9px] !font-bold !p-0 !h-auto text-blue-600 hover:text-blue-700" routerLink="/performance/appraisals"></button>
             </div>
             
-            <div class="mt-4 p-4 bg-slate-50 rounded-lg">
-                <i class="pi pi-info-circle text-blue-500 mr-2"></i>
-                <span class="text-sm text-slate-600">هذه الإحصائية تعكس التقييمات المعتمدة من قبل الموارد البشرية فقط.</span>
+            <div class="flex-1 flex flex-col justify-center space-y-4">
+                <div>
+                    <div class="flex justify-between items-end mb-1.5">
+                        <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400">مكتملة</span>
+                        <span class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">{{ completedAppraisals() }} <span class="text-[9px] text-slate-400">/ {{ totalAppraisals() }}</span></span>
+                    </div>
+                    <p-progressBar [value]="(totalAppraisals() > 0 ? (completedAppraisals() / totalAppraisals()) * 100 : 0)" [showValue]="false" styleClass="!h-1.5"></p-progressBar>
+                </div>
+                
+                <div class="mt-auto pt-2">
+                    <div class="p-2 bg-blue-50/50 dark:bg-blue-900/10 rounded border border-blue-100 dark:border-blue-900/30 flex items-start gap-2">
+                        <i class="pi pi-info-circle text-blue-500 mt-0.5 text-[10px]"></i>
+                        <span class="text-[9px] font-bold text-blue-700 dark:text-blue-300">هذه الإحصائية تعكس التقييمات المعتمدة من قبل الموارد البشرية فقط.</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-bold text-slate-800">حالة المخالفات</h3>
-            <button pButton label="سجل المخالفات" icon="pi pi-arrow-left" class="p-button-text p-button-sm p-button-danger" routerLink="/performance/violations"></button>
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="flex-1 text-center p-4 bg-orange-50 rounded-xl border border-orange-100">
-                <p class="text-xs font-bold text-orange-600 uppercase mb-1">معلقة</p>
-                <p class="text-2xl font-black text-orange-700">{{ pendingViolations() }}</p>
+        <!-- Violations Status -->
+        <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800 flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200">حالة المخالفات</h3>
+                <button pButton label="سجل المخالفات" icon="pi pi-arrow-left" class="p-button-text p-button-sm !text-[9px] !font-bold !p-0 !h-auto text-rose-600 hover:text-rose-700" routerLink="/performance/violations"></button>
             </div>
-            <div class="flex-1 text-center p-4 bg-red-50 rounded-xl border border-red-100">
-                <p class="text-xs font-bold text-red-600 uppercase mb-1">إجمالي الحالات</p>
-                <p class="text-2xl font-black text-red-700">{{ totalViolations() }}</p>
+            
+            <div class="flex items-center gap-4 flex-1">
+                <div class="flex-1 flex flex-col items-center justify-center p-4 bg-amber-50/50 dark:bg-amber-900/10 rounded-lg border border-amber-100 dark:border-amber-900/30 h-full">
+                    <p class="text-[9px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest mb-1">معلقة</p>
+                    <p class="text-3xl font-black text-amber-700 dark:text-amber-400">{{ pendingViolations() }}</p>
+                </div>
+                <div class="flex-1 flex flex-col items-center justify-center p-4 bg-rose-50/50 dark:bg-rose-900/10 rounded-lg border border-rose-100 dark:border-rose-900/30 h-full">
+                    <p class="text-[9px] font-bold text-rose-600 dark:text-rose-500 uppercase tracking-widest mb-1">إجمالي الحالات</p>
+                    <p class="text-3xl font-black text-rose-700 dark:text-rose-400">{{ totalViolations() }}</p>
+                </div>
             </div>
         </div>
     </div>

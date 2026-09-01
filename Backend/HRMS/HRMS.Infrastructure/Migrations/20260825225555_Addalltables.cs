@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HRMS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class Addalltables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "ACCOUNTING");
+
             migrationBuilder.EnsureSchema(
                 name: "HR_RECRUITMENT");
 
@@ -31,6 +34,42 @@ namespace HRMS.Infrastructure.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "HR_PAYROLL");
+
+            migrationBuilder.EnsureSchema(
+                name: "HR_COMMON");
+
+            migrationBuilder.CreateTable(
+                name: "ACCOUNTS",
+                schema: "ACCOUNTING",
+                columns: table => new
+                {
+                    AccountId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    AccountNameAr = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    AccountNameEn = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    AccountType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PARENT_ACCOUNT_ID = table.Column<int>(type: "int", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ACCOUNTS", x => x.AccountId);
+                    table.ForeignKey(
+                        name: "FK_ACCOUNTS_ACCOUNTS_PARENT_ACCOUNT_ID",
+                        column: x => x.PARENT_ACCOUNT_ID,
+                        principalSchema: "ACCOUNTING",
+                        principalTable: "ACCOUNTS",
+                        principalColumn: "AccountId",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateTable(
                 name: "APPRAISAL_CYCLES",
@@ -53,6 +92,24 @@ namespace HRMS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_APPRAISAL_CYCLES", x => x.CYCLE_ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,6 +144,10 @@ namespace HRMS.Infrastructure.Migrations
                     BANK_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BANK_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     BANK_CODE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    SWIFT_CODE = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
+                    ADDRESS = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    PHONE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    EMAIL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -109,6 +170,7 @@ namespace HRMS.Infrastructure.Migrations
                     COUNTRY_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     COUNTRY_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CITIZENSHIP_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CITIZENSHIP_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ISO_CODE = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -120,38 +182,6 @@ namespace HRMS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_COUNTRIES", x => x.COUNTRY_ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DEPARTMENTS",
-                schema: "HR_CORE",
-                columns: table => new
-                {
-                    DEPT_ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DEPT_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DEPT_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    PARENT_DEPT_ID = table.Column<int>(type: "int", nullable: true),
-                    COST_CENTER_CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MANAGER_ID = table.Column<int>(type: "int", nullable: true),
-                    IS_ACTIVE = table.Column<byte>(type: "tinyint", nullable: false),
-                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
-                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DEPARTMENTS", x => x.DEPT_ID);
-                    table.ForeignKey(
-                        name: "FK_DEPARTMENTS_DEPARTMENTS_PARENT_DEPT_ID",
-                        column: x => x.PARENT_DEPT_ID,
-                        principalSchema: "HR_CORE",
-                        principalTable: "DEPARTMENTS",
-                        principalColumn: "DEPT_ID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -181,12 +211,16 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_CORE",
                 columns: table => new
                 {
-                    DOC_TYPE_ID = table.Column<int>(type: "int", nullable: false)
+                    DOCUMENT_TYPE_ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DOC_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    IS_MANDATORY = table.Column<byte>(type: "tinyint", nullable: false),
-                    REQUIRES_EXPIRY = table.Column<byte>(type: "tinyint", nullable: false),
-                    ALERT_DAYS_BEFORE = table.Column<short>(type: "smallint", nullable: false),
+                    DOCUMENT_TYPE_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DOCUMENT_TYPE_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DESCRIPTION = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ALLOWED_EXTENSIONS = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    IS_REQUIRED = table.Column<bool>(type: "bit", nullable: false),
+                    HAS_EXPIRY = table.Column<bool>(type: "bit", nullable: false),
+                    DEFAULT_EXPIRY_DAYS = table.Column<int>(type: "int", nullable: true),
+                    MAX_FILE_SIZE_MB = table.Column<int>(type: "int", nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -196,7 +230,7 @@ namespace HRMS.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DOCUMENT_TYPES", x => x.DOC_TYPE_ID);
+                    table.PrimaryKey("PK_DOCUMENT_TYPES", x => x.DOCUMENT_TYPE_ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,12 +238,16 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_CORE",
                 columns: table => new
                 {
-                    GRADE_ID = table.Column<int>(type: "int", nullable: false)
+                    JOB_GRADE_ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GRADE_NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    MIN_SALARY = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    MAX_SALARY = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    TICKET_CLASS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    GRADE_CODE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    GRADE_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    GRADE_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    GRADE_LEVEL = table.Column<int>(type: "int", nullable: false),
+                    MIN_SALARY = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MAX_SALARY = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    BENEFITS_CONFIG = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DESCRIPTION = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -219,7 +257,35 @@ namespace HRMS.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JOB_GRADES", x => x.GRADE_ID);
+                    table.PrimaryKey("PK_JOB_GRADES", x => x.JOB_GRADE_ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JOURNAL_ENTRIES",
+                schema: "ACCOUNTING",
+                columns: table => new
+                {
+                    JournalEntryId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    SourceModule = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    SourceReferenceId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    TotalDebit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalCredit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PostedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JOURNAL_ENTRIES", x => x.JournalEntryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,6 +299,8 @@ namespace HRMS.Infrastructure.Migrations
                     KPI_DESCRIPTION = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CATEGORY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     MEASUREMENT_UNIT = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    WEIGHT = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    TARGET_JOB_TYPE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -253,7 +321,10 @@ namespace HRMS.Infrastructure.Migrations
                     LEAVE_TYPE_ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LEAVE_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LEAVE_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DEFAULT_DAYS = table.Column<int>(type: "int", nullable: false),
                     IS_PAID = table.Column<byte>(type: "tinyint", nullable: false),
+                    IS_DEDUCTIBLE = table.Column<byte>(type: "tinyint", nullable: false),
                     MAX_DAYS_PER_YEAR = table.Column<short>(type: "smallint", nullable: true),
                     REQUIRES_ATTACHMENT = table.Column<byte>(type: "tinyint", nullable: false),
                     IS_CARRY_FORWARD = table.Column<byte>(type: "tinyint", nullable: false),
@@ -271,22 +342,19 @@ namespace HRMS.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "NOTIFICATIONS",
-                schema: "HR_CORE",
+                schema: "HR_COMMON",
                 columns: table => new
                 {
-                    NOTIFICATION_ID = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RECIPIENT_ID = table.Column<int>(type: "int", nullable: false),
-                    NOTIFICATION_TYPE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    TITLE_AR = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    MESSAGE_AR = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    IS_READ = table.Column<byte>(type: "tinyint", nullable: false),
-                    READ_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PRIORITY = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    REFERENCE_TABLE = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    REFERENCE_ID = table.Column<long>(type: "bigint", nullable: true),
-                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NOTIFICATION_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    USER_ID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    TITLE = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    MESSAGE = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    TYPE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    REFERENCE_TYPE = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    REFERENCE_ID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IS_READ = table.Column<bool>(type: "bit", nullable: false),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
@@ -320,6 +388,28 @@ namespace HRMS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PAYROLL_RUNS", x => x.RunId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Module = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -408,6 +498,7 @@ namespace HRMS.Infrastructure.Migrations
                     IsGosiBase = table.Column<byte>(type: "tinyint", nullable: false),
                     DefaultPercentage = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     IsRecurring = table.Column<byte>(type: "tinyint", nullable: false),
+                    IsBasic = table.Column<byte>(type: "tinyint", nullable: false),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -478,6 +569,7 @@ namespace HRMS.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VIOLATION_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SEVERITY_LEVEL = table.Column<byte>(type: "tinyint", nullable: false),
+                    DESCRIPTION = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -517,6 +609,27 @@ namespace HRMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CANDIDATES",
                 schema: "HR_RECRUITMENT",
                 columns: table => new
@@ -530,6 +643,8 @@ namespace HRMS.Infrastructure.Migrations
                     PHONE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     NATIONALITY_ID = table.Column<int>(type: "int", nullable: true),
                     CV_FILE_PATH = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    APPLICATION_SOURCE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     LINKEDIN_PROFILE = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -580,6 +695,171 @@ namespace HRMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "JOURNAL_ENTRY_LINES",
+                schema: "ACCOUNTING",
+                columns: table => new
+                {
+                    LineId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JOURNAL_ENTRY_ID = table.Column<long>(type: "bigint", nullable: false),
+                    ACCOUNT_ID = table.Column<int>(type: "int", nullable: false),
+                    DebitAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreditAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    LineNumber = table.Column<short>(type: "smallint", nullable: false),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JOURNAL_ENTRY_LINES", x => x.LineId);
+                    table.ForeignKey(
+                        name: "FK_JOURNAL_ENTRY_LINES_ACCOUNTS_ACCOUNT_ID",
+                        column: x => x.ACCOUNT_ID,
+                        principalSchema: "ACCOUNTING",
+                        principalTable: "ACCOUNTS",
+                        principalColumn: "AccountId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_JOURNAL_ENTRY_LINES_JOURNAL_ENTRIES_JOURNAL_ENTRY_ID",
+                        column: x => x.JOURNAL_ENTRY_ID,
+                        principalSchema: "ACCOUNTING",
+                        principalTable: "JOURNAL_ENTRIES",
+                        principalColumn: "JournalEntryId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LEAVE_ACCRUAL_RULES",
+                schema: "HR_LEAVES",
+                columns: table => new
+                {
+                    RULE_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LEAVE_TYPE_ID = table.Column<int>(type: "int", nullable: false),
+                    ACCRUAL_FREQUENCY = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    DAYS_PER_PERIOD = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    MAX_ACCUMULATION = table.Column<short>(type: "smallint", nullable: true),
+                    IS_PRORATED = table.Column<byte>(type: "tinyint", nullable: false),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LEAVE_ACCRUAL_RULES", x => x.RULE_ID);
+                    table.ForeignKey(
+                        name: "FK_LEAVE_ACCRUAL_RULES_LEAVE_TYPES_LEAVE_TYPE_ID",
+                        column: x => x.LEAVE_TYPE_ID,
+                        principalSchema: "HR_LEAVES",
+                        principalTable: "LEAVE_TYPES",
+                        principalColumn: "LEAVE_TYPE_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermissions",
+                columns: table => new
+                {
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BRANCHES",
+                schema: "HR_CORE",
+                columns: table => new
+                {
+                    BRANCH_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BRANCH_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    BRANCH_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CITY_ID = table.Column<int>(type: "int", nullable: true),
+                    ADDRESS = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BRANCHES", x => x.BRANCH_ID);
+                    table.ForeignKey(
+                        name: "FK_BRANCHES_CITIES_CITY_ID",
+                        column: x => x.CITY_ID,
+                        principalSchema: "HR_CORE",
+                        principalTable: "CITIES",
+                        principalColumn: "CITY_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DEPARTMENTS",
+                schema: "HR_CORE",
+                columns: table => new
+                {
+                    DEPT_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DEPT_NAME_AR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DEPT_NAME_EN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    PARENT_DEPT_ID = table.Column<int>(type: "int", nullable: true),
+                    COST_CENTER_CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    MANAGER_ID = table.Column<int>(type: "int", nullable: true),
+                    IS_ACTIVE = table.Column<byte>(type: "tinyint", nullable: false),
+                    BranchId = table.Column<int>(type: "int", nullable: true),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DEPARTMENTS", x => x.DEPT_ID);
+                    table.ForeignKey(
+                        name: "FK_DEPARTMENTS_BRANCHES_BranchId",
+                        column: x => x.BranchId,
+                        principalSchema: "HR_CORE",
+                        principalTable: "BRANCHES",
+                        principalColumn: "BRANCH_ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DEPARTMENTS_DEPARTMENTS_PARENT_DEPT_ID",
+                        column: x => x.PARENT_DEPT_ID,
+                        principalSchema: "HR_CORE",
+                        principalTable: "DEPARTMENTS",
+                        principalColumn: "DEPT_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JOBS",
                 schema: "HR_CORE",
                 columns: table => new
@@ -613,38 +893,7 @@ namespace HRMS.Infrastructure.Migrations
                         column: x => x.DEFAULT_GRADE_ID,
                         principalSchema: "HR_CORE",
                         principalTable: "JOB_GRADES",
-                        principalColumn: "GRADE_ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LEAVE_ACCRUAL_RULES",
-                schema: "HR_LEAVES",
-                columns: table => new
-                {
-                    RULE_ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LEAVE_TYPE_ID = table.Column<int>(type: "int", nullable: false),
-                    ACCRUAL_FREQUENCY = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    DAYS_PER_PERIOD = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    MAX_ACCUMULATION = table.Column<short>(type: "smallint", nullable: true),
-                    IS_PRORATED = table.Column<byte>(type: "tinyint", nullable: false),
-                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
-                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LEAVE_ACCRUAL_RULES", x => x.RULE_ID);
-                    table.ForeignKey(
-                        name: "FK_LEAVE_ACCRUAL_RULES_LEAVE_TYPES_LEAVE_TYPE_ID",
-                        column: x => x.LEAVE_TYPE_ID,
-                        principalSchema: "HR_LEAVES",
-                        principalTable: "LEAVE_TYPES",
-                        principalColumn: "LEAVE_TYPE_ID",
+                        principalColumn: "JOB_GRADE_ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -696,21 +945,29 @@ namespace HRMS.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EMPLOYEE_NUMBER = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     FIRST_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    SECOND_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    THIRD_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    HIJRI_LAST_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SECOND_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    THIRD_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LAST_NAME_AR = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FULL_NAME_EN = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    GENDER = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true),
                     BIRTH_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MARITAL_STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    NATIONALITY_ID = table.Column<int>(type: "int", nullable: false),
+                    GENDER = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    MARITAL_STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    MOBILE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    EMAIL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    HIRE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DEPARTMENT_ID = table.Column<int>(type: "int", nullable: false),
                     JOB_ID = table.Column<int>(type: "int", nullable: false),
-                    DEPT_ID = table.Column<int>(type: "int", nullable: false),
+                    JOB_GRADE_ID = table.Column<int>(type: "int", nullable: true),
+                    NATIONALITY_ID = table.Column<int>(type: "int", nullable: true),
+                    NATIONAL_ID = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    LICENSE_NUMBER = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    LICENSE_EXPIRY_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SPECIALTY = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     MANAGER_ID = table.Column<int>(type: "int", nullable: true),
-                    JOINING_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    EMAIL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    MOBILE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    USER_ID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    PROFILE_PICTURE_PATH = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    IS_ACTIVE = table.Column<bool>(type: "bit", nullable: false),
+                    TERMINATION_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -729,8 +986,8 @@ namespace HRMS.Infrastructure.Migrations
                         principalColumn: "COUNTRY_ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_EMPLOYEES_DEPARTMENTS_DEPT_ID",
-                        column: x => x.DEPT_ID,
+                        name: "FK_EMPLOYEES_DEPARTMENTS_DEPARTMENT_ID",
+                        column: x => x.DEPARTMENT_ID,
                         principalSchema: "HR_CORE",
                         principalTable: "DEPARTMENTS",
                         principalColumn: "DEPT_ID",
@@ -793,6 +1050,47 @@ namespace HRMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastLoginAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_EMPLOYEES_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalSchema: "HR_PERSONNEL",
+                        principalTable: "EMPLOYEES",
+                        principalColumn: "EMPLOYEE_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CONTRACTS",
                 schema: "HR_PERSONNEL",
                 columns: table => new
@@ -827,7 +1125,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -845,6 +1143,8 @@ namespace HRMS.Infrastructure.Migrations
                     LATE_MINUTES = table.Column<short>(type: "smallint", nullable: false),
                     EARLY_LEAVE_MINUTES = table.Column<short>(type: "smallint", nullable: false),
                     OVERTIME_MINUTES = table.Column<short>(type: "smallint", nullable: false),
+                    DEDUCTION_AMOUNT = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OVERTIME_AMOUNT = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -902,7 +1202,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -934,7 +1234,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -974,7 +1274,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -992,6 +1292,7 @@ namespace HRMS.Infrastructure.Migrations
                     GRADE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     EMPLOYEE_COMMENT = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    COMMENTS = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1061,7 +1362,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1095,24 +1396,24 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EMPLOYEE_DOCUMENTS",
+                name: "EMPLOYEE_COMPENSATIONS",
                 schema: "HR_PERSONNEL",
                 columns: table => new
                 {
-                    DOC_ID = table.Column<int>(type: "int", nullable: false)
+                    COMPENSATION_ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EMPLOYEE_ID = table.Column<int>(type: "int", nullable: false),
-                    DOC_TYPE_ID = table.Column<int>(type: "int", nullable: false),
-                    DOC_NUMBER = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    ISSUE_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    EXPIRY_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ISSUE_PLACE = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    ATTACHMENT_PATH = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    IS_ACTIVE = table.Column<byte>(type: "tinyint", nullable: false),
+                    BASIC_SALARY = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    HOUSING_ALLOWANCE = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TRANSPORT_ALLOWANCE = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MEDICAL_ALLOWANCE = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OTHER_ALLOWANCES = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    BANK_ID = table.Column<int>(type: "int", nullable: true),
+                    IBAN_NUMBER = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1122,13 +1423,55 @@ namespace HRMS.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EMPLOYEE_DOCUMENTS", x => x.DOC_ID);
+                    table.PrimaryKey("PK_EMPLOYEE_COMPENSATIONS", x => x.COMPENSATION_ID);
                     table.ForeignKey(
-                        name: "FK_EMPLOYEE_DOCUMENTS_DOCUMENT_TYPES_DOC_TYPE_ID",
-                        column: x => x.DOC_TYPE_ID,
+                        name: "FK_EMPLOYEE_COMPENSATIONS_BANKS_BANK_ID",
+                        column: x => x.BANK_ID,
+                        principalSchema: "HR_CORE",
+                        principalTable: "BANKS",
+                        principalColumn: "BANK_ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EMPLOYEE_COMPENSATIONS_EMPLOYEES_EMPLOYEE_ID",
+                        column: x => x.EMPLOYEE_ID,
+                        principalSchema: "HR_PERSONNEL",
+                        principalTable: "EMPLOYEES",
+                        principalColumn: "EMPLOYEE_ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EMPLOYEE_DOCUMENTS",
+                schema: "HR_PERSONNEL",
+                columns: table => new
+                {
+                    DOCUMENT_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EMPLOYEE_ID = table.Column<int>(type: "int", nullable: false),
+                    DOCUMENT_TYPE_ID = table.Column<int>(type: "int", nullable: false),
+                    DOCUMENT_NUMBER = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ISSUE_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EXPIRY_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FILE_NAME = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    FILE_PATH = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CONTENT_TYPE = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    FILE_SIZE = table.Column<long>(type: "bigint", nullable: false),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EMPLOYEE_DOCUMENTS", x => x.DOCUMENT_ID);
+                    table.ForeignKey(
+                        name: "FK_EMPLOYEE_DOCUMENTS_DOCUMENT_TYPES_DOCUMENT_TYPE_ID",
+                        column: x => x.DOCUMENT_TYPE_ID,
                         principalSchema: "HR_CORE",
                         principalTable: "DOCUMENT_TYPES",
-                        principalColumn: "DOC_TYPE_ID",
+                        principalColumn: "DOCUMENT_TYPE_ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_EMPLOYEE_DOCUMENTS_EMPLOYEES_EMPLOYEE_ID",
@@ -1136,7 +1479,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1170,7 +1513,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1248,7 +1591,7 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PERSONNEL",
                         principalTable: "EMPLOYEES",
                         principalColumn: "EMPLOYEE_ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1262,6 +1605,7 @@ namespace HRMS.Infrastructure.Migrations
                     ROSTER_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SHIFT_ID = table.Column<int>(type: "int", nullable: true),
                     IS_OFF_DAY = table.Column<byte>(type: "tinyint", nullable: false),
+                    STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1541,6 +1885,10 @@ namespace HRMS.Infrastructure.Migrations
                     RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     InstallmentCount = table.Column<short>(type: "smallint", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    APPROVED_BY = table.Column<int>(type: "int", nullable: true),
+                    SettlementDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SettlementNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1653,6 +2001,12 @@ namespace HRMS.Infrastructure.Migrations
                     TotalAllowances = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     TotalDeductions = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     NetSalary = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    TOTAL_VIOLATIONS = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    OTHER_DEDUCTIONS = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    TOTAL_LATE_MINUTES = table.Column<int>(type: "int", nullable: false),
+                    ABSENCE_DAYS = table.Column<int>(type: "int", nullable: false),
+                    TOTAL_OT_MINUTES = table.Column<int>(type: "int", nullable: false),
+                    OT_EARNINGS = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1676,6 +2030,41 @@ namespace HRMS.Infrastructure.Migrations
                         principalSchema: "HR_PAYROLL",
                         principalTable: "PAYROLL_RUNS",
                         principalColumn: "RunId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PERMISSION_REQUESTS",
+                schema: "HR_ATTENDANCE",
+                columns: table => new
+                {
+                    PERMISSION_REQUEST_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EMPLOYEE_ID = table.Column<int>(type: "int", nullable: false),
+                    PERMISSION_TYPE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PERMISSION_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HOURS = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    REASON = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    REJECTION_REASON = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    APPROVED_BY = table.Column<int>(type: "int", nullable: true),
+                    APPROVED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PERMISSION_REQUESTS", x => x.PERMISSION_REQUEST_ID);
+                    table.ForeignKey(
+                        name: "FK_PERMISSION_REQUESTS_EMPLOYEES_EMPLOYEE_ID",
+                        column: x => x.EMPLOYEE_ID,
+                        principalSchema: "HR_PERSONNEL",
+                        principalTable: "EMPLOYEES",
+                        principalColumn: "EMPLOYEE_ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -1788,6 +2177,91 @@ namespace HRMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CONTRACT_RENEWALS",
                 schema: "HR_PERSONNEL",
                 columns: table => new
@@ -1820,6 +2294,46 @@ namespace HRMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ATTENDANCE_CORRECTIONS",
+                schema: "HR_ATTENDANCE",
+                columns: table => new
+                {
+                    CORRECTION_ID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EMPLOYEE_ID = table.Column<int>(type: "int", nullable: false),
+                    ATTENDANCE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DAILY_ATTENDANCE_ID = table.Column<long>(type: "bigint", nullable: false),
+                    FIELD_NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    OLD_VALUE = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NEW_VALUE = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    AUDIT_NOTE = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ATTENDANCE_CORRECTIONS", x => x.CORRECTION_ID);
+                    table.ForeignKey(
+                        name: "FK_ATTENDANCE_CORRECTIONS_DAILY_ATTENDANCE_DAILY_ATTENDANCE_ID",
+                        column: x => x.DAILY_ATTENDANCE_ID,
+                        principalSchema: "HR_ATTENDANCE",
+                        principalTable: "DAILY_ATTENDANCE",
+                        principalColumn: "RECORD_ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ATTENDANCE_CORRECTIONS_EMPLOYEES_EMPLOYEE_ID",
+                        column: x => x.EMPLOYEE_ID,
+                        principalSchema: "HR_PERSONNEL",
+                        principalTable: "EMPLOYEES",
+                        principalColumn: "EMPLOYEE_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "APPRAISAL_DETAILS",
                 schema: "HR_PERFORMANCE",
                 columns: table => new
@@ -1830,7 +2344,9 @@ namespace HRMS.Infrastructure.Migrations
                     KPI_ID = table.Column<int>(type: "int", nullable: false),
                     TARGET_VALUE = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     ACTUAL_VALUE = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    SCORE = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    EMPLOYEE_SCORE = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    MANAGER_SCORE = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    FINAL_SCORE = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
                     COMMENTS = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1859,6 +2375,47 @@ namespace HRMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LEAVE_APPROVAL_HISTORY",
+                schema: "HR_LEAVES",
+                columns: table => new
+                {
+                    HISTORY_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    REQUEST_ID = table.Column<int>(type: "int", nullable: false),
+                    ACTION_TYPE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PERFORMED_BY_USER_ID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PERFORMED_BY_EMPLOYEE_ID = table.Column<int>(type: "int", nullable: true),
+                    ACTION_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    COMMENT = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    PREVIOUS_STATUS = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NEW_STATUS = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    UPDATED_AT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IS_DELETED = table.Column<byte>(type: "tinyint", nullable: false),
+                    VERSION_NO = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LEAVE_APPROVAL_HISTORY", x => x.HISTORY_ID);
+                    table.ForeignKey(
+                        name: "FK_LEAVE_APPROVAL_HISTORY_EMPLOYEES_PERFORMED_BY_EMPLOYEE_ID",
+                        column: x => x.PERFORMED_BY_EMPLOYEE_ID,
+                        principalSchema: "HR_PERSONNEL",
+                        principalTable: "EMPLOYEES",
+                        principalColumn: "EMPLOYEE_ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LEAVE_APPROVAL_HISTORY_LEAVE_REQUESTS_REQUEST_ID",
+                        column: x => x.REQUEST_ID,
+                        principalSchema: "HR_LEAVES",
+                        principalTable: "LEAVE_REQUESTS",
+                        principalColumn: "REQUEST_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LOAN_INSTALLMENTS",
                 schema: "HR_PAYROLL",
                 columns: table => new
@@ -1869,8 +2426,11 @@ namespace HRMS.Infrastructure.Migrations
                     InstallmentNumber = table.Column<short>(type: "smallint", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    IsPaid = table.Column<byte>(type: "tinyint", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PaidDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PAID_IN_PAYROLL_RUN = table.Column<int>(type: "int", nullable: true),
+                    SettlementNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    IsPaid = table.Column<byte>(type: "tinyint", nullable: false),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1898,7 +2458,7 @@ namespace HRMS.Infrastructure.Migrations
                     DetailId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PAYSLIP_ID = table.Column<long>(type: "bigint", nullable: false),
-                    ELEMENT_ID = table.Column<int>(type: "int", nullable: false),
+                    ELEMENT_ID = table.Column<int>(type: "int", nullable: true),
                     ElementNameAr = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
@@ -1940,8 +2500,9 @@ namespace HRMS.Infrastructure.Migrations
                     SCHEDULED_TIME = table.Column<DateTime>(type: "datetime2", nullable: false),
                     INTERVIEW_TYPE = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     RATING = table.Column<byte>(type: "tinyint", nullable: true),
-                    FEEDBACK = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RESULT_NOTES = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RESULT = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UPDATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1980,7 +2541,10 @@ namespace HRMS.Infrastructure.Migrations
                     BASIC_SALARY = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     HOUSING_ALLOWANCE = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     TRANSPORT_ALLOWANCE = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    MEDICAL_ALLOWANCE = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    OTHER_ALLOWANCES = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     JOINING_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EXPIRY_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
                     STATUS = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CREATED_BY = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CREATED_AT = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -2000,6 +2564,12 @@ namespace HRMS.Infrastructure.Migrations
                         principalColumn: "APP_ID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ACCOUNTS_PARENT_ACCOUNT_ID",
+                schema: "ACCOUNTING",
+                table: "ACCOUNTS",
+                column: "PARENT_ACCOUNT_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_APPLICATIONS_CANDIDATE_ID",
@@ -2026,6 +2596,62 @@ namespace HRMS.Infrastructure.Migrations
                 column: "KPI_ID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_EmployeeId",
+                table: "AspNetUsers",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ATTENDANCE_CORRECTIONS_DAILY_ATTENDANCE_ID",
+                schema: "HR_ATTENDANCE",
+                table: "ATTENDANCE_CORRECTIONS",
+                column: "DAILY_ATTENDANCE_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ATTENDANCE_CORRECTIONS_EMPLOYEE_ID",
+                schema: "HR_ATTENDANCE",
+                table: "ATTENDANCE_CORRECTIONS",
+                column: "EMPLOYEE_ID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ATTENDANCE_POLICIES_DEPT_ID",
                 schema: "HR_ATTENDANCE",
                 table: "ATTENDANCE_POLICIES",
@@ -2036,6 +2662,12 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_ATTENDANCE",
                 table: "ATTENDANCE_POLICIES",
                 column: "JOB_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BRANCHES_CITY_ID",
+                schema: "HR_CORE",
+                table: "BRANCHES",
+                column: "CITY_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CANDIDATES_NATIONALITY_ID",
@@ -2072,6 +2704,12 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_ATTENDANCE",
                 table: "DAILY_ATTENDANCE",
                 column: "PLANNED_SHIFT_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DEPARTMENTS_BranchId",
+                schema: "HR_CORE",
+                table: "DEPARTMENTS",
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DEPARTMENTS_PARENT_DEPT_ID",
@@ -2140,10 +2778,23 @@ namespace HRMS.Infrastructure.Migrations
                 column: "EMPLOYEE_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EMPLOYEE_DOCUMENTS_DOC_TYPE_ID",
+                name: "IX_EMPLOYEE_COMPENSATIONS_BANK_ID",
+                schema: "HR_PERSONNEL",
+                table: "EMPLOYEE_COMPENSATIONS",
+                column: "BANK_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EMPLOYEE_COMPENSATIONS_EMPLOYEE_ID",
+                schema: "HR_PERSONNEL",
+                table: "EMPLOYEE_COMPENSATIONS",
+                column: "EMPLOYEE_ID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EMPLOYEE_DOCUMENTS_DOCUMENT_TYPE_ID",
                 schema: "HR_PERSONNEL",
                 table: "EMPLOYEE_DOCUMENTS",
-                column: "DOC_TYPE_ID");
+                column: "DOCUMENT_TYPE_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EMPLOYEE_DOCUMENTS_EMPLOYEE_ID",
@@ -2224,10 +2875,10 @@ namespace HRMS.Infrastructure.Migrations
                 column: "VIOLATION_TYPE_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EMPLOYEES_DEPT_ID",
+                name: "IX_EMPLOYEES_DEPARTMENT_ID",
                 schema: "HR_PERSONNEL",
                 table: "EMPLOYEES",
-                column: "DEPT_ID");
+                column: "DEPARTMENT_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EMPLOYEES_JOB_ID",
@@ -2290,10 +2941,34 @@ namespace HRMS.Infrastructure.Migrations
                 column: "DepartmentDeptId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JOURNAL_ENTRY_LINES_ACCOUNT_ID",
+                schema: "ACCOUNTING",
+                table: "JOURNAL_ENTRY_LINES",
+                column: "ACCOUNT_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JOURNAL_ENTRY_LINES_JOURNAL_ENTRY_ID",
+                schema: "ACCOUNTING",
+                table: "JOURNAL_ENTRY_LINES",
+                column: "JOURNAL_ENTRY_ID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LEAVE_ACCRUAL_RULES_LEAVE_TYPE_ID",
                 schema: "HR_LEAVES",
                 table: "LEAVE_ACCRUAL_RULES",
                 column: "LEAVE_TYPE_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LEAVE_APPROVAL_HISTORY_PERFORMED_BY_EMPLOYEE_ID",
+                schema: "HR_LEAVES",
+                table: "LEAVE_APPROVAL_HISTORY",
+                column: "PERFORMED_BY_EMPLOYEE_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LEAVE_APPROVAL_HISTORY_REQUEST_ID",
+                schema: "HR_LEAVES",
+                table: "LEAVE_APPROVAL_HISTORY",
+                column: "REQUEST_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LEAVE_ENCASHMENT_EMPLOYEE_ID",
@@ -2398,10 +3073,27 @@ namespace HRMS.Infrastructure.Migrations
                 column: "RUN_ID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PERMISSION_REQUESTS_EMPLOYEE_ID",
+                schema: "HR_ATTENDANCE",
+                table: "PERMISSION_REQUESTS",
+                column: "EMPLOYEE_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_Name",
+                table: "Permissions",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RAW_PUNCH_LOGS_EMPLOYEE_ID",
                 schema: "HR_ATTENDANCE",
                 table: "RAW_PUNCH_LOGS",
                 column: "EMPLOYEE_ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_PermissionId",
+                table: "RolePermissions",
+                column: "PermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SHIFT_SWAP_REQUESTS_REQUESTER_ID",
@@ -2424,6 +3116,25 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PERFORMANCE");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ATTENDANCE_CORRECTIONS",
+                schema: "HR_ATTENDANCE");
+
+            migrationBuilder.DropTable(
                 name: "ATTENDANCE_POLICIES",
                 schema: "HR_ATTENDANCE");
 
@@ -2434,10 +3145,6 @@ namespace HRMS.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "CONTRACT_RENEWALS",
                 schema: "HR_PERSONNEL");
-
-            migrationBuilder.DropTable(
-                name: "DAILY_ATTENDANCE",
-                schema: "HR_ATTENDANCE");
 
             migrationBuilder.DropTable(
                 name: "DEPENDENTS",
@@ -2457,6 +3164,10 @@ namespace HRMS.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "EMPLOYEE_CERTIFICATIONS",
+                schema: "HR_PERSONNEL");
+
+            migrationBuilder.DropTable(
+                name: "EMPLOYEE_COMPENSATIONS",
                 schema: "HR_PERSONNEL");
 
             migrationBuilder.DropTable(
@@ -2496,15 +3207,19 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_RECRUITMENT");
 
             migrationBuilder.DropTable(
+                name: "JOURNAL_ENTRY_LINES",
+                schema: "ACCOUNTING");
+
+            migrationBuilder.DropTable(
                 name: "LEAVE_ACCRUAL_RULES",
                 schema: "HR_LEAVES");
 
             migrationBuilder.DropTable(
-                name: "LEAVE_ENCASHMENT",
+                name: "LEAVE_APPROVAL_HISTORY",
                 schema: "HR_LEAVES");
 
             migrationBuilder.DropTable(
-                name: "LEAVE_REQUESTS",
+                name: "LEAVE_ENCASHMENT",
                 schema: "HR_LEAVES");
 
             migrationBuilder.DropTable(
@@ -2517,7 +3232,7 @@ namespace HRMS.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "NOTIFICATIONS",
-                schema: "HR_CORE");
+                schema: "HR_COMMON");
 
             migrationBuilder.DropTable(
                 name: "OFFERS",
@@ -2536,6 +3251,10 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PAYROLL");
 
             migrationBuilder.DropTable(
+                name: "PERMISSION_REQUESTS",
+                schema: "HR_ATTENDANCE");
+
+            migrationBuilder.DropTable(
                 name: "PUBLIC_HOLIDAYS",
                 schema: "HR_LEAVES");
 
@@ -2546,6 +3265,9 @@ namespace HRMS.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "REPORT_TEMPLATES",
                 schema: "HR_CORE");
+
+            migrationBuilder.DropTable(
+                name: "RolePermissions");
 
             migrationBuilder.DropTable(
                 name: "ROSTER_PERIODS",
@@ -2572,12 +3294,15 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PERFORMANCE");
 
             migrationBuilder.DropTable(
-                name: "CONTRACTS",
-                schema: "HR_PERSONNEL");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "CITIES",
-                schema: "HR_CORE");
+                name: "DAILY_ATTENDANCE",
+                schema: "HR_ATTENDANCE");
+
+            migrationBuilder.DropTable(
+                name: "CONTRACTS",
+                schema: "HR_PERSONNEL");
 
             migrationBuilder.DropTable(
                 name: "BANKS",
@@ -2588,10 +3313,6 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_CORE");
 
             migrationBuilder.DropTable(
-                name: "SHIFT_TYPES",
-                schema: "HR_ATTENDANCE");
-
-            migrationBuilder.DropTable(
                 name: "DISCIPLINARY_ACTIONS",
                 schema: "HR_PERFORMANCE");
 
@@ -2600,7 +3321,15 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PERFORMANCE");
 
             migrationBuilder.DropTable(
-                name: "LEAVE_TYPES",
+                name: "ACCOUNTS",
+                schema: "ACCOUNTING");
+
+            migrationBuilder.DropTable(
+                name: "JOURNAL_ENTRIES",
+                schema: "ACCOUNTING");
+
+            migrationBuilder.DropTable(
+                name: "LEAVE_REQUESTS",
                 schema: "HR_LEAVES");
 
             migrationBuilder.DropTable(
@@ -2620,8 +3349,22 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PAYROLL");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
                 name: "APPRAISAL_CYCLES",
                 schema: "HR_PERFORMANCE");
+
+            migrationBuilder.DropTable(
+                name: "SHIFT_TYPES",
+                schema: "HR_ATTENDANCE");
+
+            migrationBuilder.DropTable(
+                name: "LEAVE_TYPES",
+                schema: "HR_LEAVES");
 
             migrationBuilder.DropTable(
                 name: "CANDIDATES",
@@ -2640,10 +3383,6 @@ namespace HRMS.Infrastructure.Migrations
                 schema: "HR_PAYROLL");
 
             migrationBuilder.DropTable(
-                name: "COUNTRIES",
-                schema: "HR_CORE");
-
-            migrationBuilder.DropTable(
                 name: "JOBS",
                 schema: "HR_CORE");
 
@@ -2653,6 +3392,18 @@ namespace HRMS.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "JOB_GRADES",
+                schema: "HR_CORE");
+
+            migrationBuilder.DropTable(
+                name: "BRANCHES",
+                schema: "HR_CORE");
+
+            migrationBuilder.DropTable(
+                name: "CITIES",
+                schema: "HR_CORE");
+
+            migrationBuilder.DropTable(
+                name: "COUNTRIES",
                 schema: "HR_CORE");
         }
     }

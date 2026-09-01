@@ -1,89 +1,93 @@
-<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
     <!-- Header -->
-    <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50 border-b border-slate-100">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                <i class="pi pi-users text-blue-600"></i>
-                تقييم أداء فريقي
-            </h2>
-            <p class="text-slate-500 text-sm mt-1">المراجعة الإدارية والاعتماد لمرؤوسيك المباشرين</p>
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-900/30">
+                <i class="pi pi-users text-[11px]"></i>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight flex items-center gap-2">تقييم أداء فريقي</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">المراجعة الإدارية والاعتماد لمرؤوسيك المباشرين</p>
+            </div>
         </div>
-        <div class="flex gap-3">
-            <span class="p-input-icon-left">
-                <i class="pi pi-search text-slate-400"></i>
+        <div class="flex items-center gap-2">
+            <span class="p-input-icon-left relative">
+                <i class="pi pi-search absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
                 <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                    placeholder="بحث في الموظفين..." class="p-inputtext-sm w-full md:w-64 border-slate-200 focus:border-blue-500" />
+                    placeholder="بحث في الموظفين..." class="p-inputtext-sm w-full md:w-56 pl-7 !text-[10px]" />
             </span>
         </div>
     </div>
 
     <!-- Table -->
-    <p-table #dt [value]="appraisals()" [loading]="loading()" [rowHover]="true" styleClass="p-datatable-striped"
-        responsiveLayout="scroll" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
-        [globalFilterFields]="['employeeName', 'status', 'cycleName']"
-        currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} تقييم">
+    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
+        <p-table #dt [value]="appraisals()" [loading]="loading()" styleClass="p-datatable-sm clean-table"
+            responsiveLayout="scroll" [paginator]="true" [rows]="10"
+            [globalFilterFields]="['employeeName', 'status', 'cycleName']"
+            currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} تقييم">
 
-        <ng-template pTemplate="header">
-            <tr class="bg-slate-50 text-slate-600 text-sm uppercase tracking-wider">
-                <th class="font-semibold p-4">الموظف</th>
-                <th class="font-semibold p-4">دورة التقييم</th>
-                <th class="font-semibold p-4">الحالة</th>
-                <th class="font-semibold p-4">الدرجة</th>
-                <th class="font-semibold p-4 text-center">الإجراء</th>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="header">
+                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">دورة التقييم</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الدرجة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center" style="width:120px">الإجراء</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-a>
-            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                <td class="p-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
-                            {{ a.employeeName.substring(0, 1) }}
+            <ng-template pTemplate="body" let-a>
+                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                    <td class="!px-3 !py-2 !border-none">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-400 shadow-sm border border-slate-200 dark:border-slate-700">
+                                {{ a.employeeName.substring(0, 1) }}
+                            </div>
+                            <span class="font-bold text-[10px] text-slate-800 dark:text-slate-200">{{ a.employeeName }}</span>
                         </div>
-                        <span class="font-medium text-slate-800">{{ a.employeeName }}</span>
-                    </div>
-                </td>
-                <td class="p-4 text-slate-600">{{ a.cycleName }}</td>
-                <td class="p-4">
-                    <p-tag *ngIf="a.status === 'SELF_EVALUATION'" value="بانتظار الموظف" severity="info" styleClass="px-2 text-[10px]"></p-tag>
-                    <p-tag *ngIf="a.status === 'MANAGER_EVALUATION'" value="بانتظار مراجعتك" severity="warn" styleClass="px-2 text-[10px]"></p-tag>
-                    <p-tag *ngIf="a.status === 'HR_REVIEW'" value="قيد اعتماد HR" severity="danger" styleClass="px-2 text-[10px]"></p-tag>
-                    <p-tag *ngIf="a.status === 'COMPLETED'" value="مكتمل" severity="success" styleClass="px-2 text-[10px]"></p-tag>
-                </td>
-                <td class="p-4">
-                    <span *ngIf="a.status === 'COMPLETED'" class="font-bold text-lg text-green-600">{{ a.finalScore }}%</span>
-                    <span *ngIf="a.status !== 'COMPLETED'" class="text-slate-400 italic text-sm">- قيد المراجعة -</span>
-                </td>
-                <td class="p-4 text-center">
-                    <div class="flex justify-center gap-2">
-                         <button *ngIf="a.status === 'MANAGER_EVALUATION'" pButton icon="pi pi-pencil" label="تقييم الآن"
-                            class="p-button-sm p-button-primary shadow-sm"
-                            (click)="openReview(a)"></button>
-                            
-                         <button *ngIf="a.status === 'COMPLETED'" pButton icon="pi pi-chart-bar" label="النتائج"
-                            class="p-button-sm p-button-success p-button-outlined"
-                            (click)="viewResult(a)"></button>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none">
+                        <span class="text-[9px] font-medium text-slate-600 dark:text-slate-400">{{ a.cycleName }}</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <p-tag *ngIf="a.status === 'SELF_EVALUATION'" value="بانتظار الموظف" severity="info" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'MANAGER_EVALUATION'" value="بانتظار مراجعتك" severity="warn" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'HR_REVIEW'" value="قيد اعتماد HR" severity="danger" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'COMPLETED'" value="مكتمل" severity="success" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <span *ngIf="a.status === 'COMPLETED'" class="font-bold text-[10px] font-mono text-emerald-600">{{ a.finalScore }}%</span>
+                        <span *ngIf="a.status !== 'COMPLETED'" class="text-slate-400 dark:text-slate-500 italic text-[9px] font-medium">-</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <div class="flex justify-center gap-1.5">
+                             <button *ngIf="a.status === 'MANAGER_EVALUATION'" pButton icon="pi pi-pencil" label="تقييم الآن"
+                                class="p-button-outlined p-button-primary !h-6 !px-2 !py-0 !text-[9px] !font-bold shadow-sm"
+                                (click)="openReview(a)"></button>
+                                
+                             <button *ngIf="a.status === 'COMPLETED'" pButton icon="pi pi-chart-bar" label="النتائج"
+                                class="p-button-outlined p-button-success !h-6 !px-2 !py-0 !text-[9px] !font-bold shadow-sm"
+                                (click)="viewResult(a)"></button>
 
-                         <button *ngIf="a.status !== 'MANAGER_EVALUATION' && a.status !== 'COMPLETED'" pButton icon="pi pi-eye" label="عرض"
-                            class="p-button-sm p-button-secondary p-button-text"
-                            (click)="openReview(a)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+                             <button *ngIf="a.status !== 'MANAGER_EVALUATION' && a.status !== 'COMPLETED'" pButton icon="pi pi-eye" label="عرض"
+                                class="p-button-text p-button-secondary !h-6 !px-2 !py-0 !text-[9px] !font-bold"
+                                (click)="openReview(a)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="5" class="text-center p-12">
-                    <div class="flex flex-col items-center justify-center text-slate-300">
-                        <i class="pi pi-users text-6xl mb-4 opacity-20"></i>
-                        <p class="text-xl font-light">لا توجد طلبات تقييم لفريقك حالياً</p>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="text-center py-8 bg-slate-50/50 dark:bg-slate-800/30">
+                        <i class="pi pi-users text-2xl text-slate-300 dark:text-slate-600 block mb-2"></i>
+                        <span class="text-[10px] font-bold text-slate-500">لا توجد طلبات تقييم لفريقك حالياً</span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
 <p-toast position="bottom-left"></p-toast>
-<p-confirmDialog [style]="{width: '400px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>
+<p-confirmDialog [style]="{width: '400px'}"></p-confirmDialog>

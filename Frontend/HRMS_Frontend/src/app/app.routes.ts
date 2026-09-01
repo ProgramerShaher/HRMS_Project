@@ -15,7 +15,7 @@ export const routes: Routes = [
     { path: 'unauthorized', loadComponent: () => import('./features/auth/pages/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent) },
     // Protected Dashboard Routes
     { path: 'dashboard', canActivate: [authGuard], loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: '', redirectTo: 'attendance/dashboard', pathMatch: 'full' },
     { path: 'setup', canActivate: [authGuard], loadChildren: () => import('./features/setup/setup.routes').then(m => m.SETUP_ROUTES) },
     { path: 'employees', canActivate: [authGuard], loadChildren: () => import('./features/personnel/personnel.routes').then(m => m.PERSONNEL_ROUTES) },
     { path: 'leaves', canActivate: [authGuard], loadChildren: () => import('./features/leaves/leaves.routes').then(m => m.leavesRoutes) },

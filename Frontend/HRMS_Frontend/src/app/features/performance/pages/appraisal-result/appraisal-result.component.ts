@@ -11,258 +11,186 @@ import { TagModule } from 'primeng/tag';
     standalone: true,
     imports: [CommonModule, RouterModule, ButtonModule, TagModule],
     template: `
-    <div class="result-page" *ngIf="appraisal(); else loading">
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col min-h-screen gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700 mx-auto max-w-6xl" dir="rtl" *ngIf="appraisal(); else loading">
         <!-- Back Button -->
-        <div class="top-bar">
+        <div class="flex items-center">
             <button pButton icon="pi pi-arrow-right" label="العودة للقائمة"
-                    class="p-button-text" routerLink="/performance/appraisals"></button>
+                    class="p-button-text p-button-sm !text-[10px] !font-bold" routerLink="/performance/appraisals"></button>
         </div>
 
         <!-- Hero Score Card -->
-        <div class="hero-card" [class]="'grade-' + gradeClass()">
-            <div class="hero-left">
-                <div class="employee-avatar">{{ initials() }}</div>
-                <div class="employee-info">
-                    <h2>{{ appraisal()!.employeeName }}</h2>
-                    <p>{{ appraisal()!.cycleName }}</p>
-                    <p class="evaluator">المُقيّم: {{ appraisal()!.evaluatorName }}</p>
+        <div class="rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 text-white shadow-md relative overflow-hidden" 
+             [ngClass]="{
+                 'bg-gradient-to-br from-emerald-600 to-emerald-800': gradeClass() === 'excellent',
+                 'bg-gradient-to-br from-cyan-600 to-cyan-800': gradeClass() === 'verygood',
+                 'bg-gradient-to-br from-blue-600 to-indigo-800': gradeClass() === 'good',
+                 'bg-gradient-to-br from-amber-500 to-amber-700': gradeClass() === 'fair',
+                 'bg-gradient-to-br from-rose-600 to-rose-800': gradeClass() === 'poor'
+             }">
+            <!-- Background pattern -->
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
+            
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold border border-white/30 backdrop-blur-sm shadow-inner">
+                    {{ initials() }}
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-xl font-bold tracking-tight">{{ appraisal()!.employeeName }}</h2>
+                    <p class="text-xs font-medium text-white/80 mt-1">{{ appraisal()!.cycleName }}</p>
+                    <p class="text-[10px] text-white/60 mt-1.5 flex items-center gap-1">
+                        <i class="pi pi-user text-[9px]"></i> المُقيّم: {{ appraisal()!.evaluatorName }}
+                    </p>
                 </div>
             </div>
-            <div class="hero-score">
-                <div class="score-ring" [style]="ringStyle()">
-                    <div class="score-inner">
-                        <div class="score-num">{{ appraisal()!.finalScore | number:'1.1-1' }}</div>
-                        <div class="score-max">/ 100</div>
+            <div class="flex flex-col items-center gap-3 relative z-10">
+                <div class="w-24 h-24 rounded-full flex items-center justify-center relative shadow-lg"
+                     [style.background]="'conic-gradient(rgba(255,255,255,0.95) ' + ((appraisal()!.finalScore ?? 0) / 100 * 360) + 'deg, rgba(255,255,255,0.15) 0)'">
+                    <div class="w-20 h-20 rounded-full bg-black/20 backdrop-blur-md flex flex-col items-center justify-center">
+                        <span class="text-2xl font-black font-mono leading-none">{{ appraisal()!.finalScore | number:'1.1-1' }}</span>
+                        <span class="text-[9px] font-bold text-white/70 mt-1">/ 100</span>
                     </div>
                 </div>
-                <div class="grade-badge">{{ gradeLabel() }}</div>
+                <div class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1 font-bold text-xs shadow-inner">
+                    {{ gradeLabel() }}
+                </div>
             </div>
         </div>
 
         <!-- KPI Details Grid -->
-        <div class="section-title">
-            <i class="pi pi-chart-bar"></i>
-            <span>تفاصيل مؤشرات الأداء (KPIs)</span>
+        <div class="flex items-center gap-2 mt-2">
+            <i class="pi pi-chart-bar text-blue-500 text-sm"></i>
+            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">تفاصيل مؤشرات الأداء (KPIs)</h3>
         </div>
 
-        <div class="kpi-grid">
-            <div class="kpi-card" *ngFor="let d of appraisal()!.details">
-                <div class="kpi-card-header">
-                    <div class="kpi-title-row">
-                        <span class="kpi-dot" [style.background]="getCategoryColor(d.kpiCategory)"></span>
-                        <strong>{{ d.kpiName }}</strong>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div *ngFor="let d of appraisal()!.details" class="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col gap-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors shadow-sm">
+                
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full shadow-sm" [style.background]="getCategoryColor(d.kpiCategory)"></span>
+                        <strong class="text-xs font-bold text-slate-800 dark:text-slate-200">{{ d.kpiName }}</strong>
                     </div>
-                    <span class="kpi-weight">وزن {{ d.weight }}%</span>
+                    <span class="text-[9px] font-bold text-blue-700 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full whitespace-nowrap border border-blue-200 dark:border-blue-800/50">وزن {{ d.weight }}%</span>
                 </div>
 
                 <!-- Triple Score Bars -->
-                <div class="score-bars">
-                    <div class="score-bar-row">
-                        <span class="bar-label">التقييم الذاتي</span>
-                        <div class="bar-track">
-                            <div class="bar-fill employee" [style.width.%]="d.employeeScore"></div>
+                <div class="flex flex-col gap-3 mt-1">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 w-16">التقييم الذاتي</span>
+                        <div class="flex-grow h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 rounded-full" [style.width.%]="d.employeeScore"></div>
                         </div>
-                        <span class="bar-value">{{ d.employeeScore }}%</span>
+                        <span class="text-[9px] font-mono font-bold text-slate-600 dark:text-slate-300 w-8 text-left">{{ d.employeeScore }}%</span>
                     </div>
-                    <div class="score-bar-row">
-                        <span class="bar-label">تقييم المدير</span>
-                        <div class="bar-track">
-                            <div class="bar-fill manager" [style.width.%]="d.managerScore"></div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 w-16">تقييم المدير</span>
+                        <div class="flex-grow h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 rounded-full" [style.width.%]="d.managerScore"></div>
                         </div>
-                        <span class="bar-value">{{ d.managerScore }}%</span>
+                        <span class="text-[9px] font-mono font-bold text-slate-600 dark:text-slate-300 w-8 text-left">{{ d.managerScore }}%</span>
                     </div>
-                    <div class="score-bar-row final-row">
-                        <span class="bar-label">النهائي</span>
-                        <div class="bar-track">
-                            <div class="bar-fill final" [style.width.%]="d.finalScore"></div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] font-black text-slate-800 dark:text-slate-200 w-16">النهائي</span>
+                        <div class="flex-grow h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden shadow-inner">
+                            <div class="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full" [style.width.%]="d.finalScore"></div>
                         </div>
-                        <span class="bar-value final-val">{{ d.finalScore }}%</span>
+                        <span class="text-[10px] font-mono font-black text-slate-800 dark:text-slate-200 w-8 text-left">{{ d.finalScore }}%</span>
                     </div>
                 </div>
 
                 <!-- Actual vs Target (if available) -->
-                <div class="actual-target" *ngIf="d.actualValue !== null && d.actualValue !== undefined">
-                    <span class="actual-chip">فعلي: {{ d.actualValue }}</span>
-                    <span class="target-chip">مستهدف: {{ d.targetValue }}</span>
+                <div class="flex gap-2 mt-1" *ngIf="d.actualValue !== null && d.actualValue !== undefined">
+                    <span class="text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-900/50 rounded-full px-2.5 py-0.5">فعلي: <span class="font-mono">{{ d.actualValue }}</span></span>
+                    <span class="text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-100 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-900/50 rounded-full px-2.5 py-0.5">مستهدف: <span class="font-mono">{{ d.targetValue }}</span></span>
                 </div>
 
-                <div class="kpi-comment" *ngIf="d.comments">
-                    <i class="pi pi-comment"></i>
-                    {{ d.comments }}
-                </div>
-            </div>
-        </div>
-
-        <!-- Radar Chart (Canvas) -->
-        <div class="radar-section" *ngIf="appraisal()!.details?.length">
-            <div class="section-title">
-                <i class="pi pi-chart-pie"></i>
-                <span>نقاط القوة والضعف</span>
-            </div>
-            <div class="radar-container">
-                <svg [attr.viewBox]="'0 0 400 400'" class="radar-svg" *ngIf="radarPoints().length">
-                    <!-- Background circles -->
-                    <circle cx="200" cy="200" r="160" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-                    <circle cx="200" cy="200" r="120" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-                    <circle cx="200" cy="200" r="80" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-                    <circle cx="200" cy="200" r="40" fill="none" stroke="#e2e8f0" stroke-width="1"/>
-
-                    <!-- Axis lines -->
-                    <line *ngFor="let pt of radarPoints()" [attr.x1]="200" [attr.y1]="200"
-                          [attr.x2]="pt.x100" [attr.y2]="pt.y100"
-                          stroke="#e2e8f0" stroke-width="1"/>
-
-                    <!-- Employee polygon -->
-                    <polygon [attr.points]="getPolygonPoints('employee')"
-                             fill="rgba(99,102,241,0.2)" stroke="#6366f1" stroke-width="2"/>
-
-                    <!-- Manager polygon -->
-                    <polygon [attr.points]="getPolygonPoints('manager')"
-                             fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
-
-                    <!-- Final polygon -->
-                    <polygon [attr.points]="getPolygonPoints('final')"
-                             fill="rgba(245,158,11,0.25)" stroke="#f59e0b" stroke-width="2.5"/>
-
-                    <!-- Labels -->
-                    <text *ngFor="let pt of radarPoints()"
-                          [attr.x]="pt.labelX" [attr.y]="pt.labelY"
-                          text-anchor="middle" dominant-baseline="middle"
-                          font-size="10" fill="#475569">{{ pt.label }}</text>
-                </svg>
-
-                <div class="radar-legend">
-                    <div class="legend-item"><span class="lg-dot blue"></span> التقييم الذاتي</div>
-                    <div class="legend-item"><span class="lg-dot green"></span> تقييم المدير</div>
-                    <div class="legend-item"><span class="lg-dot amber"></span> الدرجة النهائية</div>
+                <div class="mt-2 text-[9px] text-slate-500 dark:text-slate-400 flex gap-2 font-medium bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-100 dark:border-slate-800" *ngIf="d.comments">
+                    <i class="pi pi-comment text-[9px] text-slate-400 mt-0.5"></i>
+                    <span>{{ d.comments }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Comments Section -->
-        <div class="comments-section">
-            <div class="comment-card" *ngIf="appraisal()!.employeeComment">
-                <div class="comment-header"><i class="pi pi-user"></i> تعليق الموظف</div>
-                <p>{{ appraisal()!.employeeComment }}</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
+            <!-- Radar Chart (Canvas) -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm" *ngIf="appraisal()!.details?.length">
+                <div class="flex items-center gap-2 mb-6">
+                    <i class="pi pi-chart-pie text-purple-500 text-sm"></i>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">نقاط القوة والضعف</h3>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-8 justify-center">
+                    <svg [attr.viewBox]="'0 0 400 400'" class="w-64 h-64 drop-shadow-sm" *ngIf="radarPoints().length">
+                        <!-- Background circles -->
+                        <circle cx="200" cy="200" r="160" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="1"/>
+                        <circle cx="200" cy="200" r="120" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="1"/>
+                        <circle cx="200" cy="200" r="80" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="1"/>
+                        <circle cx="200" cy="200" r="40" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="1"/>
+
+                        <!-- Axis lines -->
+                        <line *ngFor="let pt of radarPoints()" [attr.x1]="200" [attr.y1]="200"
+                              [attr.x2]="pt.x100" [attr.y2]="pt.y100"
+                              stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="1"/>
+
+                        <!-- Employee polygon -->
+                        <polygon [attr.points]="getPolygonPoints('employee')"
+                                 fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2"/>
+
+                        <!-- Manager polygon -->
+                        <polygon [attr.points]="getPolygonPoints('manager')"
+                                 fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
+
+                        <!-- Final polygon -->
+                        <polygon [attr.points]="getPolygonPoints('final')"
+                                 fill="rgba(245,158,11,0.2)" stroke="#f59e0b" stroke-width="2.5"/>
+
+                        <!-- Labels -->
+                        <text *ngFor="let pt of radarPoints()"
+                              [attr.x]="pt.labelX" [attr.y]="pt.labelY"
+                              text-anchor="middle" dominant-baseline="middle"
+                              class="text-[10px] font-bold fill-slate-500 dark:fill-slate-400">{{ pt.label }}</text>
+                    </svg>
+
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span> التقييم الذاتي
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span> تقييم المدير
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span> الدرجة النهائية
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="comment-card manager" *ngIf="appraisal()!.comments">
-                <div class="comment-header"><i class="pi pi-briefcase"></i> تعليق المدير / الموارد البشرية</div>
-                <p>{{ appraisal()!.comments }}</p>
+
+            <!-- Comments Section -->
+            <div class="flex flex-col gap-4">
+                <div class="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-xl p-5 shadow-sm" *ngIf="appraisal()!.employeeComment">
+                    <div class="flex items-center gap-2 mb-3 text-blue-700 dark:text-blue-400 font-bold text-[11px]">
+                        <i class="pi pi-user text-sm"></i> تعليق الموظف
+                    </div>
+                    <p class="text-[10px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{{ appraisal()!.employeeComment }}</p>
+                </div>
+                <div class="bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-5 shadow-sm flex-grow" *ngIf="appraisal()!.comments">
+                    <div class="flex items-center gap-2 mb-3 text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
+                        <i class="pi pi-briefcase text-sm"></i> تعليق المدير / الموارد البشرية
+                    </div>
+                    <p class="text-[10px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{{ appraisal()!.comments }}</p>
+                </div>
             </div>
         </div>
     </div>
 
     <ng-template #loading>
-        <div class="loading-screen">
-            <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: #6366f1;"></i>
-            <p>جاري تحميل بيانات التقييم…</p>
+        <div class="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-slate-500 dark:text-slate-400">
+            <i class="pi pi-spin pi-spinner text-3xl text-blue-500"></i>
+            <p class="text-xs font-bold tracking-widest">جاري تحميل بيانات التقييم…</p>
         </div>
     </ng-template>
     `,
     styles: [`
-        :host { display: block; direction: rtl; }
-        .result-page { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
-        .top-bar { margin-bottom: 1rem; }
-
-        /* Hero */
-        .hero-card {
-            border-radius: 20px; padding: 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 2rem; color: white;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-        }
-        .hero-card.grade-excellent { background: linear-gradient(135deg, #059669, #10b981); }
-        .hero-card.grade-verygood  { background: linear-gradient(135deg, #0891b2, #06b6d4); }
-        .hero-card.grade-good      { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
-        .hero-card.grade-fair      { background: linear-gradient(135deg, #d97706, #f59e0b); }
-        .hero-card.grade-poor      { background: linear-gradient(135deg, #dc2626, #ef4444); }
-
-        .hero-left { display: flex; align-items: center; gap: 1.25rem; }
-        .employee-avatar {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: rgba(255,255,255,0.2); display: grid; place-items: center;
-            font-size: 1.4rem; font-weight: 700; color: white;
-        }
-        h2 { margin: 0; font-size: 1.4rem; }
-        .employee-info p { margin: 2px 0 0; opacity: 0.85; font-size: 0.875rem; }
-        .evaluator { opacity: 0.7 !important; }
-
-        .hero-score { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
-        .score-ring {
-            width: 110px; height: 110px; border-radius: 50%;
-            background: conic-gradient(rgba(255,255,255,0.9) var(--pct), rgba(255,255,255,0.2) 0);
-            display: grid; place-items: center;
-        }
-        .score-inner {
-            width: 88px; height: 88px; border-radius: 50%;
-            background: rgba(0,0,0,0.2); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; color: white;
-        }
-        .score-num { font-size: 1.6rem; font-weight: 800; line-height: 1; }
-        .score-max { font-size: 0.75rem; opacity: 0.7; }
-        .grade-badge {
-            background: rgba(255,255,255,0.2); border-radius: 20px;
-            padding: 4px 16px; font-weight: 600; font-size: 0.9rem;
-        }
-
-        /* Section Title */
-        .section-title {
-            display: flex; align-items: center; gap: 0.5rem;
-            font-size: 1.05rem; font-weight: 700; color: #1e293b;
-            margin-bottom: 1rem; margin-top: 1.5rem;
-        }
-        .section-title i { color: #6366f1; }
-
-        /* KPI Grid */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
-        .kpi-card {
-            background: #fff; border-radius: 14px; padding: 1.25rem;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-            border: 1px solid #f1f5f9; transition: box-shadow 0.2s;
-        }
-        .kpi-card:hover { box-shadow: 0 4px 20px rgba(99,102,241,0.12); }
-        .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-        .kpi-title-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; }
-        .kpi-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .kpi-weight { font-size: 0.78rem; color: #6366f1; background: #ede9fe; border-radius: 20px; padding: 2px 10px; }
-
-        .score-bars { display: flex; flex-direction: column; gap: 0.6rem; }
-        .score-bar-row { display: flex; align-items: center; gap: 0.5rem; }
-        .bar-label { font-size: 0.75rem; color: #64748b; width: 75px; flex-shrink: 0; }
-        .bar-track { flex: 1; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
-        .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
-        .bar-fill.employee { background: #6366f1; }
-        .bar-fill.manager  { background: #10b981; }
-        .bar-fill.final    { background: linear-gradient(90deg, #f59e0b, #ef4444); }
-        .bar-value { font-size: 0.78rem; width: 32px; text-align: left; color: #64748b; }
-        .final-row .bar-label { font-weight: 700; color: #1e293b; }
-        .final-val { font-weight: 700; color: #1e293b; }
-
-        .actual-target { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
-        .actual-chip { background: #dbeafe; color: #1d4ed8; border-radius: 20px; padding: 2px 8px; font-size: 0.78rem; }
-        .target-chip { background: #fef9c3; color: #a16207; border-radius: 20px; padding: 2px 8px; font-size: 0.78rem; }
-
-        .kpi-comment { margin-top: 0.75rem; font-size: 0.82rem; color: #64748b; display: flex; gap: 0.4rem; font-style: italic; }
-
-        /* Radar */
-        .radar-section { margin-top: 1.5rem; }
-        .radar-container { background: #fff; border-radius: 16px; padding: 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 2rem; }
-        .radar-svg { width: 300px; height: 300px; flex-shrink: 0; }
-        .radar-legend { display: flex; flex-direction: column; gap: 0.75rem; }
-        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #475569; }
-        .lg-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .lg-dot.blue { background: #6366f1; }
-        .lg-dot.green { background: #10b981; }
-        .lg-dot.amber { background: #f59e0b; }
-
-        /* Comments */
-        .comments-section { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-        .comment-card { background: #fff; border-radius: 14px; padding: 1.25rem; box-shadow: 0 1px 6px rgba(0,0,0,0.06); border-right: 4px solid #6366f1; }
-        .comment-card.manager { border-color: #10b981; }
-        .comment-header { font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; display: flex; gap: 0.4rem; align-items: center; }
-        .comment-card p { margin: 0; color: #475569; font-size: 0.9rem; line-height: 1.6; }
-
-        .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; gap: 1rem; color: #64748b; }
+        :host { display: block; }
     `]
 })
 export class AppraisalResultComponent implements OnInit {

@@ -28,91 +28,95 @@ import { RouterModule, Router } from '@angular/router';
     <p-toast position="top-center" />
     <p-confirmDialog />
 
-    <div class="cycles-page">
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
         <!-- Header -->
-        <div class="page-header">
-            <div class="header-content">
-                <div class="header-icon">
-                    <i class="pi pi-calendar-plus"></i>
+        <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-900/30">
+                    <i class="pi pi-calendar-plus text-[11px]"></i>
                 </div>
                 <div>
-                    <h1>دورات التقييم</h1>
-                    <p>إنشاء وإدارة فترات تقييم الأداء السنوية والدورية</p>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">دورات التقييم</h3>
+                    <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إنشاء وإدارة فترات تقييم الأداء السنوية والدورية</p>
                 </div>
             </div>
-            <button pButton label="دورة تقييم جديدة" icon="pi pi-plus" class="btn-primary" (click)="openAdd()"></button>
+            <button pButton label="دورة تقييم جديدة" icon="pi pi-plus" class="p-button-outlined p-button-primary !h-8 !px-3 !py-0 flex justify-center items-center !rounded-md hover:!bg-blue-50 dark:hover:!bg-blue-900/20 !border-blue-200 dark:!border-blue-800 transition-all text-[10px] font-bold shadow-sm" (click)="openAdd()"></button>
         </div>
 
         <!-- Stats Cards -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <i class="pi pi-list stat-icon blue"></i>
-                <div>
-                    <div class="stat-num">{{ cycles().length }}</div>
-                    <div class="stat-label">إجمالي الدورات</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-lg p-3 border border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500 shadow-sm border border-blue-100 dark:border-blue-900/30">
+                    <i class="pi pi-list text-sm"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-black text-slate-700 dark:text-slate-200 leading-tight">{{ cycles().length }}</span>
+                    <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400">إجمالي الدورات</span>
                 </div>
             </div>
-            <div class="stat-card">
-                <i class="pi pi-check-circle stat-icon green"></i>
-                <div>
-                    <div class="stat-num">{{ activeCycles() }}</div>
-                    <div class="stat-label">دورات نشطة</div>
+            <div class="bg-emerald-50/50 dark:bg-emerald-900/10 rounded-lg p-3 border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-white dark:bg-slate-800 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-200 dark:border-emerald-800/50">
+                    <i class="pi pi-check-circle text-sm"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-black text-emerald-700 dark:text-emerald-400 leading-tight">{{ activeCycles() }}</span>
+                    <span class="text-[9px] font-bold text-emerald-600 dark:text-emerald-500">دورات نشطة</span>
                 </div>
             </div>
-            <div class="stat-card">
-                <i class="pi pi-clock stat-icon orange"></i>
-                <div>
-                    <div class="stat-num">{{ upcomingCycles() }}</div>
-                    <div class="stat-label">قادمة</div>
+            <div class="bg-amber-50/50 dark:bg-amber-900/10 rounded-lg p-3 border border-amber-100 dark:border-amber-900/30 flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-white dark:bg-slate-800 flex items-center justify-center text-amber-500 shadow-sm border border-amber-200 dark:border-amber-800/50">
+                    <i class="pi pi-clock text-sm"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-black text-amber-700 dark:text-amber-400 leading-tight">{{ upcomingCycles() }}</span>
+                    <span class="text-[9px] font-bold text-amber-600 dark:text-amber-500">قادمة</span>
                 </div>
             </div>
         </div>
 
         <!-- Table -->
-        <div class="table-card">
+        <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
             <p-table [value]="cycles()" [loading]="loading()" dataKey="cycleId"
-                     [paginator]="true" [rows]="8" styleClass="p-datatable-gridlines"
+                     [paginator]="true" [rows]="8" styleClass="p-datatable-sm clean-table"
                      [globalFilterFields]="['cycleNameAr']">
 
                 <ng-template pTemplate="header">
-                    <tr>
-                        <th>#</th>
-                        <th>اسم الدورة</th>
-                        <th>تاريخ البدء</th>
-                        <th>تاريخ الانتهاء</th>
-                        <th>المدة</th>
-                        <th>الحالة</th>
-                        <th>الإجراءات</th>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none" style="width:40px">#</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">اسم الدورة</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">تاريخ البدء</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">تاريخ الانتهاء</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">المدة</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الحالة</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center" style="width:100px">الإجراءات</th>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-cycle let-i="rowIndex">
-                    <tr [class.active-row]="cycle.isActive === 1">
-                        <td>{{ i + 1 }}</td>
-                        <td>
-                            <div class="cycle-name">
-                                <i class="pi pi-calendar cycle-icon"></i>
-                                <div>
-                                    <strong>{{ cycle.cycleNameAr }}</strong>
-                                </div>
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50" [ngClass]="{'bg-blue-50/20 dark:bg-blue-900/10': cycle.isActive === 1}">
+                        <td class="!px-3 !py-2 !border-none text-[9px] font-mono text-slate-400">{{ i + 1 }}</td>
+                        <td class="!px-3 !py-2 !border-none">
+                            <div class="flex items-center gap-1.5">
+                                <i class="pi pi-calendar text-[10px] text-blue-500"></i>
+                                <strong class="font-bold text-[10px] text-slate-700 dark:text-slate-200">{{ cycle.cycleNameAr }}</strong>
                             </div>
                         </td>
-                        <td>{{ cycle.startDate | date:'dd/MM/yyyy' }}</td>
-                        <td>{{ cycle.endDate | date:'dd/MM/yyyy' }}</td>
-                        <td>
-                            <span class="duration-badge">{{ getDuration(cycle) }} يوم</span>
+                        <td class="!px-3 !py-2 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">{{ cycle.startDate | date:'yyyy-MM-dd' }}</td>
+                        <td class="!px-3 !py-2 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">{{ cycle.endDate | date:'yyyy-MM-dd' }}</td>
+                        <td class="!px-3 !py-2 !border-none">
+                            <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-purple-50 text-purple-600 border border-purple-200 dark:bg-purple-900/20 dark:text-purple-400 dark:border-purple-800/50">{{ getDuration(cycle) }} يوم</span>
                         </td>
-                        <td>
+                        <td class="!px-3 !py-2 !border-none">
                             <p-tag [value]="getStatusLabel(cycle)"
-                                   [severity]="getStatusSeverity(cycle)"></p-tag>
+                                   [severity]="getStatusSeverity(cycle)" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
                         </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button pButton icon="pi pi-users" class="p-button-text p-button-sm p-button-info"
-                                        pTooltip="تهيئة تقييمات الدورة"
+                        <td class="!px-3 !py-2 !border-none text-center">
+                            <div class="flex justify-center gap-1">
+                                <button pButton icon="pi pi-users" class="p-button-text p-button-info !w-6 !h-6 !p-0 !text-[10px]"
+                                        title="تهيئة تقييمات الدورة"
                                         (click)="goToAppraisals(cycle)"></button>
-                                <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger"
-                                        pTooltip="حذف الدورة"
+                                <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-[10px]"
+                                        title="حذف الدورة"
                                         (click)="delete(cycle)"></button>
                             </div>
                         </td>
@@ -121,9 +125,9 @@ import { RouterModule, Router } from '@angular/router';
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="7" class="empty-state">
-                            <i class="pi pi-calendar"></i>
-                            <p>لا توجد دورات تقييم. ابدأ بإنشاء الدورة الأولى.</p>
+                        <td colspan="7" class="text-center py-8 bg-slate-50/50 dark:bg-slate-800/30">
+                            <i class="pi pi-calendar text-2xl text-slate-300 dark:text-slate-600 block mb-2"></i>
+                            <span class="text-[10px] font-bold text-slate-500">لا توجد دورات تقييم. ابدأ بإنشاء الدورة الأولى.</span>
                         </td>
                     </tr>
                 </ng-template>
@@ -133,116 +137,60 @@ import { RouterModule, Router } from '@angular/router';
 
     <!-- Create Dialog -->
     <p-dialog [(visible)]="showDialog" header="إنشاء دورة تقييم جديدة"
-              [modal]="true" [style]="{width: '520px'}" [draggable]="false">
+              [modal]="true" [style]="{width: '450px'}" [draggable]="false" styleClass="p-fluid">
 
-        <form [formGroup]="form" class="dialog-form">
-            <div class="form-grid">
-                <div class="form-field full">
-                    <label>اسم الدورة <span class="required">*</span></label>
+        <form [formGroup]="form" class="pt-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">اسم الدورة <span class="text-rose-500">*</span></label>
                     <input pInputText formControlName="cycleName"
-                           placeholder="مثال: تقييم الأداء السنوي 2025" />
-                    <small class="field-error" *ngIf="form.get('cycleName')?.invalid && form.get('cycleName')?.touched">
+                           placeholder="مثال: تقييم الأداء السنوي 2025" class="p-inputtext-sm w-full" />
+                    <small class="text-rose-500 text-[8px] mt-1 block" *ngIf="form.get('cycleName')?.invalid && form.get('cycleName')?.touched">
                         اسم الدورة مطلوب
                     </small>
                 </div>
 
-                <div class="form-field">
-                    <label>تاريخ البدء <span class="required">*</span></label>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">تاريخ البدء <span class="text-rose-500">*</span></label>
                     <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy"
-                                  [showIcon]="true" appendTo="body"></p-datepicker>
+                                  [showIcon]="true" appendTo="body" styleClass="p-inputtext-sm w-full"></p-datepicker>
                 </div>
 
-                <div class="form-field">
-                    <label>تاريخ الانتهاء <span class="required">*</span></label>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">تاريخ الانتهاء <span class="text-rose-500">*</span></label>
                     <p-datepicker formControlName="endDate" dateFormat="dd/mm/yy"
                                   [showIcon]="true" appendTo="body"
-                                  [minDate]="form.get('startDate')?.value"></p-datepicker>
-                    <small class="field-error" *ngIf="isDateRangeInvalid()">
-                        تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء
+                                  [minDate]="form.get('startDate')?.value" styleClass="p-inputtext-sm w-full"></p-datepicker>
+                    <small class="text-rose-500 text-[8px] mt-1 block font-bold" *ngIf="isDateRangeInvalid()">
+                        يجب أن يكون بعد تاريخ البدء
                     </small>
                 </div>
 
-                <div class="form-field full">
-                    <label>حالة الدورة</label>
+                <div class="col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">حالة الدورة</label>
                     <p-select formControlName="status" [options]="statusOptions"
-                               optionLabel="label" optionValue="value"></p-select>
+                               optionLabel="label" optionValue="value" styleClass="p-inputtext-sm w-full"></p-select>
                 </div>
             </div>
 
             <!-- Preview -->
-            <div class="preview-box" *ngIf="form.get('startDate')?.value && form.get('endDate')?.value">
+            <div class="mt-3 p-2 bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg text-blue-700 dark:text-blue-300 flex items-center gap-1.5 text-[10px]" *ngIf="form.get('startDate')?.value && form.get('endDate')?.value">
                 <i class="pi pi-info-circle"></i>
-                مدة الدورة: <strong>{{ getFormDuration() }} يوم</strong>
+                مدة الدورة: <strong class="font-mono text-blue-800 dark:text-blue-200">{{ getFormDuration() }} يوم</strong>
             </div>
         </form>
 
         <ng-template pTemplate="footer">
-            <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="showDialog = false"></button>
-            <button pButton label="إنشاء الدورة" icon="pi pi-check"
-                    (click)="save()" [disabled]="form.invalid || isDateRangeInvalid()" class="btn-primary"></button>
+            <div class="border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-end gap-2 mt-2">
+                <button pButton label="إلغاء" class="p-button-text p-button-sm !text-[10px] !font-bold" (click)="showDialog = false"></button>
+                <button pButton label="إنشاء الدورة" icon="pi pi-check"
+                        (click)="save()" [disabled]="form.invalid || isDateRangeInvalid()" class="p-button-primary p-button-sm !text-[10px] !font-bold shadow-sm"></button>
+            </div>
         </ng-template>
     </p-dialog>
     `,
     styles: [`
-        :host { display: block; direction: rtl; }
-        .cycles-page { padding: 1.5rem; }
-
-        .page-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-        .header-content { display: flex; align-items: center; gap: 1rem; }
-        .header-icon {
-            width: 52px; height: 52px; border-radius: 14px;
-            background: linear-gradient(135deg, #0ea5e9, #6366f1);
-            display: grid; place-items: center; font-size: 1.4rem; color: white;
-        }
-        h1 { margin: 0; font-size: 1.4rem; color: #1e293b; font-weight: 700; }
-        p { margin: 0; color: #64748b; font-size: 0.875rem; }
-
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-        .stat-card {
-            background: #fff; border-radius: 14px; padding: 1.25rem;
-            display: flex; align-items: center; gap: 1rem;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-        }
-        .stat-icon { font-size: 1.8rem; }
-        .stat-icon.blue { color: #6366f1; }
-        .stat-icon.green { color: #10b981; }
-        .stat-icon.orange { color: #f59e0b; }
-        .stat-num { font-size: 1.8rem; font-weight: 700; color: #1e293b; line-height: 1; }
-        .stat-label { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
-
-        .table-card {
-            background: #fff; border-radius: 16px;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.06); overflow: hidden;
-        }
-
-        .cycle-name { display: flex; align-items: center; gap: 0.75rem; }
-        .cycle-icon { color: #6366f1; font-size: 1rem; }
-        .duration-badge {
-            background: #ede9fe; color: #6d28d9; border-radius: 20px;
-            padding: 2px 10px; font-size: 0.82rem; font-weight: 600;
-        }
-        .active-row { background: rgba(99,102,241,0.03); }
-        .action-buttons { display: flex; gap: 0.25rem; }
-        .empty-state { text-align: center; padding: 3rem; color: #94a3b8; }
-        .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
-
-        .dialog-form { padding: 0.5rem 0; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
-        .form-field.full { grid-column: 1 / -1; }
-        label { font-size: 0.85rem; font-weight: 600; color: #374151; }
-        .required { color: #ef4444; }
-        .field-error { color: #ef4444; font-size: 0.78rem; }
-
-        .preview-box {
-            margin-top: 1rem; padding: 0.75rem 1rem;
-            background: #f0f9ff; border-radius: 8px; color: #0369a1;
-            display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;
-        }
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6) !important; border: none !important; }
+        :host { display: block; }
     `]
 })
 export class EvaluationCyclesComponent implements OnInit {

@@ -48,12 +48,14 @@ export class BanksComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(BankFormComponent, {
-        header: 'إضافة بنك جديد',
-        width: '400px',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -65,12 +67,14 @@ export class BanksComponent implements OnInit {
 
   edit(item: Bank) {
     this.ref = this.dialogService.open(BankFormComponent, {
-        header: 'تعديل بيانات البنك',
-        width: '400px',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item
     });

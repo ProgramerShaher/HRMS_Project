@@ -49,12 +49,14 @@ export class ShiftTypesComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(ShiftTypeFormComponent, {
-        header: 'إضافة وردية جديدة',
+        showHeader: false,
         width: '450px',
-        contentStyle: { overflow: 'visible' },
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -66,12 +68,14 @@ export class ShiftTypesComponent implements OnInit {
 
   edit(item: ShiftType) {
     this.ref = this.dialogService.open(ShiftTypeFormComponent, {
-        header: 'تعديل بيانات الوردية',
+        showHeader: false,
         width: '450px',
-        contentStyle: { overflow: 'visible' },
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item
     });

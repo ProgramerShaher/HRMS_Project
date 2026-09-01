@@ -1,50 +1,85 @@
-<div class="p-4" dir="rtl" [formGroup]="form">
-    <div class="flex flex-col gap-4">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800" dir="rtl">
+    
+    <!-- Dialog Header -->
+    <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <i [class]="isEditMode ? 'pi pi-pencil' : 'pi pi-plus'" class="text-[13px]"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+                {{ isEditMode ? 'تعديل بيانات البند' : 'إضافة بند راتب جديد' }}
+            </h3>
+        </div>
+        <button type="button"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            (click)="onCancel()">
+            <i class="pi pi-times text-[12px]"></i>
+        </button>
+    </div>
+
+    <div class="flex flex-col gap-y-4 p-5 overflow-y-auto">
         
         <!-- Name -->
-        <div class="flex flex-col gap-2">
-            <label for="name" class="text-sm font-medium text-slate-700 dark:text-zinc-300">اسم البند <span class="text-red-500">*</span></label>
-            <input pInputText id="name" formControlName="elementNameAr" class="w-full" [ngClass]="{'ng-invalid ng-dirty': form.get('elementNameAr')?.touched && form.get('elementNameAr')?.invalid}" />
-            <small *ngIf="form.get('elementNameAr')?.touched && form.get('elementNameAr')?.invalid" class="text-red-500 text-xs">حقل مطلوب</small>
+        <div class="flex flex-col gap-1.5">
+            <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">اسم البند <span class="text-red-500">*</span></label>
+            <input pInputText id="name" formControlName="elementNameAr" autofocus 
+                class="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-emerald-500 transition-all" />
+            <small class="text-red-500 text-[10px] block mt-0.5 font-bold" *ngIf="form.get('elementNameAr')?.touched && form.get('elementNameAr')?.invalid">حقل مطلوب</small>
         </div>
 
         <!-- Type & Percentage -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="flex flex-col gap-2">
-                <label for="type" class="text-sm font-medium text-slate-700 dark:text-zinc-300">نوع البند <span class="text-red-500">*</span></label>
-                <p-select id="type" [options]="elementTypes" formControlName="elementType" placeholder="اختر النوع" styleClass="w-full" class="w-full"></p-select>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">نوع البند <span class="text-red-500">*</span></label>
+                <p-select [options]="elementTypes" formControlName="elementType" placeholder="اختر النوع" 
+                    styleClass="w-full !h-9 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] flex items-center" 
+                    class="w-full"></p-select>
             </div>
-            <div class="flex flex-col gap-2">
-                <label for="percent" class="text-sm font-medium text-slate-700 dark:text-zinc-300">النسبة الافتراضية</label>
-                <p-inputNumber id="percent" formControlName="defaultPercentage" [min]="0" [max]="100" suffix="%" styleClass="w-full" class="w-full"></p-inputNumber>
+            <div class="flex flex-col gap-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">النسبة الافتراضية</label>
+                <p-inputNumber formControlName="defaultPercentage" [min]="0" [max]="100" suffix="%" 
+                    styleClass="w-full" class="w-full"
+                    inputStyleClass="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] font-mono focus:!bg-white dark:focus:!bg-slate-900 focus:!border-emerald-500 transition-all"></p-inputNumber>
             </div>
         </div>
 
         <!-- Toggles -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+            <div class="h-9 flex items-center gap-2 px-3 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                 (click)="form.get('isTaxable')?.setValue(!form.get('isTaxable')?.value)">
                 <p-checkbox formControlName="isTaxable" [binary]="true" inputId="tax"></p-checkbox>
-                <label for="tax" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">خاضع للضريبة</label>
+                <label class="cursor-pointer text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-grow select-none">خاضع للضريبة</label>
             </div>
-            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+            
+            <div class="h-9 flex items-center gap-2 px-3 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                 (click)="form.get('isGosiBase')?.setValue(!form.get('isGosiBase')?.value)">
                 <p-checkbox formControlName="isGosiBase" [binary]="true" inputId="gosi"></p-checkbox>
-                <label for="gosi" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">خاضع للتأمين (GOSI)</label>
+                <label class="cursor-pointer text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-grow select-none">خاضع للتأمين (GOSI)</label>
             </div>
-            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+            
+            <div class="h-9 flex items-center gap-2 px-3 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                 (click)="form.get('isRecurring')?.setValue(!form.get('isRecurring')?.value)">
                 <p-checkbox formControlName="isRecurring" [binary]="true" inputId="rec"></p-checkbox>
-                <label for="rec" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">بند متكرر شهرياً</label>
+                <label class="cursor-pointer text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-grow select-none">بند متكرر شهرياً</label>
             </div>
-            <div class="flex items-center gap-2 bg-slate-50 dark:bg-zinc-800 p-3 rounded-xl border border-slate-100 dark:border-zinc-700">
+            
+            <div class="h-9 flex items-center gap-2 px-3 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                 (click)="form.get('isBasic')?.setValue(!form.get('isBasic')?.value)">
                 <p-checkbox formControlName="isBasic" [binary]="true" inputId="basic"></p-checkbox>
-                <label for="basic" class="text-sm text-slate-700 dark:text-zinc-300 cursor-pointer select-none">راتب أساسي</label>
+                <label class="cursor-pointer text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-grow select-none">راتب أساسي</label>
             </div>
         </div>
 
     </div>
 
     <!-- Actions -->
-    <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
-        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="onCancel()"></button>
-        <button pButton label="حفظ" class="p-button-primary" (click)="onSubmit()" [loading]="loading" [disabled]="form.invalid"></button>
+    <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 mt-auto rounded-b-xl">
+        <button pButton label="إلغاء" type="button"
+            class="p-button-text !h-9 !text-[12px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-5 !rounded-lg transition-colors"
+            (click)="onCancel()">
+        </button>
+        <button pButton [label]="isEditMode ? 'حفظ التغييرات' : 'إضافة البند'" icon="pi pi-check" type="submit" [loading]="loading" [disabled]="form.invalid"
+            class="p-button-primary !h-9 !bg-emerald-600 hover:!bg-emerald-700 !border-none !text-[12px] !px-6 !rounded-lg shadow-sm font-bold transition-colors">
+        </button>
     </div>
-</div>
+</form>

@@ -1,287 +1,268 @@
-<div class="report-container p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-  
-  <!-- Modern Header Section -->
-  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 no-print">
-      <div class="flex items-center gap-3">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
-          <i class="pi pi-chart-bar"></i> التحليلات المالية
-        </div>
-        @if (reportData()) {
-          <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border"
-                [ngClass]="reportData()!.isFinalized ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200 animate-pulse'">
-            {{ reportData()!.isFinalized ? 'تقرير معتمد' : 'عرض تقديري (مسودة)' }}
-          </span>
-        }
+<div
+  class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700"
+  dir="rtl">
+
+  <!-- Header -->
+  <div
+    class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div
+        class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <i class="pi pi-chart-bar text-[11px]"></i>
       </div>
-      <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">التقرير الشهري للرواتب</h1>
-      <p class="text-lg text-slate-500 dark:text-zinc-400 max-w-2xl">نظرة عميقة على توزيع الميزانية وأداء القوى العاملة حسب الأقسام</p>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">التقرير الشهري للرواتب</h3>
+          @if (reportData()) {
+          <span class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest border"
+            [ngClass]="reportData()!.isFinalized ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'">
+            {{ reportData()!.isFinalized ? 'مُعتمد' : 'مُسودة' }}
+          </span>
+          }
+        </div>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">نظرة عميقة على توزيع الميزانية وأداء
+          القوى العاملة</p>
+      </div>
     </div>
 
-    <div class="glass-panel p-4 rounded-3xl flex flex-wrap items-center gap-4 shadow-xl border-white/40">
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-400">الفترة:</span>
-        <select [(ngModel)]="selectedMonth" (change)="loadReport()" class="bg-transparent border-none font-bold text-slate-900 dark:text-white outline-none cursor-pointer">
-          <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
-        </select>
-        <select [(ngModel)]="selectedYear" (change)="loadReport()" class="bg-transparent border-none font-bold text-slate-900 dark:text-white outline-none cursor-pointer">
-          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-        </select>
-      </div>
-      
-      <div class="h-8 w-px bg-slate-200 dark:bg-zinc-800 hidden md:block"></div>
+    <div class="flex items-center gap-2">
+      <!-- Month & Year -->
+      <select [(ngModel)]="selectedMonth" (change)="loadReport()"
+        class="!h-8 !px-2 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] !font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-blue-500 transition-all">
+        <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+      </select>
+      <select [(ngModel)]="selectedYear" (change)="loadReport()"
+        class="!h-8 !px-2 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] !font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-blue-500 transition-all">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
 
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-400">القسم:</span>
-        <select [(ngModel)]="selectedDept" (change)="loadReport()" class="bg-transparent border-none font-bold text-slate-900 dark:text-white outline-none cursor-pointer min-w-[120px]">
-          <option [ngValue]="null">جميع الأقسام</option>
-          <option *ngFor="let dept of departments()" [value]="dept.departmentId">{{ dept.deptNameAr }}</option>
-        </select>
-      </div>
+      <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1 hidden md:block"></div>
 
-      <p-button icon="pi pi-print" severity="secondary" [rounded]="true" (onClick)="exportPDF()" pTooltip="طباعة التقرير" tooltipPosition="bottom"></p-button>
+      <!-- Department -->
+      <select [(ngModel)]="selectedDept" (change)="loadReport()"
+        class="!h-8 !px-2 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] !font-bold text-slate-700 dark:text-slate-300 outline-none cursor-pointer focus:border-blue-500 transition-all min-w-[100px]">
+        <option [ngValue]="null">جميع الأقسام</option>
+        <option *ngFor="let dept of departments()" [value]="dept.departmentId">{{ dept.deptNameAr }}</option>
+      </select>
+
+      <button pButton icon="pi pi-print" title="طباعة التقرير"
+        class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+        (click)="exportPDF()"></button>
     </div>
   </div>
 
   @if (loading()) {
-    <div class="flex flex-col items-center justify-center py-32 space-y-4">
-      <div class="relative w-16 h-16">
-        <div class="absolute inset-0 border-4 border-blue-500/10 rounded-full"></div>
-        <div class="absolute inset-0 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-      <p class="text-slate-500 font-medium animate-pulse">جاري تحليل البيانات المالية...</p>
+  <div class="flex flex-col items-center justify-center py-20 space-y-3">
+    <div class="relative w-8 h-8">
+      <div class="absolute inset-0 border-2 border-blue-500/10 rounded-full"></div>
+      <div class="absolute inset-0 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
     </div>
+    <p class="text-[10px] text-slate-500 font-bold">جاري تحليل البيانات...</p>
+  </div>
   } @else if (reportData()) {
-    
-    <!-- KPI Dashboard Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Net Salaries -->
-      <div class="card-stat card-stat-blue p-6 rounded-3xl group">
-        <div class="flex justify-between items-start">
-          <div class="space-y-1">
-            <p class="text-sm font-bold text-slate-400 uppercase tracking-tighter">صافي المنصرف</p>
-            <h3 class="text-3xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
-              {{ formatCurrency(reportData()!.totalNetSalaries) }}
-            </h3>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 transition-transform group-hover:rotate-12">
-            <i class="pi pi-wallet text-xl"></i>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center gap-2 text-xs">
-          <span class="px-2 py-0.5 rounded-full font-bold" 
-                [ngClass]="reportData()!.isFinalized ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'">
-            {{ reportData()!.isFinalized ? 'دقة مالية' : 'بيانات تقديرية' }}
-          </span>
-          <span class="text-slate-400">{{ reportData()!.isFinalized ? 'بناءً على المعالجة المعتمدة' : 'بناءً على الهيكل الحالي' }}</span>
-        </div>
-      </div>
 
-      <!-- Employees Count -->
-      <div class="card-stat card-stat-purple p-6 rounded-3xl group">
-        <div class="flex justify-between items-start">
-          <div class="space-y-1">
-            <p class="text-sm font-bold text-slate-400 uppercase tracking-tighter">إجمالي الكادر</p>
-            <h3 class="text-3xl font-black text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors">
-              {{ reportData()!.totalEmployees }}
-            </h3>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 transition-transform group-hover:rotate-12">
-            <i class="pi pi-users text-xl"></i>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center gap-4 text-xs">
-          <div class="flex -space-x-2">
-            <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
-            <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-300"></div>
-            <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-400"></div>
-          </div>
-          <span class="text-slate-400">موظفين نشطين</span>
-        </div>
+  <!-- KPI Dashboard Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+    <!-- Net Salaries -->
+    <div
+      class="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30 flex justify-between items-start group hover:border-blue-300 dark:hover:border-blue-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-tighter mb-0.5">صافي المنصرف
+        </p>
+        <h3 class="text-lg font-black text-blue-800 dark:text-blue-200 font-mono">{{
+          formatCurrency(reportData()!.totalNetSalaries) }}</h3>
+        <p class="text-[7px] text-blue-500/70 mt-1 font-bold">{{ reportData()!.isFinalized ? 'بناءً على المعالجة' :
+          'هيكل حالي' }}</p>
       </div>
-
-      <!-- Allowances -->
-      <div class="card-stat card-stat-emerald p-6 rounded-3xl group">
-        <div class="flex justify-between items-start">
-          <div class="space-y-1">
-            <p class="text-sm font-bold text-slate-400 uppercase tracking-tighter">البدلات المنصرفة</p>
-            <h3 class="text-3xl font-black text-emerald-600 transition-colors">
-              +{{ formatCurrency(reportData()!.totalAllowances) }}
-            </h3>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 transition-transform group-hover:rotate-12">
-            <i class="pi pi-plus-circle text-xl"></i>
-          </div>
-        </div>
-        <div class="mt-4 text-xs text-slate-400">
-          تمثل <span class="font-bold text-slate-900 dark:text-white">{{ ((reportData()!.totalAllowances / reportData()!.totalBasicSalaries) * 100) | number:'1.0-1' }}%</span> من الراتب
-        </div>
-      </div>
-
-      <!-- Deductions -->
-      <div class="card-stat card-stat-rose p-6 rounded-3xl group">
-        <div class="flex justify-between items-start">
-          <div class="space-y-1">
-            <p class="text-sm font-bold text-slate-400 uppercase tracking-tighter">إجمالي الخصومات</p>
-            <h3 class="text-3xl font-black text-rose-600 transition-colors">
-              -{{ formatCurrency(reportData()!.totalDeductions) }}
-            </h3>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center text-rose-600 transition-transform group-hover:rotate-12">
-            <i class="pi pi-minus-circle text-xl"></i>
-          </div>
-        </div>
-        <div class="mt-4 text-xs text-slate-400">
-          خصومات جزاءات وسلف وغيرها
-        </div>
+      <div class="w-8 h-8 rounded-md bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600">
+        <i class="pi pi-wallet text-[14px]"></i>
       </div>
     </div>
 
-    <!-- Analytics Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <!-- Visual Chart Card -->
-      <div class="lg:col-span-8 glass-panel p-8 rounded-[40px] shadow-2xl relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 relative z-10">
-          <div>
-            <h3 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">تحليل الأقسام التفاعلي</h3>
-            <p class="text-slate-400 text-sm">مقارنة التكاليف بأعداد الموظفين لكل قسم</p>
-          </div>
-          <div class="flex items-center gap-6 p-2 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl no-print">
-            <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-zinc-300">
-              <span class="w-3 h-3 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50"></span> الرواتب
-            </div>
-            <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-zinc-300">
-              <span class="w-3 h-3 rounded-full bg-pink-500 shadow-lg shadow-pink-500/50"></span> الكادر
-            </div>
-          </div>
-        </div>
-
-        <div class="h-[450px] relative z-10 w-full transition-transform duration-500 group-hover:scale-[1.01]">
-          <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart>
-        </div>
+    <!-- Employees Count -->
+    <div
+      class="bg-purple-50 dark:bg-purple-900/10 p-3 rounded-lg border border-purple-100 dark:border-purple-900/30 flex justify-between items-start group hover:border-purple-300 dark:hover:border-purple-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-purple-700 dark:text-purple-300 uppercase tracking-tighter mb-0.5">إجمالي
+          الكادر</p>
+        <h3 class="text-lg font-black text-purple-800 dark:text-purple-200 font-mono">{{ reportData()!.totalEmployees }}
+        </h3>
+        <p class="text-[7px] text-purple-500/70 mt-1 font-bold">موظفين نشطين</p>
       </div>
-
-      <!-- Insights & Ranking Side Panel -->
-      <div class="lg:col-span-4 space-y-8">
-        <!-- Rankings -->
-        <div class="glass-panel p-8 rounded-[40px] shadow-lg border-indigo-50 dark:border-zinc-800">
-          <h3 class="text-lg font-black text-slate-900 dark:text-white mb-8 flex items-center gap-2">
-            <i class="pi pi-sort-amount-down text-blue-600"></i>
-            أعلى الأقسام من حيث الأعباء
-          </h3>
-          
-          <div class="space-y-8">
-            <div *ngFor="let dept of reportData()!.departmentBreakdown | slice:0:4; let i = index" class="space-y-3">
-              <div class="flex justify-between items-end">
-                <div class="flex items-center gap-3">
-                  <span class="text-2xl font-black text-slate-200 dark:text-zinc-800">0{{i+1}}</span>
-                  <div>
-                    <h4 class="text-sm font-bold text-slate-700 dark:text-zinc-200">{{ dept.departmentName }}</h4>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ dept.employeeCount }} موظف</p>
-                  </div>
-                </div>
-                <div class="text-left">
-                  <p class="text-sm font-black text-blue-600">{{ formatCurrency(dept.totalNetSalaries) }}</p>
-                </div>
-              </div>
-              <div class="dept-bar">
-                <div class="progress" [style.width.%]="(dept.totalNetSalaries / reportData()!.totalNetSalaries) * 100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Info Widget -->
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
-          <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full -mb-16 -mr-16 blur-2xl"></div>
-          <i class="pi pi-info-circle text-blue-400 text-3xl mb-4 block"></i>
-          <h4 class="font-bold text-lg mb-2">{{ reportData()!.isFinalized ? 'تأكيد البيانات' : 'ملاحظة العرض التقديري' }}</h4>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {{ reportData()!.isFinalized 
-               ? 'هذه البيانات تعكس الأرقام النهائية بعد احتساب جميع متغيرات الرواتب، بما في ذلك الحضور، الإضافي، وجزاءات الغياب.'
-               : 'هذا العرض تقديري بناءً على الرواتب الأساسية والبدلات الثابتة والأقساط النشطة. الأرقام النهائية قد تختلف بعد معالجة الحضور والغياب.' }}
-          </p>
-          <button class="mt-6 text-xs font-bold text-blue-400 flex items-center gap-2 hover:gap-3 transition-all no-print">
-            عرض الأرشيف السابق <i class="pi pi-arrow-left"></i>
-          </button>
-        </div>
+      <div
+        class="w-8 h-8 rounded-md bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600">
+        <i class="pi pi-users text-[14px]"></i>
       </div>
     </div>
 
-    <!-- Comprehensive Data Table -->
-    <div class="glass-panel rounded-[40px] shadow-2xl overflow-hidden border-none backdrop-blur-3xl bg-white/90">
-      <div class="p-8 border-b border-slate-100 dark:border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <!-- Allowances -->
+    <div
+      class="bg-emerald-50 dark:bg-emerald-900/10 p-3 rounded-lg border border-emerald-100 dark:border-emerald-900/30 flex justify-between items-start group hover:border-emerald-300 dark:hover:border-emerald-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-tighter mb-0.5">البدلات
+        </p>
+        <h3 class="text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">+{{
+          formatCurrency(reportData()!.totalAllowances) }}</h3>
+        <p class="text-[7px] text-emerald-500/70 mt-1 font-bold">{{ ((reportData()!.totalAllowances /
+          reportData()!.totalBasicSalaries) * 100) | number:'1.0-1' }}% من الراتب</p>
+      </div>
+      <div
+        class="w-8 h-8 rounded-md bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600">
+        <i class="pi pi-plus-circle text-[14px]"></i>
+      </div>
+    </div>
+
+    <!-- Deductions -->
+    <div
+      class="bg-rose-50 dark:bg-rose-900/10 p-3 rounded-lg border border-rose-100 dark:border-rose-900/30 flex justify-between items-start group hover:border-rose-300 dark:hover:border-rose-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-rose-700 dark:text-rose-300 uppercase tracking-tighter mb-0.5">الخصومات</p>
+        <h3 class="text-lg font-black text-rose-600 dark:text-rose-400 font-mono">-{{
+          formatCurrency(reportData()!.totalDeductions) }}</h3>
+        <p class="text-[7px] text-rose-500/70 mt-1 font-bold">جزاءات وسلف</p>
+      </div>
+      <div class="w-8 h-8 rounded-md bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center text-rose-600">
+        <i class="pi pi-minus-circle text-[14px]"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout Container -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+    <!-- Chart -->
+    <div
+      class="lg:col-span-8 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
         <div>
-          <h3 class="text-2xl font-black text-slate-900 dark:text-white">جدول البيانات التحليلي</h3>
-          <p class="text-sm text-slate-400 mt-1">تفريغ دقيق لكافة البنود المالية حسب القسم المختص</p>
+          <h3 class="text-[10px] font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">تحليل الأقسام
+          </h3>
         </div>
-        <div class="flex items-center gap-3 no-print">
-          <p-button icon="pi pi-file-excel" label="تصدير كـ Excel" severity="success" [text]="true" [rounded]="true"></p-button>
-          <p-button icon="pi pi-file-pdf" label="تصدير كـ PDF" severity="danger" [text]="true" [rounded]="true"></p-button>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5 text-[9px] font-bold text-slate-500">
+            <span class="w-2 h-2 rounded bg-blue-500"></span> الرواتب
+          </div>
+          <div class="flex items-center gap-1.5 text-[9px] font-bold text-slate-500">
+            <span class="w-2 h-2 rounded bg-pink-500"></span> الكادر
+          </div>
         </div>
       </div>
+      <div class="h-64 w-full">
+        <p-chart type="bar" [data]="chartData" [options]="chartOptions" height="100%"></p-chart>
+      </div>
+    </div>
 
-      <p-table 
-        [value]="reportData()!.departmentBreakdown" 
-        [responsiveLayout]="'scroll'"
-        styleClass="p-datatable-lg p-datatable-gridlines no-border"
-      >
-        <ng-template pTemplate="header">
-          <tr class="bg-slate-50/50 dark:bg-zinc-800/50">
-            <th class="!bg-transparent text-slate-900 font-black">القسم</th>
-            <th class="!bg-transparent text-center font-black">الكادر</th>
-            <th class="!bg-transparent text-left font-black">الأساسي</th>
-            <th class="!bg-transparent text-left font-black">البدلات</th>
-            <th class="!bg-transparent text-left font-black">الخصومات</th>
-            <th class="!bg-transparent text-left font-black">الصافي المنصرف</th>
-            <th class="!bg-transparent text-center font-black">الحالة</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-dept>
-          <tr class="hover:bg-blue-50/20 dark:hover:bg-blue-900/10 transition-colors cursor-default border-slate-50 dark:border-zinc-800">
-            <td class="font-bold text-slate-700 dark:text-zinc-200">
-              <div class="flex items-center gap-3">
-                <div class="w-1.5 h-6 rounded-full bg-blue-500"></div>
-                {{ dept.departmentName }}
+    <!-- Rankings -->
+    <div
+      class="lg:col-span-4 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-700 rounded-xl p-4 flex flex-col gap-3">
+      <h3
+        class="text-[10px] font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center gap-1.5">
+        <i class="pi pi-sort-amount-down text-blue-600 text-[10px]"></i> أعلى الأقسام
+      </h3>
+
+      <div class="flex flex-col gap-3">
+        <div *ngFor="let dept of reportData()!.departmentBreakdown | slice:0:4; let i = index"
+          class="flex flex-col gap-1.5">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-slate-300 dark:text-slate-600">0{{i+1}}</span>
+              <div>
+                <h4 class="text-[9px] font-bold text-slate-700 dark:text-slate-200">{{ dept.departmentName }}</h4>
+                <p class="text-[8px] font-medium text-slate-500">{{ dept.employeeCount }} موظف</p>
               </div>
-            </td>
-            <td class="text-center">
-              <span class="px-3 py-1 rounded-xl bg-slate-100 dark:bg-zinc-800 text-xs font-black text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700">
-                {{ dept.employeeCount }}
-              </span>
-            </td>
-            <td class="text-left font-medium">{{ formatCurrency(dept.totalBasicSalaries) }}</td>
-            <td class="text-left font-bold text-emerald-600">+{{ formatCurrency(dept.totalAllowances) }}</td>
-            <td class="text-left font-bold text-rose-600">-{{ formatCurrency(dept.totalDeductions) }}</td>
-            <td class="text-left">
-              <span class="text-lg font-black" [ngClass]="dept.totalNetSalaries < 0 ? 'text-rose-600' : 'text-blue-600'">
-                {{ formatCurrency(dept.totalNetSalaries) }}
-              </span>
-            </td>
-            <td class="text-center">
-              <i class="pi" 
-                 [ngClass]="{
+            </div>
+            <span class="text-[10px] font-black text-blue-600 font-mono">{{ formatCurrency(dept.totalNetSalaries)
+              }}</span>
+          </div>
+          <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500 rounded-full"
+              [style.width.%]="(dept.totalNetSalaries / reportData()!.totalNetSalaries) * 100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Data Table -->
+  <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col mt-2">
+    <div
+      class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800 px-3 py-2 flex items-center justify-between">
+      <h3 class="text-[10px] font-bold text-slate-800 dark:text-slate-200">الجدول التحليلي للأقسام</h3>
+      <div class="flex items-center gap-1.5 no-print">
+        <button pButton icon="pi pi-file-excel" class="p-button-text p-button-success !w-6 !h-6 !p-0 !text-[11px]"
+          title="Excel"></button>
+        <button pButton icon="pi pi-file-pdf" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-[11px]"
+          title="PDF"></button>
+      </div>
+    </div>
+
+    <p-table [value]="reportData()!.departmentBreakdown" styleClass="p-datatable-sm clean-table">
+      <ng-template pTemplate="header">
+        <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">القسم</th>
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">
+            الكادر</th>
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-left">
+            الأساسي</th>
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-left">
+            البدلات</th>
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-left">
+            الخصومات</th>
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-left">الصافي
+            المنصرف</th>
+          <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">
+            الحالة</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dept>
+        <tr
+          class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+          <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">
+            <div class="flex items-center gap-1.5">
+              <div class="w-1 h-3 rounded-full bg-blue-500"></div>
+              {{ dept.departmentName }}
+            </div>
+          </td>
+          <td class="!px-3 !py-1.5 !border-none text-center">
+            <span
+              class="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[9px] font-mono font-black text-slate-600 dark:text-slate-400">
+              {{ dept.employeeCount }}
+            </span>
+          </td>
+          <td class="!px-3 !py-1.5 !border-none text-left font-mono text-[9px] font-medium">{{
+            formatCurrency(dept.totalBasicSalaries) }}</td>
+          <td class="!px-3 !py-1.5 !border-none text-left font-mono text-[9px] font-bold text-emerald-600">+{{
+            formatCurrency(dept.totalAllowances) }}</td>
+          <td class="!px-3 !py-1.5 !border-none text-left font-mono text-[9px] font-bold text-rose-600">-{{
+            formatCurrency(dept.totalDeductions) }}</td>
+          <td class="!px-3 !py-1.5 !border-none text-left">
+            <span class="text-[10px] font-mono font-black"
+              [ngClass]="dept.totalNetSalaries < 0 ? 'text-rose-600' : 'text-blue-600'">
+              {{ formatCurrency(dept.totalNetSalaries) }}
+            </span>
+          </td>
+          <td class="!px-3 !py-1.5 !border-none text-center">
+            <i class="pi text-[10px]" [ngClass]="{
                    'pi-check-circle text-emerald-500': reportData()!.isFinalized,
                    'pi-clock text-amber-500': !reportData()!.isFinalized
-                 }"
-                 [pTooltip]="reportData()!.isFinalized ? 'تمت المعالجة واعتماده' : 'عرض تقديري لم يعالج بعد'"></i>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+                 }"></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 
   } @else {
-    <div class="glass-panel p-32 rounded-[40px] text-center space-y-6">
-      <div class="w-32 h-32 bg-slate-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
-        <i class="pi pi-inbox text-5xl text-slate-300"></i>
-      </div>
-      <div class="space-y-2">
-        <h3 class="text-2xl font-black text-slate-900 dark:text-white mt-1">لا توجد سجلات مالية</h3>
-        <p class="text-slate-400 max-w-md mx-auto">لم يتم العثور على حركات مالية لهذا الشهر أو لهذا القسم المحدد. يرجى مراجعة نظام معالجة الرواتب.</p>
-      </div>
-      <p-button label="محاولة تحديث البيانات" icon="pi pi-refresh" [rounded]="true" (onClick)="loadReport()"></p-button>
+  <div class="flex flex-col items-center justify-center py-16 text-center">
+    <div class="w-12 h-12 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-3">
+      <i class="pi pi-inbox text-xl text-slate-300 dark:text-slate-600"></i>
     </div>
+    <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-1">لا توجد سجلات مالية</h3>
+    <p class="text-[9px] text-slate-500 mb-4 max-w-xs">لم يتم العثور على حركات مالية لهذا الشهر أو لهذا القسم المحدد.
+    </p>
+    <button pButton label="تحديث البيانات" icon="pi pi-refresh" (click)="loadReport()"
+      class="p-button-primary !h-8 !text-[10px] !font-bold !rounded-md !px-4 shadow-sm"></button>
+  </div>
   }
+</div>

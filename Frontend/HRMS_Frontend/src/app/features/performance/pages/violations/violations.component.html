@@ -1,246 +1,251 @@
-<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
     <!-- Header -->
-    <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50 border-b border-slate-100">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">المخالفات والجزاءات</h2>
-            <p class="text-slate-500 text-sm mt-1">سجل المخالفات الإدارية وإجراءات الاعتماد</p>
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm border border-rose-100 dark:border-rose-900/30">
+                <i class="pi pi-exclamation-triangle text-[11px]"></i>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">المخالفات والجزاءات</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">سجل المخالفات الإدارية وإجراءات الاعتماد</p>
+            </div>
         </div>
-        <div class="flex gap-3">
-            <span class="p-input-icon-left">
-                <i class="pi pi-search text-slate-400"></i>
+        <div class="flex items-center gap-2">
+            <span class="p-input-icon-left relative">
+                <i class="pi pi-search absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
                 <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                    placeholder="بحث..." class="p-inputtext-sm w-full md:w-64 border-slate-200 focus:border-red-500" />
+                    placeholder="بحث..." class="p-inputtext-sm w-full md:w-56 pl-7 !text-[10px]" />
             </span>
-            <button pButton label="تسجيل مخالفة" icon="pi pi-plus" class="p-button-danger p-button-sm shadow-none"
+            <button pButton label="تسجيل مخالفة" icon="pi pi-plus" class="p-button-danger !h-8 !px-3 !py-0 !text-[10px] !font-bold shadow-sm"
                 (click)="openNew()"></button>
         </div>
     </div>
 
     <!-- Table -->
-    <p-table #dt [value]="violations()" [loading]="loading()" [rowHover]="true" styleClass="p-datatable-striped"
-        responsiveLayout="scroll" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
-        [globalFilterFields]="['employeeName', 'violationTypeNameAr', 'status']"
-        currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} مخالفة">
+    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
+        <p-table #dt [value]="violations()" [loading]="loading()" styleClass="p-datatable-sm clean-table"
+            responsiveLayout="scroll" [paginator]="true" [rows]="10"
+            [globalFilterFields]="['employeeName', 'violationTypeNameAr', 'status']"
+            currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} مخالفة">
 
-        <ng-template pTemplate="header">
-            <tr class="bg-slate-50 text-slate-600 text-sm uppercase tracking-wider">
-                <th class="font-semibold p-4">الموظف</th>
-                <th class="font-semibold p-4">نوع المخالفة</th>
-                <th class="font-semibold p-4">التاريخ</th>
-                <th class="font-semibold p-4">الإجراء المقترح</th>
-                <th class="font-semibold p-4">الخصم (أيام)</th>
-                <th class="font-semibold p-4">الحالة</th>
-                <th class="font-semibold p-4 text-center">الإجراءات</th>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="header">
+                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">نوع المخالفة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التاريخ</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الإجراء المقترح</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الخصم (أيام)</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center" style="width:100px">الإجراءات</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-v>
-            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                <td class="p-4 font-medium text-slate-800">{{ v.employeeName }}</td>
-                <td class="p-4">
-                    <span
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-800">
-                        {{ v.violationTypeNameAr }}
-                    </span>
-                </td>
-                <td class="p-4 text-slate-500">{{ v.violationDate | date:'yyyy-MM-dd' }}</td>
-                <td class="p-4 text-slate-600">
-                    <span *ngIf="v.actionNameAr" class="font-medium text-slate-700">{{ v.actionNameAr }}</span>
-                    <button *ngIf="!v.actionNameAr && (v.status === 'PENDING' || !v.status)" pButton
-                        label="تحديد الإجراء" icon="pi pi-plus-circle"
-                        class="p-button-sm p-button-outlined p-button-warning rounded-lg py-1 px-2 text-[10px]"
-                        (click)="openActionDialog(v)"></button>
-                    <span *ngIf="!v.actionNameAr && v.status === 'APPROVED'"
-                        class="text-emerald-600 font-bold italic flex items-center gap-1">
-                        <i class="pi pi-check text-xs"></i> عفو إداري
-                    </span>
-                </td>
-                <td class="p-4">
-                    <span *ngIf="v.deductionDays > 0" class="font-bold text-red-600">{{ v.deductionDays }} يوم</span>
-                    <span *ngIf="!(v.deductionDays > 0)" class="text-slate-400">-</span>
-                </td>
-                <td class="p-4">
-                    <p-tag
-                        [value]="(v.status?.toUpperCase() === 'APPROVED') ? 'معتمد' : (v.status?.toUpperCase() === 'REJECTED' ? 'مرفوض' : 'قيد الانتظار')"
-                        [severity]="(v.status?.toUpperCase() === 'APPROVED') ? 'success' : (v.status?.toUpperCase() === 'REJECTED' ? 'danger' : 'warn')"
-                        styleClass="text-xs px-2 py-1 uppercase tracking-wide"></p-tag>
-                </td>
-                <td class="p-4 text-center">
-                    <div class="flex justify-center gap-2">
-                        <!-- Approve only if PENDING and Action is set -->
-                        <button *ngIf="(v.status === 'PENDING' || !v.status) && (v.actionId || v.status === 'APPROVED')"
-                            pButton icon="pi pi-check"
-                            class="p-button-rounded p-button-success p-button-text hover:bg-green-50"
-                            pTooltip="اعتماد المخالفة وتطبيق الجزاء" tooltipPosition="top"
-                            (click)="approve(v)"></button>
+            <ng-template pTemplate="body" let-v>
+                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                    <td class="!px-3 !py-2 !border-none">
+                        <span class="font-bold text-[10px] text-slate-800 dark:text-slate-200">{{ v.employeeName }}</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none">
+                        <span
+                            class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-100 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-900/50">
+                            {{ v.violationTypeNameAr }}
+                        </span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                        {{ v.violationDate | date:'yyyy-MM-dd' }}
+                    </td>
+                    <td class="!px-3 !py-2 !border-none">
+                        <span *ngIf="v.actionNameAr" class="font-bold text-[9px] text-slate-700 dark:text-slate-300">{{ v.actionNameAr }}</span>
+                        <button *ngIf="!v.actionNameAr && (v.status === 'PENDING' || !v.status)" pButton
+                            label="تحديد الإجراء" icon="pi pi-plus-circle"
+                            class="p-button-outlined p-button-warning !h-6 !px-2 !py-0 !text-[8px] !font-bold shadow-sm"
+                            (click)="openActionDialog(v)"></button>
+                        <span *ngIf="!v.actionNameAr && v.status === 'APPROVED'"
+                            class="text-emerald-600 dark:text-emerald-400 font-bold italic text-[9px] flex items-center gap-1">
+                            <i class="pi pi-check text-[8px]"></i> عفو إداري
+                        </span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <span *ngIf="v.deductionDays > 0" class="font-bold text-[10px] text-rose-600 dark:text-rose-400">{{ v.deductionDays }} يوم</span>
+                        <span *ngIf="!(v.deductionDays > 0)" class="text-slate-400 dark:text-slate-500 font-bold text-[9px]">-</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <p-tag
+                            [value]="(v.status?.toUpperCase() === 'APPROVED') ? 'معتمد' : (v.status?.toUpperCase() === 'REJECTED' ? 'مرفوض' : 'قيد الانتظار')"
+                            [severity]="(v.status?.toUpperCase() === 'APPROVED') ? 'success' : (v.status?.toUpperCase() === 'REJECTED' ? 'danger' : 'warn')"
+                            styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <div class="flex justify-center gap-1.5">
+                            <!-- Approve only if PENDING and Action is set -->
+                            <button *ngIf="(v.status === 'PENDING' || !v.status) && (v.actionId || v.status === 'APPROVED')"
+                                pButton icon="pi pi-check"
+                                class="p-button-text p-button-success !w-6 !h-6 !p-0 !text-[10px]"
+                                title="اعتماد المخالفة وتطبيق الجزاء"
+                                (click)="approve(v)"></button>
 
-                        <button *ngIf="v.status === 'PENDING' || !v.status" pButton icon="pi pi-pencil"
-                            class="p-button-rounded p-button-info p-button-text hover:bg-blue-50"
-                            pTooltip="تعديل البيانات" tooltipPosition="top" (click)="edit(v)"></button>
+                            <button *ngIf="v.status === 'PENDING' || !v.status" pButton icon="pi pi-pencil"
+                                class="p-button-text p-button-info !w-6 !h-6 !p-0 !text-[10px]"
+                                title="تعديل البيانات" (click)="edit(v)"></button>
 
-                        <button *ngIf="v.status === 'PENDING' || !v.status" pButton icon="pi pi-trash"
-                            class="p-button-rounded p-button-danger p-button-text hover:bg-red-50" pTooltip="حذف"
-                            tooltipPosition="top" (click)="delete(v)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+                            <button *ngIf="v.status === 'PENDING' || !v.status" pButton icon="pi pi-trash"
+                                class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-[10px]" title="حذف"
+                                (click)="delete(v)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7" class="text-center p-8">
-                    <div class="flex flex-col items-center justify-center text-slate-400">
-                        <i class="pi pi-inbox text-4xl mb-2 opacity-50"></i>
-                        <p>لا توجد مخالفات مسجلة حالياً</p>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center py-8 bg-slate-50/50 dark:bg-slate-800/30">
+                        <i class="pi pi-inbox text-2xl text-slate-300 dark:text-slate-600 block mb-2"></i>
+                        <span class="text-[10px] font-bold text-slate-500">لا توجد مخالفات مسجلة حالياً</span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
 <!-- Registration/Edit Dialog -->
-<p-dialog [(visible)]="showDialog" [style]="{width: '500px'}" header="تسجيل مخالفة إدارية" [modal]="true"
-    [draggable]="false" [resizable]="false" styleClass="p-fluid rounded-xl overflow-hidden">
-    <ng-template pTemplate="content">
-        <form [formGroup]="form" class="mt-2">
-
-            <!-- Employee -->
-            <div class="field mb-5">
-                <label class="block text-slate-700 font-bold mb-2 text-sm">الموظف <span
-                        class="text-red-500">*</span></label>
-                <div class="bg-slate-50 rounded-lg p-1">
+<p-dialog [(visible)]="showDialog" header="تسجيل مخالفة إدارية" [modal]="true"
+    [draggable]="false" [style]="{width: '450px'}" styleClass="p-fluid">
+    <div class="pt-2">
+        <form [formGroup]="form">
+            <div class="grid grid-cols-1 gap-3">
+                <!-- Employee -->
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">الموظف <span
+                            class="text-rose-500">*</span></label>
                     <p-select [options]="employees()" formControlName="employeeId" optionLabel="label"
                         optionValue="value" placeholder="اختر الموظف" [filter]="true" appendTo="body"
-                        styleClass="w-full border-0 bg-transparent shadow-none"
+                        styleClass="p-inputtext-sm w-full"
                         [class.ng-dirty]="submitted && form.controls['employeeId'].invalid"></p-select>
-                </div>
-                <small class="text-red-500" *ngIf="submitted && form.controls['employeeId'].invalid">الموظف
-                    مطلوب</small>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Violation Type -->
-                <div class="field mb-5">
-                    <label class="block text-slate-700 font-bold mb-2 text-sm">نوع المخالفة <span
-                            class="text-red-500">*</span></label>
-                    <p-select [options]="violationTypes()" formControlName="violationTypeId"
-                        optionLabel="violationNameAr" optionValue="violationTypeId" placeholder="نوع المخالفة"
-                        appendTo="body" styleClass="w-full"></p-select>
-                    <small class="text-red-500" *ngIf="submitted && form.controls['violationTypeId'].invalid">نوع
-                        المخالفة مطلوب</small>
-                </div>
-
-                <!-- Date -->
-                <div class="field mb-5">
-                    <label class="block text-slate-700 font-bold mb-2 text-sm">تاريخ المخالفة <span
-                            class="text-red-500">*</span></label>
-                    <p-datepicker formControlName="violationDate" appendTo="body" dateFormat="yy-mm-dd"
-                        [showIcon]="true" styleClass="w-full"></p-datepicker>
-                    <small class="text-red-500" *ngIf="submitted && form.controls['violationDate'].invalid">التاريخ
+                    <small class="text-rose-500 text-[8px] mt-0.5 block font-bold" *ngIf="submitted && form.controls['employeeId'].invalid">الموظف
                         مطلوب</small>
                 </div>
-            </div>
 
-            <!-- Description -->
-            <div class="field mb-2">
-                <label class="block text-slate-700 font-bold mb-2 text-sm">تفاصيل المخالفة</label>
-                <textarea pTextarea formControlName="description" rows="4"
-                    class="w-full !p-3 !border-slate-300 !rounded-xl focus:!border-red-500 !text-sm shadow-sm"
-                    placeholder="أدخل تفاصيل المخالفة هنا..."></textarea>
-            </div>
+                <div class="grid grid-cols-2 gap-3 col-span-1">
+                    <!-- Violation Type -->
+                    <div class="col-span-1">
+                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">نوع المخالفة <span
+                                class="text-rose-500">*</span></label>
+                        <p-select [options]="violationTypes()" formControlName="violationTypeId"
+                            optionLabel="violationNameAr" optionValue="violationTypeId" placeholder="نوع المخالفة"
+                            appendTo="body" styleClass="p-inputtext-sm w-full"></p-select>
+                        <small class="text-rose-500 text-[8px] mt-0.5 block font-bold" *ngIf="submitted && form.controls['violationTypeId'].invalid">نوع
+                            المخالفة مطلوب</small>
+                    </div>
 
+                    <!-- Date -->
+                    <div class="col-span-1">
+                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">تاريخ المخالفة <span
+                                class="text-rose-500">*</span></label>
+                        <p-datepicker formControlName="violationDate" appendTo="body" dateFormat="yy-mm-dd"
+                            [showIcon]="true" styleClass="p-inputtext-sm w-full"></p-datepicker>
+                        <small class="text-rose-500 text-[8px] mt-0.5 block font-bold" *ngIf="submitted && form.controls['violationDate'].invalid">التاريخ
+                            مطلوب</small>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">تفاصيل المخالفة</label>
+                    <textarea pTextarea formControlName="description" rows="3"
+                        class="w-full p-inputtext-sm"
+                        placeholder="أدخل تفاصيل المخالفة هنا..."></textarea>
+                </div>
+            </div>
         </form>
-    </ng-template>
+    </div>
 
     <ng-template pTemplate="footer">
-        <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
-            <button pButton label="إلغاء التعديل" icon="pi pi-times" class="p-button-text p-button-secondary font-bold"
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800 mt-2">
+            <button pButton label="إلغاء التعديل" class="p-button-text p-button-sm !text-[10px] !font-bold"
                 (click)="showDialog = false"></button>
             <button pButton [label]="isEditMode ? 'تحديث البيانات' : 'حفظ وتسجيل المخالفة'"
-                [icon]="isEditMode ? 'pi pi-save' : 'pi pi-check'" class="p-button-danger shadow-md font-bold px-6"
+                [icon]="isEditMode ? 'pi pi-save' : 'pi pi-check'" class="p-button-danger p-button-sm !text-[10px] !font-bold shadow-sm"
                 (click)="save()"></button>
         </div>
     </ng-template>
 </p-dialog>
 
 <!-- Action Assignment Dialog -->
-<p-dialog [(visible)]="showActionDialog" [style]="{width: '500px'}" header="تحديد الإجراء المقترح للمخالفة"
-    [modal]="true" [draggable]="false" [resizable]="false" styleClass="p-fluid rounded-xl overflow-hidden">
-    <ng-template pTemplate="content">
-        <div class="mb-4">
-            <p class="text-slate-500 text-sm">الموظف: <span class="font-bold text-slate-800">{{
-                    currentViolation?.employeeName }}</span></p>
-            <p class="text-slate-500 text-sm">المخالفة: <span class="font-bold text-slate-800">{{
-                    currentViolation?.violationTypeNameAr }}</span></p>
+<p-dialog [(visible)]="showActionDialog" header="تحديد الإجراء المقترح للمخالفة"
+    [modal]="true" [draggable]="false" [style]="{width: '450px'}" styleClass="p-fluid">
+    <div class="pt-2">
+        <div class="mb-4 flex flex-col gap-1">
+            <p class="text-slate-500 dark:text-slate-400 text-[10px]">الموظف: <span class="font-bold text-slate-800 dark:text-slate-200">{{ currentViolation?.employeeName }}</span></p>
+            <p class="text-slate-500 dark:text-slate-400 text-[10px]">المخالفة: <span class="font-bold text-slate-800 dark:text-slate-200">{{ currentViolation?.violationTypeNameAr }}</span></p>
         </div>
 
         <form [formGroup]="form">
             <!-- Proposed Action Category -->
-            <div class="field mb-4">
-                <label class="block text-slate-700 font-bold mb-3 text-sm">نوع الإجراء المقترح <span
-                        class="text-red-500">*</span></label>
-                <div class="flex gap-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <div class="mb-4">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-2">نوع الإجراء المقترح <span
+                        class="text-rose-500">*</span></label>
+                <div class="flex gap-4 p-3 bg-slate-50/50 dark:bg-slate-800/30 rounded-lg border border-slate-100 dark:border-slate-800">
                     <div class="flex items-center gap-2">
                         <p-radioButton name="actionCategory" value="disciplinary" [(ngModel)]="actionCategory"
                             [ngModelOptions]="{standalone: true}" inputId="cat_dialog_1"></p-radioButton>
-                        <label for="cat_dialog_1" class="text-sm font-bold text-slate-700 cursor-pointer">إجراء
+                        <label for="cat_dialog_1" class="text-[10px] font-bold text-slate-700 dark:text-slate-300 cursor-pointer">إجراء
                             تأديبي</label>
                     </div>
                     <div class="flex items-center gap-2">
                         <p-radioButton name="actionCategory" value="amnesty" [(ngModel)]="actionCategory"
                             [ngModelOptions]="{standalone: true}" inputId="cat_dialog_2"></p-radioButton>
                         <label for="cat_dialog_2"
-                            class="text-sm font-bold text-slate-700 cursor-pointer text-emerald-600">عفو إداري</label>
+                            class="text-[10px] font-bold cursor-pointer text-emerald-600 dark:text-emerald-400">عفو إداري</label>
                     </div>
                 </div>
             </div>
 
             <!-- Specific Disciplinary Action -->
-            <div class="field mb-5 animate-in fade-in slide-in-from-top-2 duration-300"
+            <div class="mb-4 animate-in fade-in slide-in-from-top-2 duration-300"
                 *ngIf="actionCategory === 'disciplinary'">
-                <label class="block text-slate-700 font-bold mb-2 text-sm">نوع الجزاء المطبق</label>
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">نوع الجزاء المطبق</label>
                 <p-select [options]="disciplinaryActions()" formControlName="actionId" optionLabel="actionNameAr"
                     optionValue="actionId" placeholder="اختر نوع الجزاء..." appendTo="body"
-                    styleClass="w-full h-11 flex items-center"></p-select>
-                <div class="mt-2 p-2 bg-amber-50 rounded-lg border border-amber-100 flex items-center gap-2"
+                    styleClass="p-inputtext-sm w-full"></p-select>
+                <div class="mt-2 p-2 bg-amber-50 dark:bg-amber-900/10 rounded-md border border-amber-100 dark:border-amber-900/30 flex items-center gap-1.5"
                     *ngIf="form.get('actionId')?.value">
-                    <i class="pi pi-info-circle text-amber-500 text-sm"></i>
-                    <span class="text-[11px] text-amber-700">سيتم تطبيق خصم مالي آلي عند الاعتماد النهائي.</span>
+                    <i class="pi pi-info-circle text-amber-500 text-[10px]"></i>
+                    <span class="text-[9px] font-bold text-amber-700 dark:text-amber-400">سيتم تطبيق خصم مالي آلي عند الاعتماد النهائي.</span>
                 </div>
             </div>
 
             <!-- Amnesty Info -->
-            <div class="field mb-5 animate-in fade-in slide-in-from-top-2 duration-300"
+            <div class="mb-4 animate-in fade-in slide-in-from-top-2 duration-300"
                 *ngIf="actionCategory === 'amnesty'">
-                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
-                    <i class="pi pi-verified text-emerald-500 mt-1"></i>
+                <div class="p-3 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-lg flex items-start gap-2">
+                    <i class="pi pi-verified text-emerald-500 mt-0.5 text-sm"></i>
                     <div>
-                        <h4 class="text-sm font-bold text-emerald-800">قرار عفو إداري</h4>
-                        <p class="text-xs text-emerald-600 mt-1 leading-relaxed">سيتم تسجيل المخالفة كعفو إداري دون أي
+                        <h4 class="text-[10px] font-bold text-emerald-800 dark:text-emerald-300">قرار عفو إداري</h4>
+                        <p class="text-[9px] font-medium text-emerald-600 dark:text-emerald-400 mt-0.5 leading-relaxed">سيتم تسجيل المخالفة كعفو إداري دون أي
                             خصومات مالية من الراتب.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="field">
-                <label class="block text-slate-700 font-bold mb-2 text-sm">ملاحظات عن الإجراء (اختياري)</label>
+            <div class="mb-2">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">ملاحظات عن الإجراء (اختياري)</label>
                 <textarea pTextarea formControlName="description" rows="2"
-                    class="w-full !p-3 !border-slate-300 !rounded-xl focus:!border-red-500 !text-sm"
+                    class="w-full p-inputtext-sm"
                     placeholder="أدخل أي ملاحظات إضافية هنا..."></textarea>
             </div>
         </form>
-    </ng-template>
+    </div>
 
     <ng-template pTemplate="footer">
-        <div class="flex justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
-            <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800 mt-2">
+            <button pButton label="إلغاء" class="p-button-text p-button-sm !text-[10px] !font-bold"
                 (click)="showActionDialog = false"></button>
-            <button pButton label="حفظ الإجراء" icon="pi pi-save" class="p-button-warning shadow-md font-bold px-6"
+            <button pButton label="حفظ الإجراء" icon="pi pi-save" class="p-button-warning p-button-sm !text-[10px] !font-bold shadow-sm"
                 (click)="saveAction()"></button>
         </div>
     </ng-template>
 </p-dialog>
 
 <p-toast position="bottom-left"></p-toast>
-<p-confirmDialog [style]="{width: '400px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>
+<p-confirmDialog [style]="{width: '400px'}"></p-confirmDialog>

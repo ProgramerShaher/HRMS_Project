@@ -1,272 +1,157 @@
-<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-5 duration-1000">
 
-  <!-- Clean Header & Photo Section -->
-  <div
-    class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col lg:flex-row items-start gap-8">
-
-    <!-- Profile Photo -->
-    <div class="relative flex-shrink-0 group/photo">
-      <div
-        class="w-32 h-32 rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center relative">
-        @if (profileImagePreview) {
-        <img [src]="profileImagePreview" alt="Profile" class="w-full h-full object-cover" />
-        } @else {
-        <div class="flex flex-col items-center gap-2 text-slate-300 dark:text-slate-600">
-          <i class="pi pi-user text-4xl opacity-50"></i>
-          <span class="text-[10px] font-bold uppercase tracking-widest">Photo</span>
+  <!-- الصندوق الأول: الاسم والبيانات الشخصية -->
+  <section class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-3">
+    <!-- الترويسة -->
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+          <i class="pi pi-id-card text-[11px]"></i>
         </div>
-        }
-
-        <!-- Hover Overlay -->
-        <div
-          class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-[2px]">
-          <i class="pi pi-camera text-white text-xl"></i>
-        </div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-white">الاسم الكامل والبيانات الشخصية</h3>
       </div>
+      <span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-bold rounded border border-blue-100 dark:border-blue-800/50">أساسي</span>
+    </div>
 
-      <!-- Upload Trigger -->
-      <div class="absolute -bottom-2 -right-2">
-        <p-fileUpload mode="basic" [auto]="true" accept="image/*" maxFileSize="5000000" chooseIcon="pi pi-pencil"
-          styleClass="p-button-rounded p-button-sm !w-8 !h-8 !bg-blue-600 !border-2 !border-white dark:!border-slate-900 !shadow-sm hover:!bg-blue-700 transition-all"
-          (onSelect)="onFileSelect($event)">
-        </p-fileUpload>
+    <!-- الاسم بالعربية -->
+    <div class="grid grid-cols-4 gap-2.5">
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">الاسم الأول <span class="text-red-500">*</span></label>
+        <input pInputText [(ngModel)]="data.firstNameAr" (ngModelChange)="onDataChange()" placeholder="أحمد"
+          class="w-full !h-8 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] !px-2.5 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">اسم الأب <span class="text-red-500">*</span></label>
+        <input pInputText [(ngModel)]="data.secondNameAr" (ngModelChange)="onDataChange()" placeholder="علي"
+          class="w-full !h-8 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] !px-2.5 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">اسم الجد <span class="text-red-500">*</span></label>
+        <input pInputText [(ngModel)]="data.thirdNameAr" (ngModelChange)="onDataChange()" placeholder="يحيى"
+          class="w-full !h-8 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] !px-2.5 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">اللقب <span class="text-red-500">*</span></label>
+        <input pInputText [(ngModel)]="data.lastNameAr" (ngModelChange)="onDataChange()" placeholder="صالح"
+          class="w-full !h-8 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] !px-2.5 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
       </div>
     </div>
 
-    <!-- Header Text -->
-    <div class="flex-grow space-y-4 pt-2">
-      <div class="flex flex-col lg:flex-row justify-between items-start gap-4">
+    <!-- الاسم بالانجليزية -->
+    <div class="space-y-1 mt-1.5">
+      <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Full English Name</label>
+      <input pInputText [(ngModel)]="data.fullNameEn" (ngModelChange)="onDataChange()" (keypress)="validateEnglishName($event)"
+        placeholder="AHMED ALI YAHYA SALEH"
+        class="w-full !h-8 !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[10px] font-mono uppercase focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all"
+        dir="ltr" />
+    </div>
+
+    <!-- البيانات الشخصية -->
+    <div class="grid grid-cols-2 gap-2.5 mt-1.5">
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">تاريخ الميلاد</label>
+        <p-datePicker [(ngModel)]="data.birthDate" (ngModelChange)="onDataChange()" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+          styleClass="w-full"
+          inputStyleClass="!h-8 !py-0 !leading-[30px] !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all"></p-datePicker>
+      </div>
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">الجنسية</label>
+        <p-select [options]="countries" [(ngModel)]="data.nationalityId" (ngModelChange)="onDataChange()"
+          optionLabel="countryNameAr" optionValue="countryId" [filter]="true" appendTo="body" placeholder="اختر الجنسية"
+          panelStyleClass="!text-[11px]"
+          styleClass="w-full !rounded-md !h-8 !text-[11px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-2.5 [&_.p-select-label]:!leading-[30px]"></p-select>
+      </div>
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">الجنس</label>
+        <div class="flex gap-2 h-8">
+          @for (gender of genders; track gender.value) {
+          <button class="flex-1 flex items-center justify-center gap-1.5 rounded-md border transition-all text-[11px] font-bold"
+            [ngClass]="data.gender === gender.value ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-500'"
+            (click)="data.gender = gender.value; onDataChange()">
+            <i [class]="gender.icon" class="text-[10px]"></i>
+            {{ gender.label }}
+          </button>
+          }
+        </div>
+      </div>
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">الحالة الاجتماعية</label>
+        <p-select [options]="maritalStatuses" [(ngModel)]="data.maritalStatus" (ngModelChange)="onDataChange()"
+          optionLabel="label" optionValue="value" appendTo="body" placeholder="اختر الحالة"
+          panelStyleClass="!text-[11px]"
+          styleClass="w-full !rounded-md !h-8 !text-[11px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-2.5 [&_.p-select-label]:!leading-[30px]"></p-select>
+      </div>
+    </div>
+  </section>
+
+  <!-- الصندوق الثاني: البقية (تواصل، هوية، صورة) -->
+  <section class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-3">
+    <!-- الترويسة -->
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+          <i class="pi pi-address-book text-[11px]"></i>
+        </div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-white">الهوية ومعلومات التواصل</h3>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <!-- الصورة الشخصية -->
+      <div class="relative flex-shrink-0 group/photo self-start">
+        <div class="w-20 h-20 rounded-lg overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center relative">
+          @if (profileImagePreview) {
+            <img [src]="profileImagePreview" alt="Profile" class="w-full h-full object-cover" />
+          } @else {
+            <div class="flex flex-col items-center gap-1.5 text-slate-300 dark:text-slate-600">
+              <i class="pi pi-user text-3xl opacity-50"></i>
+            </div>
+          }
+          <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+            <i class="pi pi-camera text-white text-xs"></i>
+          </div>
+        </div>
+        <div class="absolute -bottom-2 -right-2">
+          <p-fileUpload mode="basic" [auto]="true" accept="image/*" maxFileSize="5000000" chooseIcon="pi pi-pencil"
+            styleClass="p-button-rounded p-button-sm !w-7 !h-7 !p-0 !text-[10px] !bg-emerald-600 !border-2 !border-white dark:!border-slate-900 !shadow-sm hover:!bg-emerald-700 transition-all"
+            (onSelect)="onFileSelect($event)">
+          </p-fileUpload>
+        </div>
+      </div>
+
+      <!-- الحقول المتبقية -->
+      <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2.5">
+        
+        <!-- رقم الهوية -->
         <div class="space-y-1">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-tight">البيانات الأساسية للموظف</h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
-            المعلومات الشخصية والوثائق الثبوتية الرسمية
-          </p>
+          <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">رقم الهوية الوطنية</label>
+          <input pInputText [(ngModel)]="data.nationalId" (ngModelChange)="onDataChange()" (keypress)="validateNumber($event)" maxlength="10" placeholder="0000000000"
+            class="w-full !h-8 !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] font-mono tracking-wider focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
         </div>
 
-        <div class="flex items-center gap-3">
-          <span
-            class="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-lg border border-blue-100 dark:border-blue-800/50">
-            Identity Verification
-          </span>
-        </div>
-      </div>
-
-      <!-- Stats / Badges -->
-      <div class="flex flex-wrap gap-3">
-        <div
-          class="px-4 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-lg flex items-center gap-3">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Employee No.</span>
-          <span class="text-xs font-bold text-slate-700 dark:text-slate-200 font-mono">{{ data.employeeNumber || '---'
-            }}</span>
+        <!-- الرقم الوظيفي -->
+        <div class="space-y-1">
+          <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Employee No.</label>
+          <input pInputText [(ngModel)]="data.employeeNumber" placeholder="P-0000"
+            class="w-full !h-8 !px-2.5 !rounded-md !bg-slate-100 dark:!bg-slate-950 !border-dashed !border-slate-200 dark:!border-slate-700 !text-[11px] font-mono opacity-70 cursor-not-allowed" readonly />
         </div>
 
-        <div
-          class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-lg flex items-center gap-3">
-          <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Status</span>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Active Entry</span>
-          </div>
+        <!-- الهاتف -->
+        <div class="space-y-1">
+          <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">رقم الهاتف (+967)</label>
+          <input pInputText [(ngModel)]="data.mobile" (onBlur)="onDataChange()" maxlength="9" placeholder="777000000"
+            class="w-full !h-8 !px-2.5 !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !rounded-md !text-[11px] font-mono tracking-widest focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" dir="ltr" />
         </div>
+
+        <!-- الإيميل -->
+        <div class="space-y-1">
+          <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">البريد الإلكتروني</label>
+          <input pInputText [(ngModel)]="data.email" (ngModelChange)="onDataChange()" placeholder="employee@company.com"
+            class="w-full !h-8 !px-2.5 !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !rounded-md !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" dir="ltr" />
+        </div>
+
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <!-- Form Content: Left Column (Large) -->
-    <div class="lg:col-span-8 space-y-6">
-
-      <!-- Section 1: Arabic Full Identity -->
-      <section
-        class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-        <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-              <i class="pi pi-id-card text-sm"></i>
-            </div>
-            <h3 class="text-base font-bold text-slate-800 dark:text-white">الاسم الكامل بالعربية</h3>
-          </div>
-          <span
-            class="px-2 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-bold rounded border border-red-100 dark:border-red-900/30">مطلوب</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الاسم الأول</label>
-            <input pInputText [(ngModel)]="data.firstNameAr" (ngModelChange)="onDataChange()" placeholder="أحمد"
-              class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
-          </div>
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">اسم الأب</label>
-            <input pInputText [(ngModel)]="data.secondNameAr" (ngModelChange)="onDataChange()" placeholder="علي"
-              class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
-          </div>
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">اسم الجد</label>
-            <input pInputText [(ngModel)]="data.thirdNameAr" (ngModelChange)="onDataChange()" placeholder="يحيى"
-              class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
-          </div>
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">اللقب</label>
-            <input pInputText [(ngModel)]="data.lastNameAr" (ngModelChange)="onDataChange()" placeholder="صالح"
-              class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2">
-          <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Full
-            English Name (Passport Format)</label>
-          <input pInputText [(ngModel)]="data.fullNameEn" (ngModelChange)="onDataChange()"
-            (keypress)="validateEnglishName($event)" placeholder="AHMED ALI YAHYA SALEH"
-            class="w-full !h-11 !px-4 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-medium tracking-wide uppercase focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"
-            dir="ltr" />
-        </div>
-      </section>
-
-      <!-- Section 2: Birth, Nationality & Social -->
-      <section
-        class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-        <div class="flex items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-          <div
-            class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-            <i class="pi pi-user text-sm"></i>
-          </div>
-          <h3 class="text-base font-bold text-slate-800 dark:text-white">البيانات الشخصية</h3>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ الميلاد</label>
-            <p-datePicker [(ngModel)]="data.birthDate" (ngModelChange)="onDataChange()" [showIcon]="true"
-              appendTo="body" dateFormat="yy-mm-dd" styleClass="w-full"
-              inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الجنسية</label>
-            <p-select [options]="countries" [(ngModel)]="data.nationalityId" (ngModelChange)="onDataChange()"
-              optionLabel="countryNameAr" optionValue="countryId" [filter]="true" appendTo="body"
-              placeholder="اختر الجنسية"
-              styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الجنس</label>
-            <div class="flex gap-3 h-11">
-              @for (gender of genders; track gender.value) {
-              <button
-                class="flex-1 flex items-center justify-center gap-2 rounded-lg border transition-all text-xs font-bold relative"
-                [ngClass]="data.gender === gender.value ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500'"
-                (click)="data.gender = gender.value; onDataChange()">
-                <i [class]="gender.icon"></i>
-                {{ gender.label }}
-              </button>
-              }
-            </div>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">الحالة الاجتماعية</label>
-            <p-select [options]="maritalStatuses" [(ngModel)]="data.maritalStatus" (ngModelChange)="onDataChange()"
-              optionLabel="label" optionValue="value" appendTo="body" placeholder="اختر الحالة"
-              styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section 3: Official Documentation -->
-      <section
-        class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-        <div class="flex items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-          <div
-            class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-            <i class="pi pi-shield text-sm"></i>
-          </div>
-          <h3 class="text-base font-bold text-slate-800 dark:text-white">الوثائق الثبوتية</h3>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">رقم الهوية الوطنية</label>
-            <div class="relative">
-              <input pInputText [(ngModel)]="data.nationalId" (ngModelChange)="onDataChange()"
-                (keypress)="validateNumber($event)" maxlength="10" placeholder="0000000000"
-                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm font-mono tracking-wider focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
-              @if (data.nationalId && data.nationalId.length !== 10) {
-              <span
-                class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-red-500 font-bold bg-white dark:bg-slate-900 px-1">10
-                أرقام</span>
-              }
-            </div>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest font-sans">Permanent
-              ID</label>
-            <input pInputText [(ngModel)]="data.employeeNumber" (ngModelChange)="onDataChange()" placeholder="P-0000"
-              class="w-full !h-11 !rounded-lg !bg-slate-50 dark:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-sm font-mono tracking-wider opacity-70 cursor-not-allowed"
-              readonly />
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- Right Column: Quick Contact & Security (Aside) -->
-    <div class="lg:col-span-4 space-y-6">
-
-      <!-- Contact Card -->
-      <div
-        class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-            <i class="pi pi-phone text-sm"></i>
-          </div>
-          <h4 class="font-bold text-slate-800 dark:text-white text-sm">التواصل السريع</h4>
-        </div>
-
-        <div class="space-y-4">
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">رقم الهاتف الأساسي</label>
-            <div class="relative flex items-center" dir="ltr">
-              <span
-                class="absolute left-0 top-0 bottom-0 px-3 flex items-center justify-center bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 rounded-l-lg text-xs font-bold text-slate-500">+967</span>
-              <input pInputText [(ngModel)]="data.mobile" (onBlur)="onDataChange()" maxlength="9"
-                placeholder="777 000 000"
-                class="w-full !h-11 !pl-14 !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !rounded-lg !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all font-mono tracking-wide" />
-            </div>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">البريد الإلكتروني
-              الرسمي</label>
-            <div class="relative">
-              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                <i class="pi pi-envelope text-xs"></i>
-              </span>
-              <input pInputText [(ngModel)]="data.email" (ngModelChange)="onDataChange()"
-                placeholder="employee@company.com"
-                class="w-full !h-11 !pl-9 !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !rounded-lg !text-xs focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"
-                dir="ltr" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Security Protocol Banner -->
-      <div class="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-5 border border-blue-100 dark:border-blue-900/30">
-        <div class="flex gap-3">
-          <i class="pi pi-shield-check text-blue-600 dark:text-blue-400 text-xl"></i>
-          <div class="space-y-1">
-            <h4 class="text-sm font-bold text-blue-900 dark:text-blue-300">حماية البيانات</h4>
-            <p class="text-xs text-blue-700/70 dark:text-blue-400/70 leading-relaxed">
-              نظام HRMS يتبع معايير ISO 27001. يتم تخزين جميع البيانات الشخصية بشكل مشفر لضمان الخصوصية.
-            </p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
 </div>

@@ -19,11 +19,11 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
   selector: 'app-transaction-history',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule,
-    ToastModule, 
-    TableModule, 
-    TagModule, 
+    ToastModule,
+    TableModule,
+    TagModule,
     ButtonModule,
     DatePickerModule,
     SelectModule,
@@ -33,123 +33,137 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
   ],
   providers: [MessageService],
   template: `
-    <div class="p-6 space-y-6">
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
       <p-toast></p-toast>
       
-      <!-- Premium Header -->
-      <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden border border-slate-700/50">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <i class="pi pi-history text-[11px]"></i>
+          </div>
           <div>
-            <h1 class="text-4xl font-black text-white tracking-tight flex items-center gap-4">
-              <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                <i class="pi pi-history text-2xl"></i>
-              </div>
-              سجل حركات الإجازات
-            </h1>
-            <p class="text-slate-400 mt-2 text-lg font-medium">مراقبة وتدقيق جميع التغييرات على أرصدة الموظفين</p>
+            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">سجل حركات الإجازات</h3>
+            <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">مراقبة وتدقيق جميع التغييرات على أرصدة الموظفين</p>
           </div>
-          
-          <div class="flex items-center gap-3">
-            <button pButton icon="pi pi-refresh" (click)="loadTransactions()" 
-                    class="p-button-secondary p-button-text p-button-rounded text-white hover:bg-slate-700"></button>
-            <div class="px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-              <span class="text-emerald-400 font-bold">{{ transactions().length }} حركة مكتشفة</span>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <div class="px-2 py-1 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50 rounded-md flex items-center gap-1">
+                <i class="pi pi-chart-line text-emerald-600 dark:text-emerald-400 text-[10px]"></i>
+                <span class="text-emerald-700 dark:text-emerald-400 text-[10px] font-bold">{{ transactions().length }} حركة مكتشفة</span>
             </div>
-          </div>
+            <button pButton icon="pi pi-refresh" title="تحديث"
+                class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+                (click)="loadTransactions()">
+            </button>
         </div>
       </div>
 
       <!-- Filters Bar -->
-      <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-zinc-800 flex flex-wrap gap-4 items-end">
+      <div class="flex flex-wrap gap-2 items-end bg-slate-50 dark:bg-slate-800/30 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
         
-        <div class="flex flex-col gap-2" *ngIf="isAdmin()">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">رقم الموظف</label>
-            <p-iconField iconPosition="left">
-              <p-inputIcon styleClass="pi pi-user"></p-inputIcon>
-              <input type="text" pInputText [(ngModel)]="filters.employeeId" placeholder="بحث بالرقم..." class="w-32" />
-            </p-iconField>
+        <div class="flex flex-col gap-1 w-full md:w-32" *ngIf="isAdmin()">
+            <label class="text-[9px] font-bold text-slate-500">رقم الموظف</label>
+            <div class="relative">
+                <i class="pi pi-user absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
+                <input type="text" pInputText [(ngModel)]="filters.employeeId" placeholder="بحث بالرقم..." 
+                    class="w-full !h-7 !pl-6 !pr-2 !rounded-md !bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-700 !text-[10px] focus:!border-emerald-500 transition-all" />
+            </div>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">نوع الحركة</label>
+        <div class="flex flex-col gap-1 w-full md:w-36">
+            <label class="text-[9px] font-bold text-slate-500">نوع الحركة</label>
             <p-select [options]="typeOptions" [(ngModel)]="filters.transactionType" 
-                      placeholder="الكل" [showClear]="true" class="w-48"></p-select>
+                      placeholder="الكل" [showClear]="true" 
+                      styleClass="w-full !h-7 !rounded-md !bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-700 !text-[10px] focus:!border-emerald-500 transition-all flex items-center">
+            </p-select>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">الفترة من</label>
-            <p-datepicker [(ngModel)]="filters.fromDate" [showIcon]="true" placeholder="من تاريخ" dateFormat="yy-mm-dd"></p-datepicker>
+        <div class="flex flex-col gap-1 w-full md:w-32">
+            <label class="text-[9px] font-bold text-slate-500">الفترة من</label>
+            <p-datepicker [(ngModel)]="filters.fromDate" placeholder="من تاريخ" dateFormat="yy-mm-dd"
+                styleClass="w-full" inputStyleClass="w-full !h-7 !px-2 !rounded-md !bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-700 !text-[10px] focus:!border-emerald-500 transition-all text-center">
+            </p-datepicker>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">إلى تاريخ</label>
-            <p-datepicker [(ngModel)]="filters.toDate" [showIcon]="true" placeholder="إلى تاريخ" dateFormat="yy-mm-dd"></p-datepicker>
+        <div class="flex flex-col gap-1 w-full md:w-32">
+            <label class="text-[9px] font-bold text-slate-500">إلى تاريخ</label>
+            <p-datepicker [(ngModel)]="filters.toDate" placeholder="إلى تاريخ" dateFormat="yy-mm-dd"
+                styleClass="w-full" inputStyleClass="w-full !h-7 !px-2 !rounded-md !bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-700 !text-[10px] focus:!border-emerald-500 transition-all text-center">
+            </p-datepicker>
         </div>
 
-        <p-button label="تطبيق الفلتر" icon="pi pi-filter" styleClass="p-button-raised p-button-primary" (onClick)="loadTransactions()"></p-button>
-        <p-button label="إعادة تعيين" icon="pi pi-filter-slash" [outlined]="true" (onClick)="resetFilters()"></p-button>
+        <button pButton icon="pi pi-filter" label="تطبيق" 
+            class="p-button-primary !h-7 !bg-emerald-600 hover:!bg-emerald-700 !border-none !text-[10px] !font-bold !rounded-md !px-3 shadow-sm transition-colors whitespace-nowrap"
+            (click)="loadTransactions()">
+        </button>
+        <button pButton icon="pi pi-filter-slash" 
+            class="p-button-outlined p-button-secondary !h-7 !w-7 !p-0 flex justify-center items-center !rounded-md hover:!bg-white dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+            title="إعادة تعيين"
+            (click)="resetFilters()">
+        </button>
       </div>
 
       <!-- Main Table -->
-      <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-zinc-800">
+      <div class="flex-grow bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative">
         <p-table 
           [value]="transactions()" 
           [paginator]="true" 
           [rows]="10"
           [loading]="loading()"
           [rowsPerPageOptions]="[10, 20, 50]"
-          styleClass="p-datatable-lg p-datatable-striped">
+          styleClass="p-datatable-sm clean-table"
+          [rowHover]="true">
           
           <ng-template pTemplate="header">
-            <tr class="bg-slate-50 dark:bg-zinc-800/50">
-              <th class="p-4 text-slate-700 dark:text-zinc-300">الموظف</th>
-              <th class="p-4 text-slate-700 dark:text-zinc-300">نوع الإجازة</th>
-              <th class="p-4 text-slate-700 dark:text-zinc-300">نوع الحركة</th>
-              <th class="p-4 text-slate-700 dark:text-zinc-300 text-center">الأيام</th>
-              <th class="p-4 text-slate-700 dark:text-zinc-300">التاريخ</th>
-              <th class="p-4 text-slate-700 dark:text-zinc-300">الملاحظات</th>
-              <th class="p-4 text-slate-700 dark:text-zinc-300">المرجع</th>
+            <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">الموظف</th>
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">نوع الإجازة</th>
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">نوع الحركة</th>
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">الأيام</th>
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">التاريخ</th>
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">الملاحظات</th>
+              <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">المرجع</th>
             </tr>
           </ng-template>
 
           <ng-template pTemplate="body" let-tx>
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-              <td class="p-4">
-                <div class="flex items-center gap-3">
-                   <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-zinc-400">
+            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors duration-200 border-b border-slate-50 dark:border-slate-800/50">
+              <td class="!px-4 !py-2 !border-none">
+                <div class="flex items-center gap-2">
+                   <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-[10px] font-black text-emerald-600">
                       {{ tx.employeeName?.charAt(0) }}
                    </div>
-                   <span class="font-medium text-slate-900 dark:text-white">{{ tx.employeeName }}</span>
+                   <span class="font-bold text-slate-800 dark:text-slate-200 text-[10px]">{{ tx.employeeName }}</span>
                 </div>
               </td>
-              <td class="p-4 text-slate-600 dark:text-zinc-400">{{ tx.leaveTypeName }}</td>
-              <td class="p-4">
+              <td class="!px-4 !py-2 !text-[9px] !font-bold !text-slate-700 dark:!text-slate-300 !border-none">{{ tx.leaveTypeName }}</td>
+              <td class="!px-4 !py-2 !border-none">
                 <p-tag 
                   [value]="getTypeLabel(tx.transactionType)" 
                   [severity]="getTypeSeverity(tx.transactionType)"
-                  class="rounded-lg px-2">
+                  styleClass="!text-[9px] !font-bold !px-2 !py-0.5 rounded">
                 </p-tag>
               </td>
-              <td class="p-4 text-center">
-                <span [class]="getDaysClass(tx.transactionType)" class="font-black text-lg">
+              <td class="!px-4 !py-2 !border-none text-center">
+                <span [class]="getDaysClass(tx.transactionType)" class="font-black text-[11px] font-mono">
                   {{ getSignedDays(tx) }}
                 </span>
               </td>
-              <td class="p-4">
+              <td class="!px-4 !py-2 !border-none">
                  <div class="flex flex-col">
-                    <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ tx.transactionDate | date: 'dd/MM/yyyy' }}</span>
-                    <span class="text-[10px] text-slate-400 uppercase tracking-tighter">{{ tx.transactionDate | date: 'HH:mm' }}</span>
+                    <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300 font-mono">{{ tx.transactionDate | date: 'dd/MM/yyyy' }}</span>
+                    <span class="text-[8px] text-slate-400 font-mono">{{ tx.transactionDate | date: 'HH:mm' }}</span>
                  </div>
               </td>
-              <td class="p-4">
-                <span class="text-sm text-slate-500 dark:text-zinc-500 italic max-w-xs truncate block" [title]="tx.notes">
-                  {{ tx.notes || 'لايوجد ملاحظات' }}
+              <td class="!px-4 !py-2 !border-none">
+                <span class="text-[9px] text-slate-500 dark:text-slate-400 block truncate max-w-[150px]" [title]="tx.notes">
+                  {{ tx.notes || '—' }}
                 </span>
               </td>
-              <td class="p-4">
-                <span class="px-2 py-1 bg-slate-100 dark:bg-zinc-800 rounded text-xs font-mono text-slate-500">
+              <td class="!px-4 !py-2 !border-none">
+                <span class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800/80 rounded border border-slate-200 dark:border-slate-700 text-[9px] font-mono text-slate-500 font-bold">
                    #{{ tx.referenceId || '-' }}
                 </span>
               </td>
@@ -158,9 +172,11 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
 
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="7" class="text-center py-20 text-slate-400">
-                <i class="pi pi-search text-6xl mb-4 block text-slate-200"></i>
-                <span class="text-lg">لا توجد حركات مطابقة للبحث</span>
+              <td colspan="7" class="text-center py-12 text-slate-400">
+                <div class="flex flex-col items-center justify-center">
+                    <i class="pi pi-search text-3xl mb-3 opacity-50"></i>
+                    <span class="text-[11px] font-bold text-slate-900 dark:text-white mb-1">لا توجد حركات مطابقة للبحث</span>
+                </div>
               </td>
             </tr>
           </ng-template>
@@ -169,8 +185,7 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
     </div>
   `,
   styles: [`
-    :host { display: block; background: #f8fafc; min-height: 100vh; }
-    .dark :host { background: #09090b; }
+    :host { display: block; height: 100%; }
   `]
 })
 export class TransactionHistoryComponent implements OnInit {
@@ -202,7 +217,7 @@ export class TransactionHistoryComponent implements OnInit {
     private transactionService: LeaveTransactionService,
     private messageService: MessageService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkAccess();
@@ -217,7 +232,7 @@ export class TransactionHistoryComponent implements OnInit {
 
   loadTransactions() {
     this.loading.set(true);
-    
+
     // Convert dates to ISO string if they exist
     const searchFilters = {
       ...this.filters,

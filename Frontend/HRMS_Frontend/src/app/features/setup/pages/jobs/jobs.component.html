@@ -1,70 +1,86 @@
-<div class="card p-6 bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-slate-100 dark:border-zinc-800" dir="rtl">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-3 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
     <p-toast></p-toast>
-    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    <p-confirmDialog [style]="{width: '320px'}" styleClass="clean-confirm"></p-confirmDialog>
 
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center text-violet-600 dark:text-violet-400">
-                <i class="pi pi-briefcase text-xl"></i>
+            <div class="w-7 h-7 rounded-md bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 flex items-center justify-center">
+                <i class="pi pi-briefcase text-[11px]"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-slate-800 dark:text-zinc-100">المسميات الوظيفية</h1>
-                <p class="text-slate-500 dark:text-zinc-400 text-xs mt-1">إدارة الوظائف والدرجات المرتبطة بها</p>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">المسميات الوظيفية</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إدارة الوظائف والدرجات المرتبطة بها</p>
             </div>
         </div>
-        <div class="flex gap-2">
-            <span class="p-input-icon-left">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="بحث..." class="p-inputtext-sm w-64" />
-            </span>
-            <p-button label="إضافة وظيفة" icon="pi pi-plus" (onClick)="openNew()" styleClass="p-button-rounded p-button-primary"></p-button>
+        
+        <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="relative flex items-center flex-grow md:flex-none">
+                <i class="pi pi-search absolute left-2.5 text-slate-400 text-[10px]"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="بحث..." 
+                    class="w-full md:w-64 !h-8 !pl-8 !pr-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+            </div>
+            <button pButton icon="pi pi-plus" label="إضافة وظيفة"
+                class="p-button-outlined p-button-secondary !h-8 !text-[10px] !font-bold !rounded-md !px-3 hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all whitespace-nowrap"
+                (click)="openNew()">
+            </button>
         </div>
     </div>
 
     <!-- Table -->
-    <p-table #dt [value]="jobs()" [rows]="10" [paginator]="true" [loading]="loading()"
-             styleClass="p-datatable-sm p-datatable-gridlines"
-             [globalFilterFields]="['jobTitleAr', 'jobTitleEn', 'gradeNameAr']"
-             [rowHover]="true"
-             responsiveLayout="scroll">
-        
-        <ng-template pTemplate="header">
-            <tr class="bg-slate-50 dark:bg-zinc-950 text-slate-700 dark:text-zinc-300 text-sm">
-                <th pSortableColumn="jobTitleAr">المسمى (عربي) <p-sortIcon field="jobTitleAr"></p-sortIcon></th>
-                <th pSortableColumn="jobTitleEn">المسمى (إنجليزي) <p-sortIcon field="jobTitleEn"></p-sortIcon></th>
-                <th pSortableColumn="gradeNameAr">الدرجة الافتراضية <p-sortIcon field="gradeNameAr"></p-sortIcon></th>
-                <th pSortableColumn="isMedical" class="text-center">طبي؟ <p-sortIcon field="isMedical"></p-sortIcon></th>
-                <th class="w-32 text-center">الإجراءات</th>
-            </tr>
-        </ng-template>
+    <div class="flex-grow bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative">
+        <p-table #dt [value]="jobs()" [rows]="10" [paginator]="true" [loading]="loading()"
+                 styleClass="p-datatable-sm clean-table"
+                 [globalFilterFields]="['jobTitleAr', 'jobTitleEn', 'gradeNameAr']"
+                 [rowHover]="true"
+                 responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                    <th pSortableColumn="jobTitleAr" class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">المسمى (عربي) <p-sortIcon field="jobTitleAr"></p-sortIcon></th>
+                    <th pSortableColumn="jobTitleEn" class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">المسمى (إنجليزي) <p-sortIcon field="jobTitleEn"></p-sortIcon></th>
+                    <th pSortableColumn="gradeNameAr" class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">الدرجة الافتراضية <p-sortIcon field="gradeNameAr"></p-sortIcon></th>
+                    <th pSortableColumn="isMedical" class="!px-4 !py-2.5 w-24 text-center !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">طبي؟ <p-sortIcon field="isMedical"></p-sortIcon></th>
+                    <th class="!px-4 !py-2.5 w-24 text-center !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">الإجراءات</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-job>
-            <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50">
-                <td class="font-medium text-slate-800 dark:text-zinc-200">{{job.jobTitleAr}}</td>
-                <td class="text-slate-600 dark:text-zinc-400">{{job.jobTitleEn}}</td>
-                <td class="text-slate-600 dark:text-zinc-400">
-                    <span class="px-2 py-1 bg-slate-100 dark:bg-zinc-800 rounded text-xs">
-                        {{job.gradeNameAr || 'غير محدد'}}
-                    </span>
-                </td>
-                <td class="text-center">
-                    <i class="pi" [ngClass]="{'pi-check-circle text-green-500': job.isMedical === 1 || job.isMedical === true, 'pi-times-circle text-slate-300': !job.isMedical}"></i>
-                </td>
-                <td>
-                    <div class="flex justify-center gap-1">
-                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded p-button-sm text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20" (click)="edit(job)"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20" (click)="delete(job)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="body" let-job>
+                <tr class="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors duration-200 border-b border-slate-50 dark:border-slate-800/50">
+                    <td class="!px-4 !py-3 !text-[10px] !text-slate-700 dark:!text-slate-300 !font-bold !border-none">{{job.jobTitleAr}}</td>
+                    <td class="!px-4 !py-3 !text-[10px] !text-slate-600 dark:!text-slate-400 !font-bold !border-none">{{job.jobTitleEn}}</td>
+                    <td class="!px-4 !py-3 !border-none">
+                        <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 text-[9px] text-slate-600 dark:text-slate-400 font-bold block w-fit">
+                            {{job.gradeNameAr || 'غير محدد'}}
+                        </span>
+                    </td>
+                    <td class="!px-4 !py-3 !border-none text-center">
+                        <i class="pi" [ngClass]="{'pi-check-circle text-green-500': job.isMedical === 1 || job.isMedical === true, 'pi-times-circle text-slate-300 dark:text-slate-600': !job.isMedical}"></i>
+                    </td>
+                    <td class="!px-4 !py-3 !border-none">
+                        <div class="flex items-center justify-center gap-2">
+                            <button pButton icon="pi pi-pencil" 
+                                class="p-button-text p-button-rounded !w-7 !h-7 !p-0 !text-[11px] !text-blue-500 hover:!bg-blue-100 dark:hover:!bg-blue-900/40 transition-colors" 
+                                (click)="edit(job)"></button>
+                            <button pButton icon="pi pi-trash" 
+                                class="p-button-text p-button-rounded !w-7 !h-7 !p-0 !text-[11px] !text-red-500 hover:!bg-red-100 dark:hover:!bg-red-900/40 transition-colors" 
+                                (click)="delete(job)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="5" class="text-center py-8 text-slate-500">لا توجد وظائف مضافة حتى الآن</td>
-            </tr>
-        </ng-template>
-
-    </p-table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="text-center py-12">
+                        <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                            <i class="pi pi-inbox text-3xl mb-3 opacity-50"></i>
+                            <p class="text-[11px] font-bold text-slate-900 dark:text-white mb-1">لا توجد بيانات</p>
+                            <p class="text-[9px]">لم يتم العثور على أي وظائف مسجلة.</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>

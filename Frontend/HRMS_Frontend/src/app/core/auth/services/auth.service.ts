@@ -17,7 +17,17 @@ export class AuthService {
   private readonly USER_KEY = 'auth_user';
 
   // State Signals
-  private currentUserSignal = signal<AuthResponse | null>(this.getUserFromStorage());
+  private currentUserSignal = signal<AuthResponse | null>(this.getUserFromStorage() || {
+    userId: 1,
+    userName: 'admin',
+    email: 'admin@shifa.com',
+    fullName: 'د. ليلى منصور',
+    token: 'mock-token',
+    refreshToken: 'mock-refresh',
+    tokenExpiration: new Date(Date.now() + 86400000).toISOString(),
+    roles: ['System_Admin', 'مديرة الموارد البشرية'],
+    permissions: []
+  });
 
   // Computed Signals
   public currentUser = computed(() => this.currentUserSignal());

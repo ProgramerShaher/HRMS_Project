@@ -1,125 +1,156 @@
-<div class="p-6 space-y-8">
-
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+  
   <!-- Header -->
-  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <div>
-      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-          <i class="pi pi-calendar text-white text-xl"></i>
-        </div>
-        لوحة تحكم الإجازات — إدارية
-      </h1>
-      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">نظرة إجمالية على طلبات وأرصدة الإجازات لجميع الموظفين</p>
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+        <i class="pi pi-calendar text-[11px]"></i>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">لوحة تحكم الإجازات — إدارية</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">نظرة إجمالية على طلبات وأرصدة الإجازات لجميع الموظفين</p>
+      </div>
     </div>
-    <div class="flex gap-3">
-      <button pButton icon="pi pi-refresh" label="تحديث" class="p-button-outlined p-button-secondary" (click)="load()"></button>
-      <button pButton icon="pi pi-check-circle" label="الاعتمادات المعلقة" class="p-button-warning" (click)="navigateTo('approvals')"></button>
+    <div class="flex gap-2">
+        <button pButton icon="pi pi-refresh" title="تحديث"
+            class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+            (click)="load()">
+        </button>
+        <button pButton icon="pi pi-check-circle" label="الاعتمادات المعلقة"
+            class="p-button-warning !h-8 !bg-amber-500 hover:!bg-amber-600 !border-none !text-[10px] !font-bold !rounded-md !px-3 shadow-sm transition-colors whitespace-nowrap"
+            (click)="navigateTo('approvals')">
+        </button>
     </div>
   </div>
 
   <!-- KPI Cards -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
 
     <!-- Pending -->
-    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
-      <div class="absolute -right-4 -top-4 w-20 h-20 bg-amber-500/10 rounded-full blur-2xl"></div>
-      <div class="flex justify-between items-start mb-3">
-        <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-          <i class="pi pi-clock text-amber-600 text-xl"></i>
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-slate-100 dark:border-slate-800 relative overflow-hidden group hover:border-amber-200 dark:hover:border-amber-900/50 transition-colors" *ngIf="stats()">
+      <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-amber-500/5 rounded-full blur-xl group-hover:bg-amber-500/10 transition-colors"></div>
+      <div class="flex justify-between items-start mb-2 relative z-10">
+        <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+          <i class="pi pi-clock text-amber-600 dark:text-amber-400 text-sm"></i>
         </div>
-        <span class="text-xl font-black text-amber-600">{{ stats()!.pendingRequestsCount }}</span>
+        <span class="text-xl font-black text-amber-600 dark:text-amber-400">{{ stats()!.pendingRequestsCount }}</span>
       </div>
-      <p class="text-sm font-semibold text-slate-500">طلبات معلقة</p>
-      <button pButton label="مراجعة" icon="pi pi-arrow-left" class="p-button-text p-button-sm p-button-warning mt-3" (click)="navigateTo('approvals')"></button>
+      <div class="flex items-end justify-between mt-3 relative z-10">
+        <div>
+            <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">طلبات معلقة</p>
+        </div>
+        <button pButton icon="pi pi-arrow-left" 
+            class="p-button-text p-button-rounded !w-6 !h-6 !p-0 !text-[9px] !text-amber-600 dark:!text-amber-400 hover:!bg-amber-100 dark:hover:!bg-amber-900/40 transition-colors" 
+            title="مراجعة" (click)="navigateTo('approvals')">
+        </button>
+      </div>
     </div>
 
     <!-- Approved -->
-    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
-      <div class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-2xl"></div>
-      <div class="flex justify-between items-start mb-3">
-        <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
-          <i class="pi pi-check-circle text-emerald-600 text-xl"></i>
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-slate-100 dark:border-slate-800 relative overflow-hidden group hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-colors" *ngIf="stats()">
+      <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
+      <div class="flex justify-between items-start mb-2 relative z-10">
+        <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+          <i class="pi pi-check-circle text-emerald-600 dark:text-emerald-400 text-sm"></i>
         </div>
-        <span class="text-xl font-black text-emerald-600">{{ stats()!.approvedRequestsCount }}</span>
+        <span class="text-xl font-black text-emerald-600 dark:text-emerald-400">{{ stats()!.approvedRequestsCount }}</span>
       </div>
-      <p class="text-sm font-semibold text-slate-500">طلبات معتمدة</p>
-      <p class="text-xs text-slate-400 mt-1">من إجمالي الطلبات</p>
+      <div class="mt-3 relative z-10">
+        <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">طلبات معتمدة</p>
+        <p class="text-[8px] text-slate-500 mt-0.5">من إجمالي الطلبات</p>
+      </div>
     </div>
 
     <!-- Consumed Days -->
-    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
-      <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl"></div>
-      <div class="flex justify-between items-start mb-3">
-        <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
-          <i class="pi pi-calendar-minus text-blue-600 text-xl"></i>
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-slate-100 dark:border-slate-800 relative overflow-hidden group hover:border-blue-200 dark:hover:border-blue-900/50 transition-colors" *ngIf="stats()">
+      <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
+      <div class="flex justify-between items-start mb-2 relative z-10">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+          <i class="pi pi-calendar-minus text-blue-600 dark:text-blue-400 text-sm"></i>
         </div>
-        <span class="text-xl font-black text-blue-600">{{ stats()!.consumedDays }}</span>
+        <span class="text-xl font-black text-blue-600 dark:text-blue-400">{{ stats()!.consumedDays }}</span>
       </div>
-      <p class="text-sm font-semibold text-slate-500">أيام مستهلكة</p>
-      <p class="text-xs text-slate-400 mt-1">من بداية السنة حتى الآن</p>
+      <div class="mt-3 relative z-10">
+        <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">أيام مستهلكة</p>
+        <p class="text-[8px] text-slate-500 mt-0.5">من بداية السنة حتى الآن</p>
+      </div>
     </div>
 
     <!-- Remaining -->
-    <div class="glass-card p-6 rounded-3xl relative overflow-hidden" *ngIf="stats()">
-      <div class="absolute -right-4 -top-4 w-20 h-20 bg-violet-500/10 rounded-full blur-2xl"></div>
-      <div class="flex justify-between items-start mb-3">
-        <div class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
-          <i class="pi pi-calendar-plus text-violet-600 text-xl"></i>
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-slate-100 dark:border-slate-800 relative overflow-hidden group hover:border-violet-200 dark:hover:border-violet-900/50 transition-colors" *ngIf="stats()">
+      <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-violet-500/5 rounded-full blur-xl group-hover:bg-violet-500/10 transition-colors"></div>
+      <div class="flex justify-between items-start mb-2 relative z-10">
+        <div class="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
+          <i class="pi pi-calendar-plus text-violet-600 dark:text-violet-400 text-sm"></i>
         </div>
-        <span class="text-xl font-black text-violet-600">{{ stats()!.remainingDays }}</span>
+        <span class="text-xl font-black text-violet-600 dark:text-violet-400">{{ stats()!.remainingDays }}</span>
       </div>
-      <p class="text-sm font-semibold text-slate-500">أيام متبقية</p>
-      <p class="text-xs text-slate-400 mt-1">الأرصدة الكلية لجميع الموظفين</p>
+      <div class="mt-3 relative z-10">
+        <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">أيام متبقية</p>
+        <p class="text-[8px] text-slate-500 mt-0.5">الأرصدة الكلية لجميع الموظفين</p>
+      </div>
     </div>
   </div>
 
   <!-- Charts + Recent Pending -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
     <!-- Donut Chart: Leave type distribution -->
-    <div class="glass-card p-6 rounded-3xl">
-      <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">توزيع أنواع الإجازات المستهلكة</h3>
-      <p class="text-sm text-slate-400 mb-4">الأيام المستهلكة حسب نوع الإجازة</p>
-      <div *ngIf="stats() && stats()!.leaveTypeSummaries?.length; else noChart">
+    <div class="bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded-xl flex flex-col">
+      <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-0.5">توزيع أنواع الإجازات المستهلكة</h3>
+      <p class="text-[9px] text-slate-500 mb-3">الأيام المستهلكة حسب نوع الإجازة</p>
+      <div class="flex-grow flex items-center justify-center" *ngIf="stats() && stats()!.leaveTypeSummaries?.length; else noChart">
         <canvas id="leaveTypeChart"></canvas>
       </div>
       <ng-template #noChart>
-        <div class="h-40 flex items-center justify-center text-slate-400">
-          <span>لا توجد بيانات في السنة الحالية</span>
+        <div class="flex-grow flex flex-col items-center justify-center text-slate-400 min-h-[160px]">
+            <i class="pi pi-chart-pie text-3xl mb-2 opacity-50"></i>
+            <span class="text-[10px] font-bold">لا توجد بيانات في السنة الحالية</span>
         </div>
       </ng-template>
     </div>
 
     <!-- Recent Pending Requests -->
-    <div class="lg:col-span-2 glass-card rounded-3xl overflow-hidden">
-      <div class="p-6 flex items-center justify-between">
-        <h3 class="text-lg font-black text-slate-900 dark:text-white">آخر الطلبات المعلقة</h3>
-        <button pButton label="عرض الكل" icon="pi pi-arrow-left" class="p-button-text p-button-sm" (click)="navigateTo('approvals')"></button>
+    <div class="lg:col-span-2 bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden flex flex-col">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-800/50">
+        <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+            <i class="pi pi-history text-slate-400"></i>
+            آخر الطلبات المعلقة
+        </h3>
+        <button pButton label="عرض الكل" icon="pi pi-arrow-left" 
+            class="p-button-text !h-6 !text-[9px] !p-0 !text-emerald-600 hover:!bg-emerald-50 dark:hover:!bg-emerald-900/20 !px-2 !rounded transition-colors" 
+            (click)="navigateTo('approvals')">
+        </button>
       </div>
 
-      <div *ngIf="loading()" class="p-12 text-center text-slate-400">
-        <i class="pi pi-spin pi-spinner text-3xl block mb-2"></i> جاري التحميل...
+      <div *ngIf="loading()" class="p-10 flex flex-col items-center justify-center text-slate-400 flex-grow bg-white dark:bg-slate-900/50">
+        <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
+        <span class="text-[10px] font-bold">جاري التحميل...</span>
       </div>
 
-      <div *ngIf="!loading() && recentPending().length === 0" class="p-12 text-center text-slate-400">
-        <i class="pi pi-check-circle text-3xl block mb-2 text-emerald-400"></i>
-        لا توجد طلبات معلقة حالياً
+      <div *ngIf="!loading() && recentPending().length === 0" class="p-10 flex flex-col items-center justify-center text-slate-400 flex-grow bg-white dark:bg-slate-900/50">
+        <i class="pi pi-check-circle text-3xl mb-2 text-emerald-400 opacity-60"></i>
+        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">لا توجد طلبات معلقة حالياً</span>
       </div>
 
-      <div *ngIf="!loading() && recentPending().length > 0" class="divide-y divide-slate-100 dark:divide-zinc-800">
-        <div *ngFor="let req of recentPending()" class="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors">
+      <div *ngIf="!loading() && recentPending().length > 0" class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/50">
+        <div *ngFor="let req of recentPending()" class="flex items-center justify-between px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50 last:border-0">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-sm font-black text-slate-600">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
               {{ req.employeeName?.charAt(0) ?? '?' }}
             </div>
             <div>
-              <p class="font-bold text-slate-900 dark:text-white text-sm">{{ req.employeeName }}</p>
-              <p class="text-xs text-slate-400">{{ req.leaveTypeName }} · {{ req.daysCount }} أيام</p>
+              <p class="font-bold text-slate-800 dark:text-slate-200 text-[11px]">{{ req.employeeName }}</p>
+              <p class="text-[9px] text-slate-500 font-mono">{{ req.leaveTypeName }} · <span class="font-bold">{{ req.daysCount }} أيام</span></p>
             </div>
           </div>
-          <div class="flex items-center gap-3">
-            <p-tag [severity]="getStatusSeverity(req.status)" [value]="getStatusLabel(req.status)"></p-tag>
-            <button pButton icon="pi pi-eye" class="p-button-text p-button-sm p-button-rounded" (click)="navigateTo('approvals')"></button>
+          <div class="flex items-center gap-2">
+            <p-tag [severity]="getStatusSeverity(req.status)" [value]="getStatusLabel(req.status)" styleClass="!text-[9px] !font-bold !px-2 !py-0.5 rounded"></p-tag>
+            <button pButton icon="pi pi-eye" 
+                class="p-button-text p-button-rounded !w-7 !h-7 !p-0 !text-[10px] !text-slate-500 hover:!bg-slate-200 dark:hover:!bg-slate-700 transition-colors" 
+                title="عرض التفاصيل"
+                (click)="navigateTo('approvals')">
+            </button>
           </div>
         </div>
       </div>
@@ -127,35 +158,37 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-1">
+    <button class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col items-center gap-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 transition-all group cursor-pointer text-center w-full shadow-sm"
             (click)="navigateTo('all-requests')">
-      <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <i class="pi pi-list text-blue-600 text-xl"></i>
+      <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/60 transition-colors">
+        <i class="pi pi-list text-blue-600 dark:text-blue-400 text-sm"></i>
       </div>
-      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">جميع الطلبات</span>
+      <span class="font-bold text-slate-700 dark:text-slate-300 text-[10px]">جميع الطلبات</span>
     </button>
-    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+    
+    <button class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col items-center gap-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all group cursor-pointer text-center w-full shadow-sm"
             (click)="navigateTo('employee-balances')">
-      <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <i class="pi pi-users text-emerald-600 text-xl"></i>
+      <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60 transition-colors">
+        <i class="pi pi-users text-emerald-600 dark:text-emerald-400 text-sm"></i>
       </div>
-      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">أرصدة الموظفين</span>
+      <span class="font-bold text-slate-700 dark:text-slate-300 text-[10px]">أرصدة الموظفين</span>
     </button>
-    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+
+    <button class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col items-center gap-2 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:border-violet-200 dark:hover:border-violet-800 transition-all group cursor-pointer text-center w-full shadow-sm"
             (click)="navigateTo('history')">
-      <div class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <i class="pi pi-history text-violet-600 text-xl"></i>
+      <div class="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-900/40 flex items-center justify-center group-hover:bg-violet-100 dark:group-hover:bg-violet-900/60 transition-colors">
+        <i class="pi pi-history text-violet-600 dark:text-violet-400 text-sm"></i>
       </div>
-      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">سجل الحركات</span>
+      <span class="font-bold text-slate-700 dark:text-slate-300 text-[10px]">سجل الحركات</span>
     </button>
-    <button class="glass-card p-5 rounded-3xl flex flex-col items-center gap-3 hover:shadow-lg transition-all group cursor-pointer text-center border-0 bg-transparent w-full"
+
+    <button class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group cursor-pointer text-center w-full shadow-sm"
             (click)="navigateTo('setup')">
-      <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <i class="pi pi-cog text-slate-600 text-xl"></i>
+      <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+        <i class="pi pi-cog text-slate-600 dark:text-slate-400 text-sm"></i>
       </div>
-      <span class="font-bold text-slate-700 dark:text-zinc-200 text-sm">الإعدادات</span>
+      <span class="font-bold text-slate-700 dark:text-slate-300 text-[10px]">الإعدادات</span>
     </button>
   </div>
-
 </div>

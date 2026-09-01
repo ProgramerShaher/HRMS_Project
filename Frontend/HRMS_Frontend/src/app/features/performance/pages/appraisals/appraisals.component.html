@@ -1,122 +1,141 @@
-<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
     <!-- Header -->
-    <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50 border-b border-slate-100">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">إدارة تقييمات الأداء</h2>
-            <p class="text-slate-500 text-sm mt-1">لوحة تحكم المديرين لإدارة واعتماد التقييمات</p>
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-900/30">
+                <i class="pi pi-star-fill text-[11px]"></i>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">إدارة تقييمات الأداء</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">لوحة تحكم المديرين لإدارة واعتماد التقييمات</p>
+            </div>
         </div>
-        <div class="flex gap-3">
-            <span class="p-input-icon-left">
-                <i class="pi pi-search text-slate-400"></i>
+        <div class="flex items-center gap-2">
+            <span class="p-input-icon-left relative">
+                <i class="pi pi-search absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
                 <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                    placeholder="بحث..." class="p-inputtext-sm w-full md:w-64 border-slate-200 focus:border-blue-500" />
+                    placeholder="بحث..." class="p-inputtext-sm w-full md:w-56 pl-7 !text-[10px]" />
             </span>
-            <button *ngIf="isAdmin()" pButton label="تهيئة دورة تقييم" icon="pi pi-plus" class="p-button-primary shadow-sm"
+            <button *ngIf="isAdmin()" pButton label="تهيئة تقييم" icon="pi pi-plus" class="p-button-outlined p-button-primary !h-8 !px-3 !py-0 flex justify-center items-center !rounded-md hover:!bg-blue-50 dark:hover:!bg-blue-900/20 !border-blue-200 dark:!border-blue-800 transition-all text-[10px] font-bold shadow-sm"
                 (click)="openInitiate()"></button>
         </div>
     </div>
 
     <!-- Table -->
-    <p-table #dt [value]="appraisals()" [loading]="loading()" [rowHover]="true" styleClass="p-datatable-striped"
-        responsiveLayout="scroll" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
-        [globalFilterFields]="['employeeName', 'cycleName', 'evaluatorName', 'status']"
-        currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} تقييم">
+    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
+        <p-table #dt [value]="appraisals()" [loading]="loading()" styleClass="p-datatable-sm clean-table"
+            responsiveLayout="scroll" [paginator]="true" [rows]="10"
+            [globalFilterFields]="['employeeName', 'cycleName', 'evaluatorName', 'status']"
+            currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} تقييم">
 
-        <ng-template pTemplate="header">
-            <tr class="bg-slate-50 text-slate-600 text-sm uppercase tracking-wider">
-                <th class="font-semibold p-4">الموظف</th>
-                <th class="font-semibold p-4">الدورة</th>
-                <th class="font-semibold p-4">تاريخ الفتح</th>
-                <th class="font-semibold p-4">المقيّم</th>
-                <th class="font-semibold p-4">الدرجة</th>
-                <th class="font-semibold p-4">المرحلة</th>
-                <th class="font-semibold p-4 text-center">الإجراءات</th>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="header">
+                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الدورة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">تاريخ الفتح</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">المقيّم</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الدرجة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">المرحلة</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center" style="width:120px">الإجراءات</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-a>
-            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                <td class="p-4 font-medium text-slate-800">{{ a.employeeName }}</td>
-                <td class="p-4 text-slate-600">{{ a.cycleName }}</td>
-                <td class="p-4 text-slate-500">{{ a.appraisalDate | date:'yyyy-MM-dd' }}</td>
-                <td class="p-4 text-slate-600">{{ a.evaluatorName }}</td>
-                <td class="p-4">
-                    <span *ngIf="a.status === 'COMPLETED'" class="font-bold text-lg"
-                        [ngClass]="{'text-green-600': a.finalScore >= 80, 'text-yellow-600': a.finalScore >= 60 && a.finalScore < 80, 'text-red-600': a.finalScore < 60}">
-                        {{ a.finalScore }}%
-                    </span>
-                    <span *ngIf="a.status !== 'COMPLETED'" class="text-slate-400 text-sm">قيد المراجعة</span>
-                </td>
-                <td class="p-4">
-                    <p-tag *ngIf="a.status === 'NOT_STARTED'" value="مسودة" severity="secondary"></p-tag>
-                    <p-tag *ngIf="a.status === 'SELF_EVALUATION'" value="تقييم ذاتي" severity="info"></p-tag>
-                    <p-tag *ngIf="a.status === 'MANAGER_EVALUATION'" value="تقييم المدير" severity="warn"></p-tag>
-                    <p-tag *ngIf="a.status === 'HR_REVIEW'" value="اعتماد الإدارة" severity="danger"></p-tag>
-                    <p-tag *ngIf="a.status === 'COMPLETED'" value="مكتمل" severity="success"></p-tag>
-                </td>
-                <td class="p-4 text-center">
-                    <div class="flex justify-center gap-2">
-                        <!-- View Result for completed appraisals -->
-                        <button *ngIf="a.status === 'COMPLETED'" pButton icon="pi pi-chart-pie" label="النتائج"
-                            class="p-button-sm p-button-success p-button-outlined"
-                            (click)="viewResult(a)"></button>
+            <ng-template pTemplate="body" let-a>
+                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                    <td class="!px-3 !py-2 !border-none">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-[10px] text-slate-700 dark:text-slate-200">{{ a.employeeName }}</span>
+                        </div>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none">
+                        <span class="text-[9px] font-medium text-slate-600 dark:text-slate-400">{{ a.cycleName }}</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                        {{ a.appraisalDate | date:'yyyy-MM-dd' }}
+                    </td>
+                    <td class="!px-3 !py-2 !border-none">
+                        <span class="text-[9px] font-medium text-slate-600 dark:text-slate-400">{{ a.evaluatorName }}</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <span *ngIf="a.status === 'COMPLETED'" class="font-bold text-[10px] font-mono"
+                            [ngClass]="{'text-emerald-600': a.finalScore >= 80, 'text-amber-600': a.finalScore >= 60 && a.finalScore < 80, 'text-rose-600': a.finalScore < 60}">
+                            {{ a.finalScore }}%
+                        </span>
+                        <span *ngIf="a.status !== 'COMPLETED'" class="text-[9px] font-medium text-slate-400 italic">قيد المراجعة</span>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none">
+                        <p-tag *ngIf="a.status === 'NOT_STARTED'" value="مسودة" severity="secondary" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'SELF_EVALUATION'" value="تقييم ذاتي" severity="info" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'MANAGER_EVALUATION'" value="تقييم المدير" severity="warn" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'HR_REVIEW'" value="اعتماد الإدارة" severity="danger" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                        <p-tag *ngIf="a.status === 'COMPLETED'" value="مكتمل" severity="success" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                    </td>
+                    <td class="!px-3 !py-2 !border-none text-center">
+                        <div class="flex justify-center gap-1.5">
+                            <!-- View Result for completed appraisals -->
+                            <button *ngIf="a.status === 'COMPLETED'" pButton icon="pi pi-chart-pie" label="النتائج"
+                                class="p-button-outlined p-button-success !h-6 !px-2 !py-0 !text-[9px] !font-bold shadow-sm"
+                                (click)="viewResult(a)"></button>
 
-                        <!-- Review actions based on Phase -->
-                        <button *ngIf="a.status === 'MANAGER_EVALUATION' || a.status === 'HR_REVIEW'" pButton icon="pi pi-pencil" label="مراجعة"
-                            class="p-button-sm p-button-primary p-button-outlined"
-                            (click)="openReview(a)"></button>
+                            <!-- Review actions based on Phase -->
+                            <button *ngIf="a.status === 'MANAGER_EVALUATION' || a.status === 'HR_REVIEW'" pButton icon="pi pi-pencil" label="مراجعة"
+                                class="p-button-outlined p-button-primary !h-6 !px-2 !py-0 !text-[9px] !font-bold shadow-sm"
+                                (click)="openReview(a)"></button>
 
-                        <button *ngIf="isAdmin()" pButton icon="pi pi-trash"
-                            class="p-button-rounded p-button-text p-button-danger hover:bg-red-50" pTooltip="إلغاء التقييم"
-                            tooltipPosition="top" (click)="delete(a)"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+                            <button *ngIf="isAdmin()" pButton icon="pi pi-trash"
+                                class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-[10px]" title="إلغاء التقييم"
+                                (click)="delete(a)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7" class="text-center p-8">
-                    <div class="flex flex-col items-center justify-center text-slate-400">
-                        <i class="pi pi-chart-bar text-4xl mb-2 opacity-50"></i>
-                        <p>لا توجد طلبات تقييم متاحة</p>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center py-8 bg-slate-50/50 dark:bg-slate-800/30">
+                        <i class="pi pi-star-fill text-2xl text-slate-300 dark:text-slate-600 block mb-2"></i>
+                        <span class="text-[10px] font-bold text-slate-500">لا توجد طلبات تقييم متاحة</span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
 <!-- Init Dialog -->
-<p-dialog [(visible)]="showInitDialog" [style]="{width: '500px'}" header="تهيئة دورة تقييم لموظف" [modal]="true"
-    [draggable]="false" [resizable]="false" styleClass="p-fluid rounded-xl">
-    <ng-template pTemplate="content">
-        <form [formGroup]="initForm" class="mt-2 space-y-4">
-            <div class="field">
-                <label class="block text-slate-700 font-bold mb-2">الموظف <span class="text-red-500">*</span></label>
-                <p-select [options]="employees()" formControlName="employeeId" optionLabel="label"
-                    optionValue="value" placeholder="اختر الموظف" [filter]="true" appendTo="body"
-                    styleClass="w-full"></p-select>
-            </div>
-            <div class="field">
-                <label class="block text-slate-700 font-bold mb-2">دورة التقييم <span class="text-red-500">*</span></label>
-                <p-select [options]="cycles()" formControlName="cycleId" optionLabel="cycleName"
-                    optionValue="cycleId" placeholder="اختر الدورة" appendTo="body"
-                    styleClass="w-full"></p-select>
-            </div>
-            <div class="field">
-                <label class="block text-slate-700 font-bold mb-2">المدير المُقيّم (اختياري)</label>
-                <p-select [options]="employees()" formControlName="evaluatorId" optionLabel="label"
-                    optionValue="value" placeholder="يحدد تلقائياً إن تُرك فارغاً" [filter]="true" appendTo="body"
-                    styleClass="w-full"></p-select>
+<p-dialog [(visible)]="showInitDialog" header="تهيئة دورة تقييم لموظف" [modal]="true"
+    [draggable]="false" [style]="{width: '450px'}" styleClass="p-fluid">
+    <div class="pt-2">
+        <form [formGroup]="initForm">
+            <div class="grid grid-cols-1 gap-3">
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">الموظف <span class="text-rose-500">*</span></label>
+                    <p-select [options]="employees()" formControlName="employeeId" optionLabel="label"
+                        optionValue="value" placeholder="اختر الموظف" [filter]="true" appendTo="body"
+                        styleClass="p-inputtext-sm w-full"></p-select>
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">دورة التقييم <span class="text-rose-500">*</span></label>
+                    <p-select [options]="cycles()" formControlName="cycleId" optionLabel="cycleName"
+                        optionValue="cycleId" placeholder="اختر الدورة" appendTo="body"
+                        styleClass="p-inputtext-sm w-full"></p-select>
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">المدير المُقيّم (اختياري)</label>
+                    <p-select [options]="employees()" formControlName="evaluatorId" optionLabel="label"
+                        optionValue="value" placeholder="يحدد تلقائياً إن تُرك فارغاً" [filter]="true" appendTo="body"
+                        styleClass="p-inputtext-sm w-full"></p-select>
+                </div>
             </div>
         </form>
-    </ng-template>
+    </div>
     <ng-template pTemplate="footer">
-        <button pButton label="إلغاء" class="p-button-text p-button-secondary" (click)="showInitDialog = false"></button>
-        <button pButton label="فتح التقييم" class="p-button-primary" (click)="submitInitiate()" [disabled]="initForm.invalid"></button>
+        <div class="border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-end gap-2 mt-2">
+            <button pButton label="إلغاء" class="p-button-text p-button-sm !text-[10px] !font-bold" (click)="showInitDialog = false"></button>
+            <button pButton label="فتح التقييم" class="p-button-primary p-button-sm !text-[10px] !font-bold shadow-sm" (click)="submitInitiate()" [disabled]="initForm.invalid"></button>
+        </div>
     </ng-template>
 </p-dialog>
 
 <p-toast position="bottom-left"></p-toast>
-<p-confirmDialog [style]="{width: '400px'}" rejectButtonStyleClass="p-button-text p-button-secondary"></p-confirmDialog>
+<p-confirmDialog [style]="{width: '400px'}"></p-confirmDialog>

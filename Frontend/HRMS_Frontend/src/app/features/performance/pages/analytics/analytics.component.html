@@ -1,79 +1,94 @@
-<div class="card p-0 overflow-hidden border-0 shadow-sm rounded-xl bg-white mb-6">
-    <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-t-xl">
-        <h2 class="text-3xl font-bold tracking-tight">تحليلات الأداء المتقدمة</h2>
-        <p class="text-blue-100 mt-2">رؤية تحليلية شاملة لبيانات تقييم الموظفين وتوزيع الدرجات</p>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <!-- Bar Chart: Score Distribution -->
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <i class="pi pi-chart-bar text-blue-500"></i>
-            توزيع درجات الأداء (Completed Only)
-        </h3>
-        <p-chart type="bar" [data]="barData()" [options]="barOptions()"></p-chart>
-    </div>
-
-    <!-- Pie Chart: Status Breakdown -->
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <i class="pi pi-chart-pie text-emerald-500"></i>
-            تحليل حالات التقييم (Progress)
-        </h3>
-        <p-chart type="pie" [data]="pieData()" [options]="pieOptions()"></p-chart>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Top Performers Table -->
-    <div class="lg:col-span-2 p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <i class="pi pi-star-fill text-yellow-500"></i>
-            أفضل 5 موظفين أداءً (Golden Stars)
-        </h3>
-        <p-table [value]="topPerformers()" styleClass="p-datatable-sm" responsiveLayout="scroll">
-            <ng-template pTemplate="header">
-                <tr class="bg-slate-50 text-slate-600 text-[10px] uppercase tracking-wider">
-                    <th class="p-3 font-semibold">الموظف</th>
-                    <th class="p-3 font-semibold">دورة التقييم</th>
-                    <th class="p-3 font-semibold text-center">الدرجة</th>
-                    <th class="p-3 font-semibold">التقدير</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-a>
-                <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                    <td class="p-3 font-medium text-slate-800 text-sm">{{ a.employeeName }}</td>
-                    <td class="p-3 text-slate-600 text-xs">{{ a.cycleName }}</td>
-                    <td class="p-3 text-center">
-                        <span class="font-bold text-emerald-600">{{ a.finalScore }}%</span>
-                    </td>
-                    <td class="p-3">
-                        <p-tag [value]="a.grade" severity="success" [rounded]="true" styleClass="text-[10px] px-2"></p-tag>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
-
-    <!-- Quick Insights -->
-    <div class="p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <i class="pi pi-info-circle text-blue-500"></i>
-            رؤى سريعة
-        </h3>
-        <div class="space-y-4">
-            <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
-                <p class="text-xs text-blue-600 font-bold mb-1 uppercase tracking-wider">نصيحة إدارية</p>
-                <p class="text-sm text-blue-700 leading-relaxed font-medium">
-                    يلاحظ وجود نسبة كبيرة في النطاق 80-100؛ يرجى مراجعة معايير التقييم لضمان الموضوعية (Avoid Lenience bias).
-                </p>
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm border border-indigo-100 dark:border-indigo-900/30">
+                <i class="pi pi-chart-bar text-[11px]"></i>
             </div>
-            <div class="p-4 bg-amber-50 rounded-lg border border-amber-100">
-                <p class="text-xs text-amber-600 font-bold mb-1 uppercase tracking-wider">تنبيه الموارد البشرية</p>
-                <p class="text-sm text-amber-700 leading-relaxed font-medium">
-                    هناك عدد من التقييمات العالقة في مرحلة (تقييم المدير)، يرجى إرسال التذكيرات الآلية.
-                </p>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">تحليلات الأداء المتقدمة</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">رؤية تحليلية شاملة لبيانات تقييم الموظفين وتوزيع الدرجات</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Bar Chart: Score Distribution -->
+        <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800 flex flex-col">
+            <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <i class="pi pi-align-left text-[11px] text-blue-500"></i>
+                توزيع درجات الأداء <span class="text-[9px] text-slate-400 font-normal">(Completed Only)</span>
+            </h3>
+            <div class="flex-1 min-h-[250px]">
+                <p-chart type="bar" [data]="barData()" [options]="barOptions()" height="100%"></p-chart>
+            </div>
+        </div>
+
+        <!-- Pie Chart: Status Breakdown -->
+        <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800 flex flex-col">
+            <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <i class="pi pi-chart-pie text-[11px] text-emerald-500"></i>
+                تحليل حالات التقييم <span class="text-[9px] text-slate-400 font-normal">(Progress)</span>
+            </h3>
+            <div class="flex-1 min-h-[250px] flex items-center justify-center">
+                <p-chart type="pie" [data]="pieData()" [options]="pieOptions()" height="100%"></p-chart>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Top Performers Table -->
+        <div class="lg:col-span-2 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800 flex flex-col overflow-hidden">
+            <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <i class="pi pi-star-fill text-[11px] text-amber-500"></i>
+                أفضل الموظفين أداءً <span class="text-[9px] text-slate-400 font-normal">(Golden Stars)</span>
+            </h3>
+            <div class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                <p-table [value]="topPerformers()" styleClass="p-datatable-sm clean-table" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr class="bg-slate-100/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700">
+                            <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                            <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">دورة التقييم</th>
+                            <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الدرجة</th>
+                            <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">التقدير</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-a>
+                        <tr class="hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/30">
+                            <td class="!px-3 !py-2 !border-none font-bold text-[10px] text-slate-700 dark:text-slate-200">{{ a.employeeName }}</td>
+                            <td class="!px-3 !py-2 !border-none text-[9px] font-medium text-slate-600 dark:text-slate-400">{{ a.cycleName }}</td>
+                            <td class="!px-3 !py-2 !border-none text-center">
+                                <span class="font-bold text-[10px] font-mono text-emerald-600 dark:text-emerald-400">{{ a.finalScore }}%</span>
+                            </td>
+                            <td class="!px-3 !py-2 !border-none text-center">
+                                <p-tag [value]="a.grade" severity="success" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+        <!-- Quick Insights -->
+        <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800 flex flex-col">
+            <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <i class="pi pi-lightbulb text-[11px] text-amber-500"></i>
+                رؤى سريعة
+            </h3>
+            <div class="space-y-3">
+                <div class="p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                    <p class="text-[9px] text-blue-600 dark:text-blue-400 font-bold mb-1 uppercase tracking-widest flex items-center gap-1.5"><i class="pi pi-info-circle text-[9px]"></i> نصيحة إدارية</p>
+                    <p class="text-[10px] text-blue-700 dark:text-blue-300 leading-relaxed font-medium">
+                        يلاحظ وجود نسبة كبيرة في النطاق 80-100؛ يرجى مراجعة معايير التقييم لضمان الموضوعية (Avoid Lenience bias).
+                    </p>
+                </div>
+                <div class="p-3 bg-amber-50/50 dark:bg-amber-900/10 rounded-lg border border-amber-100 dark:border-amber-900/30">
+                    <p class="text-[9px] text-amber-600 dark:text-amber-500 font-bold mb-1 uppercase tracking-widest flex items-center gap-1.5"><i class="pi pi-exclamation-triangle text-[9px]"></i> تنبيه الموارد البشرية</p>
+                    <p class="text-[10px] text-amber-700 dark:text-amber-400 leading-relaxed font-medium">
+                        هناك عدد من التقييمات العالقة في مرحلة (تقييم المدير)، يرجى إرسال التذكيرات الآلية.
+                    </p>
+                </div>
             </div>
         </div>
     </div>

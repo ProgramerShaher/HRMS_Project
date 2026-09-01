@@ -1,45 +1,42 @@
-<div class="p-6 space-y-6">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
   <p-toast></p-toast>
 
   <!-- Header -->
-  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <div>
-      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-          <i class="pi pi-list text-white text-xl"></i>
-        </div>
-        جميع طلبات الإجازة
-      </h1>
-      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">
-        {{ filtered().length }} طلب — نظرة إدارية شاملة على جميع الطلبات
-      </p>
-    </div>
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
     <div class="flex items-center gap-3">
-      <button pButton icon="pi pi-refresh" label="تحديث" class="p-button-outlined p-button-secondary" (click)="load()"></button>
-      <button pButton icon="pi pi-plus" label="تقديم طلب إجازة" class="p-button-primary" (click)="showRequestDialog = true" pTooltip="إنشاء طلب كمدير نيابة عن موظف أو كطلب شخصي"></button>
+      <div class="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+        <i class="pi pi-list text-[11px]"></i>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">جميع طلبات الإجازة</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">{{ filtered().length }} طلب — نظرة إدارية شاملة على جميع الطلبات</p>
+      </div>
     </div>
-  </div>
-
-  <!-- Filters -->
-  <div class="glass-card p-4 rounded-2xl flex flex-wrap items-end gap-4">
-    <div class="flex flex-col gap-1.5 flex-1 min-w-[200px]">
-      <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">بحث</label>
-      <input pInputText [(ngModel)]="searchText" (ngModelChange)="applyFilter()"
-             placeholder="اسم الموظف أو نوع الإجازة أو القسم..."
-             class="rounded-xl"/>
+    
+    <div class="flex items-center gap-2 w-full md:w-auto">
+        <div class="relative flex items-center flex-grow md:flex-none">
+            <i class="pi pi-search absolute left-2.5 text-slate-400 text-[10px]"></i>
+            <input pInputText type="text" [(ngModel)]="searchText" (ngModelChange)="applyFilter()" placeholder="اسم الموظف، الإجازة، القسم..." 
+                class="w-full md:w-64 !h-8 !pl-8 !pr-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-emerald-500 transition-all" />
+        </div>
+        <p-select [options]="statusOptions" [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()"
+            optionLabel="label" optionValue="value"
+            placeholder="جميع الحالات" 
+            styleClass="w-32 md:w-40 !h-8 !text-[10px] !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!border-emerald-500 transition-all flex items-center">
+        </p-select>
+        <button pButton icon="pi pi-refresh" title="تحديث"
+            class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+            (click)="load()">
+        </button>
+        <button pButton icon="pi pi-plus" label="تقديم طلب إجازة" pTooltip="إنشاء طلب كمدير نيابة عن موظف أو كطلب شخصي"
+            class="p-button-primary !h-8 !bg-emerald-600 hover:!bg-emerald-700 !border-none !text-[10px] !font-bold !rounded-md !px-3 shadow-sm transition-colors whitespace-nowrap"
+            (click)="showRequestDialog = true">
+        </button>
     </div>
-    <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">الحالة</label>
-      <p-select [options]="statusOptions" [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()"
-                optionLabel="label" optionValue="value"
-                placeholder="جميع الحالات" class="w-48"></p-select>
-    </div>
-    <button pButton icon="pi pi-filter-slash" label="إعادة تعيين" class="p-button-outlined p-button-secondary"
-            (click)="resetFilters()"></button>
   </div>
 
   <!-- Table -->
-  <div class="glass-card rounded-3xl overflow-hidden">
+  <div class="flex-grow bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative">
     <p-table
       [value]="filtered()"
       [loading]="loading()"
@@ -47,63 +44,75 @@
       [rows]="15"
       [rowsPerPageOptions]="[15, 30, 50]"
       responsiveLayout="scroll"
-      styleClass="p-datatable-striped">
+      styleClass="p-datatable-sm clean-table"
+      [rowHover]="true">
 
       <ng-template pTemplate="header">
-        <tr>
-          <th>الموظف</th>
-          <th>القسم</th>
-          <th>نوع الإجازة</th>
-          <th class="text-center">من</th>
-          <th class="text-center">إلى</th>
-          <th class="text-center">الأيام</th>
-          <th>تاريخ الطلب</th>
-          <th class="text-center">الحالة</th>
-          <th class="text-center">الإجراء</th>
+        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">الموظف</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">القسم</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">نوع الإجازة</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">التاريخ (من-إلى)</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">الأيام</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">تاريخ الطلب</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">الحالة</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center w-24">الإجراء</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-req>
-        <tr>
-          <td>
+        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors duration-200 border-b border-slate-50 dark:border-slate-800/50">
+          <td class="!px-4 !py-2 !border-none">
             <div class="flex items-center gap-2">
-              <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-sm font-black text-blue-600">
+              <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-[10px] font-black text-emerald-600">
                 {{ req.employeeName?.charAt(0) ?? '?' }}
               </div>
               <div>
-                <p class="font-bold text-slate-900 dark:text-white text-sm">{{ req.employeeName ?? '—' }}</p>
-                <p class="text-xs text-slate-400">#{{ req.employeeNumber ?? req.employeeId }}</p>
+                <p class="font-bold text-slate-800 dark:text-slate-200 text-[10px]">{{ req.employeeName ?? '—' }}</p>
+                <p class="text-[9px] text-slate-400 font-mono">#{{ req.employeeNumber ?? req.employeeId }}</p>
               </div>
             </div>
           </td>
-          <td class="text-sm text-slate-500">{{ req.departmentName ?? '—' }}</td>
-          <td class="font-semibold text-slate-700 dark:text-zinc-300 text-sm">{{ req.leaveTypeName ?? '—' }}</td>
-          <td class="text-center text-sm">{{ req.startDate | date:'dd/MM/yyyy' }}</td>
-          <td class="text-center text-sm">{{ req.endDate | date:'dd/MM/yyyy' }}</td>
-          <td class="text-center">
-            <span class="px-3 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 font-black text-sm">
+          <td class="!px-4 !py-2 !text-[9px] !text-slate-500 dark:!text-slate-400 !font-bold !border-none">{{ req.departmentName ?? '—' }}</td>
+          <td class="!px-4 !py-2 !text-[9px] !text-slate-700 dark:!text-slate-300 !font-bold !border-none">{{ req.leaveTypeName ?? '—' }}</td>
+          <td class="!px-4 !py-2 !border-none text-center">
+            <div class="flex items-center justify-center gap-1">
+                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 w-fit">
+                    <span class="font-mono font-bold text-[8px]">{{ req.startDate | date:'dd/MM/yyyy' }}</span>
+                </span>
+                <span class="text-[8px] text-slate-400">-</span>
+                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 w-fit">
+                    <span class="font-mono font-bold text-[8px]">{{ req.endDate | date:'dd/MM/yyyy' }}</span>
+                </span>
+            </div>
+          </td>
+          <td class="!px-4 !py-2 !border-none text-center">
+            <span class="px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-800/50 text-[10px] font-bold inline-block mx-auto min-w-[30px]">
               {{ req.daysCount }}
             </span>
           </td>
-          <td class="text-sm text-slate-500">{{ req.createdAt | date:'dd/MM/yyyy' }}</td>
-          <td class="text-center">
-            <p-tag [severity]="getStatusSeverity(req.status)" [value]="getStatusLabel(req.status)"></p-tag>
+          <td class="!px-4 !py-2 !border-none text-center text-[9px] text-slate-500 font-mono">{{ req.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td class="!px-4 !py-2 !border-none text-center">
+            <p-tag [severity]="getStatusSeverity(req.status)" [value]="getStatusLabel(req.status)" styleClass="!text-[9px] !font-bold !px-2 !py-0.5"></p-tag>
           </td>
-          <td class="text-center">
+          <td class="!px-4 !py-2 !border-none text-center">
             <button *ngIf="canCancel(req.status)"
-                    pButton icon="pi pi-ban" label="إلغاء"
-                    class="p-button-outlined p-button-danger p-button-sm"
+                    pButton icon="pi pi-times" 
+                    class="p-button-text p-button-rounded !w-7 !h-7 !p-0 !text-[11px] !text-red-500 hover:!bg-red-100 dark:hover:!bg-red-900/40 transition-colors mx-auto block"
+                    title="إلغاء الطلب"
                     (click)="openCancelDialog(req)"></button>
-            <span *ngIf="!canCancel(req.status)" class="text-slate-300 text-xs">—</span>
+            <span *ngIf="!canCancel(req.status)" class="text-slate-300 dark:text-slate-600 text-xs">—</span>
           </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="9" class="text-center py-16 text-slate-400">
-            <i class="pi pi-inbox text-5xl block mb-3"></i>
-            <p class="font-bold">لا توجد طلبات مطابقة</p>
+          <td colspan="8" class="text-center py-12 text-slate-400">
+            <div class="flex flex-col items-center justify-center">
+                <i class="pi pi-inbox text-3xl mb-3 opacity-50"></i>
+                <p class="text-[11px] font-bold text-slate-900 dark:text-white mb-1">لا توجد طلبات مطابقة</p>
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -114,47 +123,72 @@
 <!-- Cancel Dialog -->
 <p-dialog
   [(visible)]="showCancelDialog"
-  [modal]="true" [draggable]="false" [resizable]="false"
-  header="إلغاء طلب الإجازة"
-  [style]="{ width: '420px' }">
-
-  <div class="px-2 py-4 space-y-4" *ngIf="selectedRequest">
-    <div class="bg-rose-50 dark:bg-rose-900/20 rounded-2xl p-4 space-y-2">
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">الموظف</span>
-        <span class="font-bold">{{ selectedRequest.employeeName }}</span>
-      </div>
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">نوع الإجازة</span>
-        <span class="font-bold">{{ selectedRequest.leaveTypeName }}</span>
-      </div>
-      <div class="flex justify-between text-sm">
-        <span class="text-slate-500">الأيام</span>
-        <span class="font-black text-rose-600">{{ selectedRequest.daysCount }}</span>
-      </div>
+  [modal]="true" 
+  [dismissableMask]="true"
+  [showHeader]="false"
+  [style]="{ width: '420px' }"
+  styleClass="clean-dialog !bg-transparent !border-none !shadow-none"
+  contentStyleClass="!p-0 !overflow-visible">
+  
+  <div class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800" dir="rtl">
+    <!-- Dialog Header -->
+    <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                <i class="pi pi-exclamation-triangle text-[13px]"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+                إلغاء طلب الإجازة
+            </h3>
+        </div>
+        <button type="button"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            (click)="showCancelDialog = false">
+            <i class="pi pi-times text-[12px]"></i>
+        </button>
     </div>
-    <p class="text-sm text-slate-600 dark:text-zinc-400">هل أنت متأكد من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.</p>
+
+    <div class="px-5 py-4 space-y-4" *ngIf="selectedRequest">
+        <div class="bg-rose-50 dark:bg-rose-900/20 rounded-xl p-4 border border-rose-100 dark:border-rose-900/30 space-y-2">
+            <div class="flex justify-between items-center text-[11px]">
+                <span class="text-slate-500 font-bold">الموظف</span>
+                <span class="font-bold text-slate-800 dark:text-slate-200">{{ selectedRequest.employeeName }}</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px]">
+                <span class="text-slate-500 font-bold">نوع الإجازة</span>
+                <span class="font-bold text-slate-800 dark:text-slate-200">{{ selectedRequest.leaveTypeName }}</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px]">
+                <span class="text-slate-500 font-bold">الأيام</span>
+                <span class="font-black text-rose-600">{{ selectedRequest.daysCount }}</span>
+            </div>
+        </div>
+        <p class="text-[11px] font-bold text-slate-600 dark:text-slate-400 text-center">هل أنت متأكد من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 mt-auto rounded-b-xl">
+        <button pButton label="تراجع" type="button"
+            class="p-button-text !h-9 !text-[12px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-5 !rounded-lg transition-colors"
+            (click)="showCancelDialog = false">
+        </button>
+        <button pButton label="تأكيد الإلغاء" icon="pi pi-ban" [loading]="cancelling()"
+            class="p-button-danger !h-9 !bg-red-600 hover:!bg-red-700 !border-none !text-[12px] !px-6 !rounded-lg shadow-sm font-bold transition-colors"
+            (click)="confirmCancel()">
+        </button>
+    </div>
   </div>
-
-  <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3">
-      <button pButton label="تراجع" icon="pi pi-arrow-right" class="p-button-text p-button-secondary"
-              (click)="showCancelDialog = false"></button>
-      <button pButton label="تأكيد الإلغاء" icon="pi pi-ban" class="p-button-danger"
-              [loading]="cancelling()" (click)="confirmCancel()"></button>
-    </div>
-  </ng-template>
 </p-dialog>
 
 <!-- Create Request Dialog -->
 <p-dialog 
   [(visible)]="showRequestDialog" 
   [modal]="true" 
-  header="تقديم طلب إجازة" 
+  [dismissableMask]="true"
+  [showHeader]="false"
   [style]="{ width: '500px' }"
-  [draggable]="false"
-  [resizable]="false"
-  styleClass="custom-dialog">
+  styleClass="clean-dialog !bg-transparent !border-none !shadow-none"
+  contentStyleClass="!p-0 !overflow-visible">
   <app-leave-request-form 
     (submitted)="onFormSubmitted()" 
     (cancelled)="showRequestDialog = false">

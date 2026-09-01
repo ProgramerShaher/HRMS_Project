@@ -1,112 +1,139 @@
-<div class="grid grid-cols-1 gap-6">
+<div class="grid grid-cols-1 gap-4" dir="rtl">
     <p-toast></p-toast>
     
     <!-- Bulk Initialize -->
-    <div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
-        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <i class="pi pi-calendar-plus text-blue-600"></i>
-            إنشاء جدول مناوبات (Bulk)
-        </h3>
-        
-        <form [formGroup]="initForm" (ngSubmit)="onInitialize()" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                <div class="field">
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">من تاريخ</label>
-                    <p-datepicker formControlName="startDate" [showIcon]="true" styleClass="w-full"></p-datepicker>
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                    <i class="pi pi-calendar-plus text-[11px]"></i>
                 </div>
-                <div class="field">
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">إلى تاريخ</label>
-                    <p-datepicker formControlName="endDate" [showIcon]="true" styleClass="w-full"></p-datepicker>
-                </div>
-                <div class="field">
-                     <label class="block text-sm font-medium mb-1 dark:text-gray-300">المناوبة الافتراضية</label>
-                     <p-select [options]="shifts()" formControlName="shiftId" optionLabel="shiftNameAr" optionValue="shiftId" placeholder="اختر المناوبة" styleClass="w-full"></p-select>
-                </div>
-                <div class="field">
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف (اختياري)</label>
-                    <p-select [options]="employees()" formControlName="employeeId" optionLabel="fullName" optionValue="id" [showClear]="true" placeholder="الكل (اختياري)" styleClass="w-full"></p-select>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">إنشاء جدول مناوبات (Bulk)</h3>
+                    <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">توزيع المناوبات على الموظفين لفترة زمنية محددة</p>
                 </div>
             </div>
-            <button pButton type="submit" label="إنشاء الجدول" icon="pi pi-check" [disabled]="initForm.invalid" class="w-full md:w-auto"></button>
+        </div>
+        
+        <form [formGroup]="initForm" (ngSubmit)="onInitialize()" class="space-y-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                <div class="field">
+                    <label class="block text-[10px] font-bold mb-1.5 text-slate-700 dark:text-slate-300">من تاريخ</label>
+                    <p-datepicker formControlName="startDate" [showIcon]="true" styleClass="w-full p-inputtext-sm"></p-datepicker>
+                </div>
+                <div class="field">
+                    <label class="block text-[10px] font-bold mb-1.5 text-slate-700 dark:text-slate-300">إلى تاريخ</label>
+                    <p-datepicker formControlName="endDate" [showIcon]="true" styleClass="w-full p-inputtext-sm"></p-datepicker>
+                </div>
+                <div class="field">
+                     <label class="block text-[10px] font-bold mb-1.5 text-slate-700 dark:text-slate-300">المناوبة الافتراضية</label>
+                     <p-select [options]="shifts()" formControlName="shiftId" optionLabel="shiftNameAr" optionValue="shiftId" placeholder="اختر المناوبة" styleClass="w-full p-inputtext-sm"></p-select>
+                </div>
+                <div class="field">
+                    <label class="block text-[10px] font-bold mb-1.5 text-slate-700 dark:text-slate-300">الموظف (اختياري)</label>
+                    <p-select [options]="employees()" formControlName="employeeId" optionLabel="fullName" optionValue="id" [showClear]="true" placeholder="الكل (اختياري)" styleClass="w-full p-inputtext-sm"></p-select>
+                </div>
+                <div class="field pb-0.5">
+                    <button pButton type="submit" label="إنشاء الجدول" icon="pi pi-check" [disabled]="initForm.invalid" class="w-full p-button-primary !text-[10px] !font-bold !h-9 shadow-sm"></button>
+                </div>
+            </div>
         </form>
     </div>
 
     <!-- Manual Assignment Editor -->
-    <div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
-        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <i class="pi pi-user-edit text-purple-600"></i>
-            تخصيص يدوي / تعديل
-        </h3>
-        
-        <div class="flex items-center gap-4 mb-6">
-            <div class="flex-1 max-w-md">
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300">اختر الموظف</label>
-                <p-select [options]="employees()" [(ngModel)]="selectedEmployeeId" optionLabel="fullName" optionValue="id" [filter]="true" filterBy="fullName" placeholder="ابحث عن الموظف..." styleClass="w-full"></p-select>
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-md bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+                    <i class="pi pi-user-edit text-[11px]"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">تخصيص يدوي / تعديل</h3>
+                    <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">استعراض وتعديل مناوبات موظف محدد</p>
+                </div>
             </div>
-            <button pButton label="عرض الجدول" icon="pi pi-search" (click)="fetchEmployeeRoster()" class="mt-6"></button>
+            
+            <div class="flex items-center gap-2">
+                <div class="w-64">
+                    <p-select [options]="employees()" [(ngModel)]="selectedEmployeeId" optionLabel="fullName" optionValue="id" [filter]="true" filterBy="fullName" placeholder="اختر الموظف..." styleClass="w-full p-inputtext-sm"></p-select>
+                </div>
+                <button pButton icon="pi pi-search" title="عرض الجدول"
+                    class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all text-[11px]"
+                    (click)="fetchEmployeeRoster()"></button>
+            </div>
         </div>
 
-        <p-table [value]="employeeRoster()" *ngIf="employeeRoster().length > 0" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-gridlines">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>التاريخ</th>
-                    <th>اليوم</th>
-                    <th>المناوبة الحالية</th>
-                    <th>التوقيت</th>
-                    <th>الحالة</th>
-                    <th>تعديل</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-roster>
-                <tr [ngClass]="{'bg-amber-50/50 dark:bg-amber-900/10': roster.isOffDay}">
-                    <td>{{ roster.date | date:'yyyy-MM-dd' }}</td>
-                    <td class="font-bold">{{ roster.dayName }}</td>
-                    <td>{{ roster.shiftName }}</td>
-                    <td>
-                        <span *ngIf="!roster.isOffDay" class="text-xs">
-                            {{ roster.startTime }} - {{ roster.endTime }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="px-2 py-1 rounded text-xs text-white" 
-                              [ngClass]="{'bg-green-500': !roster.isOffDay, 'bg-amber-500': roster.isOffDay}">
-                            {{ roster.isOffDay ? 'إجازة' : 'دوام' }}
-                        </span>
-                    </td>
-                    <td>
-                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" (click)="openEditDialog(roster)"></button>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+        <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col mt-2" *ngIf="employeeRoster().length > 0">
+            <p-table [value]="employeeRoster()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm clean-table">
+                <ng-template pTemplate="header">
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التاريخ</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">اليوم</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">المناوبة الحالية</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">التوقيت</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">تعديل</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-roster>
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50" [ngClass]="{'bg-amber-50/20 dark:bg-amber-900/5': roster.isOffDay}">
+                        <td class="!px-3 !py-1.5 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">{{ roster.date | date:'yyyy-MM-dd' }}</td>
+                        <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">{{ roster.dayName }}</td>
+                        <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">
+                            {{ roster.shiftName }}
+                        </td>
+                        <td class="!px-3 !py-1.5 !border-none text-center">
+                            <span *ngIf="!roster.isOffDay" class="text-[9px] font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 rounded border border-blue-100 dark:border-blue-900/30">
+                                {{ roster.startTime }} - {{ roster.endTime }}
+                            </span>
+                            <span *ngIf="roster.isOffDay" class="text-slate-400 text-[10px]">-</span>
+                        </td>
+                        <td class="!px-3 !py-1.5 !border-none text-center">
+                            <span class="px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest border inline-block min-w-[40px]" 
+                                  [ngClass]="roster.isOffDay ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'">
+                                {{ roster.isOffDay ? 'إجازة' : 'دوام' }}
+                            </span>
+                        </td>
+                        <td class="!px-3 !py-1.5 !border-none text-center">
+                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-warning !w-6 !h-6 !p-0 !text-[11px]" (click)="openEditDialog(roster)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
         
-        <div *ngIf="employeeRoster().length === 0 && selectedEmployeeId()" class="text-center text-slate-400 py-8">
-            لا توجد بيانات جدول لهذا الموظف.
+        <div *ngIf="employeeRoster().length === 0 && selectedEmployeeId()" class="text-center bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded-xl py-8 mt-2">
+            <i class="pi pi-inbox text-xl text-slate-300 dark:text-slate-600 mb-2 block"></i>
+            <span class="text-[10px] font-bold text-slate-500">لا توجد بيانات جدول لهذا الموظف.</span>
         </div>
     </div>
 </div>
 
 <!-- Edit Day Dialog -->
-<p-dialog [(visible)]="editDialogVisible" header="تعديل مناوبة يوم" [modal]="true" [style]="{width: '400px'}">
-    <div class="p-4" *ngIf="editingDate">
-        <div class="mb-4 text-center font-bold text-lg border-b pb-2">
+<p-dialog [(visible)]="editDialogVisible" header="تعديل مناوبة يوم" [modal]="true" [style]="{width: '350px'}">
+    <div class="pt-4" *ngIf="editingDate">
+        <div class="mb-4 text-center text-xs font-bold font-mono tracking-widest bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 py-2 rounded-lg text-slate-700 dark:text-slate-300 shadow-sm">
             {{ editingDate | date:'fullDate' }}
         </div>
         
         <form [formGroup]="editDayForm">
-            <div class="field-checkbox mb-4 flex items-center gap-2">
+            <div class="field-checkbox mb-4 flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
                 <p-checkbox formControlName="isOffDay" [binary]="true" inputId="isOffDay"></p-checkbox>
-                <label for="isOffDay" class="cursor-pointer select-none">يوم إجازة (Off Day)</label>
+                <label for="isOffDay" class="cursor-pointer select-none text-[10px] font-bold text-slate-700 dark:text-slate-300">يوم إجازة (Off Day)</label>
             </div>
 
             <div class="field" *ngIf="!editDayForm.get('isOffDay')?.value">
-                <label class="block text-sm font-medium mb-1">المناوبة</label>
-                <p-select [options]="shifts()" formControlName="shiftId" optionLabel="shiftNameAr" optionValue="shiftId" placeholder="اختر المناوبة" styleClass="w-full"></p-select>
+                <label class="block text-[10px] font-bold mb-1.5 text-slate-700 dark:text-slate-300">المناوبة</label>
+                <p-select [options]="shifts()" formControlName="shiftId" optionLabel="shiftNameAr" optionValue="shiftId" placeholder="اختر المناوبة" styleClass="w-full p-inputtext-sm"></p-select>
             </div>
         </form>
     </div>
     <ng-template pTemplate="footer">
-        <button pButton label="إلغاء" class="p-button-text" (click)="editDialogVisible = false"></button>
-        <button pButton label="حفظ التغييرات" icon="pi pi-check" (click)="saveDayEdit()"></button>
+        <div class="border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-end gap-2">
+            <button pButton label="إلغاء" class="p-button-text p-button-sm !text-[10px] !font-bold" (click)="editDialogVisible = false"></button>
+            <button pButton label="حفظ التغييرات" icon="pi pi-check" class="p-button-primary p-button-sm !text-[10px] !font-bold shadow-sm" (click)="saveDayEdit()"></button>
+        </div>
     </ng-template>
 </p-dialog>

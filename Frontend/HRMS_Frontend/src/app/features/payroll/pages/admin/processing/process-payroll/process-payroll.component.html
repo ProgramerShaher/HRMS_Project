@@ -1,189 +1,152 @@
-<div class="p-6 space-y-6 animate-in fade-in duration-500">
-  <!-- Action Buttons -->
-  <app-action-buttons
-    [showBack]="true"
-    [showRefresh]="true"
-    backRoute="/payroll/dashboard"
-    (refresh)="loadEmployeesSummary()"
-  ></app-action-buttons>
-
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700 max-w-4xl mx-auto mt-4" dir="rtl">
+  
   <!-- Header -->
-  <div class="glass-panel p-6 rounded-2xl">
-    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-      معالجة الرواتب
-    </h1>
-    <p class="text-slate-500 dark:text-zinc-400 mt-1">
-      معالجة رواتب الموظفين للشهر المحدد
-    </p>
-  </div>
-
-  <!-- Date Selection -->
-  <div class="glass-panel p-6 rounded-2xl">
-    <div class="flex items-center gap-4">
-      <div class="flex-1">
-        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">
-          اختر الشهر
-        </label>
-        <p-datepicker
-          [ngModel]="selectedDate()"
-          (ngModelChange)="onDateChange($event)"
-          view="month"
-          dateFormat="yy-mm"
-          [showIcon]="true"
-          styleClass="w-full"
-        ></p-datepicker>
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <i class="pi pi-cog text-[11px] animate-spin-slow"></i>
       </div>
-      <div class="flex items-end">
-        <p-button
-          label="معالجة الرواتب"
-          icon="pi pi-play"
-          severity="success"
-          size="large"
-          [loading]="processing()"
-          [disabled]="processing() || summary().status === 'COMPLETED'"
-          (onClick)="processPayroll()"
-        ></p-button>
+      <div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">معالجة الرواتب</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">معالجة رواتب الموظفين للشهر المحدد</p>
       </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <button pButton icon="pi pi-refresh" title="تحديث"
+          class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+          (click)="loadEmployeesSummary()"></button>
+      <button pButton icon="pi pi-arrow-left" title="رجوع" routerLink="/payroll/dashboard"
+          class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"></button>
     </div>
   </div>
 
-  <!-- Status Card -->
-  <div class="glass-panel p-6 rounded-2xl">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-xl font-bold text-slate-900 dark:text-white">
-        حالة المعالجة
-      </h3>
-      <p-tag
-        [value]="getStatusLabel(summary().status)"
-        [severity]="getStatusSeverity(summary().status)"
-      ></p-tag>
+  <!-- Control Section -->
+  <div class="bg-slate-50 dark:bg-slate-800/30 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-end gap-4">
+    <div class="flex-1 w-full">
+      <label class="block text-[9px] font-bold text-slate-700 dark:text-slate-300 mb-1">اختر الشهر</label>
+      <p-datepicker
+        [ngModel]="selectedDate()"
+        (ngModelChange)="onDateChange($event)"
+        view="month"
+        dateFormat="yy-mm"
+        [showIcon]="true"
+        styleClass="!h-8 !w-full"
+        inputStyleClass="!text-[10px] !bg-white dark:!bg-slate-900 !border-slate-200 dark:!border-slate-700 focus:!border-blue-500"
+      ></p-datepicker>
+    </div>
+    <button pButton label="بدء المعالجة" icon="pi pi-play" 
+        [loading]="processing()" 
+        [disabled]="processing() || summary().status === 'COMPLETED'"
+        (click)="processPayroll()"
+        class="p-button-primary !h-8 !bg-blue-600 hover:!bg-blue-700 !border-none !text-[10px] !font-bold !rounded-md !px-4 w-full md:w-auto shadow-sm transition-colors whitespace-nowrap"></button>
+  </div>
+
+  <!-- Status & Progress -->
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+      <div class="flex items-center gap-2">
+        <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+        <h3 class="text-[10px] font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">حالة المعالجة</h3>
+      </div>
+      <p-tag [value]="getStatusLabel(summary().status)" [severity]="getStatusSeverity(summary().status)" styleClass="!text-[9px] !px-2 !py-0.5 !rounded-md"></p-tag>
     </div>
 
     @if (processing()) {
-      <div class="space-y-4">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-slate-600 dark:text-zinc-400">جاري المعالجة...</span>
-          <span class="font-bold text-blue-600">{{ progress() }}%</span>
+      <div class="space-y-2 bg-blue-50/50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+        <div class="flex items-center justify-between text-[10px]">
+          <span class="text-blue-700 dark:text-blue-300 font-bold"><i class="pi pi-spin pi-spinner text-[9px] ml-1"></i> جاري المعالجة...</span>
+          <span class="font-black text-blue-600 dark:text-blue-400">{{ progress() }}%</span>
         </div>
-        <p-progressBar [value]="progress()" [showValue]="false"></p-progressBar>
+        <p-progressBar [value]="progress()" [showValue]="false" styleClass="!h-1.5"></p-progressBar>
       </div>
     }
 
     @if (summary().status === 'COMPLETED') {
-      <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4">
-        <div class="flex items-center gap-3">
-          <i class="pi pi-check-circle text-3xl text-emerald-600"></i>
-          <div>
-            <h4 class="font-bold text-emerald-900 dark:text-emerald-100">
-              تمت المعالجة بنجاح
-            </h4>
-            <p class="text-sm text-emerald-700 dark:text-emerald-300">
-              تم معالجة رواتب {{ summary().processedEmployees }} موظف
-            </p>
-          </div>
+      <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 flex items-center gap-3">
+        <i class="pi pi-check-circle text-xl text-emerald-600"></i>
+        <div>
+          <h4 class="text-[10px] font-bold text-emerald-900 dark:text-emerald-100">تمت المعالجة بنجاح</h4>
+          <p class="text-[9px] text-emerald-700 dark:text-emerald-300 mt-0.5">تم معالجة رواتب {{ summary().processedEmployees }} موظف</p>
         </div>
       </div>
     }
   </div>
 
   <!-- Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <!-- Total Employees -->
-    <div class="card-floating">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-500 dark:text-zinc-400">عدد الموظفين</p>
-          <h3 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
-            {{ summary().totalEmployees }}
-          </h3>
-        </div>
-        <div class="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
-          <i class="pi pi-users text-2xl"></i>
-        </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <!-- Employees -->
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-blue-200 dark:hover:border-blue-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400">عدد الموظفين</p>
+        <h3 class="text-lg font-black text-slate-800 dark:text-slate-100 mt-0.5 font-mono">{{ summary().totalEmployees }}</h3>
+      </div>
+      <div class="w-8 h-8 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <i class="pi pi-users text-[14px]"></i>
       </div>
     </div>
 
-    <!-- Total Gross Salary -->
-    <div class="card-floating">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-500 dark:text-zinc-400">إجمالي الرواتب</p>
-          <h3 class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-            {{ formatCurrency(summary().totalGrossSalary) }}
-          </h3>
-        </div>
-        <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
-          <i class="pi pi-wallet text-2xl"></i>
-        </div>
+    <!-- Gross -->
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400">إجمالي الرواتب</p>
+        <h3 class="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-0.5 font-mono">{{ formatCurrency(summary().totalGrossSalary) }}</h3>
+      </div>
+      <div class="w-8 h-8 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+        <i class="pi pi-plus-circle text-[14px]"></i>
       </div>
     </div>
 
-    <!-- Total Deductions -->
-    <div class="card-floating">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-500 dark:text-zinc-400">الخصومات</p>
-          <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
-            {{ formatCurrency(summary().totalDeductions) }}
-          </h3>
-        </div>
-        <div class="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl">
-          <i class="pi pi-minus-circle text-2xl"></i>
-        </div>
+    <!-- Deductions -->
+    <div class="bg-slate-50 dark:bg-slate-800/30 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group hover:border-rose-200 dark:hover:border-rose-800 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400">الخصومات</p>
+        <h3 class="text-lg font-black text-rose-600 dark:text-rose-400 mt-0.5 font-mono">{{ formatCurrency(summary().totalDeductions) }}</h3>
+      </div>
+      <div class="w-8 h-8 rounded-md bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+        <i class="pi pi-minus-circle text-[14px]"></i>
       </div>
     </div>
 
-    <!-- Total Net Salary -->
-    <div class="card-floating bg-gradient-to-br from-purple-500 to-blue-600">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-white/80">صافي الرواتب</p>
-          <h3 class="text-2xl font-bold text-white mt-1">
-            {{ formatCurrency(summary().totalNetSalary) }}
-          </h3>
-        </div>
-        <div class="p-3 bg-white/20 text-white rounded-xl">
-          <i class="pi pi-money-bill text-2xl"></i>
-        </div>
+    <!-- Net -->
+    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-lg border border-indigo-200 dark:border-indigo-800 flex items-center justify-between group hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors">
+      <div>
+        <p class="text-[9px] font-bold text-indigo-800 dark:text-indigo-200">صافي الرواتب</p>
+        <h3 class="text-lg font-black text-indigo-600 dark:text-indigo-400 mt-0.5 font-mono">{{ formatCurrency(summary().totalNetSalary) }}</h3>
+      </div>
+      <div class="w-8 h-8 rounded-md bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 flex items-center justify-center">
+        <i class="pi pi-wallet text-[14px]"></i>
       </div>
     </div>
   </div>
 
   <!-- Errors -->
   @if (summary().errors.length > 0) {
-    <div class="glass-panel p-6 rounded-2xl">
-      <h3 class="text-xl font-bold text-red-600 dark:text-red-400 mb-4">
-        <i class="pi pi-exclamation-triangle ml-2"></i>
+    <div class="bg-rose-50/50 dark:bg-rose-900/10 p-4 rounded-lg border border-rose-200 dark:border-rose-900/30">
+      <h3 class="text-[10px] font-bold text-rose-700 dark:text-rose-400 mb-2 flex items-center gap-1.5">
+        <i class="pi pi-exclamation-triangle"></i>
         أخطاء المعالجة
       </h3>
-      <div class="space-y-2">
+      <div class="space-y-1.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
         @for (error of summary().errors; track error) {
-          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-            <p class="text-sm text-red-700 dark:text-red-300">{{ error }}</p>
+          <div class="text-[9px] font-medium text-rose-600 dark:text-rose-300 flex items-start gap-1">
+            <span class="mt-0.5 w-1 h-1 rounded-full bg-rose-400 shrink-0"></span>
+            {{ error }}
           </div>
         }
       </div>
     </div>
   }
 
-  <!-- Actions -->
+  <!-- Actions for Completed -->
   @if (summary().status === 'COMPLETED') {
-    <div class="flex items-center justify-center gap-4">
-      <p-button
-        label="عرض النتائج"
-        icon="pi pi-eye"
-        severity="info"
-        size="large"
-        (onClick)="viewResults()"
-      ></p-button>
-      <p-button
-        label="معالجة شهر جديد"
-        icon="pi pi-refresh"
-        severity="secondary"
-        size="large"
-        styleClass="p-button-outlined"
-        (onClick)="loadEmployeesSummary()"
-      ></p-button>
+    <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 mt-auto">
+      <button pButton label="معالجة شهر جديد" icon="pi pi-refresh"
+        class="p-button-outlined p-button-secondary !h-8 !text-[10px] !font-bold !rounded-md !px-3"
+        (click)="loadEmployeesSummary()"></button>
+      <button pButton label="عرض النتائج" icon="pi pi-eye"
+        class="p-button-info !h-8 !text-[10px] !font-bold !rounded-md !px-3 shadow-sm"
+        (click)="viewResults()"></button>
     </div>
   }
 </div>

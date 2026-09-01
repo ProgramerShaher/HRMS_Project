@@ -49,12 +49,14 @@ export class AttendancePoliciesComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(AttendancePolicyFormComponent, {
-        header: 'إضافة سياسة حضور جديدة',
-        width: '500px',
-        contentStyle: { overflow: 'visible' },
+        showHeader: false,
+        width: '550px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -66,12 +68,14 @@ export class AttendancePoliciesComponent implements OnInit {
 
   edit(item: AttendancePolicy) {
     this.ref = this.dialogService.open(AttendancePolicyFormComponent, {
-        header: 'تعديل سياسة الحضور',
-        width: '500px',
-        contentStyle: { overflow: 'visible' },
+        showHeader: false,
+        width: '550px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item
     });

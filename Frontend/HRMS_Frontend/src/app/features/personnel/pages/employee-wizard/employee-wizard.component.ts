@@ -20,7 +20,7 @@ import { AddressesStepComponent } from '../../components/wizard-steps/addresses-
 import { QualificationsStepComponent } from '../../components/wizard-steps/qualifications-experience/qualifications-step.component';
 import { DocumentsStepComponent } from '../../components/wizard-steps/documents-contracts/documents-step.component';
 import { FamilyStepComponent } from '../../components/wizard-steps/family-preferences/family-step.component';
-
+import { EnterNextDirective } from '../../../../shared/directives/enter-next.directive';
 
 /**
  * Employee Wizard Component
@@ -49,7 +49,7 @@ import { FamilyStepComponent } from '../../components/wizard-steps/family-prefer
     QualificationsStepComponent,
     DocumentsStepComponent,
     FamilyStepComponent,
-
+    EnterNextDirective
   ],
   providers: [MessageService],
   templateUrl: './employee-wizard.component.html',

@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load dashboard data', err);
+        this.dashboardData = null;
         this.loading = false;
       }
     });

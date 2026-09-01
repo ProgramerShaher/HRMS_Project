@@ -1,11 +1,18 @@
-<div class="p-6 space-y-6 animate-in fade-in duration-500">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+  
   <!-- Header -->
-  <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">سلفي</h1>
-      <p class="text-slate-500 dark:text-zinc-400 mt-1">إدارة ومتابعة جميع السلف والأقساط</p>
-    </div>
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
     <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+        <i class="pi pi-money-bill text-[11px]"></i>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">سلفي</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إدارة ومتابعة جميع السلف والأقساط</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
       <p-select 
         [(ngModel)]="selectedStatus" 
         [options]="statusOptions" 
@@ -13,70 +20,71 @@
         optionValue="value"
         (onChange)="onStatusChange()"
         placeholder="تصفية حسب الحالة"
-        styleClass="w-48" />
-      <button pButton icon="pi pi-plus" label="سلفة جديدة" 
-              class="p-button-raised p-button-success rounded-xl px-6"
-              (click)="navigateToNewLoan()"></button>
-      <button pButton icon="pi pi-refresh" 
-              class="p-button-text p-button-rounded"
+        styleClass="!h-8 !text-[10px] !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!border-emerald-500 transition-all flex items-center w-40" />
+      
+      <button pButton icon="pi pi-refresh" title="تحديث" 
+              class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
               [loading]="loading()" (click)="loadLoans()"></button>
+              
+      <button pButton icon="pi pi-plus" label="سلفة جديدة" 
+              class="p-button-primary !h-8 !bg-emerald-600 hover:!bg-emerald-700 !border-none !text-[10px] !font-bold !rounded-md !px-3 shadow-sm transition-colors whitespace-nowrap"
+              (click)="navigateToNewLoan()"></button>
     </div>
   </div>
 
   <!-- Loans Table -->
-  <div class="glass-panel rounded-2xl overflow-hidden">
+  <div class="flex-grow bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative">
     <p-table 
       [value]="filteredLoans()" 
       [loading]="loading()"
       [paginator]="true" 
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 20]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="عرض {first} إلى {last} من {totalRecords} سلفة"
-      styleClass="p-datatable-sm"
-      [globalFilterFields]="['loanAmount', 'status']">
+      styleClass="p-datatable-sm clean-table"
+      [rowHover]="true">
       
       <ng-template pTemplate="header">
-        <tr>
-          <th class="text-right">رقم السلفة</th>
-          <th class="text-right">المبلغ</th>
-          <th class="text-right">عدد الأقساط</th>
-          <th class="text-right">المدفوع</th>
-          <th class="text-right">المتبقي</th>
-          <th class="text-right">التقدم</th>
-          <th class="text-right">تاريخ الطلب</th>
-          <th class="text-right">الحالة</th>
-          <th class="text-center">الإجراءات</th>
+        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">رقم السلفة</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none">المبلغ</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">الأقساط</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">المدفوع</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">المتبقي</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center w-32">التقدم</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">التاريخ</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">الحالة</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center w-24">الإجراءات</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-loan>
-        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer" (click)="viewLoanDetails(loan)">
-          <td class="font-semibold text-blue-600">{{ loan.loanId }}</td>
-          <td class="font-bold">{{ formatCurrency(loan.loanAmount) }} ريال</td>
-          <td>{{ loan.installmentCount }} قسط</td>
-          <td class="text-emerald-600 font-semibold">{{ formatCurrency(loan.paidAmount) }}</td>
-          <td class="text-amber-600 font-semibold">{{ formatCurrency(loan.remainingAmount) }}</td>
-          <td>
+        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors duration-200 border-b border-slate-50 dark:border-slate-800/50 cursor-pointer" (click)="viewLoanDetails(loan)">
+          <td class="!px-4 !py-2 !border-none text-[10px] text-slate-500 dark:text-slate-400 font-mono">#{{ loan.loanId }}</td>
+          <td class="!px-4 !py-2 !border-none text-[11px] font-bold text-slate-700 dark:text-slate-300 font-mono">{{ formatCurrency(loan.loanAmount) }} <small class="text-[8px] font-sans opacity-70">ريال</small></td>
+          <td class="!px-4 !py-2 !border-none text-[10px] text-center font-bold text-slate-600 dark:text-slate-400">{{ loan.installmentCount }}</td>
+          <td class="!px-4 !py-2 !border-none text-center font-bold text-[10px] text-emerald-600 font-mono">{{ formatCurrency(loan.paidAmount) }}</td>
+          <td class="!px-4 !py-2 !border-none text-center font-bold text-[10px] text-amber-600 font-mono">{{ formatCurrency(loan.remainingAmount) }}</td>
+          <td class="!px-4 !py-2 !border-none text-center">
             <div class="flex items-center gap-2">
-              <div class="flex-1 bg-slate-200 dark:bg-zinc-700 h-2 rounded-full overflow-hidden">
+              <div class="flex-1 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
                 <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" 
                      [style.width.%]="calculateProgress(loan)"></div>
               </div>
-              <span class="text-xs font-bold text-slate-600 dark:text-zinc-400 min-w-[3rem]">{{ calculateProgress(loan) }}%</span>
+              <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 w-6">{{ calculateProgress(loan) }}%</span>
             </div>
           </td>
-          <td class="text-sm">{{ formatDate(loan.requestDate) }}</td>
-          <td>
+          <td class="!px-4 !py-2 !border-none text-center text-[10px] font-mono text-slate-500">{{ formatDate(loan.requestDate) }}</td>
+          <td class="!px-4 !py-2 !border-none text-center">
             <p-tag 
               [value]="getStatusLabel(loan.status)" 
               [severity]="getStatusSeverity(loan.status)"
-              styleClass="rounded-full"></p-tag>
+              styleClass="!text-[9px] !font-bold !px-2 !py-0.5">
+            </p-tag>
           </td>
-          <td class="text-center">
+          <td class="!px-4 !py-2 !border-none text-center">
             <button pButton 
                     icon="pi pi-eye" 
-                    class="p-button-text p-button-rounded p-button-sm"
+                    class="p-button-text p-button-rounded !w-7 !h-7 !p-0 !text-[11px] !text-blue-500 hover:!bg-blue-100 dark:hover:!bg-blue-900/40 mx-auto"
                     (click)="viewLoanDetails(loan); $event.stopPropagation()"
                     pTooltip="عرض التفاصيل"></button>
           </td>
@@ -85,11 +93,11 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="9" class="text-center py-8">
-            <div class="text-slate-400">
-              <i class="pi pi-inbox text-5xl mb-3"></i>
-              <p class="text-lg">لا توجد سلف</p>
-              <p class="text-sm mt-2">يمكنك إنشاء سلفة جديدة من الزر أعلاه</p>
+          <td colspan="9" class="text-center py-12 text-slate-400">
+            <div class="flex flex-col items-center justify-center">
+              <i class="pi pi-inbox text-2xl mb-2 opacity-50"></i>
+              <p class="text-[10px] font-bold text-slate-900 dark:text-white">لا توجد سلف</p>
+              <p class="text-[9px] mt-1">يمكنك إنشاء سلفة جديدة من الزر أعلاه</p>
             </div>
           </td>
         </tr>

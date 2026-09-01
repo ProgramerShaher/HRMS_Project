@@ -1,167 +1,136 @@
-<div class="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-5 duration-1000 h-full min-h-[300px]">
 
-  <!-- Clean Header Section -->
-  <div
-    class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
-    <div class="flex items-center gap-5">
-      <div
-        class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
-        <i class="pi pi-file-pdf text-2xl"></i>
-      </div>
-      <div>
-        <h2 class="text-xl font-bold text-slate-800 dark:text-white leading-tight">إدارة الوثائق والتعاقدات</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
-          سجل أرشفة الهويات الرسمية وبنود عقود التوظيف
-        </p>
-      </div>
-    </div>
+  <!-- Documents Section -->
+  <section class="h-full">
+    <app-dynamic-array-list [items]="data.documents || []" title="الأرشيف الإلكتروني للوثائق" itemLabel="وثيقة رسمية"
+      icon="pi pi-cloud-upload" [columns]="docColumns" (save)="onSaveDocument($event)"
+      (delete)="onDeleteDocument($event)">
 
-    <div class="flex items-center gap-3">
-      <span
-        class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg border border-slate-100 dark:border-slate-700">
-        Document Archive & Contracts
-      </span>
-    </div>
-  </div>
+      <ng-template #formTemplate let-item>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2.5 mt-1">
+          <div class="col-span-2 space-y-1">
+            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">تصنيف الوثيقة <span class="text-red-500">*</span></label>
+            <p-select [options]="documentTypes" [(ngModel)]="item.documentTypeId" optionLabel="documentTypeNameAr"
+              optionValue="documentTypeId" [filter]="true" appendTo="body" placeholder="اختر نوع الوثيقة"
+              panelStyleClass="!text-[11px]"
+              styleClass="w-full !rounded-md !h-8 !text-[11px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-2.5 [&_.p-select-label]:!leading-[30px]"></p-select>
+          </div>
+          
+          <div class="space-y-1">
+            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">رقم الوثيقة</label>
+            <input pInputText [(ngModel)]="item.documentNumber" placeholder="رقم الهوية، الجواز..."
+              class="w-full !h-8 !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+          </div>
+          
+          <div class="space-y-1">
+            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">تاريخ الانتهاء</label>
+            <p-datePicker [(ngModel)]="item.expiryDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+              styleClass="w-full" panelStyleClass="!text-[11px]"
+              inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all"></p-datePicker>
+          </div>
 
-  <div class="grid grid-cols-1 gap-8">
-    <!-- Documents Section -->
-    <section>
-      <app-dynamic-array-list [items]="data.documents || []" title="الأرشيف الإلكتروني للوثائق" itemLabel="وثيقة رسمية"
-        icon="pi pi-cloud-upload" [columns]="docColumns" (save)="onSaveDocument($event)"
-        (delete)="onDeleteDocument($event)">
+          <!-- File Dropzone -->
+          <div class="col-span-2 pt-1">
+            <div class="p-5 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-md bg-slate-50 dark:bg-slate-800/30 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:border-blue-400 transition-all flex flex-col items-center justify-center gap-2 text-center cursor-pointer group/dropzone">
+              <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover/dropzone:scale-110 transition-transform">
+                <i class="pi pi-cloud-upload text-[11px]"></i>
+              </div>
+              <div>
+                <h4 class="text-[10px] font-bold text-slate-700 dark:text-slate-200">سحب وإفلات ملف الوثيقة هنا</h4>
+                <p class="text-[9px] text-slate-500 mt-0.5">أو <span class="text-blue-600 dark:text-blue-400 underline decoration-blue-600/30">اضغط للاستعراض</span> من جهازك</p>
+              </div>
 
-        <ng-template #formTemplate let-item>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-2 text-right">
-            <div class="space-y-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تصنيف الوثيقة <span
-                  class="text-red-500">*</span></label>
-              <p-select [options]="documentTypes" [(ngModel)]="item.documentTypeId" optionLabel="documentTypeNameAr"
-                optionValue="documentTypeId" [filter]="true" appendTo="body" placeholder="اختر نوع الوثيقة"
-                styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
-            </div>
-            <div class="space-y-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">رقم الوثيقة</label>
-              <input pInputText [(ngModel)]="item.documentNumber" placeholder="رقم الهوية، الجواز..."
-                class="w-full !h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all" />
-            </div>
-            <div class="space-y-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ الانتهاء</label>
-              <p-datePicker [(ngModel)]="item.expiryDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
-                styleClass="w-full"
-                inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
-            </div>
-
-            <!-- File Dropzone -->
-            <div class="md:col-span-3 pt-4">
-              <div
-                class="p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/30 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:border-blue-400 transition-all flex flex-col items-center justify-center gap-4 text-center cursor-pointer group/dropzone">
-                <div
-                  class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover/dropzone:scale-110 transition-transform">
-                  <i class="pi pi-cloud-upload text-xl"></i>
-                </div>
-                <div>
-                  <h4 class="text-sm font-bold text-slate-700 dark:text-slate-200">سحب وإفلات ملف الوثيقة هنا</h4>
-                  <p class="text-xs text-slate-500 mt-1">أو <span
-                      class="text-blue-600 dark:text-blue-400 underline decoration-blue-600/30">اضغط للاستعراض</span> من
-                    جهازك</p>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <p-fileUpload mode="basic" [auto]="true" chooseLabel="اختيار ملف"
-                    styleClass="p-button-sm !rounded-lg !px-4 !h-9 !text-xs !font-bold"
-                    (onSelect)="onFileSelect($event, item)"></p-fileUpload>
-                  <span
-                    class="text-xs text-slate-500 font-mono bg-white dark:bg-slate-900 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700">
-                    {{ item.file ? item.file.name : 'No file selected' }}
-                  </span>
-                </div>
+              <div class="flex flex-col items-center gap-2 w-full mt-1">
+                <p-fileUpload mode="basic" [auto]="true" chooseLabel="اختيار ملف"
+                  styleClass="p-button-sm p-button-outlined !rounded-md !px-4 !h-8 !text-[10px] !font-bold"
+                  (onSelect)="onFileSelect($event, item)"></p-fileUpload>
+                <span class="text-[9px] text-slate-500 font-mono bg-white dark:bg-slate-900 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 w-full truncate">
+                  {{ item.file ? item.file.name : 'No file selected' }}
+                </span>
               </div>
             </div>
           </div>
-        </ng-template>
-      </app-dynamic-array-list>
-    </section>
+        </div>
+      </ng-template>
+    </app-dynamic-array-list>
+  </section>
 
-    <!-- Contracts Section -->
-    <section>
-      <app-dynamic-array-list [items]="data.contracts || []" title="إدارة العقود" itemLabel="عقد" icon="pi pi-briefcase"
-        [columns]="contractColumns" (save)="onSaveContract($event)" (delete)="onDeleteContract($event)"
-        class="contracts-card">
+  <!-- Contracts Section -->
+  <section class="h-full">
+    <app-dynamic-array-list [items]="data.contracts || []" title="إدارة العقود" itemLabel="عقد" icon="pi pi-briefcase"
+      [columns]="contractColumns" (save)="onSaveContract($event)" (delete)="onDeleteContract($event)">
 
-        <ng-template #formTemplate let-item>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-2 space-y-4">
-            <!-- Top Row -->
-            <div class="space-y-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">نوع التعاقد</label>
-              <p-select [options]="contractTypes" [(ngModel)]="item.contractType" optionLabel="label"
-                optionValue="value" appendTo="body" placeholder="اختر نوع العقد"
-                styleClass="w-full !rounded-lg !h-11 !text-sm shadow-none !border-slate-300 dark:!border-slate-700 focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-select>
-            </div>
-            <div class="space-y-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ التفعيل</label>
-              <p-datePicker [(ngModel)]="item.startDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
-                styleClass="w-full"
-                inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
-            </div>
-            <div class="space-y-2">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">تاريخ الانتهاء</label>
-              <p-datePicker [(ngModel)]="item.endDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
-                styleClass="w-full"
-                inputStyleClass="!h-11 !rounded-lg !bg-white dark:!bg-slate-900 !border-slate-300 dark:!border-slate-700 !text-sm focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500 transition-all"></p-datePicker>
-            </div>
+      <ng-template #formTemplate let-item>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2.5 mt-1">
+          <!-- Top Row -->
+          <div class="col-span-2 space-y-1">
+            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">نوع التعاقد</label>
+            <p-select [options]="contractTypes" [(ngModel)]="item.contractType" optionLabel="label"
+              optionValue="value" appendTo="body" placeholder="اختر نوع العقد"
+              panelStyleClass="!text-[11px]"
+              styleClass="w-full !rounded-md !h-8 !text-[11px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-2.5 [&_.p-select-label]:!leading-[30px]"></p-select>
+          </div>
+          
+          <div class="space-y-1">
+            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">تاريخ التفعيل</label>
+            <p-datePicker [(ngModel)]="item.startDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+              styleClass="w-full" panelStyleClass="!text-[11px]"
+              inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all"></p-datePicker>
+          </div>
+          
+          <div class="space-y-1">
+            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400">تاريخ الانتهاء</label>
+            <p-datePicker [(ngModel)]="item.endDate" [showIcon]="true" appendTo="body" dateFormat="yy-mm-dd"
+              styleClass="w-full" panelStyleClass="!text-[11px]"
+              inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all"></p-datePicker>
+          </div>
 
-            <!-- Financials (Card) -->
-            <div
-              class="md:col-span-3 bg-slate-50 dark:bg-slate-800/20 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
-              <div class="flex items-center gap-2 mb-4">
-                <div
-                  class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                  <i class="pi pi-money-bill text-sm"></i>
-                </div>
-                <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">بنود الاستحقاق المالي</h4>
+          <!-- Financials (Card) -->
+          <div class="col-span-2 bg-slate-50 dark:bg-slate-800/20 rounded-md p-3 border border-slate-200 dark:border-slate-700 mt-1">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <i class="pi pi-money-bill text-[10px]"></i>
               </div>
+              <h4 class="text-[10px] font-bold text-slate-800 dark:text-slate-100">بنود الاستحقاق المالي</h4>
+            </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="space-y-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">الراتب الأساسي</label>
-                  <p-inputNumber [(ngModel)]="item.basicSalary" mode="decimal" [minFractionDigits]="2"
-                    styleClass="w-full"
-                    inputStyleClass="!h-10 !rounded-lg !bg-white dark:!bg-slate-900 !text-sm !border-slate-200 dark:!border-slate-700 focus:!border-blue-500"></p-inputNumber>
-                </div>
-                <div class="space-y-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">بدل السكن</label>
-                  <p-inputNumber [(ngModel)]="item.housingAllowance" mode="decimal" [minFractionDigits]="2"
-                    styleClass="w-full"
-                    inputStyleClass="!h-10 !rounded-lg !bg-white dark:!bg-slate-900 !text-sm !border-slate-200 dark:!border-slate-700 focus:!border-blue-500"></p-inputNumber>
-                </div>
-                <div class="space-y-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">بدل مواصلات</label>
-                  <p-inputNumber [(ngModel)]="item.transportAllowance" mode="decimal" [minFractionDigits]="2"
-                    styleClass="w-full"
-                    inputStyleClass="!h-10 !rounded-lg !bg-white dark:!bg-slate-900 !text-sm !border-slate-200 dark:!border-slate-700 focus:!border-blue-500"></p-inputNumber>
-                </div>
-                <div class="space-y-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">بدلات أخرى</label>
-                  <p-inputNumber [(ngModel)]="item.otherAllowances" mode="decimal" [minFractionDigits]="2"
-                    styleClass="w-full"
-                    inputStyleClass="!h-10 !rounded-lg !bg-white dark:!bg-slate-900 !text-sm !border-slate-200 dark:!border-slate-700 focus:!border-blue-500"></p-inputNumber>
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2.5">
+              <div class="space-y-1">
+                <label class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">الراتب الأساسي</label>
+                <p-inputNumber [(ngModel)]="item.basicSalary" mode="decimal" [minFractionDigits]="2"
+                  styleClass="w-full"
+                  inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-white dark:!bg-slate-900 !text-[11px] !border-slate-200 dark:!border-slate-700 focus:!border-blue-500 transition-all"></p-inputNumber>
               </div>
+              <div class="space-y-1">
+                <label class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">بدل السكن</label>
+                <p-inputNumber [(ngModel)]="item.housingAllowance" mode="decimal" [minFractionDigits]="2"
+                  styleClass="w-full"
+                  inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-white dark:!bg-slate-900 !text-[11px] !border-slate-200 dark:!border-slate-700 focus:!border-blue-500 transition-all"></p-inputNumber>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">بدل مواصلات</label>
+                <p-inputNumber [(ngModel)]="item.transportAllowance" mode="decimal" [minFractionDigits]="2"
+                  styleClass="w-full"
+                  inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-white dark:!bg-slate-900 !text-[11px] !border-slate-200 dark:!border-slate-700 focus:!border-blue-500 transition-all"></p-inputNumber>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">بدلات أخرى</label>
+                <p-inputNumber [(ngModel)]="item.otherAllowances" mode="decimal" [minFractionDigits]="2"
+                  styleClass="w-full"
+                  inputStyleClass="w-full !h-8 !px-2.5 !rounded-md !bg-white dark:!bg-slate-900 !text-[11px] !border-slate-200 dark:!border-slate-700 focus:!border-blue-500 transition-all"></p-inputNumber>
+              </div>
+            </div>
 
-              <div class="flex items-center justify-between mt-5 pt-4 border-t border-slate-200 dark:border-slate-700">
-                <div class="flex items-center gap-2">
-                  <p-checkbox [(ngModel)]="item.isRenewable" binary="true" inputId="renew"></p-checkbox>
-                  <label for="renew"
-                    class="text-xs font-semibold text-slate-600 dark:text-slate-400 cursor-pointer">قابل للتجديد
-                    تلقائياً</label>
-                </div>
-                <span class="text-[10px] font-mono text-slate-400">Currency: YER</span>
+            <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700">
+              <div class="flex items-center gap-2">
+                <p-checkbox [(ngModel)]="item.isRenewable" binary="true" inputId="renew" styleClass="!text-[10px]"></p-checkbox>
+                <label for="renew" class="text-[10px] font-bold text-slate-600 dark:text-slate-400 cursor-pointer">قابل للتجديد تلقائياً</label>
               </div>
+              <span class="text-[9px] font-mono font-bold text-slate-400">Currency: YER</span>
             </div>
           </div>
-        </ng-template>
-      </app-dynamic-array-list>
-    </section>
-  </div>
+        </div>
+      </ng-template>
+    </app-dynamic-array-list>
+  </section>
 </div>

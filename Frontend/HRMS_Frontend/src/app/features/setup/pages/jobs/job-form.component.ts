@@ -24,65 +24,80 @@ import { MessageService } from 'primeng/api';
     SelectModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <form [formGroup]="form" (ngSubmit)="save()" class="p-4" dir="rtl">
-        <div class="grid grid-cols-1 gap-6">
+    template: `
+    <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800" dir="rtl">
+        
+        <!-- Dialog Header -->
+        <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 flex items-center justify-center">
+                    <i [class]="isEdit ? 'pi pi-pencil' : 'pi pi-plus'" class="text-[13px]"></i>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+                    {{ isEdit ? 'تعديل بيانات الوظيفة' : 'إضافة وظيفة جديدة' }}
+                </h3>
+            </div>
+            <button type="button"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                (click)="close()">
+                <i class="pi pi-times text-[12px]"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4 p-5 overflow-y-auto">
             
             <!-- Ar Name -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="jobTitleAr" formControlName="jobTitleAr" class="w-full" autofocus />
-                    <label for="jobTitleAr">اسم الوظيفة (عربي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">اسم الوظيفة (عربي) <span class="text-red-500">*</span></label>
+                <input pInputText id="jobTitleAr" formControlName="jobTitleAr" autofocus 
+                    class="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- En Name -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="jobTitleEn" formControlName="jobTitleEn" class="w-full" />
-                    <label for="jobTitleEn">اسم الوظيفة (إنجليزي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">اسم الوظيفة (إنجليزي)</label>
+                <input pInputText id="jobTitleEn" formControlName="jobTitleEn" 
+                    class="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- Default Grade -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <p-select 
-                        [options]="jobGradesList" 
-                        formControlName="defaultGradeId" 
-                        optionLabel="gradeNameAr" 
-                        optionValue="jobGradeId"
-                        [filter]="true"
-                        filterBy="gradeNameAr,gradeNameEn" 
-                        [showClear]="true"
-                        placeholder="اختر الدرجة الافتراضية"
-                        styleClass="w-full"
-                        appendTo="body"
-                        scrollHeight="250px">
-                        <ng-template pTemplate="selectedItem" let-selectedOption>
-                            <div class="flex align-items-center gap-2" *ngIf="selectedOption">
-                                <div>{{ selectedOption.gradeNameAr }}</div>
+            <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">الدرجة الوظيفية الافتراضية <span class="text-red-500">*</span></label>
+                <p-select 
+                    [options]="jobGradesList" 
+                    formControlName="defaultGradeId" 
+                    optionLabel="gradeNameAr" 
+                    optionValue="jobGradeId"
+                    [filter]="true"
+                    filterBy="gradeNameAr,gradeNameEn" 
+                    [showClear]="true"
+                    placeholder="اختر الدرجة الافتراضية"
+                    styleClass="w-full !rounded-md !h-9 !text-[12px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-3 [&_.p-select-label]:!leading-[34px]"
+                    appendTo="body"
+                    scrollHeight="250px">
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex align-items-center gap-2" *ngIf="selectedOption">
+                            <div>{{ selectedOption.gradeNameAr }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-grade>
+                        <div class="flex flex-col gap-1 border-b border-slate-50 dark:border-slate-800 last:border-0 py-1">
+                            <span class="font-bold text-[11px]">{{ grade.gradeNameAr }}</span>
+                            <div class="flex gap-2 text-[9px] text-slate-400">
+                                <span>{{ grade.minSalary | number }} - {{ grade.maxSalary | number }} ر.س</span>
                             </div>
-                        </ng-template>
-                        <ng-template pTemplate="item" let-grade>
-                            <div class="flex flex-col gap-1 border-b border-gray-50 last:border-0 py-1">
-                                <span class="font-bold text-sm">{{ grade.gradeNameAr }}</span>
-                                <div class="flex gap-2 text-xs text-slate-400">
-                                    <span>{{ grade.minSalary | number }} - {{ grade.maxSalary | number }} ر.س</span>
-                                </div>
-                            </div>
-                        </ng-template>
-                    </p-select>
-                    <label for="defaultGradeId">الدرجة الوظيفية الافتراضية</label>
-                </p-floatLabel>
+                        </div>
+                    </ng-template>
+                </p-select>
             </div>
 
             <!-- Is Medical -->
-            <div class="col-span-1 flex items-center h-full p-2 border border-slate-100 rounded-xl bg-slate-50 dark:bg-zinc-900/50 dark:border-zinc-800">
-                <div class="flex items-center gap-2">
+            <div class="col-span-1 flex items-end">
+                <div class="w-full h-9 flex items-center gap-2 px-3 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                     (click)="form.get('isMedical')?.setValue(!form.get('isMedical')?.value)">
                     <p-checkbox formControlName="isMedical" [binary]="true" inputId="isMedical"></p-checkbox>
-                    <label for="isMedical" class="cursor-pointer select-none text-slate-700 dark:text-slate-300 font-medium">
-                        <i class="pi pi-briefcase text-blue-500 mr-2 ml-1"></i>
+                    <label for="isMedical" class="cursor-pointer text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-grow flex items-center">
+                        <i class="pi pi-briefcase text-violet-500 mr-2 ml-1 text-[10px]"></i>
                         هل هذه وظيفة طبية؟
                     </label>
                 </div>
@@ -90,9 +105,14 @@ import { MessageService } from 'primeng/api';
 
         </div>
 
-        <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
-            <p-button label="إلغاء" icon="pi pi-times" styleClass="p-button-text p-button-secondary" (onClick)="close()"></p-button>
-            <p-button label="حفظ التغييرات" icon="pi pi-check" type="submit" [loading]="loading" styleClass="p-button-primary"></p-button>
+        <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 mt-auto rounded-b-xl">
+            <button pButton label="إلغاء" type="button"
+                class="p-button-text !h-9 !text-[12px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-5 !rounded-lg transition-colors"
+                (click)="close()">
+            </button>
+            <button pButton [label]="isEdit ? 'حفظ التغييرات' : 'إضافة الوظيفة'" icon="pi pi-check" type="submit" [loading]="loading"
+                class="p-button-primary !h-9 !bg-violet-600 hover:!bg-violet-700 !border-none !text-[12px] !px-6 !rounded-lg shadow-sm font-bold transition-colors">
+            </button>
         </div>
     </form>
   `

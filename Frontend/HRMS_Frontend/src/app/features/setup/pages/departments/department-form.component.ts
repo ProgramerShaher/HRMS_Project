@@ -25,107 +25,124 @@ import { MessageService } from 'primeng/api';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-    <form [formGroup]="form" (ngSubmit)="save()" class="p-4" dir="rtl">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800" dir="rtl">
+        
+        <!-- Dialog Header -->
+        <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                    <i [class]="isEdit ? 'pi pi-pencil' : 'pi pi-plus'" class="text-[13px]"></i>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+                    {{ isEdit ? 'تعديل بيانات القسم' : 'إضافة قسم جديد' }}
+                </h3>
+            </div>
+            <button type="button"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                (click)="close()">
+                <i class="pi pi-times text-[12px]"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4 p-5 overflow-y-auto">
             
             <!-- Ar Name -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="deptNameAr" formControlName="deptNameAr" class="w-full" autofocus />
-                    <label for="deptNameAr">اسم القسم (عربي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">اسم القسم (عربي) <span class="text-red-500">*</span></label>
+                <input pInputText id="deptNameAr" formControlName="deptNameAr" autofocus 
+                    class="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- En Name -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="deptNameEn" formControlName="deptNameEn" class="w-full" />
-                    <label for="deptNameEn">اسم القسم (إنجليزي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">اسم القسم (إنجليزي)</label>
+                <input pInputText id="deptNameEn" formControlName="deptNameEn" 
+                    class="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- Parent Department (Select with Search) -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <p-select 
-                        [options]="departmentsList" 
-                        formControlName="parentDeptId" 
-                        optionLabel="deptNameAr" 
-                        optionValue="deptId"
-                        [filter]="true"
-                        filterBy="deptNameAr,deptNameEn" 
-                        [showClear]="true"
-                        placeholder="استخدم البحث للعثور على القسم"
-                        styleClass="w-full"
-                        appendTo="body"
-                        scrollHeight="250px">
-                        <ng-template pTemplate="selectedItem" let-selectedOption>
-                            <div class="flex align-items-center gap-2" *ngIf="selectedOption">
-                                <div>{{ selectedOption.deptNameAr }}</div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="item" let-dept>
-                            <div class="flex align-items-center gap-2" style="height: 35px;">
-                                <div>{{ dept.deptNameAr }}</div>
-                            </div>
-                        </ng-template>
-                    </p-select>
-                    <label for="parentDeptId">القسم الرئيسي</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">القسم الرئيسي</label>
+                <p-select 
+                    [options]="departmentsList" 
+                    formControlName="parentDeptId" 
+                    optionLabel="deptNameAr" 
+                    optionValue="deptId"
+                    [filter]="true"
+                    filterBy="deptNameAr,deptNameEn" 
+                    [showClear]="true"
+                    placeholder="بدون قسم رئيسي"
+                    styleClass="w-full !rounded-md !h-9 !text-[12px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-3 [&_.p-select-label]:!leading-[34px]"
+                    appendTo="body"
+                    scrollHeight="250px">
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex align-items-center gap-2" *ngIf="selectedOption">
+                            <div>{{ selectedOption.deptNameAr }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-dept>
+                        <div class="flex align-items-center gap-2 text-[12px] py-1">
+                            <div>{{ dept.deptNameAr }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
             </div>
 
              <!-- Manager (Select with Search from API) -->
-             <div class="col-span-1">
-                <p-floatLabel>
-                    <p-select 
-                        [options]="employeesList" 
-                        formControlName="managerId" 
-                        optionLabel="fullNameAr" 
-                        optionValue="employeeId"
-                        [filter]="true"
-                        filterBy="fullNameAr,fullNameEn,employeeNumber" 
-                        [showClear]="true"
-                        placeholder="ابحث باسم الموظف أو رقمه"
-                        styleClass="w-full"
-                        appendTo="body"
-                        scrollHeight="250px">
-                        <ng-template pTemplate="selectedItem" let-selectedOption>
-                            <div class="flex align-items-center gap-2" *ngIf="selectedOption">
-                                <i class="pi pi-user text-slate-500"></i>
-                                <div>{{ selectedOption.fullNameAr }}</div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="item" let-emp>
-                            <div class="flex flex-col justify-center h-full border-b border-gray-100 last:border-0 py-1">
-                                <span class="font-bold text-sm">{{ emp.fullNameAr }}</span>
-                                <span class="text-xs text-slate-500">{{ emp.jobTitle || 'بدون مسمى' }}</span>
-                            </div>
-                        </ng-template>
-                    </p-select>
-                    <label for="managerId">مدير القسم</label>
-                </p-floatLabel>
+             <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">مدير القسم</label>
+                <p-select 
+                    [options]="employeesList" 
+                    formControlName="managerId" 
+                    optionLabel="fullNameAr" 
+                    optionValue="employeeId"
+                    [filter]="true"
+                    filterBy="fullNameAr,fullNameEn,employeeNumber" 
+                    [showClear]="true"
+                    placeholder="اختر مدير القسم"
+                    styleClass="w-full !rounded-md !h-9 !text-[12px] shadow-none !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all [&_.p-select-label]:!py-0 [&_.p-select-label]:!px-3 [&_.p-select-label]:!leading-[34px]"
+                    appendTo="body"
+                    scrollHeight="250px">
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        <div class="flex items-center gap-2" *ngIf="selectedOption">
+                            <i class="pi pi-user text-slate-400 text-[10px]"></i>
+                            <div>{{ selectedOption.fullNameAr }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-emp>
+                        <div class="flex flex-col py-1 border-b border-slate-50 dark:border-slate-800 last:border-0">
+                            <span class="font-bold text-[11px] text-slate-700 dark:text-slate-200">{{ emp.fullNameAr }}</span>
+                            <span class="text-[9px] text-slate-500">{{ emp.jobTitle || 'بدون مسمى' }}</span>
+                        </div>
+                    </ng-template>
+                </p-select>
             </div>
 
              <!-- Cost Center -->
-             <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="costCenterCode" formControlName="costCenterCode" class="w-full uppercase" />
-                    <label for="costCenterCode">مركز التكلفة</label>
-                </p-floatLabel>
+             <div class="col-span-1 space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">مركز التكلفة</label>
+                <input pInputText id="costCenterCode" formControlName="costCenterCode" 
+                    class="w-full uppercase !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] font-mono tracking-wider focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- Is Active -->
-            <div class="col-span-1 flex items-center h-full">
-                <div class="flex items-center gap-2">
+            <div class="col-span-1 flex items-end">
+                <div class="w-full h-9 flex items-center gap-2 px-3 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                     (click)="form.get('isActive')?.setValue(!form.get('isActive')?.value)">
                     <p-checkbox formControlName="isActive" [binary]="true" inputId="isActive"></p-checkbox>
-                    <label for="isActive" class="cursor-pointer select-none text-slate-700 dark:text-slate-300">نشط / مفعل</label>
+                    <label for="isActive" class="cursor-pointer text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-grow">حالة التفعيل (نشط)</label>
                 </div>
             </div>
         </div>
 
-        <div class="flex justify-end gap-2 mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800">
-            <p-button label="إلغاء" icon="pi pi-times" styleClass="p-button-text p-button-secondary" (onClick)="close()"></p-button>
-            <p-button label="حفظ التغييرات" icon="pi pi-check" type="submit" [loading]="loading" styleClass="p-button-primary"></p-button>
+        <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 mt-auto rounded-b-xl">
+            <button pButton label="إلغاء" type="button"
+                class="p-button-text !h-9 !text-[12px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-5 !rounded-lg transition-colors"
+                (click)="close()">
+            </button>
+            <button pButton [label]="isEdit ? 'حفظ التغييرات' : 'إضافة القسم'" icon="pi pi-check" type="submit" [loading]="loading"
+                class="p-button-primary !h-9 !bg-blue-600 hover:!bg-blue-700 !border-none !text-[12px] !px-6 !rounded-lg shadow-sm font-bold transition-colors">
+            </button>
         </div>
     </form>
   `

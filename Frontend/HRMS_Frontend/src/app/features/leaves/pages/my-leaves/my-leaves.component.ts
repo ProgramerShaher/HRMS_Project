@@ -26,56 +26,58 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
   ],
   providers: [MessageService],
   template: `
-    <div class="p-6 space-y-6 animate-in fade-in duration-500">
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
       <p-toast></p-toast>
       
       <!-- Page Header -->
-      <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border-none shadow-sm">
-        <div>
-          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
-            <i class="pi pi-calendar-plus text-blue-600"></i>
-            طلبات إجازاتي
-          </h1>
-          <p class="text-slate-500 dark:text-zinc-400 mt-1">إدارة طلبات الإجازة ومتابعة الأرصدة المتاحة للعام الحالي.</p>
+      <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <i class="pi pi-calendar-plus text-[11px]"></i>
+          </div>
+          <div>
+            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">طلبات إجازاتي</h3>
+            <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إدارة طلبات الإجازة ومتابعة الأرصدة المتاحة للعام الحالي</p>
+          </div>
         </div>
-        <p-button 
-            label="تقديم طلب جديد" 
-            icon="pi pi-plus" 
-            styleClass="p-button-raised p-button-primary rounded-xl px-6"
-            (onClick)="showRequestDialog.set(true)">
-        </p-button>
+        <button pButton icon="pi pi-plus" label="تقديم طلب جديد"
+            class="p-button-outlined p-button-secondary !h-8 !text-[10px] !font-bold !rounded-md !px-3 hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all whitespace-nowrap"
+            (click)="showRequestDialog.set(true)">
+        </button>
       </div>
 
-      <!-- Balance Section -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-          <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
-          أرصدة الإجازات المتاحة
-        </h2>
-        <app-leave-balance-cards [balanceData]="balances()"></app-leave-balance-cards>
-      </div>
+      <div class="flex-grow flex flex-col gap-4 overflow-y-auto pr-1 custom-scrollbar">
+        <!-- Balance Section -->
+        <div class="space-y-3">
+          <h2 class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <i class="pi pi-wallet text-blue-500"></i>
+            أرصدة الإجازات المتاحة
+          </h2>
+          <app-leave-balance-cards [balanceData]="balances()"></app-leave-balance-cards>
+        </div>
 
-      <!-- Requests List -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-          <span class="w-1.5 h-6 bg-emerald-600 rounded-full"></span>
-          سجل الطلبات السابقة
-        </h2>
-        <app-leave-request-list 
-          [requests]="requests()"
-          (cancelRequest)="handleCancelRequest($event)">
-        </app-leave-request-list>
+        <!-- Requests List -->
+        <div class="space-y-3 mt-2">
+          <h2 class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <i class="pi pi-history text-emerald-500"></i>
+            سجل الطلبات السابقة
+          </h2>
+          <app-leave-request-list 
+            [requests]="requests()"
+            (cancelRequest)="handleCancelRequest($event)">
+          </app-leave-request-list>
+        </div>
       </div>
 
       <!-- Request Modal -->
       <p-dialog 
         [(visible)]="showRequestDialog" 
         [modal]="true" 
-        [header]="'تقديم طلب إجازة جديد'" 
+        [dismissableMask]="true"
+        [showHeader]="false"
         [style]="{ width: '500px' }"
-        [draggable]="false"
-        [resizable]="false"
-        styleClass="custom-dialog">
+        styleClass="clean-dialog !bg-transparent !border-none !shadow-none"
+        contentStyleClass="!p-0 !overflow-visible">
         <app-leave-request-form 
           (submitted)="onFormSubmitted()" 
           (cancelled)="showRequestDialog.set(false)">
@@ -84,13 +86,11 @@ import { AuthService } from '../../../../core/auth/services/auth.service';
     </div>
   `,
   styles: [`
-    :host { display: block; }
-    ::ng-deep .custom-dialog .p-dialog-header {
-      @apply bg-slate-50 dark:bg-zinc-900 border-b border-slate-100 dark:border-zinc-800 rounded-t-2xl;
-    }
-    ::ng-deep .custom-dialog .p-dialog-content {
-      @apply bg-white dark:bg-zinc-900 p-0 rounded-b-2xl;
-    }
+    :host { display: block; height: 100%; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
   `]
 })
 export class MyLeavesComponent implements OnInit {

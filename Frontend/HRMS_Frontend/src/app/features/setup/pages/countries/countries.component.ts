@@ -49,12 +49,14 @@ export class CountriesComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(CountryFormComponent, {
-        header: 'إضافة دولة جديدة',
-        width: '50vw',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -66,12 +68,14 @@ export class CountriesComponent implements OnInit {
 
   edit(item: Country) {
     this.ref = this.dialogService.open(CountryFormComponent, {
-        header: 'تعديل بيانات الدولة',
-        width: '50vw',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: { 
             id: item.countryId,

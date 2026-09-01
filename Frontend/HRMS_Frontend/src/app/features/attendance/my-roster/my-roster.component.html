@@ -1,57 +1,90 @@
-<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">جدول مناوباتي للحالية</h2>
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+        <i class="pi pi-calendar text-[11px]"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">جدول مناوباتي الحالية</h3>
+        </div>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">استعراض أوقات الدوام والخروج المخططة والفعلية</p>
+      </div>
+    </div>
     
-    <p-table [value]="roster()" [loading]="loading()" [rowHover]="true" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+    <div class="flex items-center gap-2">
+        <button pButton icon="pi pi-print" title="طباعة"
+          class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all text-[11px]"></button>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col mt-2">
+    <div class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800 px-3 py-2 flex items-center justify-between">
+      <h3 class="text-[10px] font-bold text-slate-800 dark:text-slate-200">سجل الدوام</h3>
+    </div>
+
+    <p-table [value]="roster()" [loading]="loading()" [rowHover]="true" responsiveLayout="scroll" styleClass="p-datatable-sm clean-table">
         <ng-template pTemplate="header">
-            <tr>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">اليوم</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">التاريخ</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">المناوبة</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">مخطط</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">دخول فعلي</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">خروج فعلي</th>
-                <th class="bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-slate-300">الحالة</th>
+            <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">اليوم</th>
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التاريخ</th>
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">المناوبة</th>
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">مخطط</th>
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">دخول فعلي</th>
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">خروج فعلي</th>
+                <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-item>
-            <tr [ngClass]="{'bg-amber-50/50 dark:bg-amber-900/10': item.isOffDay}">
-                <td class="font-bold">{{ item.dayName }}</td>
-                <td>{{ item.date | date:'dd/MM/yyyy' }}</td>
-                <td>
-                    <span class="font-medium" [ngClass]="{'text-slate-400': item.isOffDay}">{{ item.shiftName }}</span>
-                </td>
-                <td>
-                    <div *ngIf="!item.isOffDay" class="flex flex-col text-xs gap-1">
-                        <span class="text-blue-600 dark:text-blue-400 font-bold">بدء: {{ item.startTime }}</span>
-                        <span class="text-indigo-600 dark:text-indigo-400 font-bold">نهاية: {{ item.endTime }}</span>
+            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50" [ngClass]="{'bg-amber-50/20 dark:bg-amber-900/5': item.isOffDay}">
+                <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-1 h-3 rounded-full" [ngClass]="item.isOffDay ? 'bg-amber-400' : 'bg-blue-500'"></div>
+                        {{ item.dayName }}
                     </div>
-                    <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
                 </td>
-                <td>
-                    <span *ngIf="item.actualInTime" class="text-emerald-600 dark:text-emerald-400 font-mono text-sm" dir="ltr">
+                <td class="!px-3 !py-1.5 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">
+                    {{ item.date | date:'dd/MM/yyyy' }}
+                </td>
+                <td class="!px-3 !py-1.5 !border-none text-[9px]">
+                    <span class="font-bold" [ngClass]="item.isOffDay ? 'text-slate-400' : 'text-slate-700 dark:text-slate-200'">{{ item.shiftName }}</span>
+                </td>
+                <td class="!px-3 !py-1.5 !border-none">
+                    <div *ngIf="!item.isOffDay" class="flex flex-col gap-0.5">
+                        <span class="text-[8px] text-blue-600 dark:text-blue-400 font-bold font-mono">بدء: {{ item.startTime }}</span>
+                        <span class="text-[8px] text-indigo-600 dark:text-indigo-400 font-bold font-mono">نهاية: {{ item.endTime }}</span>
+                    </div>
+                    <span *ngIf="item.isOffDay" class="text-slate-400 text-[10px]">-</span>
+                </td>
+                <td class="!px-3 !py-1.5 !border-none">
+                    <span *ngIf="item.actualInTime" class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 font-mono" dir="ltr">
                         {{ item.actualInTime | date:'HH:mm:ss' }}
                     </span>
-                    <span *ngIf="!item.actualInTime && !item.isOffDay" class="text-slate-300 text-xs text-center block">--:--:--</span>
-                    <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
+                    <span *ngIf="!item.actualInTime && !item.isOffDay" class="text-slate-300 text-[9px] font-mono block">--:--:--</span>
+                    <span *ngIf="item.isOffDay" class="text-slate-400 text-[10px]">-</span>
                 </td>
-                <td>
-                    <span *ngIf="item.actualOutTime" class="text-rose-600 dark:text-rose-400 font-mono text-sm" dir="ltr">
+                <td class="!px-3 !py-1.5 !border-none">
+                    <span *ngIf="item.actualOutTime" class="text-[9px] font-bold text-rose-600 dark:text-rose-400 font-mono" dir="ltr">
                         {{ item.actualOutTime | date:'HH:mm:ss' }}
                     </span>
-                    <span *ngIf="!item.actualOutTime && !item.isOffDay" class="text-slate-300 text-xs text-center block">--:--:--</span>
-                    <span *ngIf="item.isOffDay" class="text-slate-400">-</span>
+                    <span *ngIf="!item.actualOutTime && !item.isOffDay" class="text-slate-300 text-[9px] font-mono block">--:--:--</span>
+                    <span *ngIf="item.isOffDay" class="text-slate-400 text-[10px]">-</span>
                 </td>
-                <td>
-                    <p-tag [value]="getStatusLabel(item)" [severity]="getSeverity(item.status)"></p-tag>
+                <td class="!px-3 !py-1.5 !border-none text-center">
+                    <p-tag [value]="getStatusLabel(item)" [severity]="getSeverity(item.status)" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="5" class="text-center py-8 text-slate-500">
+                <td colspan="7" class="text-center py-8 text-slate-500 text-[10px]">
                     لا يوجد جدول مناوبات متاح حالياً
                 </td>
             </tr>
         </ng-template>
     </p-table>
+  </div>
 </div>

@@ -73,6 +73,10 @@ public static class MiddlewareExtensions
             // 3. Seed Role-Permission Mappings
             await PermissionSeeder.SeedRolePermissionsAsync(context);
             Log.Information("✅ Role-Permission mappings seeded successfully");
+
+            // 4. Seed Setup/Configuration Data
+            await SetupSeeder.SeedSetupDataAsync(context);
+            Log.Information("✅ Setup and configuration data seeded successfully");
         }
         catch (Exception ex)
         {

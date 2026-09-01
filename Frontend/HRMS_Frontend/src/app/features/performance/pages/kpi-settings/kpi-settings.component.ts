@@ -29,85 +29,85 @@ import { KpiLibrary, CreateKpiCommand } from '../../models/performance.model';
     <p-toast position="top-center" />
     <p-confirmDialog />
 
-    <div class="kpi-settings-page">
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
         <!-- Header -->
-        <div class="page-header">
-            <div class="header-content">
-                <div class="header-icon">
-                    <i class="pi pi-sliders-h"></i>
+        <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-md bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-sm border border-purple-100 dark:border-purple-900/30">
+                    <i class="pi pi-sliders-h text-[11px]"></i>
                 </div>
                 <div>
-                    <h1>إعدادات مؤشرات الأداء (KPIs)</h1>
-                    <p>إدارة المؤشرات والأوزان النسبية لكل فئة وظيفية</p>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">إعدادات مؤشرات الأداء (KPIs)</h3>
+                    <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إدارة المؤشرات والأوزان النسبية لكل فئة وظيفية</p>
                 </div>
             </div>
-            <button pButton label="إضافة مؤشر جديد" icon="pi pi-plus" class="btn-primary" (click)="openAdd()"></button>
+            <button pButton label="إضافة مؤشر جديد" icon="pi pi-plus" class="p-button-outlined p-button-primary !h-8 !px-3 !py-0 flex justify-center items-center !rounded-md hover:!bg-blue-50 dark:hover:!bg-blue-900/20 !border-blue-200 dark:!border-blue-800 transition-all text-[10px] font-bold shadow-sm" (click)="openAdd()"></button>
         </div>
 
         <!-- Weight Summary Banner -->
-        <div class="weight-banner" [class.valid]="totalWeight() === 100" [class.warning]="totalWeight() !== 100">
-            <div class="weight-info">
-                <i class="pi" [class.pi-check-circle]="totalWeight() === 100" [class.pi-exclamation-triangle]="totalWeight() !== 100"></i>
-                <span>إجمالي الأوزان: <strong>{{ totalWeight() }}%</strong></span>
-                <span *ngIf="totalWeight() !== 100" class="warning-text">
-                    — يجب أن يكون المجموع 100% (الفرق: {{ 100 - totalWeight() }}%)
+        <div class="rounded-lg p-3 border border-slate-200 dark:border-slate-700 flex flex-col gap-2"
+             [ngClass]="{'bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50': totalWeight() === 100, 'bg-amber-50/50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/50': totalWeight() !== 100}">
+            <div class="flex items-center gap-2 text-[10px] font-bold">
+                <i class="pi text-[11px]" [ngClass]="{'pi-check-circle text-emerald-500': totalWeight() === 100, 'pi-exclamation-triangle text-amber-500': totalWeight() !== 100}"></i>
+                <span class="text-slate-700 dark:text-slate-200">إجمالي الأوزان: <strong class="font-mono" [ngClass]="{'text-emerald-600': totalWeight() === 100, 'text-amber-600': totalWeight() !== 100}">{{ totalWeight() }}%</strong></span>
+                <span *ngIf="totalWeight() !== 100" class="text-amber-600 dark:text-amber-500 mr-2">
+                    — يجب أن يكون المجموع 100% <span class="font-mono">(الفرق: {{ Math.abs(100 - totalWeight()) }}%)</span>
                 </span>
-                <span *ngIf="totalWeight() === 100" class="success-text">— الأوزان صحيحة ✓</span>
+                <span *ngIf="totalWeight() === 100" class="text-emerald-600 dark:text-emerald-500 mr-2">— الأوزان صحيحة ✓</span>
             </div>
-            <div class="weight-bar">
-                <div class="weight-fill" [style.width.%]="Math.min(totalWeight(), 100)"
-                     [class.over]="totalWeight() > 100"></div>
+            <div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden w-full">
+                <div class="h-full rounded-full transition-all duration-500" 
+                     [style.width.%]="Math.min(totalWeight(), 100)"
+                     [ngClass]="totalWeight() > 100 ? 'bg-rose-500' : (totalWeight() === 100 ? 'bg-emerald-500' : 'bg-amber-500')"></div>
             </div>
         </div>
 
         <!-- KPI Table -->
-        <div class="table-card">
+        <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
             <p-table [value]="kpis()" [loading]="loading()" dataKey="kpiId"
-                     [paginator]="true" [rows]="10" styleClass="p-datatable-gridlines">
+                     [paginator]="true" [rows]="10" styleClass="p-datatable-sm clean-table">
 
                 <ng-template pTemplate="header">
-                    <tr>
-                        <th style="width:40px">#</th>
-                        <th>اسم المؤشر</th>
-                        <th>التصنيف</th>
-                        <th>وحدة القياس</th>
-                        <th style="width:120px">الوزن (%)</th>
-                        <th style="width:100px">الفئة المستهدفة</th>
-                        <th style="width:120px">إجراءات</th>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none" style="width:40px">#</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">اسم المؤشر</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التصنيف</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">وحدة القياس</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none" style="width:140px">الوزن (%)</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الفئة المستهدفة</th>
+                        <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center" style="width:100px">إجراءات</th>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-kpi let-i="rowIndex">
-                    <tr>
-                        <td>{{ i + 1 }}</td>
-                        <td>
-                            <div class="kpi-name">
-                                <span class="kpi-dot" [style.background]="getCategoryColor(kpi.category)"></span>
-                                {{ kpi.kpiNameAr }}
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                        <td class="!px-3 !py-2 !border-none text-[9px] font-mono text-slate-400">{{ i + 1 }}</td>
+                        <td class="!px-3 !py-2 !border-none">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" [style.background]="getCategoryColor(kpi.category)"></span>
+                                <span class="font-bold text-[10px] text-slate-700 dark:text-slate-200">{{ kpi.kpiNameAr }}</span>
                             </div>
-                            <small class="kpi-desc" *ngIf="kpi.kpiDescription">{{ kpi.kpiDescription }}</small>
+                            <small class="block text-[8px] text-slate-400 mt-0.5 pr-3" *ngIf="kpi.kpiDescription">{{ kpi.kpiDescription }}</small>
                         </td>
-                        <td>
-                            <p-tag [value]="kpi.category || 'عام'" [severity]="getCategorySeverity(kpi.category)"></p-tag>
+                        <td class="!px-3 !py-2 !border-none">
+                            <p-tag [value]="kpi.category || 'عام'" [severity]="getCategorySeverity(kpi.category)" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
                         </td>
-                        <td>{{ kpi.measurementUnit || '—' }}</td>
-                        <td>
-                            <div class="weight-cell">
-                                <div class="weight-mini-bar">
-                                    <div class="weight-mini-fill" [style.width.%]="kpi.weight"></div>
+                        <td class="!px-3 !py-2 !border-none text-[9px] font-medium text-slate-600 dark:text-slate-400">{{ kpi.measurementUnit || '—' }}</td>
+                        <td class="!px-3 !py-2 !border-none">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden w-16">
+                                    <div class="h-full rounded-full" [style.width.%]="kpi.weight" [style.background]="getCategoryColor(kpi.category)"></div>
                                 </div>
-                                <strong>{{ kpi.weight }}%</strong>
+                                <strong class="text-[9px] font-mono text-slate-700 dark:text-slate-300">{{ kpi.weight }}%</strong>
                             </div>
                         </td>
-                        <td>
-                            <p-tag [value]="kpi.targetJobType || 'ALL'" severity="secondary"></p-tag>
+                        <td class="!px-3 !py-2 !border-none">
+                            <p-tag [value]="kpi.targetJobType || 'ALL'" severity="secondary" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm !bg-slate-100 !text-slate-600 dark:!bg-slate-800 dark:!text-slate-400"></p-tag>
                         </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-info"
-                                        (click)="openEdit(kpi)" pTooltip="تعديل"></button>
-                                <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger"
-                                        (click)="delete(kpi)" pTooltip="حذف"></button>
+                        <td class="!px-3 !py-2 !border-none text-center">
+                            <div class="flex justify-center gap-1">
+                                <button pButton icon="pi pi-pencil" class="p-button-text p-button-info !w-6 !h-6 !p-0 !text-[10px]" (click)="openEdit(kpi)" title="تعديل"></button>
+                                <button pButton icon="pi pi-trash" class="p-button-text p-button-danger !w-6 !h-6 !p-0 !text-[10px]" (click)="delete(kpi)" title="حذف"></button>
                             </div>
                         </td>
                     </tr>
@@ -115,9 +115,9 @@ import { KpiLibrary, CreateKpiCommand } from '../../models/performance.model';
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="7" class="empty-state">
-                            <i class="pi pi-inbox"></i>
-                            <p>لا توجد مؤشرات أداء مضافة بعد</p>
+                        <td colspan="7" class="text-center py-8 bg-slate-50/50 dark:bg-slate-800/30">
+                            <i class="pi pi-inbox text-2xl text-slate-300 dark:text-slate-600 block mb-2"></i>
+                            <span class="text-[10px] font-bold text-slate-500">لا توجد مؤشرات أداء مضافة بعد</span>
                         </td>
                     </tr>
                 </ng-template>
@@ -127,50 +127,42 @@ import { KpiLibrary, CreateKpiCommand } from '../../models/performance.model';
 
     <!-- Add / Edit Dialog -->
     <p-dialog [(visible)]="showDialog" [header]="editMode ? 'تعديل مؤشر الأداء' : 'إضافة مؤشر أداء جديد'"
-              [modal]="true" [style]="{width: '560px'}" [draggable]="false">
+              [modal]="true" [style]="{width: '500px'}" [draggable]="false" styleClass="p-fluid">
 
-        <form [formGroup]="form" class="dialog-form">
-            <div class="form-grid">
-                <div class="form-field full">
-                    <label>اسم المؤشر (عربي) <span class="required">*</span></label>
-                    <input pInputText formControlName="kpiNameAr" placeholder="مثال: معدل الحضور الشهري" />
-                    <small class="field-error" *ngIf="form.get('kpiNameAr')?.invalid && form.get('kpiNameAr')?.touched">
-                        اسم المؤشر مطلوب
-                    </small>
+        <form [formGroup]="form" class="pt-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">اسم المؤشر (عربي) <span class="text-rose-500">*</span></label>
+                    <input pInputText formControlName="kpiNameAr" placeholder="مثال: معدل الحضور الشهري" class="p-inputtext-sm w-full" />
+                    <small class="text-rose-500 text-[8px] mt-1 block" *ngIf="form.get('kpiNameAr')?.invalid && form.get('kpiNameAr')?.touched">اسم المؤشر مطلوب</small>
                 </div>
 
-                <div class="form-field full">
-                    <label>الوصف</label>
-                    <textarea pTextarea formControlName="kpiDescription" rows="2"
-                              placeholder="وصف مختصر لكيفية قياس هذا المؤشر"></textarea>
+                <div class="col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">الوصف</label>
+                    <textarea pTextarea formControlName="kpiDescription" rows="2" class="p-inputtext-sm w-full" placeholder="وصف مختصر لكيفية قياس هذا المؤشر"></textarea>
                 </div>
 
-                <div class="form-field">
-                    <label>التصنيف <span class="required">*</span></label>
-                    <p-select formControlName="category" [options]="categories"
-                               optionLabel="label" optionValue="value" placeholder="اختر التصنيف"></p-select>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">التصنيف <span class="text-rose-500">*</span></label>
+                    <p-select formControlName="category" [options]="categories" optionLabel="label" optionValue="value" placeholder="اختر التصنيف" styleClass="p-inputtext-sm w-full"></p-select>
                 </div>
 
-                <div class="form-field">
-                    <label>وحدة القياس</label>
-                    <p-select formControlName="measurementUnit" [options]="measurementUnits"
-                               optionLabel="label" optionValue="value" placeholder="اختر الوحدة"></p-select>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">وحدة القياس</label>
+                    <p-select formControlName="measurementUnit" [options]="measurementUnits" optionLabel="label" optionValue="value" placeholder="اختر الوحدة" styleClass="p-inputtext-sm w-full"></p-select>
                 </div>
 
-                <div class="form-field">
-                    <label>الفئة الوظيفية المستهدفة</label>
-                    <p-select formControlName="targetJobType" [options]="jobTypes"
-                               optionLabel="label" optionValue="value"></p-select>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">الفئة المستهدفة</label>
+                    <p-select formControlName="targetJobType" [options]="jobTypes" optionLabel="label" optionValue="value" styleClass="p-inputtext-sm w-full"></p-select>
                 </div>
 
-                <div class="form-field">
-                    <label>الوزن النسبي (%) <span class="required">*</span></label>
-                    <p-inputnumber formControlName="weight" [min]="1" [max]="100"
-                                   suffix="%" [showButtons]="true" buttonLayout="horizontal"
-                                   decrementButtonClass="p-button-secondary"
-                                   incrementButtonClass="p-button-secondary"></p-inputnumber>
-                    <small class="field-hint">مجموع أوزان كل المؤشرات = 100%</small>
-                    <small class="field-error" *ngIf="getProjectedTotal() > 100">
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1">الوزن النسبي (%) <span class="text-rose-500">*</span></label>
+                    <p-inputnumber formControlName="weight" [min]="1" [max]="100" suffix="%" [showButtons]="true" buttonLayout="horizontal" styleClass="p-inputtext-sm w-full"
+                        incrementButtonIcon="pi pi-plus text-[10px]" decrementButtonIcon="pi pi-minus text-[10px]"></p-inputnumber>
+                    <small class="text-slate-500 text-[8px] mt-1 block">مجموع أوزان المؤشرات = 100%</small>
+                    <small class="text-rose-500 text-[8px] mt-0.5 block font-bold" *ngIf="getProjectedTotal() > 100">
                         ⚠ سيتجاوز المجموع 100% (الحالي: {{ getProjectedTotal() }}%)
                     </small>
                 </div>
@@ -178,79 +170,17 @@ import { KpiLibrary, CreateKpiCommand } from '../../models/performance.model';
         </form>
 
         <ng-template pTemplate="footer">
-            <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text" (click)="showDialog = false"></button>
-            <button pButton [label]="editMode ? 'حفظ التعديلات' : 'إضافة المؤشر'" icon="pi pi-check"
-                    (click)="save()" [disabled]="form.invalid || getProjectedTotal() > 100"></button>
+            <div class="border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-end gap-2 mt-2">
+                <button pButton label="إلغاء" class="p-button-text p-button-sm !text-[10px] !font-bold" (click)="showDialog = false"></button>
+                <button pButton [label]="editMode ? 'حفظ التعديلات' : 'إضافة المؤشر'" icon="pi pi-check"
+                        class="p-button-primary p-button-sm !text-[10px] !font-bold shadow-sm"
+                        (click)="save()" [disabled]="form.invalid || getProjectedTotal() > 100"></button>
+            </div>
         </ng-template>
     </p-dialog>
     `,
     styles: [`
-        :host { display: block; direction: rtl; }
-
-        .kpi-settings-page { padding: 1.5rem; }
-
-        .page-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-        .header-content { display: flex; align-items: center; gap: 1rem; }
-        .header-icon {
-            width: 52px; height: 52px; border-radius: 14px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            display: grid; place-items: center;
-            font-size: 1.4rem; color: white;
-        }
-        h1 { margin: 0; font-size: 1.4rem; color: #1e293b; font-weight: 700; }
-        p { margin: 0; color: #64748b; font-size: 0.875rem; }
-
-        .weight-banner {
-            border-radius: 12px; padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem; border: 1px solid transparent;
-        }
-        .weight-banner.valid { background: #f0fdf4; border-color: #86efac; }
-        .weight-banner.warning { background: #fff7ed; border-color: #fdba74; }
-        .weight-info { display: flex; align-items: center; gap: 0.75rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
-        .weight-info i { font-size: 1.1rem; }
-        .valid .weight-info i { color: #22c55e; }
-        .warning .weight-info i { color: #f97316; }
-        .warning-text { color: #ea580c; font-weight: 500; }
-        .success-text { color: #16a34a; font-weight: 500; }
-        .weight-bar {
-            height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;
-        }
-        .weight-fill {
-            height: 100%; background: #22c55e; border-radius: 4px;
-            transition: width 0.4s ease;
-        }
-        .weight-fill.over { background: #ef4444; }
-
-        .table-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); overflow: hidden; }
-
-        .kpi-name { display: flex; align-items: center; gap: 0.5rem; font-weight: 500; }
-        .kpi-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .kpi-desc { display: block; color: #94a3b8; font-size: 0.8rem; margin-top: 2px; }
-
-        .weight-cell { display: flex; align-items: center; gap: 0.5rem; }
-        .weight-mini-bar {
-            flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;
-        }
-        .weight-mini-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 3px; }
-
-        .action-buttons { display: flex; gap: 0.25rem; }
-        .empty-state { text-align: center; padding: 3rem; color: #94a3b8; }
-        .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
-
-        .dialog-form { padding: 0.5rem 0; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
-        .form-field.full { grid-column: 1 / -1; }
-        label { font-size: 0.85rem; font-weight: 600; color: #374151; }
-        .required { color: #ef4444; }
-        .field-error { color: #ef4444; font-size: 0.78rem; }
-        .field-hint { color: #6b7280; font-size: 0.78rem; }
-
-        input.ng-invalid.ng-touched, p-select.ng-invalid.ng-touched { border-color: #ef4444; }
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6) !important; border: none !important; }
+        :host { display: block; }
     `]
 })
 export class KpiSettingsComponent implements OnInit {

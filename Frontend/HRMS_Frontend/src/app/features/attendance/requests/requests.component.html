@@ -1,129 +1,150 @@
-<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6 relative">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">سجل الطلبات والإجراءات</h2>
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+                <i class="pi pi-list text-[11px]"></i>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">سجل الطلبات والإجراءات</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">إدارة أذونات الانصراف، العمل الإضافي، والتصحيح</p>
+            </div>
+        </div>
+    </div>
+
     <p-toast></p-toast>
 
-    <p-tabs value="0">
-        <p-tablist>
-            <p-tab value="0">سجل الأذونات</p-tab>
-            <p-tab value="1">سجل الإضافي</p-tab>
-            <p-tab value="2">سجل التبديل</p-tab>
-            <p-tab value="3">سجل تصحيح البصمة</p-tab>
-        </p-tablist>
-        
-        <p-tabpanels>
-            <!-- Permissions History Tab -->
-            <p-tabpanel value="0">
-                <div class="flex justify-end mb-4">
-                    <button pButton icon="pi pi-plus" label="طلب إذن جديد" class="p-button-help p-button-sm" (click)="showPermissionDialog = true; permissionForm.reset()"></button>
-                </div>
-                <p-table [value]="myPermissions" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-striped">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>رقم الطلب</th>
-                            <th>الموظف</th>
-                            <th>التاريخ</th>
-                            <th>ساعات</th>
-                            <th>السبب</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-req>
-                        <tr>
-                            <td>#{{ req.permissionRequestId }}</td>
-                            <td class="font-bold">{{ req.employeeName }}</td>
-                            <td>{{ req.permissionDate | date:'mediumDate' }}</td>
-                            <td>{{ req.hours }} ساعة</td>
-                            <td>{{ req.reason }}</td>
-                            <td>
-                                <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status"></p-tag>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr><td colspan="6" class="text-center p-8 text-slate-400">لا يوجد سجل أذونات</td></tr>
-                    </ng-template>
-                </p-table>
-            </p-tabpanel>
+    <div class="flex flex-col h-full">
+        <p-tabs value="0">
+            <p-tablist styleClass="text-[10px]">
+                <p-tab value="0">سجل الأذونات</p-tab>
+                <p-tab value="1">سجل الإضافي</p-tab>
+                <p-tab value="2">سجل التبديل</p-tab>
+                <p-tab value="3">سجل تصحيح البصمة</p-tab>
+            </p-tablist>
+            
+            <p-tabpanels>
+                <!-- Permissions History Tab -->
+                <p-tabpanel value="0">
+                    <div class="flex justify-end mb-3">
+                        <button pButton icon="pi pi-plus" label="طلب إذن جديد" class="p-button-outlined p-button-help !h-8 !text-[10px] !font-bold !rounded-md !px-3 shadow-sm" (click)="showPermissionDialog = true; permissionForm.reset()"></button>
+                    </div>
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
+                        <p-table [value]="myPermissions" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-sm clean-table">
+                            <ng-template pTemplate="header">
+                                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">رقم الطلب</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التاريخ</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">ساعات</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">السبب</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-req>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                                    <td class="!px-3 !py-1.5 !border-none font-mono text-[9px] text-slate-500">#{{ req.permissionRequestId }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">{{ req.employeeName }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">{{ req.permissionDate | date:'mediumDate' }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-center text-[9px] font-bold text-blue-600">{{ req.hours }} ساعة</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-[9px] text-slate-500">{{ req.reason }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-center">
+                                        <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr><td colspan="6" class="text-center py-6 text-[10px] text-slate-400">لا يوجد سجل أذونات</td></tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </p-tabpanel>
 
-            <!-- Overtime Tab -->
-            <p-tabpanel value="1">
-                <div class="flex justify-end mb-4">
-                    <button pButton icon="pi pi-plus" label="طلب إضافي جديد" class="p-button-primary p-button-sm" (click)="showOvertimeDialog = true; overtimeForm.reset()"></button>
-                </div>
-                <p-table [value]="myOvertimes" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-striped">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>رقم الطلب</th>
-                            <th>الموظف</th>
-                            <th>تاريخ العمل</th>
-                            <th>ساعات (مطلوبة)</th>
-                            <th>السبب</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-req>
-                        <tr>
-                            <td>#{{ req.overtimeRequestId }}</td>
-                            <td class="font-bold">{{ req.employeeName }}</td>
-                            <td>{{ req.requestDate | date:'mediumDate' }}</td>
-                            <td>{{ req.hoursRequested }} ساعة</td>
-                            <td>{{ req.reason }}</td>
-                            <td>
-                                <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status"></p-tag>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr><td colspan="6" class="text-center p-8 text-slate-400">لا يوجد طلبات عمل إضافي</td></tr>
-                    </ng-template>
-                </p-table>
-            </p-tabpanel>
+                <!-- Overtime Tab -->
+                <p-tabpanel value="1">
+                    <div class="flex justify-end mb-3">
+                        <button pButton icon="pi pi-plus" label="طلب إضافي جديد" class="p-button-outlined p-button-primary !h-8 !text-[10px] !font-bold !rounded-md !px-3 shadow-sm" (click)="showOvertimeDialog = true; overtimeForm.reset()"></button>
+                    </div>
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
+                        <p-table [value]="myOvertimes" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-sm clean-table">
+                            <ng-template pTemplate="header">
+                                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">رقم الطلب</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">تاريخ العمل</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">ساعات (مطلوبة)</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">السبب</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-req>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                                    <td class="!px-3 !py-1.5 !border-none font-mono text-[9px] text-slate-500">#{{ req.overtimeRequestId }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">{{ req.employeeName }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">{{ req.requestDate | date:'mediumDate' }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-center text-[9px] font-bold text-emerald-600">{{ req.hoursRequested }} ساعة</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-[9px] text-slate-500">{{ req.reason }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-center">
+                                        <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr><td colspan="6" class="text-center py-6 text-[10px] text-slate-400">لا يوجد طلبات عمل إضافي</td></tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </p-tabpanel>
 
-            <!-- Swap Tab -->
-            <p-tabpanel value="2">
-                <div class="flex justify-end mb-4">
-                    <button pButton icon="pi pi-plus" label="طلب تبديل جديد" class="p-button-success p-button-sm" (click)="showSwapDialog = true; swapForm.reset()"></button>
-                </div>
-                <p-table [value]="mySwaps" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-striped">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>رقم الطلب</th>
-                            <th>طالب التبديل</th>
-                            <th>البديل</th>
-                            <th>تاريخ التبديل</th>
-                            <th>السبب</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-req>
-                        <tr>
-                            <td>#{{ req.swapRequestId }}</td>
-                            <td class="font-bold">{{ req.requesterName }}</td>
-                            <td class="font-bold text-blue-600">{{ req.targetEmployeeName }}</td>
-                            <td>{{ req.rosterDate | date:'mediumDate' }}</td>
-                            <td>{{ req.reason }}</td>
-                            <td>
-                                <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status"></p-tag>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr><td colspan="6" class="text-center p-8 text-slate-400">لا يوجد طلبات تبديل مناوبة</td></tr>
-                    </ng-template>
-                </p-table>
-            </p-tabpanel>
+                <!-- Swap Tab -->
+                <p-tabpanel value="2">
+                    <div class="flex justify-end mb-3">
+                        <button pButton icon="pi pi-plus" label="طلب تبديل جديد" class="p-button-outlined p-button-success !h-8 !text-[10px] !font-bold !rounded-md !px-3 shadow-sm" (click)="showSwapDialog = true; swapForm.reset()"></button>
+                    </div>
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col">
+                        <p-table [value]="mySwaps" [loading]="loadingTables" responsiveLayout="scroll" styleClass="p-datatable-sm clean-table">
+                            <ng-template pTemplate="header">
+                                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">رقم الطلب</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">طالب التبديل</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">البديل</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">تاريخ التبديل</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">السبب</th>
+                                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center">الحالة</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-req>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                                    <td class="!px-3 !py-1.5 !border-none font-mono text-[9px] text-slate-500">#{{ req.swapRequestId }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-slate-700 dark:text-slate-200">{{ req.requesterName }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none font-bold text-[9px] text-blue-600">{{ req.targetEmployeeName }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-[9px] font-mono text-slate-600 dark:text-slate-400">{{ req.rosterDate | date:'mediumDate' }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-[9px] text-slate-500">{{ req.reason }}</td>
+                                    <td class="!px-3 !py-1.5 !border-none text-center">
+                                        <p-tag [severity]="req.status === 'Approved' ? 'success' : (req.status === 'Pending' ? 'warn' : 'danger')" [value]="req.status" styleClass="!text-[8px] !px-1.5 !py-0.5 !rounded-sm"></p-tag>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr><td colspan="6" class="text-center py-6 text-[10px] text-slate-400">لا يوجد طلبات تبديل مناوبة</td></tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </p-tabpanel>
 
-            <!-- Correction Tab -->
-            <p-tabpanel value="3">
-                <div class="flex justify-end mb-4">
-                    <button pButton icon="pi pi-plus" label="طلب تصحيح جديد" class="p-button-warning p-button-sm" (click)="showCorrectionDialog = true; correctionForm.reset()"></button>
-                </div>
-                 <div class="text-center p-8 text-slate-400">
-                     (سجل التصحيحات متاح في تقرير الإدارة)
-                 </div>
-            </p-tabpanel>
-        </p-tabpanels>
-    </p-tabs>
+                <!-- Correction Tab -->
+                <p-tabpanel value="3">
+                    <div class="flex justify-end mb-3">
+                        <button pButton icon="pi pi-plus" label="طلب تصحيح جديد" class="p-button-outlined p-button-warning !h-8 !text-[10px] !font-bold !rounded-md !px-3 shadow-sm" (click)="showCorrectionDialog = true; correctionForm.reset()"></button>
+                    </div>
+                     <div class="text-center py-6 text-[10px] text-slate-400 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50/50 dark:bg-slate-800/30">
+                         (سجل التصحيحات متاح في تقرير الإدارة)
+                     </div>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    </div>
 </div>
 
 <!-- ================= Dialogs ================= -->
@@ -133,29 +154,29 @@
     <form [formGroup]="permissionForm" (ngSubmit)="submitPermission()" class="space-y-4 pt-4">
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
-            <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+            <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full p-inputtext-sm"></p-select>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الإذن (يشمل وقت البدء)</label>
-                <p-datepicker formControlName="permissionDate" [showIcon]="true" [showTime]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+                <p-datepicker formControlName="permissionDate" [showIcon]="true" [showTime]="true" styleClass="w-full p-inputtext-sm" appendTo="body"></p-datepicker>
             </div>
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">المدة (ساعات)</label>
-                <p-inputNumber formControlName="hours" [min]="0.5" [step]="0.5" suffix=" ساعة" styleClass="w-full"></p-inputNumber>
+                <p-inputNumber formControlName="hours" [min]="0.5" [step]="0.5" suffix=" ساعة" styleClass="w-full p-inputtext-sm"></p-inputNumber>
             </div>
         </div>
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">نوع الإذن</label>
-            <p-select [options]="permissionTypes" formControlName="permissionType" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+            <p-select [options]="permissionTypes" formControlName="permissionType" optionLabel="label" optionValue="value" styleClass="w-full p-inputtext-sm"></p-select>
         </div>
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
-            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+            <textarea pTextarea formControlName="reason" rows="3" class="w-full p-inputtext-sm"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-4">
-            <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showPermissionDialog = false"></button>
-            <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="permissionForm.invalid" class="p-button-help"></button>
+        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <button pButton type="button" label="إلغاء" class="p-button-text p-button-sm" (click)="showPermissionDialog = false"></button>
+            <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="permissionForm.invalid" class="p-button-help p-button-sm"></button>
         </div>
     </form>
 </p-dialog>
@@ -165,25 +186,25 @@
     <form [formGroup]="overtimeForm" (ngSubmit)="submitOvertime()" class="space-y-4 pt-4">
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
-            <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+            <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full p-inputtext-sm"></p-select>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ العمل</label>
-                <p-datepicker formControlName="workDate" [showIcon]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+                <p-datepicker formControlName="workDate" [showIcon]="true" styleClass="w-full p-inputtext-sm" appendTo="body"></p-datepicker>
             </div>
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">عـدد الساعات</label>
-                <p-inputNumber formControlName="hoursRequested" [min]="1" [max]="12" suffix=" ساعة" styleClass="w-full"></p-inputNumber>
+                <p-inputNumber formControlName="hoursRequested" [min]="1" [max]="12" suffix=" ساعة" styleClass="w-full p-inputtext-sm"></p-inputNumber>
             </div>
         </div>
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">مبرر العمل الإضافي</label>
-            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+            <textarea pTextarea formControlName="reason" rows="3" class="w-full p-inputtext-sm"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-4">
-            <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showOvertimeDialog = false"></button>
-            <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="overtimeForm.invalid" class="p-button-primary"></button>
+        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <button pButton type="button" label="إلغاء" class="p-button-text p-button-sm" (click)="showOvertimeDialog = false"></button>
+            <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="overtimeForm.invalid" class="p-button-primary p-button-sm"></button>
         </div>
     </form>
 </p-dialog>
@@ -194,24 +215,24 @@
         <div class="grid grid-cols-2 gap-4">
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف (طالب التبديل)</label>
-                <p-select [options]="employees" formControlName="requesterId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+                <p-select [options]="employees" formControlName="requesterId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full p-inputtext-sm"></p-select>
             </div>
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف البديل</label>
-                <p-select [options]="employees" formControlName="targetEmployeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف البديل" styleClass="w-full"></p-select>
+                <p-select [options]="employees" formControlName="targetEmployeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف البديل" styleClass="w-full p-inputtext-sm"></p-select>
             </div>
         </div>
         <div class="field w-1/2 pr-2">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ المناوبة</label>
-            <p-datepicker formControlName="rosterDate" [showIcon]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+            <p-datepicker formControlName="rosterDate" [showIcon]="true" styleClass="w-full p-inputtext-sm" appendTo="body"></p-datepicker>
         </div>
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">السبب</label>
-            <textarea pTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+            <textarea pTextarea formControlName="reason" rows="3" class="w-full p-inputtext-sm"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-4">
-             <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showSwapDialog = false"></button>
-             <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="swapForm.invalid" class="p-button-success"></button>
+        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+             <button pButton type="button" label="إلغاء" class="p-button-text p-button-sm" (click)="showSwapDialog = false"></button>
+             <button pButton type="submit" label="حفظ وإرسال" icon="pi pi-check" [disabled]="swapForm.invalid" class="p-button-success p-button-sm"></button>
         </div>
     </form>
 </p-dialog>
@@ -222,30 +243,30 @@
         <div class="grid grid-cols-2 gap-4">
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">الموظف</label>
-                <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full"></p-select>
+                <p-select [options]="employees" formControlName="employeeId" optionLabel="fullNameAr" optionValue="employeeId" [filter]="true" filterBy="fullNameAr,employeeNumber" placeholder="اختر الموظف" styleClass="w-full p-inputtext-sm"></p-select>
             </div>
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">تاريخ الواقعة المراد تصحيحها</label>
-                <p-datepicker formControlName="attendanceDate" [showIcon]="true" styleClass="w-full" appendTo="body"></p-datepicker>
+                <p-datepicker formControlName="attendanceDate" [showIcon]="true" styleClass="w-full p-inputtext-sm" appendTo="body"></p-datepicker>
             </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">نوع التصحيح</label>
-                <p-select [options]="correctionTypes" formControlName="correctionType" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+                <p-select [options]="correctionTypes" formControlName="correctionType" optionLabel="label" optionValue="value" styleClass="w-full p-inputtext-sm"></p-select>
             </div>
             <div class="field">
                 <label class="block text-sm font-medium mb-1 dark:text-gray-300">الوقت الصحيح</label>
-                <input pInputText type="time" formControlName="newValue" class="w-full" />
+                <input pInputText type="time" formControlName="newValue" class="w-full p-inputtext-sm" />
             </div>
         </div>
         <div class="field">
             <label class="block text-sm font-medium mb-1 dark:text-gray-300">ملاحظات للمدقق</label>
-            <textarea pTextarea formControlName="auditNote" rows="3" class="w-full"></textarea>
+            <textarea pTextarea formControlName="auditNote" rows="3" class="w-full p-inputtext-sm"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-4">
-            <button pButton type="button" label="إلغاء" class="p-button-text" (click)="showCorrectionDialog = false"></button>
-            <button pButton type="submit" label="تصحيح الآن" icon="pi pi-check" [disabled]="correctionForm.invalid" class="p-button-warning"></button>
+        <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <button pButton type="button" label="إلغاء" class="p-button-text p-button-sm" (click)="showCorrectionDialog = false"></button>
+            <button pButton type="submit" label="تصحيح الآن" icon="pi pi-check" [disabled]="correctionForm.invalid" class="p-button-warning p-button-sm"></button>
         </div>
     </form>
 </p-dialog>

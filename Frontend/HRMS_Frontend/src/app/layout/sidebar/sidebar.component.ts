@@ -85,46 +85,12 @@ export class SidebarComponent implements OnInit {
       permission: 'Payroll.View',
       children: [
         { label: 'لوحة التحكم', icon: 'pi pi-chart-bar', route: '/payroll/dashboard', permission: 'Payroll.View' },
-        {
-          label: 'إدارة العناصر',
-          icon: 'pi pi-list',
-          expanded: false,
-          permission: 'Payroll.Edit',
-          children: [
-            { label: 'قائمة العناصر', icon: 'pi pi-list', route: '/payroll/elements', permission: 'Payroll.Edit' },
-            { label: 'إضافة عنصر', icon: 'pi pi-plus', route: '/payroll/elements/form', permission: 'Payroll.Edit' }
-          ]
-        },
-        {
-          label: 'هياكل الرواتب',
-          icon: 'pi pi-sitemap',
-          expanded: false,
-          permission: 'Payroll.View',
-          children: [
-            { label: 'جميع الهياكل', icon: 'pi pi-list', route: '/payroll/structures', permission: 'Payroll.View' },
-            { label: 'هيكل راتبي', icon: 'pi pi-user', route: '/payroll/salary/my-structure' }
-          ]
-        },
-        {
-          label: 'معالجة الرواتب',
-          icon: 'pi pi-cog',
-          expanded: false,
-          permission: 'Payroll.Process',
-          children: [
-            { label: 'معالجة شهر جديد', icon: 'pi pi-play', route: '/payroll/processing/process', permission: 'Payroll.Process' },
-            { label: 'مسيرات الرواتب', icon: 'pi pi-list', route: '/payroll/processing/runs', permission: 'Payroll.View' }
-          ]
-        },
-        {
-          label: 'التقارير',
-          icon: 'pi pi-chart-bar',
-          expanded: false,
-          permission: 'Reports.View',
-          children: [
-            { label: 'ملخص شهري', icon: 'pi pi-calendar', route: '/payroll/reports/monthly', permission: 'Reports.View' },
-            { label: 'سجل التتبع', icon: 'pi pi-history', route: '/payroll/reports/audit', permission: 'Reports.Advanced' }
-          ]
-        },
+        { label: 'عناصر الراتب', icon: 'pi pi-list', route: '/payroll/elements', permission: 'Payroll.Edit' },
+        { label: 'هياكل الرواتب', icon: 'pi pi-sitemap', route: '/payroll/structures', permission: 'Payroll.View' },
+        { label: 'مسيرات الرواتب', icon: 'pi pi-file-edit', route: '/payroll/processing/runs', permission: 'Payroll.View' },
+        { label: 'معالجة الرواتب', icon: 'pi pi-play', route: '/payroll/processing/process', permission: 'Payroll.Process' },
+        { label: 'تقارير الرواتب', icon: 'pi pi-chart-pie', route: '/payroll/reports/monthly', permission: 'Reports.View' },
+        { label: 'هيكل راتبي', icon: 'pi pi-user', route: '/payroll/salary/my-structure' },
         { label: 'قسائم رواتبي', icon: 'pi pi-file-pdf', route: '/payroll/payslips' }
       ]
     },
@@ -147,12 +113,12 @@ export class SidebarComponent implements OnInit {
       icon: 'pi pi-briefcase',
       expanded: false,
       children: [
-        { label: 'الوظائف الشاغرة',  icon: 'pi pi-megaphone',       route: '/recruitment/vacancies' },
-        { label: 'بنك المرشحين',      icon: 'pi pi-users',           route: '/recruitment/candidates' },
-        { label: 'طلبات التوظيف',    icon: 'pi pi-file-edit',       route: '/recruitment/applications' },
-        { label: 'المقابلات',         icon: 'pi pi-calendar',        route: '/recruitment/interviews' },
-        { label: 'عروض العمل',        icon: 'pi pi-envelope',        route: '/recruitment/offers' },
-        { label: 'تقارير وشاشات ذكية', icon: 'pi pi-chart-bar',       route: '/recruitment/reports' },
+        { label: 'الوظائف الشاغرة', icon: 'pi pi-megaphone', route: '/recruitment/vacancies' },
+        { label: 'بنك المرشحين', icon: 'pi pi-users', route: '/recruitment/candidates' },
+        { label: 'طلبات التوظيف', icon: 'pi pi-file-edit', route: '/recruitment/applications' },
+        { label: 'المقابلات', icon: 'pi pi-calendar', route: '/recruitment/interviews' },
+        { label: 'عروض العمل', icon: 'pi pi-envelope', route: '/recruitment/offers' },
+        { label: 'تقارير وشاشات ذكية', icon: 'pi pi-chart-bar', route: '/recruitment/reports' },
       ]
     },
     {
@@ -196,9 +162,17 @@ export class SidebarComponent implements OnInit {
     },
   ];
 
-  toggleSubmenu(item: any) {
-    if (item.children) {
-      item.expanded = !item.expanded;
+  toggleSubmenu(clickedItem: any, event?: Event) {
+    if (clickedItem.children) {
+      if (event) {
+        event.preventDefault();
+      }
+      this.menuItems.forEach(item => {
+        if (item !== clickedItem && item.expanded) {
+          item.expanded = false;
+        }
+      });
+      clickedItem.expanded = !clickedItem.expanded;
     }
   }
 }

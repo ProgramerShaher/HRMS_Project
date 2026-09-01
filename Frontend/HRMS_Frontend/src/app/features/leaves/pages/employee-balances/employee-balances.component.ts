@@ -10,6 +10,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
 import { LeaveBalanceService } from '../../services/leave-balance.service';
 import { LeaveConfigurationService } from '../../services/leave-configuration.service';
 import { EmployeeLeaveTypeBalance, LeaveType } from '../../models/leave.models';
@@ -22,7 +23,8 @@ type EmpTotals = { entitlementDays: number; consumedDays: number; remainingDays:
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
     ToastModule, TableModule, ButtonModule, InputTextModule,
-    InputNumberModule, DialogModule, TextareaModule, SelectModule
+    InputNumberModule, DialogModule, TextareaModule, SelectModule,
+    CheckboxModule
   ],
   providers: [MessageService],
   templateUrl: './employee-balances.component.html',

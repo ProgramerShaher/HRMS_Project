@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRMS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRMSDbContext))]
-    [Migration("20260214230542_AddPermissionsSystem")]
-    partial class AddPermissionsSystem
+    [Migration("20260825225555_Addalltables")]
+    partial class Addalltables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -414,6 +414,10 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("CREATED_BY");
 
+                    b.Property<decimal>("DeductionAmount")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("DEDUCTION_AMOUNT");
+
                     b.Property<short>("EarlyLeaveMinutes")
                         .HasColumnType("smallint")
                         .HasColumnName("EARLY_LEAVE_MINUTES");
@@ -429,6 +433,10 @@ namespace HRMS.Infrastructure.Migrations
                     b.Property<short>("LateMinutes")
                         .HasColumnType("smallint")
                         .HasColumnName("LATE_MINUTES");
+
+                    b.Property<decimal>("OvertimeAmount")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("OVERTIME_AMOUNT");
 
                     b.Property<short>("OvertimeMinutes")
                         .HasColumnType("smallint")
@@ -3689,6 +3697,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("MEASUREMENT_UNIT");
 
+                    b.Property<string>("TargetJobType")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("TARGET_JOB_TYPE");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("UPDATED_AT");
@@ -4822,6 +4835,11 @@ namespace HRMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CandidateId"));
 
+                    b.Property<string>("ApplicationSource")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("APPLICATION_SOURCE");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("CREATED_AT");
@@ -4875,6 +4893,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("PHONE");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("STATUS");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")

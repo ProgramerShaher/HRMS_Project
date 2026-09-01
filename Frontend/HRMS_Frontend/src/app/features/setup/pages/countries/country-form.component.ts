@@ -15,54 +15,54 @@ import { ChangeDetectorRef } from '@angular/core';
     standalone: true,
     imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, FloatLabelModule],
     template: `
-    <form [formGroup]="form" (ngSubmit)="save()" class="p-4" dir="rtl">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col h-full" dir="rtl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3 p-1">
             
             <!-- Ar Name -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="countryNameAr" formControlName="countryNameAr" class="w-full" />
-                    <label for="countryNameAr">اسم الدولة (عربي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300">اسم الدولة (عربي) <span class="text-red-500">*</span></label>
+                <input pInputText id="countryNameAr" formControlName="countryNameAr" 
+                    class="w-full !h-8 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- En Name -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="countryNameEn" formControlName="countryNameEn" class="w-full" />
-                    <label for="countryNameEn">اسم الدولة (إنجليزي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300">اسم الدولة (إنجليزي) <span class="text-red-500">*</span></label>
+                <input pInputText id="countryNameEn" formControlName="countryNameEn" 
+                    class="w-full !h-8 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
              <!-- Citizenship Ar -->
-             <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="citizenshipNameAr" formControlName="citizenshipNameAr" class="w-full" />
-                    <label for="citizenshipNameAr">اسم الجنسية (عربي)</label>
-                </p-floatLabel>
-            </div>
+             <div class="col-span-1 space-y-1">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300">اسم الجنسية (عربي)</label>
+                <input pInputText id="citizenshipNameAr" formControlName="citizenshipNameAr" 
+                    class="w-full !h-8 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+            </div>      
 
             <!-- Citizenship En -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="citizenshipNameEn" formControlName="citizenshipNameEn" class="w-full" />
-                    <label for="citizenshipNameEn">اسم الجنسية (إنجليزي)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300">اسم الجنسية (إنجليزي)</label>
+                <input pInputText id="citizenshipNameEn" formControlName="citizenshipNameEn" 
+                    class="w-full !h-8 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
             <!-- ISO Code -->
-            <div class="col-span-1">
-                <p-floatLabel>
-                    <input pInputText id="isoCode" formControlName="isoCode" class="w-full uppercase" maxlength="2" />
-                    <label for="isoCode">رمز الدولة (ISO)</label>
-                </p-floatLabel>
+            <div class="col-span-1 space-y-1">
+                <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300">رمز الدولة (ISO) <span class="text-red-500">*</span></label>
+                <input pInputText id="isoCode" formControlName="isoCode" maxlength="2"
+                    class="w-full uppercase !h-8 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] font-mono tracking-widest focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
             </div>
 
         </div>
 
-        <div class="flex justify-end gap-2 mt-8">
-            <p-button label="إلغاء" icon="pi pi-times" styleClass="p-button-text p-button-secondary" (onClick)="close()"></p-button>
-            <p-button label="حفظ" icon="pi pi-check" type="submit" [loading]="loading" styleClass="p-button-primary"></p-button>
+        <div class="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <button pButton label="إلغاء" type="button"
+                class="p-button-text !h-8 !text-[11px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-4 !rounded-md transition-colors"
+                (click)="close()">
+            </button>
+            <button pButton [label]="isEdit ? 'حفظ التغييرات' : 'إضافة الدولة'" icon="pi pi-check" type="submit" [loading]="loading"
+                class="p-button-primary !h-8 !bg-blue-600 hover:!bg-blue-700 !border-none !text-[11px] !px-4 !rounded-md shadow-sm font-bold transition-colors">
+            </button>
         </div>
     </form>
   `

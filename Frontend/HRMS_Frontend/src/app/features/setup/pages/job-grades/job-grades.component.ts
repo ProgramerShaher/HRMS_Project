@@ -51,12 +51,14 @@ export class JobGradesComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(JobGradeFormComponent, {
-        header: 'إضافة درجة وظيفية جديدة',
-        width: '50vw',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -68,12 +70,14 @@ export class JobGradesComponent implements OnInit {
 
   edit(item: JobGrade) {
     this.ref = this.dialogService.open(JobGradeFormComponent, {
-        header: 'تعديل الدرجة الوظيفية',
-        width: '50vw',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item
     });

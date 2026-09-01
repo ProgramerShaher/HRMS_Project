@@ -20,13 +20,13 @@ import { forkJoin } from 'rxjs';
   selector: 'app-monthly-summary-report',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    ChartModule, 
-    TableModule, 
-    ButtonModule, 
-    SelectModule, 
-    CardModule, 
+    CommonModule,
+    FormsModule,
+    ChartModule,
+    TableModule,
+    ButtonModule,
+    SelectModule,
+    CardModule,
     TagModule,
     TooltipModule,
     ActionButtonsComponent
@@ -41,7 +41,7 @@ export class MonthlySummaryReportComponent implements OnInit {
   loading = signal(false);
   reportData = signal<MonthlySummary | null>(null);
   departments = signal<any[]>([]);
-  
+
   selectedMonth = signal<number>(new Date().getMonth() + 1);
   selectedYear = signal<number>(new Date().getFullYear());
   selectedDept = signal<number | null>(null);
@@ -150,9 +150,9 @@ export class MonthlySummaryReportComponent implements OnInit {
       },
       scales: {
         x: {
-          ticks: { 
-            color: '#94a3b8', 
-            font: { family: 'Cairo', size: 11, weight: 'bold' } 
+          ticks: {
+            color: '#94a3b8',
+            font: { family: 'Cairo', size: 11, weight: 'bold' }
           },
           grid: { display: false }
         },
@@ -160,8 +160,8 @@ export class MonthlySummaryReportComponent implements OnInit {
           type: 'linear',
           display: true,
           position: 'right', // ليتناسب مع الـ RTL بشكل أفضل
-          ticks: { 
-            color: '#3B82F6', 
+          ticks: {
+            color: '#3B82F6',
             font: { family: 'Cairo', size: 10 },
             callback: (value: any) => this.formatCurrency(value)
           },
@@ -172,9 +172,9 @@ export class MonthlySummaryReportComponent implements OnInit {
           display: true,
           position: 'left',
           grid: { drawOnChartArea: false },
-          ticks: { 
-            color: '#EC4899', 
-            font: { family: 'Cairo', size: 10, weight: 'bold' } 
+          ticks: {
+            color: '#EC4899',
+            font: { family: 'Cairo', size: 10, weight: 'bold' }
           }
         }
       }

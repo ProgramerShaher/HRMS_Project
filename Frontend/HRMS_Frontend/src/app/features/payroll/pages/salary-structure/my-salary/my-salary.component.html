@@ -1,208 +1,189 @@
-<div class="p-6 space-y-8 animate-in fade-in slide-in-from-bottom duration-700">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
   
   <!-- Modern Header -->
-  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-    <div class="flex items-center gap-5">
-      <div class="w-16 h-16 rounded-2xl luxury-gradient-blue p-0.5 shadow-lg shadow-blue-500/20">
-        <div class="w-full h-full rounded-2xl bg-white dark:bg-slate-900 flex items-center justify-center">
-          <i class="pi pi-briefcase text-3xl text-blue-600"></i>
-        </div>
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <i class="pi pi-briefcase text-[11px]"></i>
       </div>
       <div>
-        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">هيكل الراتب الشخصي</h1>
-        <p class="text-slate-500 dark:text-zinc-400 font-medium mt-1">
-          <i class="pi pi-info-circle mr-1"></i> مراجعة دقيقة لمكونات دخلك الشهري والاستقطاعات المطبقة
-        </p>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">هيكل الراتب الشخصي</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">مراجعة دقيقة لمكونات دخلك الشهري والاستقطاعات المطبقة</p>
       </div>
     </div>
     
-    <div class="flex gap-3">
-        <button pButton icon="pi pi-refresh" (click)="loadSalaryStructure()" [loading]="loading()" class="p-button-rounded p-button-text p-button-secondary glass-card"></button>
-        <button pButton icon="pi pi-print" label="طباعة الهيكل" class="p-button-raised luxury-gradient-blue rounded-2xl px-6 border-none shadow-lg"></button>
+    <div class="flex items-center gap-2">
+        <button pButton icon="pi pi-refresh" title="تحديث"
+            class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+            (click)="loadSalaryStructure()" [loading]="loading()">
+        </button>
+        <button pButton icon="pi pi-print" label="طباعة الهيكل" 
+            class="p-button-primary !h-8 !bg-blue-600 hover:!bg-blue-700 !border-none !text-[10px] !font-bold !rounded-md !px-3 shadow-sm transition-colors whitespace-nowrap">
+        </button>
     </div>
   </div>
 
   @if (salaryBreakdown()) {
     <!-- Financial Overview Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
       <!-- Total Earnings Card -->
-      <div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
-        <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
-        <div class="flex justify-between items-start mb-4">
-          <div class="w-12 h-12 luxury-gradient-emerald text-white rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center text-xl">
-            <i class="pi pi-arrow-up-right"></i>
+      <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-slate-100 dark:border-slate-800 relative overflow-hidden group hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-colors">
+        <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
+        <div class="flex justify-between items-start mb-2 relative z-10">
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+            <i class="pi pi-arrow-up-right text-emerald-600 dark:text-emerald-400 text-sm"></i>
           </div>
-          <span class="text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full text-xs font-bold">{{ salaryBreakdown()!.allowances.length + 1 }} بند</span>
+          <span class="text-[9px] font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 px-2 py-0.5 rounded">{{ salaryBreakdown()!.allowances.length + 1 }} بند</span>
         </div>
-        <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">إجمالي الاستحقاقات</p>
-        <h2 class="text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-          {{ formatCurrency(salaryBreakdown()!.totalEarnings) }} 
-          <span class="text-sm font-normal text-slate-400">ريال</span>
-        </h2>
+        <div class="mt-3 relative z-10">
+            <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">إجمالي الاستحقاقات</p>
+            <h2 class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
+                {{ formatCurrency(salaryBreakdown()!.totalEarnings) }} 
+                <span class="text-[9px] font-bold text-emerald-500/70">ريال</span>
+            </h2>
+        </div>
       </div>
 
       <!-- Total Deductions Card -->
-      <div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
-        <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition-all duration-700"></div>
-        <div class="flex justify-between items-start mb-4">
-          <div class="w-12 h-12 luxury-gradient-rose text-white rounded-xl shadow-lg shadow-rose-500/20 flex items-center justify-center text-xl">
-            <i class="pi pi-arrow-down-right"></i>
+      <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-slate-100 dark:border-slate-800 relative overflow-hidden group hover:border-rose-200 dark:hover:border-rose-900/50 transition-colors">
+        <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-rose-500/5 rounded-full blur-xl group-hover:bg-rose-500/10 transition-colors"></div>
+        <div class="flex justify-between items-start mb-2 relative z-10">
+          <div class="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center">
+            <i class="pi pi-arrow-down-right text-rose-600 dark:text-rose-400 text-sm"></i>
           </div>
-          <span class="text-rose-500 bg-rose-50 dark:bg-rose-900/30 px-3 py-1 rounded-full text-xs font-bold">{{ salaryBreakdown()!.deductions.length }} بند</span>
+          <span class="text-[9px] font-bold text-rose-600 bg-rose-100 dark:bg-rose-900/40 px-2 py-0.5 rounded">{{ salaryBreakdown()!.deductions.length }} بند</span>
         </div>
-        <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">إجمالي الاستقطاعات</p>
-        <h2 class="text-3xl font-black text-rose-600 dark:text-rose-400 mt-1">
-          {{ formatCurrency(salaryBreakdown()!.totalDeductions) }}
-          <span class="text-sm font-normal text-slate-400">ريال</span>
-        </h2>
+        <div class="mt-3 relative z-10">
+            <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">إجمالي الاستقطاعات</p>
+            <h2 class="text-xl font-black text-rose-600 dark:text-rose-400 mt-0.5">
+                {{ formatCurrency(salaryBreakdown()!.totalDeductions) }}
+                <span class="text-[9px] font-bold text-rose-500/70">ريال</span>
+            </h2>
+        </div>
       </div>
 
       <!-- Net Salary Card -->
-      <div class="glass-card p-6 rounded-3xl relative overflow-hidden group border-blue-100/50 dark:border-blue-900/20">
-        <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all duration-700"></div>
-        <div class="flex justify-between items-start mb-4">
-          <div class="w-12 h-12 luxury-gradient-blue text-white rounded-xl shadow-lg shadow-blue-500/20 flex items-center justify-center text-xl">
-            <i class="pi pi-wallet"></i>
+      <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-xl border border-blue-200 dark:border-blue-900/50 relative overflow-hidden group hover:border-blue-300 dark:hover:border-blue-700/50 transition-colors shadow-sm shadow-blue-500/5">
+        <div class="absolute -left-4 -bottom-4 w-16 h-16 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
+        <div class="flex justify-between items-start mb-2 relative z-10">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+            <i class="pi pi-wallet text-blue-600 dark:text-blue-400 text-sm"></i>
           </div>
-          <span class="text-blue-500 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full text-xs font-bold">صافي</span>
+          <span class="text-[9px] font-bold text-blue-600 bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 rounded">صافي الراتب</span>
         </div>
-        <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400">الراتب القابل للصرف</p>
-        <h2 class="text-3xl font-black text-blue-600 dark:text-blue-400 mt-1">
-          {{ formatCurrency(salaryBreakdown()!.netSalary) }}
-          <span class="text-sm font-normal text-slate-400">ريال</span>
-        </h2>
+        <div class="mt-3 relative z-10">
+            <p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">الراتب القابل للصرف</p>
+            <h2 class="text-xl font-black text-blue-600 dark:text-blue-400 mt-0.5">
+                {{ formatCurrency(salaryBreakdown()!.netSalary) }}
+                <span class="text-[9px] font-bold text-blue-500/70">ريال</span>
+            </h2>
+        </div>
       </div>
     </div>
 
     <!-- Details Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
       
       <!-- Visual Analytics -->
-      <div class="lg:col-span-2 space-y-8">
-        <div class="glass-card p-8 rounded-3xl h-full flex flex-col">
-            <div class="mb-10">
-                <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">الرؤية التحليلية</h3>
-                <p class="text-sm text-slate-500 dark:text-zinc-400 mt-1">رسم بياني يوضح النسب المئوية لكل مكون</p>
+      <div class="lg:col-span-2">
+        <div class="bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded-xl flex flex-col h-full">
+            <div class="mb-4 border-b border-slate-200 dark:border-slate-700/50 pb-2">
+                <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200">الرؤية التحليلية</h3>
+                <p class="text-[9px] text-slate-500 mt-0.5">رسم بياني يوضح النسب المئوية لكل مكون</p>
             </div>
-            <div class="flex-grow flex items-center justify-center relative min-h-[300px]">
+            <div class="flex-grow flex items-center justify-center relative min-h-[220px]">
                 <canvas id="salaryChart"></canvas>
-                <div class="absolute inset-x-0 bottom-4 text-center pointer-events-none">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">صافي الاستحقاق</p>
-                    <p class="text-xl font-black text-blue-600">{{ formatCurrency(salaryBreakdown()!.netSalary) }}</p>
+                <div class="absolute inset-x-0 bottom-1 text-center pointer-events-none">
+                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">صافي الاستحقاق</p>
+                    <p class="text-[14px] font-black text-blue-600">{{ formatCurrency(salaryBreakdown()!.netSalary) }}</p>
                 </div>
             </div>
         </div>
       </div>
 
       <!-- Itemized Breakdown -->
-      <div class="lg:col-span-3 space-y-6">
-        <div class="glass-card p-8 rounded-3xl border-none shadow-sm relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-2 h-full luxury-gradient-blue"></div>
+      <div class="lg:col-span-3">
+        <div class="bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 p-4 rounded-xl flex flex-col h-full gap-6">
             
-            <div class="space-y-10">
-                <!-- Earnings Section -->
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 luxury-gradient-emerald text-white rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                            <i class="pi pi-arrow-up"></i>
+            <!-- Earnings Section -->
+            <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-700/50 pb-2">
+                    <div class="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 rounded flex items-center justify-center">
+                        <i class="pi pi-arrow-up text-[10px]"></i>
+                    </div>
+                    <h3 class="text-[11px] font-bold text-slate-800 dark:text-zinc-200">الاستحقاقات المالية</h3>
+                </div>
+                
+                <div class="flex flex-col gap-1.5">
+                    <!-- Primary Salary -->
+                    <div class="flex justify-between items-center p-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-700 dark:text-zinc-300">الراتب الأساسي</p>
+                            <p class="text-[8px] text-slate-400 font-mono">Base Salary</p>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800 dark:text-zinc-200">الاستحقاقات المالية</h3>
+                        <span class="text-[11px] font-black text-emerald-600 font-mono">{{ formatCurrency(salaryBreakdown()!.basicSalary) }} <small class="text-[8px] opacity-70 font-sans">ريال</small></span>
                     </div>
                     
-                    <div class="grid grid-cols-1 gap-3">
-                        <!-- Primary Salary -->
-                        <div class="benefit-item group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-transparent hover:border-emerald-200 transition-all">
+                    <!-- Dynamic Allowances -->
+                    @for (allowance of salaryBreakdown()!.allowances; track allowance.elementId) {
+                        <div class="flex justify-between items-center p-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors">
                             <div>
-                                <p class="text-sm font-bold text-slate-700 dark:text-zinc-300">الراتب الأساسي</p>
-                                <p class="text-[10px] text-slate-400 uppercase tracking-wider">Base Salary Content</p>
+                                <p class="text-[10px] font-bold text-slate-700 dark:text-zinc-300">{{ allowance.elementNameAr }}</p>
+                                <p class="text-[8px] text-slate-400 font-mono">Allowance</p>
                             </div>
-                            <span class="text-lg font-black text-emerald-600">{{ formatCurrency(salaryBreakdown()!.basicSalary) }} <small class="text-xs opacity-60">ريال</small></span>
+                            <span class="text-[11px] font-black text-emerald-600 font-mono">{{ formatCurrency(allowance.amount) }} <small class="text-[8px] opacity-70 font-sans">ريال</small></span>
                         </div>
-                        
-                        <!-- Dynamic Allowances -->
-                        @for (allowance of salaryBreakdown()!.allowances; track allowance.elementId) {
-                            <div class="benefit-item group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-transparent hover:border-emerald-200 transition-all">
+                    }
+                </div>
+            </div>
+
+            <!-- Deductions Section -->
+            <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-700/50 pb-2">
+                    <div class="w-6 h-6 bg-rose-100 dark:bg-rose-900/40 text-rose-600 rounded flex items-center justify-center">
+                        <i class="pi pi-arrow-down text-[10px]"></i>
+                    </div>
+                    <h3 class="text-[11px] font-bold text-slate-800 dark:text-zinc-200">الاستقطاعات والخصومات</h3>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    @if (salaryBreakdown()!.deductions.length > 0) {
+                        @for (deduction of salaryBreakdown()!.deductions; track deduction.elementId) {
+                            <div class="flex justify-between items-center p-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-200 dark:hover:border-rose-800 transition-colors">
                                 <div>
-                                    <p class="text-sm font-bold text-slate-700 dark:text-zinc-300">{{ allowance.elementNameAr }}</p>
-                                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Fixed Allowance</p>
+                                    <p class="text-[10px] font-bold text-slate-700 dark:text-zinc-300">{{ deduction.elementNameAr }}</p>
+                                    <p class="text-[8px] text-slate-400 font-mono">Deduction</p>
                                 </div>
-                                <span class="text-lg font-black text-emerald-600">{{ formatCurrency(allowance.amount) }} <small class="text-xs opacity-60">ريال</small></span>
+                                <span class="text-[11px] font-black text-rose-600 font-mono">{{ formatCurrency(deduction.amount) }} <small class="text-[8px] opacity-70 font-sans">ريال</small></span>
                             </div>
                         }
-                    </div>
-                </div>
-
-                <!-- Deductions Section -->
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 luxury-gradient-rose text-white rounded-xl flex items-center justify-center shadow-lg shadow-rose-500/20">
-                            <i class="pi pi-arrow-down"></i>
+                    } @else {
+                        <div class="p-4 text-center bg-white dark:bg-slate-800 rounded-lg border border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center">
+                            <i class="pi pi-shield text-slate-300 dark:text-slate-600 text-lg mb-1"></i>
+                            <p class="text-[9px] font-bold text-slate-400">لا توجد استقطاعات مسجلة حالياً</p>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800 dark:text-zinc-200">الاستقطاعات والخصومات</h3>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-3">
-                        @if (salaryBreakdown()!.deductions.length > 0) {
-                            @for (deduction of salaryBreakdown()!.deductions; track deduction.elementId) {
-                                <div class="deduction-item group flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-transparent hover:border-rose-200 transition-all">
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-700 dark:text-zinc-300">{{ deduction.elementNameAr }}</p>
-                                        <p class="text-[10px] text-slate-400 uppercase tracking-wider">Statutory Deduction</p>
-                                    </div>
-                                    <span class="text-lg font-black text-rose-600">{{ formatCurrency(deduction.amount) }} <small class="text-xs opacity-60">ريال</small></span>
-                                </div>
-                            }
-                        } @else {
-                            <div class="p-8 text-center bg-slate-50 dark:bg-slate-800/40 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-                                <i class="pi pi-shield text-slate-300 text-3xl mb-2"></i>
-                                <p class="text-slate-400 font-medium">لا توجد استقطاعات مسجلة حالياً</p>
-                            </div>
-                        }
-                    </div>
+                    }
                 </div>
+            </div>
+            
+            <!-- Summary Row -->
+            <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-700/50 flex items-center justify-between">
+                <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">صافي المستحقات (الراتب الصافي)</span>
+                <span class="text-[14px] font-black text-blue-600 dark:text-blue-400 font-mono bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-md border border-blue-100 dark:border-blue-800">{{ formatCurrency(salaryBreakdown()!.netSalary) }} <small class="text-[9px] font-bold opacity-70 font-sans">ريال يمني</small></span>
             </div>
         </div>
       </div>
     </div>
 
-    <!-- Motivational Final Summary -->
-    <div class="p-10 luxury-gradient-blue rounded-[3rem] relative overflow-hidden shadow-2xl shadow-blue-500/40 animate-fade-in">
-        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-        <div class="absolute left-10 top-10 text-white/5 text-9xl font-black">SALARY</div>
-        
-        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-            <div class="flex items-center gap-8">
-                <div class="w-24 h-24 bg-white/20 backdrop-blur-xl rounded-[2rem] flex items-center justify-center border border-white/30 rotate-3 shadow-2xl">
-                    <i class="pi pi-money-bill text-5xl text-white"></i>
-                </div>
-                <div>
-                    <p class="text-blue-100 font-bold uppercase tracking-[0.2em] text-xs mb-2">Net Distribution Summary</p>
-                    <h2 class="text-5xl font-black text-white leading-none">
-                        {{ formatCurrency(salaryBreakdown()!.netSalary) }}
-                        <span class="text-xl font-normal opacity-70 ml-2">ريال يمني</span>
-                    </h2>
-                    <p class="text-blue-200/80 mt-3 font-medium">
-                        هذا المبلغ يمثل القيمة الفعلية المودعة في حسابك بعد معالجة كافة البنود.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                <button pButton label="تحميل PDF" icon="pi pi-file-pdf" class="p-button-raised bg-white text-blue-600 rounded-2xl px-10 h-16 font-black border-none hover:bg-white/90 shadow-xl"></button>
-                <button pButton label="تاريخ المستحقات" icon="pi pi-history" class="p-button-text text-white bg-white/10 hover:bg-white/20 rounded-2xl px-8 h-16 font-bold backdrop-blur-md"></button>
-            </div>
-        </div>
-    </div>
-
   } @else {
     <!-- Empty State -->
-    <div class="glass-card p-20 rounded-[3rem] text-center border-none shadow-none">
-        <div class="w-32 h-32 mx-auto luxury-gradient-blue rounded-full flex items-center justify-center mb-8 opacity-20">
-            <i class="pi pi-folder-open text-6xl text-white"></i>
+    <div class="flex flex-col items-center justify-center p-12 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-100 dark:border-slate-800 h-64">
+        <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+            <i class="pi pi-folder-open text-xl text-slate-400"></i>
         </div>
-        <h3 class="text-2xl font-black text-slate-800 dark:text-zinc-200 mb-2">بيانات الهيكل غير متوفرة</h3>
-        <p class="text-slate-500 dark:text-zinc-400 max-w-md mx-auto">لم يتم العثور على هيكل راتب نشط لحسابك حالياً. يرجى التواصل مع قسم الموارد البشرية.</p>
-        <button pButton label="محاولة التحديث" icon="pi pi-refresh" (click)="loadSalaryStructure()" class="p-button-text p-button-primary mt-8 rounded-xl font-bold"></button>
+        <h3 class="text-[11px] font-bold text-slate-800 dark:text-slate-200 mb-1">بيانات الهيكل غير متوفرة</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 max-w-xs text-center mb-4">لم يتم العثور على هيكل راتب نشط لحسابك حالياً. يرجى التواصل مع قسم الموارد البشرية.</p>
+        <button pButton label="تحديث البيانات" icon="pi pi-refresh" (click)="loadSalaryStructure()" class="p-button-outlined p-button-secondary !h-7 !text-[9px] !px-3"></button>
     </div>
   }
 </div>

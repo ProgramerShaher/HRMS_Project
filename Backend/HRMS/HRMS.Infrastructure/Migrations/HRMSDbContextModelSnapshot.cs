@@ -3694,6 +3694,11 @@ namespace HRMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("MEASUREMENT_UNIT");
 
+                    b.Property<string>("TargetJobType")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("TARGET_JOB_TYPE");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("UPDATED_AT");

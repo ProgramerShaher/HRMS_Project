@@ -48,12 +48,14 @@ export class DepartmentsComponent implements OnInit {
 
   openNew() {
     this.ref = this.dialogService.open(DepartmentFormComponent, {
-        header: 'إضافة قسم جديد',
-        width: '50vw',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: {}
     });
@@ -65,12 +67,14 @@ export class DepartmentsComponent implements OnInit {
 
   edit(item: Department) {
     this.ref = this.dialogService.open(DepartmentFormComponent, {
-        header: 'تعديل بيانات القسم',
-        width: '50vw',
-        contentStyle: { overflow: 'auto' },
+        showHeader: false,
+        width: '650px',
+        dismissableMask: true,
+        contentStyle: { padding: '0', overflow: 'visible' },
+        styleClass: 'clean-dialog !bg-transparent !border-none !shadow-none',
         breakpoints: {
             '960px': '75vw',
-            '640px': '90vw'
+            '640px': '95vw'
         },
         data: item // Pass the full item, form will extract what it needs
     });

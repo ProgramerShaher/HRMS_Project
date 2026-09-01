@@ -1,69 +1,88 @@
-<div class="card bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800 p-6">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">طلبات قيد الانتظار</h2>
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
     <p-toast></p-toast>
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+        <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-md bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                <i class="pi pi-check-square text-[11px]"></i>
+            </div>
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">طلبات قيد الانتظار</h3>
+                <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">مراجعة واعتماد طلبات الموظفين (إضافي، إذن، تبديل)</p>
+            </div>
+        </div>
+    </div>
 
-    <p-table [value]="requests" [loading]="loading" styleClass="p-datatable-striped" [rowHover]="true">
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 120px">نوع الطلب</th>
-                <th>الموظف</th>
-                <th>التاريخ</th>
-                <th>التفاصيل</th>
-                <th style="width: 150px">الإجراء</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-req>
-            <tr>
-                <td>
-                    <span class="px-2 py-1 rounded text-xs font-bold" 
-                          [ngClass]="{
-                            'bg-blue-100 text-blue-800': req.requestType === 'Swap',
-                            'bg-purple-100 text-purple-800': req.requestType === 'Overtime',
-                            'bg-amber-100 text-amber-800': req.requestType === 'Permission'
-                          }">
-                        {{ 
-                            req.requestType === 'Swap' ? 'تبديل مناوبة' : 
-                            (req.requestType === 'Overtime' ? 'عمل إضافي' : 'إذن خروج') 
-                        }}
-                    </span>
-                </td>
-                <td class="font-medium">
-                    <div class="flex flex-col">
-                        <span>{{ req.employeeName }}</span>
-                        <small class="text-slate-400">ID: {{ req.employeeId }}</small>
-                    </div>
-                </td>
-                <td>
-                    <div class="flex flex-col text-sm">
-                        <span title="تاريخ الطلب"><i class="pi pi-calendar-plus text-xs mr-1"></i> {{ req.requestDate | date:'dd/MM/yyyy' }}</span>
-                        <span title="تاريخ التنفيذ" class="text-blue-600 font-bold"><i class="pi pi-calendar text-xs mr-1"></i> {{ req.targetDate | date:'dd/MM/yyyy' }}</span>
-                    </div>
-                </td>
-                <td class="text-slate-600 text-sm">{{ req.details }}</td>
-                <td>
-                    <div class="flex gap-2">
-                        <button pButton icon="pi pi-check" label="قبول" class="p-button-success p-button-sm p-outlined" (click)="openAction(req, 'APPROVE')"></button>
-                        <button pButton icon="pi pi-times" label="رفض" class="p-button-danger p-button-sm p-outlined" (click)="openAction(req, 'REJECT')"></button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="5" class="text-center py-8 text-slate-400">
-                    <i class="pi pi-inbox text-4xl mb-2 block"></i>
-                    لا توجد طلبات قيد الانتظار حالياً
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <!-- Data Table -->
+    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col mt-2">
+        <p-table [value]="requests" [loading]="loading" styleClass="p-datatable-sm clean-table" [rowHover]="true">
+            <ng-template pTemplate="header">
+                <tr class="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none" style="width: 120px">نوع الطلب</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">الموظف</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التاريخ</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none">التفاصيل</th>
+                    <th class="!px-3 !py-1.5 !text-[9px] !font-bold !text-slate-500 !bg-transparent !border-none text-center" style="width: 150px">الإجراء</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-req>
+                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                    <td class="!px-3 !py-1.5 !border-none">
+                        <span class="px-2 py-0.5 rounded text-[8px] font-black tracking-widest border" 
+                              [ngClass]="{
+                                'bg-blue-50 text-blue-600 border-blue-200': req.requestType === 'Swap',
+                                'bg-purple-50 text-purple-600 border-purple-200': req.requestType === 'Overtime',
+                                'bg-amber-50 text-amber-600 border-amber-200': req.requestType === 'Permission'
+                              }">
+                            {{ 
+                                req.requestType === 'Swap' ? 'تبديل مناوبة' : 
+                                (req.requestType === 'Overtime' ? 'عمل إضافي' : 'إذن خروج') 
+                            }}
+                        </span>
+                    </td>
+                    <td class="!px-3 !py-1.5 !border-none">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-[9px] text-slate-700 dark:text-slate-200">{{ req.employeeName }}</span>
+                            <small class="text-[8px] font-mono text-slate-400">ID: {{ req.employeeId }}</small>
+                        </div>
+                    </td>
+                    <td class="!px-3 !py-1.5 !border-none">
+                        <div class="flex flex-col gap-0.5">
+                            <span title="تاريخ الطلب" class="text-[9px] font-mono text-slate-500"><i class="pi pi-calendar-plus text-[8px] ml-1"></i>{{ req.requestDate | date:'yyyy-MM-dd' }}</span>
+                            <span title="تاريخ التنفيذ" class="text-[9px] font-mono text-blue-600 font-bold"><i class="pi pi-calendar text-[8px] ml-1"></i>{{ req.targetDate | date:'yyyy-MM-dd' }}</span>
+                        </div>
+                    </td>
+                    <td class="!px-3 !py-1.5 !border-none text-slate-600 dark:text-slate-400 text-[9px]">{{ req.details }}</td>
+                    <td class="!px-3 !py-1.5 !border-none text-center">
+                        <div class="flex justify-center gap-1.5">
+                            <button pButton icon="pi pi-check" label="قبول" 
+                                class="p-button-outlined p-button-success !h-6 !px-2 !py-0 !text-[9px] !font-bold hover:!bg-emerald-500 hover:!text-white transition-all shadow-sm" 
+                                (click)="openAction(req, 'APPROVE')"></button>
+                            <button pButton icon="pi pi-times" label="رفض" 
+                                class="p-button-outlined p-button-danger !h-6 !px-2 !py-0 !text-[9px] !font-bold hover:!bg-rose-500 hover:!text-white transition-all shadow-sm" 
+                                (click)="openAction(req, 'REJECT')"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="text-center py-8 bg-slate-50/50 dark:bg-slate-800/30">
+                        <i class="pi pi-inbox text-2xl mb-2 text-slate-300 dark:text-slate-600 block"></i>
+                        <span class="text-[10px] font-bold text-slate-500">لا توجد طلبات قيد الانتظار حالياً</span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
-<p-dialog [(visible)]="dialogVisible" header="تأكيد الإجراء" [modal]="true" [style]="{width: '400px'}">
-    <div class="p-4">
-        <p class="mb-4">
+<p-dialog [(visible)]="dialogVisible" header="تأكيد الإجراء" [modal]="true" [style]="{width: '350px'}">
+    <div class="pt-4">
+        <p class="mb-4 text-[11px] font-bold text-slate-700 dark:text-slate-300 text-center bg-slate-50 dark:bg-slate-800/50 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
             هل أنت متأكد من 
-            <span [ngClass]="{'text-green-600': actionType === 'APPROVE', 'text-red-600': actionType === 'REJECT'}" class="font-bold">
+            <span [ngClass]="{'text-emerald-600': actionType === 'APPROVE', 'text-rose-600': actionType === 'REJECT'}" class="font-black text-xs mx-1">
                 {{ actionType === 'APPROVE' ? 'قبول' : 'رفض' }}
             </span>
              الطلب؟
@@ -71,9 +90,9 @@
 
         <!-- Approved Hours field - shown only when approving Overtime -->
         <div class="field mb-4" *ngIf="actionType === 'APPROVE' && currentRequest?.requestType === 'Overtime'">
-            <label class="block text-sm font-medium mb-1 text-green-700">
+            <label class="block text-[10px] font-bold mb-1.5 text-emerald-700 dark:text-emerald-500">
                 الساعات المعتمدة
-                <span class="text-slate-400 font-normal text-xs">(مطلوب عند الموافقة)</span>
+                <span class="text-slate-400 font-normal text-[9px]">(مطلوب عند الموافقة)</span>
             </label>
             <p-inputNumber 
                 [(ngModel)]="approvedHours" 
@@ -81,23 +100,25 @@
                 [max]="24" 
                 [step]="0.5"
                 suffix=" ساعة" 
-                styleClass="w-full"
+                styleClass="w-full p-inputtext-sm"
                 [showButtons]="true">
             </p-inputNumber>
-            <small class="text-slate-400 mt-1 block">
-                الساعات المطلوبة: {{ currentRequest?.hoursRequested ?? '—' }} ساعة
+            <small class="text-slate-500 text-[9px] mt-1.5 block font-bold">
+                الساعات المطلوبة: <span class="text-emerald-600 font-mono">{{ currentRequest?.hoursRequested ?? '—' }}</span> ساعة
             </small>
         </div>
 
         <div class="field">
-            <label class="block text-sm font-medium mb-1">ملاحظات الإدارة</label>
-            <textarea pTextarea [(ngModel)]="comment" rows="3" class="w-full"></textarea>
+            <label class="block text-[10px] font-bold mb-1.5 text-slate-700 dark:text-slate-300">ملاحظات الإدارة</label>
+            <textarea pTextarea [(ngModel)]="comment" rows="3" class="w-full p-inputtext-sm"></textarea>
         </div>
     </div>
     <ng-template pTemplate="footer">
-        <button pButton label="إلغاء" class="p-button-text" (click)="dialogVisible = false"></button>
-        <button pButton [label]="actionType === 'APPROVE' ? 'تأكيد القبول' : 'تأكيد الرفض'" 
-                [class]="actionType === 'APPROVE' ? 'p-button-success' : 'p-button-danger'" 
-                (click)="submitAction()"></button>
+        <div class="border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-end gap-2">
+            <button pButton label="إلغاء" class="p-button-text p-button-sm !text-[10px] !font-bold" (click)="dialogVisible = false"></button>
+            <button pButton [label]="actionType === 'APPROVE' ? 'تأكيد القبول' : 'تأكيد الرفض'" 
+                    [class]="actionType === 'APPROVE' ? 'p-button-success p-button-sm !text-[10px] !font-bold shadow-sm' : 'p-button-danger p-button-sm !text-[10px] !font-bold shadow-sm'" 
+                    (click)="submitAction()"></button>
+        </div>
     </ng-template>
 </p-dialog>

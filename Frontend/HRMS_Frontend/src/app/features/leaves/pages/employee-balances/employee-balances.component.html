@@ -1,33 +1,41 @@
-<div class="p-6 space-y-6">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full gap-4 animate-in fade-in slide-in-from-bottom-5 duration-700" dir="rtl">
   <p-toast></p-toast>
 
   <!-- Header -->
-  <div class="glass-card p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <h1 class="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
-          <i class="pi pi-users text-white text-xl"></i>
-        </div>
-        أرصدة إجازات الموظفين
-      </h1>
-      <p class="text-slate-500 dark:text-zinc-400 mt-1 mr-16">عرض وإدارة الاستحقاق والمستهلك والمتبقي لكل موظف</p>
+  <div class="flex flex-col md:flex-row justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-4 md:gap-0">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <i class="pi pi-users text-[11px]"></i>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">أرصدة إجازات الموظفين</h3>
+        <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">عرض وإدارة الاستحقاق والمستهلك والمتبقي لكل موظف</p>
+      </div>
     </div>
 
-    <div class="flex items-center gap-3 flex-wrap">
-      <!-- Year filter -->
-      <div class="flex items-center gap-2">
-        <label class="text-xs font-bold text-slate-500">السنة:</label>
-        <input type="number" pInputText [(ngModel)]="year" class="w-24 rounded-xl text-center" (change)="load()" />
+    <div class="flex items-center gap-2 w-full md:w-auto">
+      <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/50 px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700">
+        <label class="text-[10px] font-bold text-slate-500">السنة:</label>
+        <input type="number" pInputText [(ngModel)]="year" class="w-16 !h-6 !text-[10px] text-center !p-1 !bg-transparent border-none focus:ring-0" (change)="load()" />
       </div>
-      <!-- Search -->
-      <input pInputText [(ngModel)]="search" placeholder="بحث..." class="rounded-xl w-48" />
-      <button pButton icon="pi pi-refresh" label="عرض" class="p-button-primary" (click)="load()" [loading]="loading()"></button>
-      <button pButton icon="pi pi-calendar-plus" label="تهيئة الأرصدة" class="p-button-outlined p-button-success" (click)="openInitDialog()"></button>
+      <div class="relative flex items-center flex-grow md:flex-none">
+          <i class="pi pi-search absolute left-2.5 text-slate-400 text-[10px]"></i>
+          <input pInputText type="text" [(ngModel)]="search" placeholder="بحث..." 
+              class="w-full md:w-48 !h-8 !pl-8 !pr-2.5 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[11px] focus:!bg-white dark:focus:!bg-slate-900 focus:!border-blue-500 transition-all" />
+      </div>
+      <button pButton icon="pi pi-refresh" title="عرض"
+          class="p-button-outlined p-button-secondary !h-8 !w-8 !p-0 flex justify-center items-center !rounded-md hover:!bg-slate-50 dark:hover:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !text-slate-700 dark:!text-slate-300 transition-all"
+          (click)="load()" [loading]="loading()">
+      </button>
+      <button pButton icon="pi pi-calendar-plus" label="تهيئة الأرصدة"
+          class="p-button-primary !h-8 !bg-emerald-600 hover:!bg-emerald-700 !border-none !text-[10px] !font-bold !rounded-md !px-3 shadow-sm transition-colors whitespace-nowrap"
+          (click)="openInitDialog()">
+      </button>
     </div>
   </div>
 
   <!-- Table -->
-  <div class="glass-card rounded-3xl overflow-hidden">
+  <div class="flex-grow bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 overflow-hidden relative">
     <p-table
       [value]="rows()"
       [loading]="loading()"
@@ -36,45 +44,45 @@
       sortField="employeeId"
       [sortOrder]="1"
       responsiveLayout="scroll"
-      styleClass="p-datatable-lg">
+      styleClass="p-datatable-sm clean-table">
 
       <ng-template pTemplate="header">
-        <tr>
-          <th>نوع الإجازة</th>
-          <th class="text-center">الإجمالي</th>
-          <th class="text-center">المستهلك</th>
-          <th class="text-center">المتبقي</th>
-          <th class="text-center">السنة</th>
-          <th class="text-center">تعديل</th>
+        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none w-1/4">نوع الإجازة</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">الإجمالي</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">المستهلك</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">المتبقي</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center">السنة</th>
+          <th class="!px-4 !py-2.5 !text-[9px] !font-bold !text-slate-500 dark:!text-slate-400 !uppercase tracking-wider !bg-transparent !border-none text-center w-24">تعديل</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="groupheader" let-r>
-        <tr class="bg-indigo-50/60 dark:bg-indigo-900/10">
-          <td colspan="6" class="py-4 px-4">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-700 font-black">
+        <tr class="bg-blue-50/50 dark:bg-blue-900/10 border-b border-slate-100 dark:border-slate-800">
+          <td colspan="6" class="!py-2 !px-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-700 font-black text-[11px]">
                   {{ r.employeeNameAr?.charAt(0) }}
                 </div>
                 <div>
-                  <p class="font-black text-slate-900 dark:text-white">
+                  <p class="font-bold text-slate-900 dark:text-white text-[11px]">
                     {{ r.employeeNameAr }}
-                    <span class="text-slate-400 font-semibold text-sm mr-2">#{{ r.employeeNumber }}</span>
+                    <span class="text-slate-400 font-semibold text-[9px] mr-1">#{{ r.employeeNumber }}</span>
                   </p>
-                  <p class="text-xs text-slate-500">{{ r.departmentNameAr }}</p>
+                  <p class="text-[9px] text-slate-500">{{ r.departmentNameAr }}</p>
                 </div>
               </div>
 
-              <div class="flex items-center gap-2 flex-wrap text-xs font-bold">
-                <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700">
-                  إجمالي: {{ totalsFor(r.employeeId).entitlementDays }}
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[9px] font-bold">
+                  إجمالي: <span class="font-mono text-slate-900 dark:text-slate-100">{{ totalsFor(r.employeeId).entitlementDays }}</span>
                 </span>
-                <span class="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700">
-                  مستهلك: {{ totalsFor(r.employeeId).consumedDays }}
+                <span class="px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 text-[9px] font-bold">
+                  مستهلك: <span class="font-mono text-amber-700 dark:text-amber-300">{{ totalsFor(r.employeeId).consumedDays }}</span>
                 </span>
-                <span class="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700">
-                  متبقي: {{ totalsFor(r.employeeId).remainingDays }}
+                <span class="px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold">
+                  متبقي: <span class="font-mono text-emerald-700 dark:text-emerald-300">{{ totalsFor(r.employeeId).remainingDays }}</span>
                 </span>
               </div>
             </div>
@@ -83,22 +91,23 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-r>
-        <tr class="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-          <td>
-            <span class="font-bold text-slate-900 dark:text-white text-sm">{{ r.leaveTypeNameAr }}</span>
+        <tr class="hover:bg-slate-50/30 dark:hover:bg-slate-800/30 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+          <td class="!px-4 !py-2 !border-none">
+            <span class="font-bold text-slate-700 dark:text-slate-300 text-[10px]">{{ r.leaveTypeNameAr }}</span>
           </td>
-          <td class="text-center font-extrabold text-slate-800 dark:text-white">{{ r.entitlementDays }}</td>
-          <td class="text-center font-extrabold text-amber-700 dark:text-amber-300">{{ r.consumedDays }}</td>
-          <td class="text-center">
-            <span class="font-extrabold px-3 py-1 rounded-lg"
-                  [ngClass]="r.remainingDays > 0 ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20' : 'text-rose-600 bg-rose-50 dark:bg-rose-900/20'">
+          <td class="!px-4 !py-2 !border-none text-center font-extrabold text-slate-700 dark:text-slate-300 text-[10px]">{{ r.entitlementDays }}</td>
+          <td class="!px-4 !py-2 !border-none text-center font-extrabold text-amber-600 dark:text-amber-400 text-[10px]">{{ r.consumedDays }}</td>
+          <td class="!px-4 !py-2 !border-none text-center">
+            <span class="font-extrabold px-2 py-0.5 rounded text-[10px]"
+                  [ngClass]="r.remainingDays > 0 ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50' : 'text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50'">
               {{ r.remainingDays }}
             </span>
           </td>
-          <td class="text-center text-slate-500 font-mono text-sm">{{ r.year }}</td>
-          <td class="text-center">
-            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-info p-button-rounded"
-                    pTooltip="ضبط الرصيد" tooltipPosition="left"
+          <td class="!px-4 !py-2 !border-none text-center text-slate-500 font-mono text-[10px]">{{ r.year }}</td>
+          <td class="!px-4 !py-2 !border-none text-center">
+            <button pButton icon="pi pi-pencil" 
+                    class="p-button-text p-button-rounded !w-7 !h-7 !p-0 !text-[11px] !text-blue-500 hover:!bg-blue-100 dark:hover:!bg-blue-900/40 transition-colors mx-auto block"
+                    title="ضبط الرصيد"
                     (click)="openAdjustDialog(r)"></button>
           </td>
         </tr>
@@ -106,10 +115,12 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="text-center py-20 text-slate-400">
-            <i class="pi pi-inbox text-6xl opacity-20 mb-4 block"></i>
-            <p class="text-lg font-bold">لا توجد بيانات</p>
-            <p class="text-sm mt-1">تأكد من تهيئة الأرصدة لهذه السنة أولاً</p>
+          <td colspan="6" class="text-center py-12 text-slate-400">
+            <div class="flex flex-col items-center justify-center">
+                <i class="pi pi-inbox text-3xl mb-3 opacity-50"></i>
+                <p class="text-[11px] font-bold text-slate-900 dark:text-white mb-1">لا توجد بيانات</p>
+                <p class="text-[9px]">تأكد من تهيئة الأرصدة لهذه السنة أولاً</p>
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -120,92 +131,144 @@
 <!-- ══════════════════════════════════
      Initialize Dialog
 ══════════════════════════════════ -->
-<p-dialog [(visible)]="showInitDialog" [modal]="true" [draggable]="false" [resizable]="false"
-          header="تهيئة أرصدة الإجازات السنوية" [style]="{ width: '480px' }">
+<p-dialog [(visible)]="showInitDialog" [modal]="true" [dismissableMask]="true" [showHeader]="false"
+          [style]="{ width: '450px' }" styleClass="clean-dialog !bg-transparent !border-none !shadow-none" contentStyleClass="!p-0 !overflow-visible">
 
-  <form [formGroup]="initForm" class="px-2 py-4 space-y-4">
-
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-bold text-slate-600">السنة <span class="text-rose-500">*</span></label>
-      <p-select [options]="yearOptions" [formControlName]="'year'"
-                placeholder="اختر السنة" class="w-full"></p-select>
+  <div class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800" dir="rtl">
+    
+    <!-- Dialog Header -->
+    <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <i class="pi pi-calendar-plus text-[13px]"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+                تهيئة أرصدة الإجازات السنوية
+            </h3>
+        </div>
+        <button type="button"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            (click)="showInitDialog = false">
+            <i class="pi pi-times text-[12px]"></i>
+        </button>
     </div>
 
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-bold text-slate-600">نوع الإجازة (اختياري — الكل إن فارغ)</label>
-      <p-select [options]="leaveTypeOptions()" [formControlName]="'leaveTypeId'"
-                optionLabel="label" optionValue="value"
-                placeholder="جميع الأنواع" [showClear]="true" class="w-full"></p-select>
-    </div>
+    <form [formGroup]="initForm" class="flex flex-col gap-y-4 p-5">
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">السنة <span class="text-red-500">*</span></label>
+            <p-select [options]="yearOptions" [formControlName]="'year'"
+                        placeholder="اختر السنة" styleClass="w-full !h-9 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 flex items-center transition-all"></p-select>
+        </div>
 
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-bold text-slate-600">عدد أيام مخصص (اختياري)</label>
-      <p-inputNumber [formControlName]="'customDays'" [min]="0" [max]="365"
-                     placeholder="يستخدم الافتراضي إن فارغ" class="w-full"></p-inputNumber>
-    </div>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">نوع الإجازة (اختياري — الكل إن فارغ)</label>
+            <p-select [options]="leaveTypeOptions()" [formControlName]="'leaveTypeId'"
+                        optionLabel="label" optionValue="value"
+                        placeholder="جميع الأنواع" [showClear]="true" styleClass="w-full !h-9 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 flex items-center transition-all"></p-select>
+        </div>
 
-    <div class="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
-      <input type="checkbox" [formControlName]="'enableProration'" id="prorate" class="rounded" />
-      <label for="prorate" class="text-sm font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
-        تفعيل التناسب الزمني للموظفين الجدد (Proration)
-      </label>
-    </div>
-  </form>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">عدد أيام مخصص (اختياري)</label>
+            <p-inputNumber [formControlName]="'customDays'" [min]="0" [max]="365"
+                            placeholder="يستخدم الافتراضي إن فارغ" class="w-full"
+                            styleClass="w-full" inputStyleClass="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 transition-all"></p-inputNumber>
+        </div>
 
-  <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3">
-      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
-              (click)="showInitDialog = false"></button>
-      <button pButton label="تهيئة الأرصدة" icon="pi pi-calendar-plus" class="p-button-success"
-              [loading]="initSaving()" (click)="saveInitialize()"></button>
+        <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/30 rounded-lg border border-slate-100 dark:border-slate-800 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors">
+            <p-checkbox formControlName="enableProration" [binary]="true" inputId="prorate"></p-checkbox>
+            <label for="prorate" class="text-[11px] font-bold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
+                تفعيل التناسب الزمني للموظفين الجدد (Proration)
+            </label>
+        </div>
+    </form>
+
+    <!-- Actions -->
+    <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 mt-auto rounded-b-xl">
+        <button pButton label="إلغاء" type="button"
+            class="p-button-text !h-9 !text-[12px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-5 !rounded-lg transition-colors"
+            (click)="showInitDialog = false">
+        </button>
+        <button pButton label="تهيئة الأرصدة" icon="pi pi-check" type="button"
+            class="p-button-primary !h-9 !bg-emerald-600 hover:!bg-emerald-700 !border-none !text-[12px] !px-6 !rounded-lg shadow-sm font-bold transition-colors"
+            [loading]="initSaving()" (click)="saveInitialize()">
+        </button>
     </div>
-  </ng-template>
+  </div>
 </p-dialog>
 
 <!-- ══════════════════════════════════
      Adjust Dialog
 ══════════════════════════════════ -->
-<p-dialog [(visible)]="showAdjustDialog" [modal]="true" [draggable]="false" [resizable]="false"
-          header="ضبط رصيد الإجازة" [style]="{ width: '440px' }">
+<p-dialog [(visible)]="showAdjustDialog" [modal]="true" [dismissableMask]="true" [showHeader]="false"
+          [style]="{ width: '440px' }" styleClass="clean-dialog !bg-transparent !border-none !shadow-none" contentStyleClass="!p-0 !overflow-visible">
 
-  <form [formGroup]="adjustForm" class="px-2 py-4 space-y-4" *ngIf="selectedEmployee">
-
-    <!-- Employee Info -->
-    <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-4">
-      <p class="font-black text-slate-900 dark:text-white">{{ selectedEmployee.employeeNameAr }}</p>
-      <p class="text-sm text-slate-500">#{{ selectedEmployee.employeeNumber }} — {{ selectedEmployee.departmentNameAr }}</p>
+  <div class="flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800" dir="rtl">
+    
+    <!-- Dialog Header -->
+    <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 rounded-t-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                <i class="pi pi-sliders-h text-[13px]"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+                ضبط رصيد الإجازة
+            </h3>
+        </div>
+        <button type="button"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            (click)="showAdjustDialog = false">
+            <i class="pi pi-times text-[12px]"></i>
+        </button>
     </div>
 
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-bold text-slate-600">نوع الإجازة <span class="text-rose-500">*</span></label>
-      <p-select [options]="leaveTypeOptions()" [formControlName]="'leaveTypeId'"
-                optionLabel="label" optionValue="value"
-                placeholder="اختر نوع الإجازة" class="w-full"></p-select>
-    </div>
+    <form [formGroup]="adjustForm" class="flex flex-col gap-y-4 p-5" *ngIf="selectedEmployee">
 
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-bold text-slate-600">
-        عدد الأيام <span class="text-rose-500">*</span>
-        <span class="text-slate-400 font-normal text-xs mr-2">(سالب للخصم، موجب للإضافة)</span>
-      </label>
-      <p-inputNumber [formControlName]="'adjustmentDays'" [min]="-365" [max]="365"
-                     [showButtons]="true" class="w-full"></p-inputNumber>
-    </div>
+        <!-- Employee Info -->
+        <div class="bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded-xl p-3 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-700 font-black text-xs">
+                {{ selectedEmployee.employeeNameAr?.charAt(0) }}
+            </div>
+            <div>
+                <p class="font-bold text-[11px] text-slate-900 dark:text-white">{{ selectedEmployee.employeeNameAr }}</p>
+                <p class="text-[9px] text-slate-500">#{{ selectedEmployee.employeeNumber }} — {{ selectedEmployee.departmentNameAr }}</p>
+            </div>
+        </div>
 
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm font-bold text-slate-600">سبب التعديل <span class="text-rose-500">*</span></label>
-      <textarea pTextarea [formControlName]="'reason'" rows="3"
-                placeholder="اذكر سبب التعديل..." class="w-full rounded-xl"></textarea>
-    </div>
-  </form>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">نوع الإجازة <span class="text-red-500">*</span></label>
+            <p-select [options]="leaveTypeOptions()" [formControlName]="'leaveTypeId'"
+                        optionLabel="label" optionValue="value"
+                        placeholder="اختر نوع الإجازة" styleClass="w-full !h-9 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 flex items-center transition-all"></p-select>
+        </div>
 
-  <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3">
-      <button pButton label="إلغاء" icon="pi pi-times" class="p-button-text p-button-secondary"
-              (click)="showAdjustDialog = false"></button>
-      <button pButton label="حفظ التعديل" icon="pi pi-save" class="p-button-primary"
-              [loading]="adjustSaving()" [disabled]="adjustForm.invalid"
-              (click)="saveAdjust()"></button>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                عدد الأيام <span class="text-red-500">*</span>
+                <span class="text-slate-400 font-normal text-[9px] mr-1">(سالب للخصم، موجب للإضافة)</span>
+            </label>
+            <p-inputNumber [formControlName]="'adjustmentDays'" [min]="-365" [max]="365"
+                            [showButtons]="true" class="w-full"
+                            styleClass="w-full" inputStyleClass="w-full !h-9 !px-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] font-mono focus:!bg-white dark:focus:!bg-slate-900 text-center transition-all"></p-inputNumber>
+        </div>
+
+        <div class="flex flex-col gap-1.5 mt-1">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">سبب التعديل <span class="text-red-500">*</span></label>
+            <textarea pTextarea [formControlName]="'reason'" rows="3"
+                        placeholder="اذكر سبب التعديل..." class="w-full !p-3 !rounded-md !bg-slate-50 dark:!bg-slate-800/50 !border-slate-200 dark:!border-slate-700 !text-[12px] focus:!bg-white dark:focus:!bg-slate-900 transition-all resize-none"></textarea>
+        </div>
+    </form>
+
+    <!-- Actions -->
+    <div class="px-5 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 mt-auto rounded-b-xl">
+        <button pButton label="إلغاء" type="button"
+            class="p-button-text !h-9 !text-[12px] !text-slate-600 dark:!text-slate-400 !font-bold hover:!bg-slate-200 dark:hover:!bg-slate-800 !px-5 !rounded-lg transition-colors"
+            (click)="showAdjustDialog = false">
+        </button>
+        <button pButton label="حفظ التعديل" icon="pi pi-check" type="button"
+            class="p-button-primary !h-9 !bg-blue-600 hover:!bg-blue-700 !border-none !text-[12px] !px-6 !rounded-lg shadow-sm font-bold transition-colors"
+            [loading]="adjustSaving()" [disabled]="adjustForm.invalid"
+            (click)="saveAdjust()">
+        </button>
     </div>
-  </ng-template>
+  </div>
 </p-dialog>
